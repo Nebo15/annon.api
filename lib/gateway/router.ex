@@ -1,4 +1,7 @@
 defmodule Gateway.Router do
+  @moduledoc """
+  Gateway HTTP Router
+  """
   use Plug.Router
 
   plug :match
