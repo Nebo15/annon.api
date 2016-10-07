@@ -11,4 +11,6 @@ defmodule Gateway.HTTP.API do
   post "/" do
     send_resp(conn, 200, "Creating a new API.")
   end
+
+  forward "/", to: Gateway.HTTP.API.Plugins
 end
