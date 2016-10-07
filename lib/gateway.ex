@@ -8,6 +8,7 @@ defmodule Gateway do
     import Supervisor.Spec, warn: false
 
     children = [
+      worker(Gateway.DB.Repo, []),
       Plug.Adapters.Cowboy.child_spec(:http, Gateway.Router, [], [port: 4000])
     ]
 
