@@ -1,4 +1,9 @@
 use Mix.Config
 
-# Configuration for production environment
-# It read environment variables to follow 12 factor apps convention.
+config :gateway, Gateway.DB.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  database: "${DB_NAME}",
+  username: "${DB_USER}",
+  password: "${DB_PASSWORD}",
+  hostname: "${DB_HOST}",
+  port: "${DB_PORT}"

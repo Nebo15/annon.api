@@ -1,4 +1,7 @@
 defmodule Gateway do
+  @moduledoc """
+  This is an entry point of Gateway application.
+  """
   use Application
 
   def start(_type, _args) do
