@@ -4,5 +4,5 @@ defmodule Keepex.Router do
   plug :match
   plug :dispatch
 
-  forward "/apis", to: Keepex.Crud.Collection
+  forward "/apis", to: Keepex.Crud.API
 end

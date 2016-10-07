@@ -1,4 +1,4 @@
-defmodule Keepex.Crud.Collection do
+defmodule Keepex.Crud.API do
   use Plug.Router
 
   plug :match
