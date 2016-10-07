@@ -1,6 +1,6 @@
 defmodule Gateway.HTTP.API do
   @moduledoc """
-  REST for api
+  REST for Api
   Documentation http://docs.osapigateway.apiary.io/#reference/apis
   """
   use Plug.Router

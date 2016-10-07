@@ -1,4 +1,8 @@
 defmodule Gateway.HTTP.API.Plugins do
+  @moduledoc """
+  REST module for Plugins
+  Documentation http://docs.osapigateway.apiary.io/#reference/apis/binded-plugins
+  """
   use Plug.Router
 
   plug :match

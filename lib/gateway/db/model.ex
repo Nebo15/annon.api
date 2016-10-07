@@ -10,30 +10,37 @@ defmodule Gateway.DB do
       import Ecto.Changeset
       import Ecto.Query
 
-      def validate_map(a, b, c)do
-        IO.inspect a
-        IO.inspect b
-        IO.inspect c
+      def validate_map(%Ecto.Changeset{} = ch, field) do
+        ch
+        |> get_field(field)
+        |> validate_map_size(ch, field)
+        |> validate_map
       end
 
-      def validate_map(changeset, field) do
-        changeset
-        |> get_field(field)
-        |> Enum.map_reduce(changeset, fn({key, value}, acc) ->
-          acc
+      defp validate_map_size(map, ch, field) when is_map(map) and map_size(map) <= 128, do: {ch, map, field}
+      defp validate_map_size(map, ch, field) do
+        add_error(ch, field, "amount of the map elements must be <= 128")
+      end
+
+      defp validate_map(%Ecto.Changeset{} = ch), do: ch
+      defp validate_map({%Ecto.Changeset{} = ch, map, field}) when is_map(map) do
+        {_, ch} = Enum.map_reduce(map, ch, fn({key, value}, acc) ->
+          acc = acc
           |> validate_map_key(key, field)
           |> validate_map_value(value, field)
+          {nil, acc}
         end)
+        ch
       end
 
-      defp validate_map_key(changeset, key, _field) when is_binary(key) and byte_size(key) <= 64, do: changeset
-      defp validate_map_key(changeset, key, field) do
-        add_error(changeset, field, "key must be a string with binary length <= 64")
+      defp validate_map_key(ch, key, _field) when is_binary(key) and byte_size(key) <= 64, do: ch
+      defp validate_map_key(ch, key, field) do
+        add_error(ch, field, "key must be a string with binary length <= 64")
       end
 
-      defp validate_map_value(changeset, value, _field) when is_binary(value) and byte_size(value) <= 512, do: changeset
-      defp validate_map_value(changeset, value, field) do
-        add_error(changeset, field, "value must be a string with binary length <= 512")
+      defp validate_map_value(ch, value, _field) when is_binary(value) and byte_size(value) <= 512, do: ch
+      defp validate_map_value(ch, value, field) do
+        add_error(ch, field, "value must be a string with binary length <= 512")
       end
     end
   end

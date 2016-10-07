@@ -6,10 +6,10 @@ defmodule Gateway.DB.Models.Plugin do
 
 #  @derive {Poison.Encoder, except: [:__meta__, :portfolio_subscription]}
 
-  schema "actions" do
+  schema "plugins" do
      field :name, :string
      field :settings, :map
-     belongs_to :api_id, Gateway.DB.Models.Api
+#     belongs_to :api_id, Gateway.DB.Models.Api
 
      timestamps()
   end
@@ -19,9 +19,10 @@ defmodule Gateway.DB.Models.Plugin do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:name, :settings, :api_id])
+#    |> cast(params, [:name, :settings, :api_id])
+    |> cast(params, [:name, :settings])
     |> validate_required([:name, :settings])
     |> validate_map(:settings)
-    |> assoc_constraint(:portfolio_subscription)
+#    |> assoc_constraint(:api_id)
   end
 end
