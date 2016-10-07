@@ -4,7 +4,5 @@ defmodule Keepex.Router do
   plug :match
   plug :dispatch
 
-  get "/" do
-    send_resp(conn, 200, "Hi!")
-  end
+  forward "/apis", to: Keepex.Crud.Collection
 end
