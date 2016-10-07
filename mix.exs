@@ -6,7 +6,7 @@ defmodule Keepex.Mixfile do
   def project do
     [app: :os_gateway,
      description: "Add description to your package.",
-     package: package,
+     package: package(),
      version: @version,
      elixir: "~> 1.3",
      elixirc_paths: elixirc_paths(Mix.env),
