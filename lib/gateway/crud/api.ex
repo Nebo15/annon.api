@@ -1,4 +1,4 @@
-defmodule Keepex.Crud.API do
+defmodule Gateway.HTTP.API do
   use Plug.Router
 
   plug :match

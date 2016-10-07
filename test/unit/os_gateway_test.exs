@@ -1,6 +1,6 @@
-defmodule KeepexTest do
+defmodule GatewayTest do
   use ExUnit.Case
-  doctest Keepex
+  doctest Gateway
 
   test "the truth" do
     assert 1 + 1 == 2

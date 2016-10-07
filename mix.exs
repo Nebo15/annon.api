@@ -1,10 +1,10 @@
-defmodule Keepex.Mixfile do
+defmodule Gateway.Mixfile do
   use Mix.Project
 
   @version "0.1.0"
 
   def project do
-    [app: :keepex,
+    [app: :gateway,
      description: "Add description to your package.",
      package: package(),
      version: @version,
@@ -25,7 +25,7 @@ defmodule Keepex.Mixfile do
   def application do
     [
       applications: [:logger, :confex, :cowboy, :plug],
-      mod: {Keepex, []}
+      mod: {Gateway, []}
     ]
   end
 

@@ -1,14 +1,14 @@
-defmodule Keepex do
+defmodule Gateway do
   use Application
 
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
     children = [
-      Plug.Adapters.Cowboy.child_spec(:http, Keepex.Router, [], [port: 4000])
+      Plug.Adapters.Cowboy.child_spec(:http, Gateway.Router, [], [port: 4000])
     ]
 
-    opts = [strategy: :one_for_one, name: Keepex.Supervisor]
+    opts = [strategy: :one_for_one, name: Gateway.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end
