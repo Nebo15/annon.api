@@ -1,4 +1,8 @@
 defmodule Gateway.HTTP.API do
+  @moduledoc """
+  REST for api
+  Documentation http://docs.osapigateway.apiary.io/#reference/apis
+  """
   use Plug.Router
 
   plug :match
