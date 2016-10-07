@@ -46,6 +46,8 @@ defmodule Keepex.Mixfile do
   defp deps do
     [{:distillery, "~> 0.9"},
      {:confex, "~> 1.4"},
+     {:plug, ">= 0.0.0"},
+     {:cowboy, ">= 0.0.0"},
      {:benchfella, "~> 0.3", only: [:dev, :test]},
      {:ex_doc, ">= 0.0.0", only: [:dev, :test]},
      {:excoveralls, "~> 0.5", only: [:dev, :test]},
