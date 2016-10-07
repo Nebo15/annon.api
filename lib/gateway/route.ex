@@ -1,8 +1,8 @@
-defmodule Keepex.Router do
+defmodule Gateway.Router do
   use Plug.Router
 
   plug :match
   plug :dispatch
 
-  forward "/apis", to: Keepex.Crud.API
+  forward "/apis", to: Gateway.Crud.API
 end
