@@ -4,7 +4,7 @@ defmodule Keepex.Mixfile do
   @version "0.1.0"
 
   def project do
-    [app: :os_gateway,
+    [app: :keepex,
      description: "Add description to your package.",
      package: package(),
      version: @version,
@@ -23,7 +23,10 @@ defmodule Keepex.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :confex]]
+    [
+      applications: [:logger, :confex, :cowboy, :plug],
+      mod: {Keepex, []}
+    ]
   end
 
   # Specifies which paths to compile per environment.
