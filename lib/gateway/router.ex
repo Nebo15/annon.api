@@ -4,5 +4,5 @@ defmodule Gateway.Router do
   plug :match
   plug :dispatch
 
-  forward "/apis", to: Gateway.Crud.API
+  forward "/apis", to: Gateway.HTTP.API
 end

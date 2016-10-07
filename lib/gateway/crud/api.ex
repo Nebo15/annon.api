@@ -1,4 +1,4 @@
-defmodule Gateway.Crud.API do
+defmodule Gateway.HTTP.API do
   use Plug.Router
 
   plug :match
