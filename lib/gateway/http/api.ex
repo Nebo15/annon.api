@@ -13,6 +13,15 @@ defmodule Gateway.HTTP.API do
   end
 
   post "/" do
+    case Gateway.DB.API.create(%{}) do
+      {:ok, api} ->
+        :ok
+        # reply with api (see Apiary)
+      {:error, changeset} ->
+        :error
+        # reply with error
+    end
+
     send_resp(conn, 200, "Creating a new API.")
   end
 end
