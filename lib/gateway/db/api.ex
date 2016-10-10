@@ -7,20 +7,32 @@ defmodule Gateway.DB.API do
 
   schema "apis" do
     field :name, :string
-    field :scheme, :string
-    field :host, :string
-    field :port, :string
-    field :path, :string
+
+    embeds_one :request, Request do
+      field :scheme, :string
+      field :host, :string
+      field :port, :string
+      field :path, :string
+    end
 
     timestamps()
   end
 
-  @required_fields [:scheme, :host, :port, :path]
+  @required_api_fields [:name]
+  @required_request_fields [:scheme, :host, :port, :path]
 
   def changeset(api, params \\ %{}) do
     api
-    |> Ecto.Changeset.cast(params, @required_fields)
-    |> Ecto.Changeset.validate_required(@required_fields)
+    |> IO.inspect
+    |> Ecto.Changeset.cast(params, @required_api_fields)
+    |> Ecto.Changeset.validate_required(@required_api_fields)
+    |> Ecto.Changeset.cast_embed(:request, with: &request_changeset/2)
+  end
+
+  def request_changeset(api, params \\ %{}) do
+    api
+    |> Ecto.Changeset.cast(params, @required_request_fields)
+    |> Ecto.Changeset.validate_required(@required_request_fields)
   end
 
   def create(params) do
