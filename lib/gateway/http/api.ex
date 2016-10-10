@@ -41,10 +41,22 @@ defmodule Gateway.HTTP.API do
             data: api
           }
 
-          { 201, responce_body }
+          { 201, response_body }
         {:error, changeset} ->
-          { 406, %{ sorry: "Nothing to create yet!" } }
-          # reply with error
+          errors =
+            for {field, {error, _}} <- changeset.changes.request.errors, into: %{} do
+              {to_string(field), error}
+            end
+
+          response_body = %{
+            meta: %{
+              code: 422,
+              description: "Validation errors",
+              errors: errors
+            }
+          }
+
+          { 422, response_body }
       end
 
     send_resp(conn, code, Poison.encode!(resp))
