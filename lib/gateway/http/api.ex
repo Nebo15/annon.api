@@ -43,7 +43,6 @@ defmodule Gateway.HTTP.API do
 
           { 201, responce_body }
         {:error, changeset} ->
-          IO.inspect changeset
           { 406, %{ sorry: "Nothing to create yet!" } }
           # reply with error
       end
