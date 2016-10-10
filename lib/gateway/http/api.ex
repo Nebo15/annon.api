@@ -46,7 +46,7 @@ defmodule Gateway.HTTP.API do
     { code, resp } =
       case Gateway.DB.API.create(conn.body_params) do
         {:ok, api} ->
-          responce_body = %{
+          response_body = %{
             meta: %{
               code: 201
             },
