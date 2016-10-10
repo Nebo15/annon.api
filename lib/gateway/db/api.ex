@@ -36,7 +36,6 @@ defmodule Gateway.DB.API do
 
   def changeset(api, params \\ %{}) do
     api
-    |> IO.inspect
     |> Ecto.Changeset.cast(params, @required_api_fields)
     |> Ecto.Changeset.validate_required(@required_api_fields)
     |> Ecto.Changeset.cast_embed(:request, with: &request_changeset/2)
