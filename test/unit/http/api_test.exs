@@ -6,9 +6,6 @@ defmodule Gateway.HTTP.APITest do
   setup tags do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Repo)
 
-    # Ecto.Adapters.Postgres.storage_down(Gateway.DB.Repo.config)
-    # Ecto.Adapters.Postgres.storage_up(Gateway.DB.Repo.config)
-
     unless tags[:async] do
       Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Repo, {:shared, self()})
     end
