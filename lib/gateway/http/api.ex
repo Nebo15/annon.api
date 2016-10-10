@@ -13,10 +13,44 @@ defmodule Gateway.HTTP.API do
   plug :dispatch
 
   get "/" do
+    # List of items of the following form:
+    #
+    #   id
+    #   name
+    #   request
+    #     scheme
+    #     host
+    #     port
+    #     path
+    #
+    send_resp(conn, 200, "Getting a new API.")
+  end
+
+  get "/:id" do
     send_resp(conn, 200, "Getting a new API.")
   end
 
   post "/" do
+    # Expects a JSON as such:
+    #
+    # {
+    #   "id": "56c31536a60ad644060041af",
+    #   "name": "my_api",
+    #   "request": {
+    #     "scheme": "http",
+    #     "host": "example.com",
+    #     "port": 80,
+    #     "path": "/example_api/v1/"
+    #   }
+    # }
+    #
+
+    IO.inspect(conn.body_params)
+
+      # params =
+      # paPoison.decode!(raw_body)
+      # pa|> IO.inspect
+
     case Gateway.DB.API.create(%{}) do
       {:ok, api} ->
         :ok
