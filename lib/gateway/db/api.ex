@@ -21,7 +21,7 @@ defmodule Gateway.DB.API do
   schema "apis" do
     field :name, :string
 
-    embeds_one :request, Request do
+    embeds_one :request, Request, primary_key: false do
       field :scheme, :string
       field :host, :string
       field :port, :string
