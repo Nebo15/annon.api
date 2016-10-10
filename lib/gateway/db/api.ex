@@ -5,6 +5,19 @@ defmodule Gateway.DB.API do
 
   use Ecto.Schema
 
+  defimpl Poison.Encoder, for: Gateway.DB.API do
+    def encode(%{__struct__: _} = struct, options) do
+      map = struct
+            |> Map.from_struct
+            |> sanitize_map
+      Poison.Encoder.Map.encode(map, options)
+    end
+
+    defp sanitize_map(map) do
+      Map.drop(map, [:__meta__, :__struct__])
+    end
+  end
+
   schema "apis" do
     field :name, :string
 
