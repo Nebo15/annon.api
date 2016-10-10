@@ -12,6 +12,19 @@ defmodule Gateway.HTTP.API do
   plug :match
   plug :dispatch
 
+  get "/" do
+    apis = Gateway.DB.Repo.all(Gateway.DB.API)
+
+    responce_body = %{
+      meta: %{
+        code: 200
+      },
+      data: apis
+    }
+
+    send_resp(conn, 200, Poison.encode!(responce_body))
+  end
+
   get "/:api_id" do
     { code, resp } =
       case Gateway.DB.Repo.get(Gateway.DB.API, api_id) do
