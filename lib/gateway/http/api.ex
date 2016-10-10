@@ -31,35 +31,23 @@ defmodule Gateway.HTTP.API do
   end
 
   post "/" do
-    # Expects a JSON as such:
-    #
-    # {
-    #   "id": "56c31536a60ad644060041af",
-    #   "name": "my_api",
-    #   "request": {
-    #     "scheme": "http",
-    #     "host": "example.com",
-    #     "port": 80,
-    #     "path": "/example_api/v1/"
-    #   }
-    # }
-    #
+    { code, resp } =
+      case Gateway.DB.API.create(conn.body_params) do
+        {:ok, api} ->
+          responce_body = %{
+            meta: %{
+              code: 201
+            },
+            data: api
+          }
 
-    IO.inspect(conn.body_params)
+          { 201, responce_body }
+        {:error, changeset} ->
+          IO.inspect changeset
+          { 406, %{ sorry: "Nothing to create yet!" } }
+          # reply with error
+      end
 
-      # params =
-      # paPoison.decode!(raw_body)
-      # pa|> IO.inspect
-
-    case Gateway.DB.API.create(%{}) do
-      {:ok, api} ->
-        :ok
-        # reply with api (see Apiary)
-      {:error, changeset} ->
-        :error
-        # reply with error
-    end
-
-    send_resp(conn, 200, "Creating a new API.")
+    send_resp(conn, code, Poison.encode!(resp))
   end
 end
