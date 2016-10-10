@@ -9,5 +9,3 @@ config :gateway, Gateway.DB.Repo,
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
-
-# Configuration for test environment
