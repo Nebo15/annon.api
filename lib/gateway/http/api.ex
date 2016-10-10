@@ -12,18 +12,30 @@ defmodule Gateway.HTTP.API do
   plug :match
   plug :dispatch
 
-  get "/" do
-    # List of items of the following form:
-    #
-    #   id
-    #   name
-    #   request
-    #     scheme
-    #     host
-    #     port
-    #     path
-    #
-    send_resp(conn, 200, "Getting a new API.")
+  get "/:api_id" do
+    { code, resp } =
+      case Gateway.DB.Repo.get(Gateway.DB.API, api_id) do
+        nil ->
+          response_body = %{
+            meta: %{
+              code: 404,
+              description: "The requested API doesn’t exist."
+            }
+          }
+
+          { 404, response_body }
+        api ->
+          responce_body = %{
+            meta: %{
+              code: 200
+            },
+            data: api
+          }
+
+          { 200, responce_body }
+      end
+
+    send_resp(conn, code, Poison.encode!(resp))
   end
 
   get "/:id" do
