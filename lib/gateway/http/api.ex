@@ -38,10 +38,6 @@ defmodule Gateway.HTTP.API do
     send_resp(conn, code, Poison.encode!(resp))
   end
 
-  get "/:id" do
-    send_resp(conn, 200, "Getting a new API.")
-  end
-
   post "/" do
     { code, resp } =
       case Gateway.DB.API.create(conn.body_params) do
