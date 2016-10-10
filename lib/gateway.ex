@@ -7,9 +7,11 @@ defmodule Gateway do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
+    http_config = Application.get_env(:gateway, :http)
+
     children = [
       worker(Gateway.DB.Repo, []),
-      Plug.Adapters.Cowboy.child_spec(:http, Gateway.Router, [], [port: 4000])
+      Plug.Adapters.Cowboy.child_spec(:http, Gateway.Router, [], http_config)
     ]
 
     opts = [strategy: :one_for_one, name: Gateway.Supervisor]
