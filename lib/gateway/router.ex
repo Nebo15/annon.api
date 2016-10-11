@@ -3,7 +3,8 @@ defmodule Gateway.Router do
   Gateway HTTP Router
   """
   use Plug.Router
-
+  
+  plug Gateway.Monitoring
   plug Plug.Parsers, parsers: [:json],
                      pass:  ["application/json"],
                      json_decoder: Poison
