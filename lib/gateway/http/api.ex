@@ -52,6 +52,7 @@ defmodule Gateway.HTTP.API do
   end
 
   post "/" do
+    # TODO: refactor once https://github.com/Nebo15/eview stabilizes
     { code, resp } =
       case Gateway.DB.API.create(conn.body_params) do
         {:ok, api} ->
