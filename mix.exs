@@ -54,6 +54,7 @@ defmodule Gateway.Mixfile do
      {:cowboy, ">= 0.0.0"},
      {:postgrex, ">= 0.0.0"},
      {:ecto, ">= 2.1.0-rc.2"},
+     {:confex, ">= 0.0.0"},
      {:dogma, "> 0.1.0", only: [:dev, :test]},
      {:poison, "~> 2.0", only: [:dev, :test]},
      {:benchfella, "~> 0.3", only: [:dev, :test]},
