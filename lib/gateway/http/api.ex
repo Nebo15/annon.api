@@ -32,7 +32,6 @@ defmodule Gateway.HTTP.API do
         {:ok, api} ->
           render_show_response(api)
         {:error, changeset} ->
-          IO.inspect changeset
           render_errors_response(changeset)
       end
 
