@@ -58,4 +58,9 @@ defmodule Gateway.DB.API do
     |> changeset(params)
     |> Gateway.DB.Repo.update()
   end
+
+  def delete(api_id) do
+    %Gateway.DB.API{ id: String.to_integer(api_id) }
+    |> Gateway.DB.Repo.delete()
+  end
 end

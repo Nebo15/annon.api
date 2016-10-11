@@ -120,4 +120,28 @@ defmodule Gateway.HTTP.APITest do
     assert resp["request"]["path"] == "/new/path/"
     assert resp["request"]["scheme"] == "https"
   end
+
+  test "DELETE /apis/:api_id" do
+    { :ok, data } =
+      Gateway.DB.API.create(%{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }})
+
+    conn =
+      conn(:delete, "/#{data.id}")
+      |> put_req_header("content-type", "application/json")
+      |> Gateway.HTTP.API.call([])
+
+    expected_resp = %{
+      meta: %{
+        description: "API was deleted",
+        code: 200
+      },
+      data: data
+    }
+
+    resp = Poison.decode!(conn.resp_body)
+
+    assert conn.status == 200
+    assert resp["data"]["id"] == data.id
+    assert resp["meta"]["description"] == "Resource was deleted"
+  end
 end
