@@ -56,7 +56,7 @@ defmodule Gateway.Mixfile do
      {:ecto, ">= 2.1.0-rc.2"},
      {:confex, ">= 0.0.0"},
      {:dogma, "> 0.1.0", only: [:dev, :test]},
-     {:poison, "~> 2.0", only: [:dev, :test]},
+     {:poison, "~> 2.0"},
      {:benchfella, "~> 0.3", only: [:dev, :test]},
      {:ex_doc, ">= 0.0.0", only: [:dev, :test]},
      {:excoveralls, "~> 0.5", only: [:dev, :test]},
