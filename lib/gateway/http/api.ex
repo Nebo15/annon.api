@@ -3,16 +3,7 @@ defmodule Gateway.HTTP.API do
   REST for api
   Documentation http://docs.osapigateway.apiary.io/#reference/apis
   """
-  use Plug.Router
-
-  plug Plug.Parsers, parsers: [:json],
-                     pass:  ["application/json"],
-                     json_decoder: Poison
-
-  plug :match
-  plug :dispatch
-
-  import Gateway.HTTPHelpers.Response
+  use Gateway.Helpers.CommonRouter
 
   get "/" do
     apis = Gateway.DB.Repo.all(Gateway.DB.API)
