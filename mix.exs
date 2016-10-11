@@ -25,7 +25,7 @@ defmodule Gateway.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [
-      applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto],
+      applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto, :elixometer, :exometer],
       mod: {Gateway, []}
     ]
   end
@@ -60,7 +60,13 @@ defmodule Gateway.Mixfile do
      {:benchfella, "~> 0.3", only: [:dev, :test]},
      {:ex_doc, ">= 0.0.0", only: [:dev, :test]},
      {:excoveralls, "~> 0.5", only: [:dev, :test]},
-     {:credo, ">= 0.4.8", only: [:dev, :test]}]
+     {:credo, ">= 0.4.8", only: [:dev, :test]},
+     {:elixometer, github: "pinterest/elixometer"},
+     {:exometer, github: "Feuerlabs/exometer"},
+     {:exometer_core, "~>1.4.0", override: true},
+     {:lager, "~> 3.2.1", override: true},
+     {:amqp_client, git: "https://github.com/dsrosario/amqp_client.git", branch: "erlang_otp_19", override: true}
+    ]
   end
 
   # Settings for publishing in Hex package manager:
