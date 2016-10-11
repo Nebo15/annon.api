@@ -7,7 +7,7 @@ defmodule Gateway do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
-    http_config = Application.get_env(:gateway, :http)
+    http_config = Confex.get_map(:gateway, :http)
 
     children = [
       worker(Gateway.DB.Repo, []),

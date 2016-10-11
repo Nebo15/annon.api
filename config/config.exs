@@ -14,6 +14,6 @@ config :gateway, ecto_repos: [Gateway.DB.Repo]
 config :logger, level: :warn
 
 config :gateway, :http,
-  port: 4000
+  port: { :system, "GATEWAY_PORT", 4000 }
 
 import_config "#{Mix.env}.exs"
