@@ -7,5 +7,7 @@ defmodule Gateway.AMQPRouter do
   plug :match
   plug :dispatch
 
-  forward "/queue", to: Gateway.AMQP.Sample
+  get "/*path" do
+    send_resp(conn, 200, Poison.encode!(%{ response: "To AMQP client." }))
+  end
 end
