@@ -4,10 +4,7 @@ defmodule Gateway.DB.Repo.Migrations.AddApisTable do
   def change do
     create table(:apis) do
       add :name, :string
-      add :scheme, :string
-      add :host, :string
-      add :port, :string
-      add :path, :string
+      add :request, :map
 
       timestamps()
     end
