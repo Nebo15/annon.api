@@ -49,4 +49,14 @@ defmodule Gateway.HTTP.API do
 
     send_resp(conn, code, resp)
   end
+
+  delete "/:api_id" do
+    { code, resp } =
+      case Gateway.DB.API.delete(api_id) do
+        {:ok, api} ->
+          render_delete_response(api)
+      end
+
+    send_resp(conn, code, resp)
+  end
 end

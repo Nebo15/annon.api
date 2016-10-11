@@ -58,4 +58,18 @@ defmodule Gateway.HTTPHelpers.Response do
 
     { code, response_body }
   end
+
+  def render_delete_response(resource) do
+    code = 200
+
+    response_body = %{
+      meta: %{
+        code: code,
+        description: "Resource was deleted",
+      },
+      data: resource
+    }
+
+    { code, Poison.encode!(response_body) }
+  end
 end
