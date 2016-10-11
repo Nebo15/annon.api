@@ -52,4 +52,10 @@ defmodule Gateway.DB.API do
     changeset = changeset(api, params)
     Gateway.DB.Repo.insert(changeset)
   end
+
+  def update(api_id, params) do
+    %Gateway.DB.API{ id: String.to_integer(api_id) }
+    |> changeset(params)
+    |> Gateway.DB.Repo.update()
+  end
 end

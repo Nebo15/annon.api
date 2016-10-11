@@ -79,4 +79,43 @@ defmodule Gateway.HTTP.APITest do
     assert resp["request"]["path"] == "/a/b/c"
     assert resp["request"]["scheme"] == "http"
   end
+
+  test "PUT /apis/:api_id" do
+    { :ok, data } =
+      Gateway.DB.API.create(%{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }})
+
+    new_contents = %{
+      name: "New name",
+      request: %{
+        host: "newhost.com",
+        port: "4000",
+        path: "/new/path/",
+        scheme: "https"
+      }
+    }
+
+    conn =
+      conn(:put, "/#{data.id}", Poison.encode!(new_contents))
+      |> put_req_header("content-type", "application/json")
+      |> Gateway.HTTP.API.call([])
+
+    expected_resp = %{
+      meta: %{
+        code: 200,
+      },
+      data: new_contents
+    }
+
+    assert conn.status == 200
+    resp = Poison.decode!(conn.resp_body)["data"]
+
+    assert resp["id"]
+    assert resp["updated_at"]
+
+    assert resp["name"] == "New name"
+    assert resp["request"]["host"] == "newhost.com"
+    assert resp["request"]["port"] == "4000"
+    assert resp["request"]["path"] == "/new/path/"
+    assert resp["request"]["scheme"] == "https"
+  end
 end

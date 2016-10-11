@@ -26,6 +26,19 @@ defmodule Gateway.HTTP.API do
     send_resp(conn, code, resp)
   end
 
+  put "/:api_id" do
+    { code, resp } =
+      case Gateway.DB.API.update(api_id, conn.body_params) do
+        {:ok, api} ->
+          render_show_response(api)
+        {:error, changeset} ->
+          IO.inspect changeset
+          render_errors_response(changeset)
+      end
+
+    send_resp(conn, code, resp)
+  end
+
   post "/" do
     { code, resp } =
       case Gateway.DB.API.create(conn.body_params) do
