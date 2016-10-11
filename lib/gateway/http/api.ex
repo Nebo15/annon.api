@@ -5,78 +5,45 @@ defmodule Gateway.HTTP.API do
   """
   use Plug.Router
 
+  plug Plug.Parsers, parsers: [:json],
+                     pass:  ["application/json"],
+                     json_decoder: Poison
+
   plug :match
   plug :dispatch
+
+  import Gateway.HTTPHelpers.Response
 
   get "/" do
     apis = Gateway.DB.Repo.all(Gateway.DB.API)
 
-    responce_body = %{
-      meta: %{
-        code: 200
-      },
-      data: apis
-    }
+    { code, resp } =
+      render_show_response(apis)
 
-    send_resp(conn, 200, Poison.encode!(responce_body))
+    send_resp(conn, code, resp)
   end
 
   get "/:api_id" do
     { code, resp } =
       case Gateway.DB.Repo.get(Gateway.DB.API, api_id) do
         nil ->
-          response_body = %{
-            meta: %{
-              code: 404,
-              description: "The requested API doesn’t exist."
-            }
-          }
-
-          { 404, response_body }
+          render_not_found_response()
         api ->
-          responce_body = %{
-            meta: %{
-              code: 200
-            },
-            data: api
-          }
-
-          { 200, responce_body }
+          render_show_response(api)
       end
 
-    send_resp(conn, code, Poison.encode!(resp))
+    send_resp(conn, code, resp)
   end
 
   post "/" do
-    # TODO: refactor once https://github.com/Nebo15/eview stabilizes
     { code, resp } =
       case Gateway.DB.API.create(conn.body_params) do
         {:ok, api} ->
-          response_body = %{
-            meta: %{
-              code: 201
-            },
-            data: api
-          }
-
-          { 201, response_body }
+          render_create_response(api)
         {:error, changeset} ->
-          errors =
-            for {field, {error, _}} <- changeset.changes.request.errors, into: %{} do
-              {to_string(field), error}
-            end
-
-          response_body = %{
-            meta: %{
-              code: 422,
-              description: "Validation errors",
-              errors: errors
-            }
-          }
-
-          { 422, response_body }
+          render_errors_response(changeset)
       end
 
-    send_resp(conn, code, Poison.encode!(resp))
+    send_resp(conn, code, resp)
   end
 end
