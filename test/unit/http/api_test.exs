@@ -11,6 +11,7 @@ defmodule Gateway.HTTP.APITest do
 
     conn =
       conn(:get, "/")
+      |> put_req_header("content-type", "application/json")
       |> Gateway.HTTP.API.call([])
 
     expected_resp = %{
@@ -30,6 +31,7 @@ defmodule Gateway.HTTP.APITest do
 
     conn =
       conn(:get, "/#{data.id}")
+      |> put_req_header("content-type", "application/json")
       |> Gateway.HTTP.API.call([])
 
     expected_resp = %{
