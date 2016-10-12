@@ -9,6 +9,6 @@ environment :default do
   set include_src: false
 end
 
-release :os_gateway do
-  set version: current_version(:os_gateway)
+release :gateway do
+  set version: current_version(:gateway)
 end

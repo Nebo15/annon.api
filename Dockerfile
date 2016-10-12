@@ -7,7 +7,7 @@ MAINTAINER Nebo#15 support@nebo15.com
 ENV TERM=xterm \
     ELIXIR_VERSION=1.3.2-r0 \
     MIX_ENV=prod \
-    APP_NAME=os_gateway \
+    APP_NAME=gateway \
     APP_PORT=4000
 
 WORKDIR ${HOME}
@@ -70,7 +70,7 @@ RUN $APP_NAME/hooks/pre-run.sh
 
 # The command to run when this image starts up
 #  You can run it in one of the following ways:
-#    Interactive: os_gateway/bin/os_gateway console
-#    Foreground: os_gateway/bin/os_gateway foreground
-#    Daemon: os_gateway/bin/os_gateway start
+#    Interactive: gateway/bin/gateway console
+#    Foreground: gateway/bin/gateway foreground
+#    Daemon: gateway/bin/gateway start
 CMD $APP_NAME/bin/$APP_NAME console

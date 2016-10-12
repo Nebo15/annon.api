@@ -1,3 +1,3 @@
 #!/bin/sh
-# `pwd` should be /opt/os_gateway
-APP_NAME="os_gateway"
+# `pwd` should be /opt/gateway
+APP_NAME="gateway"
