@@ -47,19 +47,16 @@ defmodule Gateway.HTTP.ConsumerTest do
 
   test "POST /consumers" do
     contents = %{
-      name: "Sample",
-      request: %{
-        host: "example.com",
-        port: "4000",
-        path: "/a/b/c",
-        scheme: "http"
+      external_id: "SampleID1",
+      metadata: %{
+        existing_key: "some_value"
       }
     }
 
     conn =
       conn(:post, "/", Poison.encode!(contents))
       |> put_req_header("content-type", "application/json")
-      |> Gateway.HTTP.API.call([])
+      |> Gateway.HTTP.Consumers.call([])
 
     expected_resp = %{
       meta: %{
@@ -71,15 +68,10 @@ defmodule Gateway.HTTP.ConsumerTest do
     assert conn.status == 201
     resp = Poison.decode!(conn.resp_body)["data"]
 
-    assert resp["id"]
+    assert resp["external_id"]
     assert resp["updated_at"]
     assert resp["inserted_at"]
-
-    assert resp["name"] == "Sample"
-    assert resp["request"]["host"] == "example.com"
-    assert resp["request"]["port"] == "4000"
-    assert resp["request"]["path"] == "/a/b/c"
-    assert resp["request"]["scheme"] == "http"
+    assert resp["metadata"]["existing_key"] == "some_value"
   end
 
   test "PUT /consumers/:external_id" do
