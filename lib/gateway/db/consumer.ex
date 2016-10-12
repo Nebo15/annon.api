@@ -18,8 +18,8 @@ defmodule Gateway.DB.Consumer do
     end
   end
 
+  @primary_key {:external_id, :string, autogenerate: false}
   schema "consumers" do
-    field :external_id, :string
     field :metadata, :map
 
     timestamps()
@@ -40,13 +40,13 @@ defmodule Gateway.DB.Consumer do
   end
 
   def update(consumer_id, params) do
-    %Gateway.DB.Consumer{ id: String.to_integer(consumer_id) }
+    %Gateway.DB.Consumer{ external_id: consumer_id }
     |> changeset(params)
     |> Gateway.DB.Repo.update()
   end
 
   def delete(consumer_id) do
-    %Gateway.DB.Consumer{ id: String.to_integer(consumer_id) }
+    %Gateway.DB.Consumer{ external_id: consumer_id }
     |> Gateway.DB.Repo.delete()
   end
 end

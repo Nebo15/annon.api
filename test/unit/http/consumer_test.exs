@@ -25,12 +25,12 @@ defmodule Gateway.HTTP.ConsumerTest do
     assert conn.resp_body == Poison.encode!(expected_resp)
   end
 
-  test "GET /consumers/:consumer_id" do
+  test "GET /consumers/:external_id" do
     { :ok, data } =
       Gateway.DB.Consumer.create(%{ external_id: "SampleID1", metadata: %{}})
 
     conn =
-      conn(:get, "/#{data.id}")
+      conn(:get, "/#{data.external_id}")
       |> put_req_header("content-type", "application/json")
       |> Gateway.HTTP.Consumers.call([])
 
@@ -82,7 +82,7 @@ defmodule Gateway.HTTP.ConsumerTest do
     assert resp["request"]["scheme"] == "http"
   end
 
-  test "PUT /consumers/:consumer_id" do
+  test "PUT /consumers/:external_id" do
     { :ok, data } =
       Gateway.DB.Consumer.create(%{ external_id: "SampleID1", metadata: %{ existing_key: "some_value" }})
 
@@ -95,7 +95,7 @@ defmodule Gateway.HTTP.ConsumerTest do
     }
 
     conn =
-      conn(:put, "/#{data.id}", Poison.encode!(new_contents))
+      conn(:put, "/#{data.external_id}", Poison.encode!(new_contents))
       |> put_req_header("content-type", "application/json")
       |> Gateway.HTTP.Consumers.call([])
 
@@ -109,26 +109,25 @@ defmodule Gateway.HTTP.ConsumerTest do
     assert conn.status == 200
     resp = Poison.decode!(conn.resp_body)["data"]
 
-    assert resp["id"]
     assert resp["updated_at"]
     assert resp["external_id"] == "new_external_id"
     assert resp["metadata"]["new_key"] == "another_value"
     assert resp["metadata"]["existing_key"] == "new_value"
   end
 
-  test "DELETE /consumers/:consumer_id" do
+  test "DELETE /consumers/:external_id" do
     { :ok, data } =
       Gateway.DB.Consumer.create(%{ external_id: "SampleID1", metadata: %{}})
 
     conn =
-      conn(:delete, "/#{data.id}")
+      conn(:delete, "/#{data.external_id}")
       |> put_req_header("content-type", "application/json")
       |> Gateway.HTTP.Consumers.call([])
 
     resp = Poison.decode!(conn.resp_body)
 
     assert conn.status == 200
-    assert resp["data"]["id"] == data.id
+    assert resp["data"]["external_id"] == data.external_id
     assert resp["meta"]["description"] == "Resource was deleted"
   end
 end
