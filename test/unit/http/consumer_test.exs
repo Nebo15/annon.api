@@ -12,7 +12,7 @@ defmodule Gateway.HTTP.ConsumerTest do
     conn =
       conn(:get, "/")
       |> put_req_header("content-type", "application/json")
-      |> Gateway.HTTP.Consumer.call([])
+      |> Gateway.HTTP.Consumers.call([])
 
     expected_resp = %{
       meta: %{
@@ -32,7 +32,7 @@ defmodule Gateway.HTTP.ConsumerTest do
     conn =
       conn(:get, "/#{data.id}")
       |> put_req_header("content-type", "application/json")
-      |> Gateway.HTTP.Consumer.call([])
+      |> Gateway.HTTP.Consumers.call([])
 
     expected_resp = %{
       meta: %{
