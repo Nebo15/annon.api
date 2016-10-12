@@ -27,26 +27,26 @@ defmodule Gateway.DB.Consumer do
 
   @required_consumer_fields [:external_id]
 
-  def changeset(api, params \\ %{}) do
-    api
+  def changeset(consumer, params \\ %{}) do
+    consumer
     |> Ecto.Changeset.cast(params, @required_consumer_fields)
     |> Ecto.Changeset.validate_required(@required_consumer_fields)
   end
 
   def create(params) do
-    api = %Gateway.DB.Consumer{}
-    changeset = changeset(api, params)
+    consumer = %Gateway.DB.Consumer{}
+    changeset = changeset(consumer, params)
     Gateway.DB.Repo.insert(changeset)
   end
 
-  def update(api_id, params) do
-    %Gateway.DB.Consumer{ id: String.to_integer(api_id) }
+  def update(consumer_id, params) do
+    %Gateway.DB.Consumer{ id: String.to_integer(consumer_id) }
     |> changeset(params)
     |> Gateway.DB.Repo.update()
   end
 
-  def delete(api_id) do
-    %Gateway.DB.Consumer{ id: String.to_integer(api_id) }
+  def delete(consumer_id) do
+    %Gateway.DB.Consumer{ id: String.to_integer(consumer_id) }
     |> Gateway.DB.Repo.delete()
   end
 end
