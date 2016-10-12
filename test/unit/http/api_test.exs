@@ -130,14 +130,6 @@ defmodule Gateway.HTTP.APITest do
       |> put_req_header("content-type", "application/json")
       |> Gateway.HTTP.API.call([])
 
-    expected_resp = %{
-      meta: %{
-        description: "API was deleted",
-        code: 200
-      },
-      data: data
-    }
-
     resp = Poison.decode!(conn.resp_body)
 
     assert conn.status == 200
