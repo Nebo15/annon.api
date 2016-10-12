@@ -84,12 +84,12 @@ defmodule Gateway.HTTP.ConsumerTest do
 
   test "PUT /consumers/:api_id" do
     { :ok, data } =
-      Gateway.DB.Consumer.create(%{ external_id: "SampleID1", metadata: %{}})
+      Gateway.DB.Consumer.create(%{ external_id: "SampleID1", metadata: %{ existing_key: "some_value" }})
 
     new_contents = %{
       external_id: "new_external_id",
       metadata: %{
-        existing_key: "some_value",
+        existing_key: "new_value",
         new_key: "another_value"
       }
     }
@@ -111,9 +111,9 @@ defmodule Gateway.HTTP.ConsumerTest do
 
     assert resp["id"]
     assert resp["updated_at"]
-    # assert resp["request"]["external_id"] == "new_external_id"
-    # assert resp["request"]["metadata"]["existing_key"] = "new_value"
-    # assert resp["request"]["metadata"]["new_key"] = "another_value"
+    assert resp["external_id"] == "new_external_id"
+    assert resp["metadata"]["new_key"] == "another_value"
+    assert resp["metadata"]["existing_key"] == "new_value"
   end
 
   test "DELETE /consumers/:api_id" do
