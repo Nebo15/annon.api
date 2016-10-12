@@ -82,6 +82,40 @@ defmodule Gateway.HTTP.ConsumerTest do
     assert resp["request"]["scheme"] == "http"
   end
 
+  test "PUT /consumers/:api_id" do
+    { :ok, data } =
+      Gateway.DB.Consumer.create(%{ external_id: "SampleID1", metadata: %{}})
+
+    new_contents = %{
+      name: "new_external_id",
+      metadata: %{
+        existing_key: "some_value",
+        new_key: "another_value"
+      }
+    }
+
+    conn =
+      conn(:put, "/#{data.id}", Poison.encode!(new_contents))
+      |> put_req_header("content-type", "application/json")
+      |> Gateway.HTTP.API.call([])
+
+    expected_resp = %{
+      meta: %{
+        code: 200,
+      },
+      data: new_contents
+    }
+
+    assert conn.status == 200
+    resp = Poison.decode!(conn.resp_body)["data"]
+
+    assert resp["id"]
+    assert resp["updated_at"]
+    # assert resp["request"]["external_id"] == "new_external_id"
+    # assert resp["request"]["metadata"]["existing_key"] = "new_value"
+    # assert resp["request"]["metadata"]["new_key"] = "another_value"
+  end
+
   test "DELETE /consumers/:api_id" do
     { :ok, data } =
       Gateway.DB.Consumer.create(%{ external_id: "SampleID1", metadata: %{}})
