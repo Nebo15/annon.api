@@ -29,7 +29,7 @@ defmodule Gateway.DB.Consumer do
 
   def changeset(consumer, params \\ %{}) do
     consumer
-    |> Ecto.Changeset.cast(params, @required_consumer_fields)
+    |> Ecto.Changeset.cast(params, @required_consumer_fields ++ [:metadata])
     |> Ecto.Changeset.validate_required(@required_consumer_fields)
   end
 
