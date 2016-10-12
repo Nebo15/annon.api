@@ -87,7 +87,7 @@ defmodule Gateway.HTTP.ConsumerTest do
       Gateway.DB.Consumer.create(%{ external_id: "SampleID1", metadata: %{}})
 
     new_contents = %{
-      name: "new_external_id",
+      external_id: "new_external_id",
       metadata: %{
         existing_key: "some_value",
         new_key: "another_value"
@@ -97,7 +97,7 @@ defmodule Gateway.HTTP.ConsumerTest do
     conn =
       conn(:put, "/#{data.id}", Poison.encode!(new_contents))
       |> put_req_header("content-type", "application/json")
-      |> Gateway.HTTP.API.call([])
+      |> Gateway.HTTP.Consumers.call([])
 
     expected_resp = %{
       meta: %{
