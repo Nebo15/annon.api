@@ -4,8 +4,8 @@ defmodule Gateway.HTTP.APITest do
   test "GET /apis" do
     data =
       [
-        Gateway.DB.API.create(%{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }}),
-        Gateway.DB.API.create(%{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }})
+        Gateway.DB.Models.API.create(%{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }}),
+        Gateway.DB.Models.API.create(%{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }})
       ]
       |> Enum.map(fn({:ok, e}) -> e end)
 
@@ -27,7 +27,7 @@ defmodule Gateway.HTTP.APITest do
 
   test "GET /apis/:api_id" do
     { :ok, data } =
-      Gateway.DB.API.create(%{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }})
+      Gateway.DB.Models.API.create(%{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }})
 
     conn =
       conn(:get, "/#{data.id}")
@@ -84,7 +84,7 @@ defmodule Gateway.HTTP.APITest do
 
   test "PUT /apis/:api_id" do
     { :ok, data } =
-      Gateway.DB.API.create(%{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }})
+      Gateway.DB.Models.API.create(%{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }})
 
     new_contents = %{
       name: "New name",
@@ -123,7 +123,7 @@ defmodule Gateway.HTTP.APITest do
 
   test "DELETE /apis/:api_id" do
     { :ok, data } =
-      Gateway.DB.API.create(%{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }})
+      Gateway.DB.Models.API.create(%{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }})
 
     conn =
       conn(:delete, "/#{data.id}")

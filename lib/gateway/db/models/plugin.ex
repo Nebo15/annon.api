@@ -9,7 +9,7 @@ defmodule Gateway.DB.Models.Plugin do
   schema "plugins" do
      field :name, :string
      field :settings, :map
-#     belongs_to :api_id, Gateway.DB.Models.Api
+#     belongs_to :api_id, Gateway.DB.Models.API
 
      timestamps()
   end

@@ -1,11 +1,11 @@
-defmodule Gateway.DB.API do
+defmodule Gateway.DB.Models.API do
   @moduledoc """
   API DB entity
   """
 
-  use Ecto.Schema
+  use Gateway.DB, :model
 
-  defimpl Poison.Encoder, for: Gateway.DB.API do
+  defimpl Poison.Encoder, for: Gateway.DB.Models.API do
     def encode(%{__struct__: _} = struct, options) do
       map = struct
             |> Map.from_struct
@@ -48,19 +48,19 @@ defmodule Gateway.DB.API do
   end
 
   def create(params) do
-    api = %Gateway.DB.API{}
+    api = %Gateway.DB.Models.API{}
     changeset = changeset(api, params)
     Gateway.DB.Repo.insert(changeset)
   end
 
   def update(api_id, params) do
-    %Gateway.DB.API{ id: String.to_integer(api_id) }
+    %Gateway.DB.Models.API{ id: String.to_integer(api_id) }
     |> changeset(params)
     |> Gateway.DB.Repo.update()
   end
 
   def delete(api_id) do
-    %Gateway.DB.API{ id: String.to_integer(api_id) }
+    %Gateway.DB.Models.API{ id: String.to_integer(api_id) }
     |> Gateway.DB.Repo.delete()
   end
 end
