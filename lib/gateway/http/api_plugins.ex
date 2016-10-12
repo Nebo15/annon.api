@@ -3,7 +3,7 @@ defmodule Gateway.HTTP.API.Plugins do
   REST module for Plugins
   Documentation http://docs.osapigateway.apiary.io/#reference/apis/binded-plugins
   """
-  use Plug.Router
+  use Gateway.Helpers.CommonRouter
 
   plug :match
   plug :dispatch

@@ -9,7 +9,7 @@ defmodule Gateway.DB.Models.Plugin do
   schema "plugins" do
      field :name, :string
      field :settings, :map
-#     belongs_to :api_id, Gateway.DB.Models.API
+     belongs_to :api_id, Gateway.DB.Models.API
 
      timestamps()
   end
@@ -19,10 +19,10 @@ defmodule Gateway.DB.Models.Plugin do
   """
   def changeset(struct, params \\ %{}) do
     struct
-#    |> cast(params, [:name, :settings, :api_id])
     |> cast(params, [:name, :settings])
+    |> cast_assoc(:api_id)
     |> validate_required([:name, :settings])
     |> validate_map(:settings)
-#    |> assoc_constraint(:api_id)
+    |> assoc_constraint(:api_id)
   end
 end
