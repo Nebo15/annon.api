@@ -24,7 +24,7 @@ defmodule Gateway.HTTPHelpers.Response do
     code = 422
 
     errors =
-      for {field, {error, _}} <- changeset.changes.request.errors, into: %{} do
+      for {field, {error, _}} <- changeset.errors, into: %{} do
         {to_string(field), error}
       end
 
