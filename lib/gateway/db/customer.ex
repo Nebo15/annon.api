@@ -25,7 +25,7 @@ defmodule Gateway.DB.Consumer do
     timestamps()
   end
 
-  @required_customer_fields [:name]
+  @required_consumer_fields [:name]
 
   def changeset(api, params \\ %{}) do
     api
