@@ -3,8 +3,8 @@ defmodule Gateway.DB.Repo.Migrations.AddConsumersTable do
 
   def change do
     create table(:consumers) do
-      add :name, :string
-      add :request, :map
+      add :external_id, :string
+      add :metadata, :map
 
       timestamps()
     end
