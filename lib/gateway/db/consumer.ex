@@ -5,7 +5,7 @@ defmodule Gateway.DB.Consumer do
 
   use Ecto.Schema
 
-  @derive {Poison.Encoder, except: [:__meta__, :plugins]}
+  @derive {Poison.Encoder, except: [:__meta__]}
 
   @primary_key {:external_id, :string, autogenerate: false}
   schema "consumers" do
