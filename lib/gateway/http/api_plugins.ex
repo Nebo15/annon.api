@@ -6,7 +6,6 @@ defmodule Gateway.HTTP.API.Plugins do
   # ToDo: pagination, auth, plugin owner
   use Gateway.Helpers.CommonRouter
 
-  import Ecto.Changeset
   import Ecto.Query, only: [from: 2]
 
   alias Gateway.DB.Repo

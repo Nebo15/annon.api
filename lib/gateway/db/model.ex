@@ -28,12 +28,12 @@ defmodule Gateway.DB do
 
   defp validate_map_size(map, ch, field) when is_map(map) and map_size(map) <= 128, do: {ch, map, field}
   defp validate_map_size(nil, ch, field), do: {ch, nil, field}
-  defp validate_map_size(map, ch, field) do
+  defp validate_map_size(_map, ch, field) do
     add_error(ch, field, "amount of the map elements must be <= 128")
   end
 
   defp validate_map(%Ecto.Changeset{} = ch), do: ch
-  defp validate_map({%Ecto.Changeset{} = ch, nil, field}), do: ch
+  defp validate_map({%Ecto.Changeset{} = ch, nil, _field}), do: ch
   defp validate_map({%Ecto.Changeset{} = ch, map, field}) when is_map(map) do
     {_, ch} = Enum.map_reduce(map, ch, fn({key, value}, acc) ->
       acc = acc
@@ -45,12 +45,12 @@ defmodule Gateway.DB do
   end
 
   defp validate_map_key(ch, key, _field) when is_binary(key) and byte_size(key) <= 64, do: ch
-  defp validate_map_key(ch, key, field) do
+  defp validate_map_key(ch, _key, field) do
     add_error(ch, field, "key must be a string with binary length <= 64")
   end
 
   defp validate_map_value(ch, value, _field) when is_binary(value) and byte_size(value) <= 512, do: ch
-  defp validate_map_value(ch, value, field) do
+  defp validate_map_value(ch, _value, field) do
     add_error(ch, field, "value must be a string with binary length <= 512")
   end
 end
