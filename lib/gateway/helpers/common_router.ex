@@ -6,11 +6,12 @@ defmodule Gateway.Helpers.CommonRouter do
     quote do
       use Plug.Router
 
+      plug :match
+
       plug Plug.Parsers, parsers: [:json],
                          pass:  ["application/json"],
                          json_decoder: Poison
 
-      plug :match
       plug :dispatch
 
       import Gateway.HTTPHelpers.Response
