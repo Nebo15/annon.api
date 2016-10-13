@@ -15,7 +15,7 @@ defmodule EctoFixtures do
     Faker.start
     case Keyword.has_key?(model.__info__(:functions), :__schema__) do
       true -> map_ecto_values(model.__schema__(:types))
-      false -> raise "not an Ecto.Model"
+      false -> raise "not an Ecto.Schema"
     end
   end
 
@@ -46,10 +46,7 @@ defmodule EctoFixtures do
   def random_float, do: Float.ceil(:rand.uniform + :rand.uniform(1000), 5)
 
   def random_boolean do
-    case :rand.uniform(2) do
-      1 -> true
-      2 -> false
-    end
+    Enum.random([true, false])
   end
 
   def random_enum(module) do
