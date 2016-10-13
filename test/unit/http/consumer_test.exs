@@ -78,8 +78,10 @@ defmodule Gateway.HTTP.ConsumerTest do
   end
 
   test "PUT /consumers/:external_id" do
+    external_id = "123e4567-e89b-12d3-a456-426655440000"
+
     { :ok, data } =
-      Gateway.DB.Consumer.create(%{ external_id: "123e4567-e89b-12d3-a456-426655440000", metadata: %{ existing_key: "some_value" }})
+      Gateway.DB.Consumer.create(%{ external_id: external_id, metadata: %{ existing_key: "some_value" }})
 
     new_contents = %{
       external_id: "123e4567-4321-12d3-a456-426655440000",
