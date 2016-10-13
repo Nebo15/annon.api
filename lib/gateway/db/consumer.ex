@@ -29,13 +29,13 @@ defmodule Gateway.DB.Consumer do
   end
 
   def update(consumer_id, params) do
-    %Gateway.DB.Consumer{ external_id: consumer_id }
+    %Gateway.DB.Consumer{external_id: consumer_id}
     |> changeset(params)
     |> Gateway.DB.Repo.update()
   end
 
   def delete(consumer_id) do
-    %Gateway.DB.Consumer{ external_id: consumer_id }
+    %Gateway.DB.Consumer{external_id: consumer_id}
     |> Gateway.DB.Repo.delete()
   end
 end
