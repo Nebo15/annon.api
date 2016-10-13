@@ -20,7 +20,10 @@ defmodule EctoFixtures do
   end
 
   def map_ecto_values(map) when is_map(map) do
-    {_, res} = Enum.map_reduce(map, %{}, &value_to_json/2)
+    {_, res} = map
+    |> Map.delete(:__meta__)
+    |> Map.delete(:__struct__)
+    |> Enum.map_reduce(%{}, &value_to_json/2)
     res
   end
 
@@ -32,6 +35,12 @@ defmodule EctoFixtures do
   defp value_to_json({key, :map} , acc), do: {nil, Map.put(acc, key, %{"last_name" => Faker.Name.last_name})}
   defp value_to_json({key, Ecto.DateTime} , acc), do: {nil, Map.put(acc, key, random_date("%FT%T%:z"))}
   defp value_to_json({key, :naive_datetime} , acc), do: {nil, Map.put(acc, key, random_date("%FT%T%:z"))}
+  defp value_to_json({key, {:embed, %Ecto.Embedded{cardinality: :one, related: related}}}, acc) do
+    {nil, Map.put(acc, key, ecto_fixtures(related))}
+  end
+  defp value_to_json({key, {:embed, %Ecto.Embedded{cardinality: :many, related: related}}}, acc) do
+    {nil, Map.put(acc, key, [ecto_fixtures(related)])}
+  end
 
   def random_date(format), do: Timex.format!(Timex.now, format, :strftime)
   def random_float, do: Float.ceil(:rand.uniform + :rand.uniform(1000), 5)

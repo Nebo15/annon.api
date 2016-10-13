@@ -27,11 +27,13 @@ defmodule Gateway.DB do
   end
 
   defp validate_map_size(map, ch, field) when is_map(map) and map_size(map) <= 128, do: {ch, map, field}
+  defp validate_map_size(nil, ch, field), do: {ch, nil, field}
   defp validate_map_size(map, ch, field) do
     add_error(ch, field, "amount of the map elements must be <= 128")
   end
 
   defp validate_map(%Ecto.Changeset{} = ch), do: ch
+  defp validate_map({%Ecto.Changeset{} = ch, nil, field}), do: ch
   defp validate_map({%Ecto.Changeset{} = ch, map, field}) when is_map(map) do
     {_, ch} = Enum.map_reduce(map, ch, fn({key, value}, acc) ->
       acc = acc

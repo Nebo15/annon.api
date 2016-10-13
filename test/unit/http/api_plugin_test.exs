@@ -6,158 +6,139 @@ defmodule Gateway.HTTP.PluginTest do
   alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.API, as: APIModel
 
-  test "GET /apis/:api_id/plugins" do
-    data = [
-      APIModel.create(get_api_model_data()),
-      APIModel.create(get_api_model_data()),
-    ]
-    |> Enum.map(fn({:ok, e}) -> e end)
-
-    conn =
-      conn(:get, "/#{data.id}/plugins")
-      |> put_req_header("content-type", "application/json")
-      |> Gateway.HTTP.API.Plugins.call([])
-
-    expected_resp = %{
-      meta: %{
-        code: 200,
-      },
-      data: data
-    }
-
-    assert conn.status == 200
-    assert conn.resp_body == Poison.encode!(expected_resp)
-  end
-
   test "GET /apis/:api_id" do
-    { :ok, data } =
-      Gateway.DB.Models.API.create(%{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }})
+    data = get_api_model_data()
+    {:ok, api_model} = APIModel.create(data)
 
-    conn =
-      conn(:get, "/#{data.id}")
-      |> put_req_header("content-type", "application/json")
-      |> Gateway.HTTP.API.Plugins.call([])
+    conn = "/#{api_model.id}/plugins"
+    |> send_get()
+    |> assert_conn_status()
 
-    expected_resp = %{
-      meta: %{
-        code: 200,
-      },
-      data: data
-    }
-
-    assert conn.status == 200
-    assert conn.resp_body == Poison.encode!(expected_resp)
+    assert Enum.count(Poison.decode!(conn.resp_body)["data"]) == Enum.count(data.plugins)
   end
 
-  test "POST /apis" do
-    contents = %{
-      name: "Sample",
-      request: %{
-        host: "example.com",
-        port: "4000",
-        path: "/a/b/c",
-        scheme: "http"
-      }
-    }
+  test "GET /apis/:api_id/plugins/:name" do
+    %{plugins: [p1, p2]} = data = get_api_model_data()
+    {:ok, api_model} = APIModel.create(data)
 
-    conn =
-      conn(:post, "/", Poison.encode!(contents))
-      |> put_req_header("content-type", "application/json")
-      |> Gateway.HTTP.API.Plugins.call([])
+    conn = "/#{api_model.id}/plugins/#{p1.name}"
+    |> send_get()
+    |> assert_conn_status()
 
-    expected_resp = %{
-      meta: %{
-        code: 201,
-      },
-      data: contents
-    }
+    assert Poison.decode!(conn.resp_body)["data"]["settings"] == p1.settings
 
-    assert conn.status == 201
-    resp = Poison.decode!(conn.resp_body)["data"]
+    conn = "/#{api_model.id}/plugins/#{p2.name}"
+    |> send_get()
+    |> assert_conn_status()
 
-    assert resp["id"]
-    assert resp["updated_at"]
-    assert resp["inserted_at"]
-
-    assert resp["name"] == "Sample"
-    assert resp["request"]["host"] == "example.com"
-    assert resp["request"]["port"] == "4000"
-    assert resp["request"]["path"] == "/a/b/c"
-    assert resp["request"]["scheme"] == "http"
+    assert Poison.decode!(conn.resp_body)["data"]["settings"] == p2.settings
   end
 
-  test "PUT /apis/:api_id" do
-    { :ok, data } =
-      Gateway.DB.Models.API.create(%{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }})
+  test "POST /apis/:api_id/plugins" do
+    {:ok, api_model} = APIModel
+    |> EctoFixtures.ecto_fixtures()
+    |> APIModel.create()
 
-    new_contents = %{
-      name: "New name",
-      request: %{
-        host: "newhost.com",
-        port: "4000",
-        path: "/new/path/",
-        scheme: "https"
-      }
-    }
+    plugin_data = get_plugin_data(api_model.id)
 
-    conn =
-      conn(:put, "/#{data.id}", Poison.encode!(new_contents))
-      |> put_req_header("content-type", "application/json")
-      |> Gateway.HTTP.API.Plugins.call([])
+    conn = "/#{api_model.id}/plugins"
+    |> send_data(plugin_data)
+    |> assert_conn_status(201)
 
-    expected_resp = %{
-      meta: %{
-        code: 200,
-      },
-      data: new_contents
-    }
-
-    assert conn.status == 200
     resp = Poison.decode!(conn.resp_body)["data"]
 
-    assert resp["id"]
-    assert resp["updated_at"]
+    assert resp["name"] == plugin_data.name
+    assert resp["settings"] == plugin_data.settings
+  end
 
-    assert resp["name"] == "New name"
-    assert resp["request"]["host"] == "newhost.com"
-    assert resp["request"]["port"] == "4000"
-    assert resp["request"]["path"] == "/new/path/"
-    assert resp["request"]["scheme"] == "https"
+  test "PUT /apis/:api_id/plugins/:name" do
+    %{plugins: [_, p2]} = data = get_api_model_data()
+    {:ok, api_model} = APIModel.create(data)
+
+    plugin_data = %{name: "new_name", settings: p2.settings}
+
+    conn = "/#{api_model.id}/plugins/#{p2.name}"
+    |> send_data(plugin_data, :put)
+    |> assert_conn_status()
+
+    resp = Poison.decode!(conn.resp_body)["data"]
+    assert resp["name"] == plugin_data.name
+
+    conn = "/#{api_model.id}/plugins/new_name"
+    |> send_get()
+    |> assert_conn_status()
+
+    plugin_data = %{name: "new_name", settings: %{"test" => "updated"}}
+    conn = "/#{api_model.id}/plugins/new_name"
+    |> send_data(plugin_data, :put)
+    |> assert_conn_status()
+
+    resp = Poison.decode!(conn.resp_body)["data"]
+    assert resp["settings"] == plugin_data.settings
   end
 
   test "DELETE /apis/:api_id" do
-    { :ok, data } =
-      Gateway.DB.Models.API.create(%{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }})
+    %{plugins: [p1, p2]} = data = get_api_model_data()
+    {:ok, api_model} = APIModel.create(data)
 
-    conn =
-      conn(:delete, "/#{data.id}")
-      |> put_req_header("content-type", "application/json")
-      |> Gateway.HTTP.API.Plugins.call([])
+    conn = "/#{api_model.id}/plugins/#{p1.name}"
+    |> send_get()
+    |> assert_conn_status()
 
-    expected_resp = %{
-      meta: %{
-        description: "API was deleted",
-        code: 200
-      },
-      data: data
-    }
-
+    conn = "/#{api_model.id}/plugins/#{p1.name}"
+    |> send_delete()
+    |> assert_conn_status()
     resp = Poison.decode!(conn.resp_body)
 
-    assert conn.status == 200
-    assert resp["data"]["id"] == data.id
-    assert resp["meta"]["description"] == "Resource was deleted"
+    conn = "/#{api_model.id}/plugins/#{p1.name}"
+    |> send_get()
+    |> assert_conn_status(404)
 
+    conn = "/#{api_model.id}/plugins/#{p2.name}"
+    |> send_get()
+    |> assert_conn_status()
+  end
+
+  def assert_conn_status(conn, code \\ 200) do
+    assert conn.status == code
+    conn
+  end
+
+  def send_get(path) do
+    :get
+    |> conn(path)
+    |> prepare_conn
+  end
+
+  def send_delete(path) do
+    :delete
+    |> conn(path)
+    |> prepare_conn
+  end
+
+  def send_data(path, data, method \\ :post) do
+    method
+    |> conn(path, Poison.encode!(data))
+    |> prepare_conn
+  end
+
+  defp prepare_conn(conn) do
+    conn
+    |> put_req_header("content-type", "application/json")
+    |> Gateway.HTTP.API.Plugins.call([])
   end
 
   defp get_api_model_data do
-    APIModel
+    api_model = APIModel
     |> EctoFixtures.ecto_fixtures()
-    |> Map.put(:plugins, [get_plugin_data(), get_plugin_data()])
+
+    api_model
+    |> Map.put(:plugins, [get_plugin_data(api_model.id), get_plugin_data(api_model.id)])
   end
 
-  defp get_plugin_data do
-    %Plugin{}
+  defp get_plugin_data(api_id) do
+    Plugin
     |> EctoFixtures.ecto_fixtures()
+    |> Map.put(:api_id, api_id)
   end
 end

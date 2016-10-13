@@ -13,7 +13,7 @@ defmodule Gateway.DB.Models.API do
     embeds_one :request, Request, primary_key: false do
       field :scheme, :string
       field :host, :string
-      field :port, :string
+      field :port, :integer
       field :path, :string
     end
 
@@ -27,31 +27,31 @@ defmodule Gateway.DB.Models.API do
 
   def changeset(api, params \\ %{}) do
     api
-    |> Ecto.Changeset.cast(params, @required_api_fields)
-    |> Ecto.Changeset.validate_required(@required_api_fields)
-    |> Ecto.Changeset.cast_embed(:request, with: &request_changeset/2)
+    |> cast(params, @required_api_fields)
+    |> validate_required(@required_api_fields)
+    |> cast_assoc(:plugins) |> cast_embed(:request, with: &request_changeset/2)
   end
 
   def request_changeset(api, params \\ %{}) do
     api
-    |> Ecto.Changeset.cast(params, @required_request_fields)
-    |> Ecto.Changeset.validate_required(@required_request_fields)
+    |> cast(params, @required_request_fields)
+    |> validate_required(@required_request_fields)
   end
 
   def create(params) do
-    api = %Gateway.DB.Models.API{}
-    changeset = changeset(api, params)
-    Gateway.DB.Repo.insert(changeset)
+    %Gateway.DB.Models.API{}
+    |> changeset(params)
+    |> Gateway.DB.Repo.insert
   end
 
   def update(api_id, params) do
-    %Gateway.DB.Models.API{ id: String.to_integer(api_id) }
+    %Gateway.DB.Models.API{id: String.to_integer(api_id)}
     |> changeset(params)
     |> Gateway.DB.Repo.update()
   end
 
   def delete(api_id) do
-    %Gateway.DB.Models.API{ id: String.to_integer(api_id) }
+    %Gateway.DB.Models.API{id: String.to_integer(api_id)}
     |> Gateway.DB.Repo.delete()
   end
 end

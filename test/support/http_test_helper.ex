@@ -1,4 +1,7 @@
 defmodule Gateway.HTTPTestHelper do
+  @moduledoc """
+  Http test helper
+  """
   defmacro __using__(_) do
     quote do
       use ExUnit.Case, async: true

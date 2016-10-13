@@ -4,15 +4,17 @@ defmodule Gateway.HTTP.APITest do
   test "GET /apis" do
     data =
       [
-        Gateway.DB.Models.API.create(%{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }}),
-        Gateway.DB.Models.API.create(%{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }})
+        Gateway.DB.Models.API.create(
+          %{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }}),
+        Gateway.DB.Models.API.create(
+          %{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }})
       ]
       |> Enum.map(fn({:ok, e}) -> e end)
 
-    conn =
-      conn(:get, "/")
-      |> put_req_header("content-type", "application/json")
-      |> Gateway.HTTP.API.call([])
+    conn = :get
+    |> conn("/")
+    |> put_req_header("content-type", "application/json")
+    |> Gateway.HTTP.API.call([])
 
     expected_resp = %{
       meta: %{
@@ -27,12 +29,14 @@ defmodule Gateway.HTTP.APITest do
 
   test "GET /apis/:api_id" do
     { :ok, data } =
-      Gateway.DB.Models.API.create(%{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }})
+      Gateway.DB.Models.API.create(
+        %{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }}
+      )
 
-    conn =
-      conn(:get, "/#{data.id}")
-      |> put_req_header("content-type", "application/json")
-      |> Gateway.HTTP.API.call([])
+    conn = :get
+    |> conn("/#{data.id}")
+    |> put_req_header("content-type", "application/json")
+    |> Gateway.HTTP.API.call([])
 
     expected_resp = %{
       meta: %{
@@ -56,10 +60,10 @@ defmodule Gateway.HTTP.APITest do
       }
     }
 
-    conn =
-      conn(:post, "/", Poison.encode!(contents))
-      |> put_req_header("content-type", "application/json")
-      |> Gateway.HTTP.API.call([])
+    conn = :post
+    |> conn("/", Poison.encode!(contents))
+    |> put_req_header("content-type", "application/json")
+    |> Gateway.HTTP.API.call([])
 
     expected_resp = %{
       meta: %{
@@ -77,14 +81,16 @@ defmodule Gateway.HTTP.APITest do
 
     assert resp["name"] == "Sample"
     assert resp["request"]["host"] == "example.com"
-    assert resp["request"]["port"] == "4000"
+    assert resp["request"]["port"] == 4000
     assert resp["request"]["path"] == "/a/b/c"
     assert resp["request"]["scheme"] == "http"
   end
 
   test "PUT /apis/:api_id" do
     { :ok, data } =
-      Gateway.DB.Models.API.create(%{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }})
+      Gateway.DB.Models.API.create(
+        %{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }}
+      )
 
     new_contents = %{
       name: "New name",
@@ -96,10 +102,10 @@ defmodule Gateway.HTTP.APITest do
       }
     }
 
-    conn =
-      conn(:put, "/#{data.id}", Poison.encode!(new_contents))
-      |> put_req_header("content-type", "application/json")
-      |> Gateway.HTTP.API.call([])
+    conn = :put
+    |> conn("/#{data.id}", Poison.encode!(new_contents))
+    |> put_req_header("content-type", "application/json")
+    |> Gateway.HTTP.API.call([])
 
     expected_resp = %{
       meta: %{
@@ -116,19 +122,21 @@ defmodule Gateway.HTTP.APITest do
 
     assert resp["name"] == "New name"
     assert resp["request"]["host"] == "newhost.com"
-    assert resp["request"]["port"] == "4000"
+    assert resp["request"]["port"] == 4000
     assert resp["request"]["path"] == "/new/path/"
     assert resp["request"]["scheme"] == "https"
   end
 
   test "DELETE /apis/:api_id" do
     { :ok, data } =
-      Gateway.DB.Models.API.create(%{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }})
+      Gateway.DB.Models.API.create(
+        %{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }}
+        )
 
-    conn =
-      conn(:delete, "/#{data.id}")
-      |> put_req_header("content-type", "application/json")
-      |> Gateway.HTTP.API.call([])
+    conn = :delete
+    |> conn("/#{data.id}")
+    |> put_req_header("content-type", "application/json")
+    |> Gateway.HTTP.API.call([])
 
     expected_resp = %{
       meta: %{

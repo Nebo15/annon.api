@@ -1,4 +1,7 @@
 defmodule Gateway.HTTPHelpers.Response do
+  @moduledoc """
+  Response helper
+  """
   # TODO: refactor once https://github.com/Nebo15/eview stabilizes
 
   def render_create_response({:ok, resource}), do: render_response(resource, 201)
@@ -75,6 +78,6 @@ defmodule Gateway.HTTPHelpers.Response do
   end
 
   def encode_response(%{meta: %{code: code}} = struct) do
-    { code, Poison.encode!(struct) }
+    {code, Poison.encode!(struct)}
   end
 end
