@@ -15,7 +15,7 @@ defmodule EctoFixtures do
     Faker.start
     case Keyword.has_key?(model.__info__(:functions), :__schema__) do
       true -> map_ecto_values(model.__schema__(:types))
-      false -> raise "not an Ecto.Model"
+      false -> raise "not an Ecto.Schema"
     end
   end
 
