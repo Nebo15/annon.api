@@ -2,8 +2,6 @@ defmodule Gateway.HTTPHelpers.Response do
   @moduledoc """
   Gateway HTTP Helpers Response
   """
-  # TODO: refactor once https://github.com/Nebo15/eview stabilizes
-
   def render_create_response({:ok, resource}), do: render_response(resource, 201)
   def render_create_response({:error, changeset}), do: render_errors_response(changeset)
   def render_create_response(nil), do: render_not_found_response()
