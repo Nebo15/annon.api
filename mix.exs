@@ -49,7 +49,7 @@ defmodule Gateway.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:distillery, "~> 0.9"},
+    [{:distillery, "~> 0.10.1"},
      {:confex, "~> 1.4"},
      {:plug, ">= 0.0.0"},
      {:cowboy, ">= 0.0.0"},

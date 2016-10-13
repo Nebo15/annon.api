@@ -1,13 +1,13 @@
 defmodule Gateway.HTTP.APITest do
   use Gateway.HTTPTestHelper
 
+  @correct_api_data %{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }}
+
   test "GET /apis" do
     data =
       [
-        Gateway.DB.Models.API.create(
-          %{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }}),
-        Gateway.DB.Models.API.create(
-          %{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }})
+        Gateway.DB.API.create(@correct_api_data),
+        Gateway.DB.API.create(@correct_api_data)
       ]
       |> Enum.map(fn({:ok, e}) -> e end)
 
@@ -29,9 +29,7 @@ defmodule Gateway.HTTP.APITest do
 
   test "GET /apis/:api_id" do
     { :ok, data } =
-      Gateway.DB.Models.API.create(
-        %{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }}
-      )
+      Gateway.DB.API.create(@correct_api_data)
 
     conn = :get
     |> conn("/#{data.id}")
@@ -88,9 +86,7 @@ defmodule Gateway.HTTP.APITest do
 
   test "PUT /apis/:api_id" do
     { :ok, data } =
-      Gateway.DB.Models.API.create(
-        %{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }}
-      )
+      Gateway.DB.API.create(@correct_api_data)
 
     new_contents = %{
       name: "New name",
@@ -129,22 +125,12 @@ defmodule Gateway.HTTP.APITest do
 
   test "DELETE /apis/:api_id" do
     { :ok, data } =
-      Gateway.DB.Models.API.create(
-        %{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }}
-        )
+      Gateway.DB.API.create(@correct_api_data)
 
     conn = :delete
     |> conn("/#{data.id}")
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.API.call([])
-
-    expected_resp = %{
-      meta: %{
-        description: "API was deleted",
-        code: 200
-      },
-      data: data
-    }
 
     resp = Poison.decode!(conn.resp_body)
 

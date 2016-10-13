@@ -1,6 +1,6 @@
 defmodule Gateway.HTTPHelpers.Response do
   @moduledoc """
-  Response helper
+  Gateway HTTP Helpers Response
   """
   # TODO: refactor once https://github.com/Nebo15/eview stabilizes
 

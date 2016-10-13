@@ -1,6 +1,6 @@
 defmodule Gateway.HTTPTestHelper do
   @moduledoc """
-  Http test helper
+  Gateway HTTP Test Helper
   """
   defmacro __using__(_) do
     quote do

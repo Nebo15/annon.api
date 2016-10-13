@@ -5,6 +5,9 @@ cache:
   - deps
 services:
   - docker
+  - postgresql
+addons:
+  postgresql: "9.5"
 elixir:
   - 1.3.0
 otp_release:
@@ -15,6 +18,7 @@ env:
     - DOCKER_HUB_ACCOUNT=place_your_account_name_here
     - MAIN_BRANCHES="master develop staging" # Branches on which you want version to be incremented
     - RELEASE_BRANCH="master"
+    - COVERALLS_REPO_TOKEN=cgG2HzcgLtSNdXmuIP9BarEdCFx9ePTPY
     # Docker credentials
     - secure: "..."
 branches:
@@ -22,25 +26,27 @@ branches:
   except:
     - /[0-9]*\.[0-9]*\.[0-9]*/
 before_install:
+  # Expose DB to Docker container
+  - sudo /bin/bash ./bin/ci/init-db.sh
 script:
   # Increment version in mix.exs
   # Uncomment this if you want to increment patch version on each Travis build.
   # - "./bin/version-increment.sh"
   # Install dependencies
-  - "mix deps.get"
+  - mix deps.get
   # Run all tests except pending ones
-  - "mix test --exclude pending --trace"
+  - mix test --exclude pending --trace
   # Submit code coverage report to Coveralls
   # Add --pro if you using private repo.
-  - "mix coveralls.travis"
+  - mix coveralls.travis --pro
   # Run static code analysis
-  - "mix credo"
+  - mix credo
   # Check code style
-  - "mix dogma"
+  - mix dogma
   # Build Docker container
   - "./bin/build.sh"
   # Initialize DB for Docker container
-  - "MIX_ENV=dev mix ecto.setup"
+  - MIX_ENV=dev mix ecto.setup
   # Run Docker container
   - sudo ./bin/start.sh
   - sleep 5
@@ -48,7 +54,7 @@ script:
   - RUNNING_CONTAINERS=`docker ps | wc -l`;
   - if [ "${RUNNING_CONTAINERS//[[:space:]]/}" == "1" ]; then echo "[E] Container is not started!" exit 1; fi;
   # Run acceptance tests on Docker container
-  - "MIX_TEST_HOST=localhost MIX_TEST_PORT=4000 mix test test/acceptance"
+  #- "MIX_TEST_HOST=localhost MIX_TEST_PORT=4000 mix test test/acceptance"
 # after_success:
 
 # Also you can
