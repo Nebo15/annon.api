@@ -9,5 +9,7 @@ defmodule Gateway.DB.Repo.Migrations.Plugin do
 
       timestamps()
     end
+
+    create index(:plugins, [:api_id, :name], unique: true)
   end
 end

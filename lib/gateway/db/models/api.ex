@@ -5,18 +5,7 @@ defmodule Gateway.DB.Models.API do
 
   use Gateway.DB, :model
 
-  defimpl Poison.Encoder, for: Gateway.DB.Models.API do
-    def encode(%{__struct__: _} = struct, options) do
-      map = struct
-            |> Map.from_struct
-            |> sanitize_map
-      Poison.Encoder.Map.encode(map, options)
-    end
-
-    defp sanitize_map(map) do
-      Map.drop(map, [:__meta__, :__struct__])
-    end
-  end
+  @derive {Poison.Encoder, except: [:__meta__, :plugins]}
 
   schema "apis" do
     field :name, :string
@@ -27,6 +16,8 @@ defmodule Gateway.DB.Models.API do
       field :port, :string
       field :path, :string
     end
+
+    has_many :plugins, Gateway.DB.Models.Plugin
 
     timestamps()
   end
