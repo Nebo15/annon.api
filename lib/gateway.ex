@@ -10,7 +10,7 @@ defmodule Gateway do
     http_config = Confex.get_map(:gateway, :http)
 
     children = [
-      worker(Gateway.DB.Repo, []),
+      supervisor(Gateway.DB.Repo, []),
       Plug.Adapters.Cowboy.child_spec(:http, Gateway.Router, [], http_config)
     ]
 

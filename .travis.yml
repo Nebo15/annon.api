@@ -15,6 +15,7 @@ env:
     - DOCKER_HUB_ACCOUNT=place_your_account_name_here
     - MAIN_BRANCHES="master develop staging" # Branches on which you want version to be incremented
     - RELEASE_BRANCH="master"
+    - COVERALLS_REPO_TOKEN=cgG2HzcgLtSNdXmuIP9BarEdCFx9ePTPY
     # Docker credentials
     - secure: "..."
 branches:
@@ -32,7 +33,7 @@ script:
   - "mix test --exclude pending --trace"
   # Submit code coverage report to Coveralls
   # Add --pro if you using private repo.
-  - "mix coveralls.travis"
+  - "mix coveralls.travis --pro"
   # Run static code analysis
   - "mix credo"
   # Check code style
@@ -48,7 +49,7 @@ script:
   - RUNNING_CONTAINERS=`docker ps | wc -l`;
   - if [ "${RUNNING_CONTAINERS//[[:space:]]/}" == "1" ]; then echo "[E] Container is not started!" exit 1; fi;
   # Run acceptance tests on Docker container
-  - "MIX_TEST_HOST=localhost MIX_TEST_PORT=4000 mix test test/acceptance"
+  #- "MIX_TEST_HOST=localhost MIX_TEST_PORT=4000 mix test test/acceptance"
 # after_success:
 
 # Also you can
