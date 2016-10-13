@@ -5,7 +5,7 @@ defmodule Gateway.DB.API do
 
   use Ecto.Schema
 
-  @derive {Poison.Encoder, except: [:__meta__, :plugins]}
+  @derive {Poison.Encoder, except: [:__meta__]}
 
   schema "apis" do
     field :name, :string
