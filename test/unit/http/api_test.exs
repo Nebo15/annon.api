@@ -66,13 +66,6 @@ defmodule Gateway.HTTP.APITest do
       |> put_req_header("content-type", "application/json")
       |> Gateway.HTTP.API.call([])
 
-    expected_resp = %{
-      meta: %{
-        code: 201,
-      },
-      data: contents
-    }
-
     assert conn.status == 201
     resp = Poison.decode!(conn.resp_body)["data"]
 
@@ -106,13 +99,6 @@ defmodule Gateway.HTTP.APITest do
       |> conn("/#{data.id}", Poison.encode!(new_contents))
       |> put_req_header("content-type", "application/json")
       |> Gateway.HTTP.API.call([])
-
-    expected_resp = %{
-      meta: %{
-        code: 200,
-      },
-      data: new_contents
-    }
 
     assert conn.status == 200
     resp = Poison.decode!(conn.resp_body)["data"]
