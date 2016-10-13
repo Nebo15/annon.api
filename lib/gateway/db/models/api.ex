@@ -29,7 +29,8 @@ defmodule Gateway.DB.Models.API do
     api
     |> cast(params, @required_api_fields)
     |> validate_required(@required_api_fields)
-    |> cast_assoc(:plugins) |> cast_embed(:request, with: &request_changeset/2)
+    |> cast_assoc(:plugins)
+    |> cast_embed(:request, with: &request_changeset/2)
   end
 
   def request_changeset(api, params \\ %{}) do

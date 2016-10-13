@@ -6,14 +6,14 @@ defmodule Gateway.HTTP.API do
   use Gateway.Helpers.CommonRouter
 
   get "/" do
-    Gateway.DB.API
+    Gateway.DB.Models.API
     |> Gateway.DB.Repo.all
     |> render_show_response
     |> send_response(conn)
   end
 
   get "/:api_id" do
-    Gateway.DB.API
+    Gateway.DB.Models.API
     |> Gateway.DB.Repo.get(api_id)
     |> render_show_response
     |> send_response(conn)
@@ -21,21 +21,21 @@ defmodule Gateway.HTTP.API do
 
   put "/:api_id" do
     api_id
-    |> Gateway.DB.API.update(conn.body_params)
+    |> Gateway.DB.Models.API.update(conn.body_params)
     |> render_show_response
     |> send_response(conn)
   end
 
   post "/" do
     conn.body_params
-    |> Gateway.DB.API.create
+    |> Gateway.DB.Models.API.create
     |> render_create_response
     |> send_response(conn)
   end
 
   delete "/:api_id" do
     api_id
-    |> Gateway.DB.API.delete
+    |> Gateway.DB.Models.API.delete
     |> render_delete_response
     |> send_response(conn)
   end
