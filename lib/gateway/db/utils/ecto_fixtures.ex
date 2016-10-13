@@ -29,8 +29,8 @@ defmodule EctoFixtures do
 
   defp value_to_json({key, :id}, acc), do: {nil, Map.put(acc, key, :rand.uniform(10_000))}
   defp value_to_json({key, :integer} , acc), do: {nil, Map.put(acc, key, :rand.uniform(10_000))}
-  defp value_to_json({key, :decimal} , acc), do: {nil, Map.put(acc, key, random_float)}
-  defp value_to_json({key, :boolean} , acc), do: {nil, Map.put(acc, key, random_boolean)}
+  defp value_to_json({key, :decimal} , acc), do: {nil, Map.put(acc, key, random_float())}
+  defp value_to_json({key, :boolean} , acc), do: {nil, Map.put(acc, key, random_boolean())}
   defp value_to_json({key, :string} , acc), do: {nil, Map.put(acc, key, Faker.Name.first_name)}
   defp value_to_json({key, :map} , acc), do: {nil, Map.put(acc, key, %{"last_name" => Faker.Name.last_name})}
   defp value_to_json({key, Ecto.DateTime} , acc), do: {nil, Map.put(acc, key, random_date("%FT%T%:z"))}
