@@ -60,7 +60,9 @@ defmodule Gateway.Mixfile do
      {:benchfella, "~> 0.3", only: [:dev, :test]},
      {:ex_doc, ">= 0.0.0", only: [:dev, :test]},
      {:excoveralls, "~> 0.5", only: [:dev, :test]},
-     {:credo, ">= 0.4.8", only: [:dev, :test]}]
+     {:credo, ">= 0.4.8", only: [:dev, :test]},
+     {:ex_json_schema, ">= 0.0.0"}
+     ]
   end
 
   # Settings for publishing in Hex package manager:

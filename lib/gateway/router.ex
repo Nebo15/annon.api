@@ -9,6 +9,7 @@ defmodule Gateway.Router do
                      json_decoder: Poison
 
   plug :match
+  plug Gateway.Plugins.Validator
   plug :dispatch
 
   forward "/apis", to: Gateway.HTTP.API
