@@ -46,10 +46,7 @@ defmodule EctoFixtures do
   def random_float, do: Float.ceil(:rand.uniform + :rand.uniform(1000), 5)
 
   def random_boolean do
-    case :rand.uniform(2) do
-      1 -> true
-      2 -> false
-    end
+    Enum.random([true, false])
   end
 
   def random_enum(module) do
