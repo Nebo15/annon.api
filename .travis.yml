@@ -23,6 +23,8 @@ branches:
   except:
     - /[0-9]*\.[0-9]*\.[0-9]*/
 before_install:
+  # Expose DB to Docker container
+  - sudo ./bin/ci/init-db.sh
 script:
   # Increment version in mix.exs
   # Uncomment this if you want to increment patch version on each Travis build.
