@@ -21,7 +21,7 @@ echo "[I] Assigning parent host '${HOST_NAME}' with IP '${HOST_IP}'."
 
 docker run -p 4000:4000 \
        --env-file .env \
-       --rm \
+       -d \
        --add-host=$HOST_NAME:$HOST_IP \
        --name ${PROJECT_NAME} \
        -i -t "${PROJECT_NAME}:${PROJECT_VERSION}"

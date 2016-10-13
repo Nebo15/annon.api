@@ -1,4 +1,7 @@
 defmodule Gateway.Helpers.CommonRouter do
+  @moduledoc """
+  Gateway Helpers Common Router
+  """
   defmacro __using__(_) do
     quote do
       use Plug.Router
