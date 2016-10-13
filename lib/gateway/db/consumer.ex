@@ -5,18 +5,7 @@ defmodule Gateway.DB.Consumer do
 
   use Ecto.Schema
 
-  defimpl Poison.Encoder, for: Gateway.DB.Consumer do
-    def encode(%{__struct__: _} = struct, options) do
-      map = struct
-            |> Map.from_struct
-            |> sanitize_map
-      Poison.Encoder.Map.encode(map, options)
-    end
-
-    defp sanitize_map(map) do
-      Map.drop(map, [:__meta__, :__struct__])
-    end
-  end
+  @derive {Poison.Encoder, except: [:__meta__, :plugins]}
 
   @primary_key {:external_id, :string, autogenerate: false}
   schema "consumers" do
