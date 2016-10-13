@@ -1,7 +1,7 @@
 defmodule Gateway.HTTP.APITest do
   use Gateway.HTTPTestHelper
 
-  @correct_api_data %{ name: "Sample", request: %{ path: "/", port: "3000", scheme: "https", host: "sample.com" }}
+  @correct_api_data %{ name: "Sample", request: %{ path: "/", port: 3000, scheme: "https", host: "sample.com" }}
 
   test "GET /apis" do
     data =
@@ -52,7 +52,7 @@ defmodule Gateway.HTTP.APITest do
       name: "Sample",
       request: %{
         host: "example.com",
-        port: "4000",
+        port: 4000,
         path: "/a/b/c",
         scheme: "http"
       }
@@ -62,13 +62,6 @@ defmodule Gateway.HTTP.APITest do
     |> conn("/", Poison.encode!(contents))
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.API.call([])
-
-    expected_resp = %{
-      meta: %{
-        code: 201,
-      },
-      data: contents
-    }
 
     assert conn.status == 201
     resp = Poison.decode!(conn.resp_body)["data"]
@@ -92,7 +85,7 @@ defmodule Gateway.HTTP.APITest do
       name: "New name",
       request: %{
         host: "newhost.com",
-        port: "4000",
+        port: 4000,
         path: "/new/path/",
         scheme: "https"
       }
@@ -102,13 +95,6 @@ defmodule Gateway.HTTP.APITest do
     |> conn("/#{data.id}", Poison.encode!(new_contents))
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.API.call([])
-
-    expected_resp = %{
-      meta: %{
-        code: 200,
-      },
-      data: new_contents
-    }
 
     assert conn.status == 200
     resp = Poison.decode!(conn.resp_body)["data"]
