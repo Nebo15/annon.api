@@ -10,7 +10,8 @@ defmodule Gateway.HTTP.ConsumerTest do
       |> Enum.map(fn({:ok, e}) -> e end)
 
     conn =
-      conn(:get, "/")
+      :get
+      |> conn("/")
       |> put_req_header("content-type", "application/json")
       |> Gateway.HTTP.Consumers.call([])
 
@@ -30,7 +31,8 @@ defmodule Gateway.HTTP.ConsumerTest do
       Gateway.DB.Consumer.create(%{ external_id: "SampleID1", metadata: %{}})
 
     conn =
-      conn(:get, "/#{data.external_id}")
+      :get
+      |> conn("/#{data.external_id}")
       |> put_req_header("content-type", "application/json")
       |> Gateway.HTTP.Consumers.call([])
 
@@ -54,7 +56,8 @@ defmodule Gateway.HTTP.ConsumerTest do
     }
 
     conn =
-      conn(:post, "/", Poison.encode!(contents))
+      :post
+      |> conn("/", Poison.encode!(contents))
       |> put_req_header("content-type", "application/json")
       |> Gateway.HTTP.Consumers.call([])
 
@@ -87,7 +90,8 @@ defmodule Gateway.HTTP.ConsumerTest do
     }
 
     conn =
-      conn(:put, "/#{data.external_id}", Poison.encode!(new_contents))
+      :put
+      |> conn("/#{data.external_id}", Poison.encode!(new_contents))
       |> put_req_header("content-type", "application/json")
       |> Gateway.HTTP.Consumers.call([])
 
@@ -112,7 +116,8 @@ defmodule Gateway.HTTP.ConsumerTest do
       Gateway.DB.Consumer.create(%{ external_id: "SampleID1", metadata: %{}})
 
     conn =
-      conn(:delete, "/#{data.external_id}")
+      :delete
+      |> conn("/#{data.external_id}")
       |> put_req_header("content-type", "application/json")
       |> Gateway.HTTP.Consumers.call([])
 
