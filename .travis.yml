@@ -28,20 +28,20 @@ script:
   # Uncomment this if you want to increment patch version on each Travis build.
   # - "./bin/version-increment.sh"
   # Install dependencies
-  - "mix deps.get"
+  - mix deps.get
   # Run all tests except pending ones
-  - "mix test --exclude pending --trace"
+  - mix test --exclude pending --trace
   # Submit code coverage report to Coveralls
   # Add --pro if you using private repo.
-  - "mix coveralls.travis --pro"
+  - mix coveralls.travis --pro
   # Run static code analysis
-  - "mix credo"
+  - mix credo
   # Check code style
-  - "mix dogma"
+  - mix dogma
   # Build Docker container
   - "./bin/build.sh"
   # Initialize DB for Docker container
-  - "MIX_ENV=dev mix ecto.setup"
+  - MIX_ENV=dev mix ecto.setup
   # Run Docker container
   - sudo ./bin/start.sh
   - sleep 5

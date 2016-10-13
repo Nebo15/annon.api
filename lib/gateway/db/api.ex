@@ -43,13 +43,13 @@ defmodule Gateway.DB.API do
   end
 
   def update(api_id, params) do
-    %Gateway.DB.API{ id: String.to_integer(api_id) }
+    %Gateway.DB.API{id: String.to_integer(api_id)}
     |> changeset(params)
     |> Gateway.DB.Repo.update()
   end
 
   def delete(api_id) do
-    %Gateway.DB.API{ id: String.to_integer(api_id) }
+    %Gateway.DB.API{id: String.to_integer(api_id)}
     |> Gateway.DB.Repo.delete()
   end
 end
