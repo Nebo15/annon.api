@@ -29,11 +29,10 @@ defmodule Gateway.HTTP.API.Plugins do
   end
 
   # get one
-  get "/:api_id/plugins/:id" do
+  get "/:api_id/plugins/:name" do
     query = from p in Plugin,
             where: p.api_id == ^api_id,
-            where: p.id == ^id,
-            limit: 10
+            where: p.name == ^name
 
     query
     |> Repo.one
@@ -43,9 +42,9 @@ defmodule Gateway.HTTP.API.Plugins do
 
   # create
   post "/:api_id/plugins/" do
-    api_id
-    |> get_api
-    |> create_plugin(conn.body_params)
+    APIModel
+    |> Repo.get(api_id)
+    |> Plugin.create(conn.body_params)
     |> render_create_response
     |> send_response(conn)
   end
@@ -53,7 +52,7 @@ defmodule Gateway.HTTP.API.Plugins do
   # update
   put "/:api_id/plugins/:name" do
     api_id
-    |> update_plugin(name, conn.body_params)
+    |> Plugin.update(name, conn.body_params)
     |> render_show_response
     |> send_response(conn)
   end
@@ -68,39 +67,8 @@ defmodule Gateway.HTTP.API.Plugins do
     |> send_response(conn)
   end
 
-  defp get_api(api_id) do
-    APIModel
-    |> Repo.get(api_id)
-  end
-
-  defp create_plugin(nil, _params), do: nil
-  defp create_plugin(%APIModel{} = api, params) when is_map(params) do
-    api
-    |> Ecto.build_assoc(:plugins)
-    |> Plugin.changeset(params)
-    |> Repo.insert
-  end
-
-  defp update_plugin(api_id, name, params) when is_map(params) do
-    a =
-    %Plugin{}
-    |> Plugin.changeset(params)
-    |> update_plugin(api_id, name)
-    IO.inspect a
-    a
-  end
-  defp update_plugin(%Ecto.Changeset{valid?: true, changes: changes}, api_id, name) do
-
-    changes = Map.to_list(changes)
-    query = from(p in Plugin, where: p.api_id == ^api_id, where: p.name == ^name,
-                 update: [set: ^changes])
-    IO.inspect query
-    a = query
-    Repo.update_all([], returning: true)
-    IO.inspect a
-    a
-  end
-  defp update_plugin(%Ecto.Changeset{valid?: false} = ch), do: {:error, ch}
+  defp normalize_ecto_update_resp({0, _}), do: nil
+  defp normalize_ecto_update_resp({1, [struct]}), do: struct
 
   def render_plugin(%Plugin{} = p), do: render_show_response(p)
   def render_plugin(nil), do: render_not_found_response("Plugin not found")
