@@ -1,4 +1,7 @@
 defmodule Gateway.HTTPHelpers.Response do
+  @moduledoc """
+  Gateway HTTP Helpers Response
+  """
   # TODO: refactor once https://github.com/Nebo15/eview stabilizes
 
   def render_create_response({:ok, resource}), do: render_response(resource, 201)
@@ -11,7 +14,7 @@ defmodule Gateway.HTTPHelpers.Response do
   def render_delete_response({:ok, resource}), do: render_response(resource, 200, "Resource was deleted")
   def render_delete_response(_), do: render_not_found_response()
 
-  def render_not_found_response() do
+  def render_not_found_response do
     encode_response(%{
       meta: %{
         code: 404,
@@ -24,7 +27,7 @@ defmodule Gateway.HTTPHelpers.Response do
     code = 422
 
     errors =
-      for {field, {error, _}} <- changeset.changes.request.errors, into: %{} do
+      for {field, {error, _}} <- changeset.errors, into: %{} do
         {to_string(field), error}
       end
 
@@ -36,7 +39,7 @@ defmodule Gateway.HTTPHelpers.Response do
       }
     }
 
-    { code, response_body }
+    {code, response_body}
   end
 
   def render_response(resource, code) do
@@ -67,6 +70,6 @@ defmodule Gateway.HTTPHelpers.Response do
   end
 
   def encode_response(%{meta: %{code: code}} = struct) do
-    { code, Poison.encode!(struct) }
+    {code, Poison.encode!(struct)}
   end
 end
