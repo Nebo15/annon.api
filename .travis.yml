@@ -5,6 +5,7 @@ cache:
   - deps
 services:
   - docker
+  - postgresql
 elixir:
   - 1.3.0
 otp_release:
