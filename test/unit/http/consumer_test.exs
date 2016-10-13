@@ -4,8 +4,8 @@ defmodule Gateway.HTTP.ConsumerTest do
   test "GET /consumers" do
     data =
       [
-        Gateway.DB.Consumer.create(%{ external_id: "SampleID1", metadata: %{}}),
-        Gateway.DB.Consumer.create(%{ external_id: "SampleID2", metadata: %{}})
+        Gateway.DB.Consumer.create(%{ external_id: "123e4567-4321-12d3-a456-426655440000", metadata: %{}}),
+        Gateway.DB.Consumer.create(%{ external_id: "321e4567-4321-12d3-a456-426655440000", metadata: %{}})
       ]
       |> Enum.map(fn({:ok, e}) -> e end)
 
@@ -28,7 +28,7 @@ defmodule Gateway.HTTP.ConsumerTest do
 
   test "GET /consumers/:external_id" do
     { :ok, data } =
-      Gateway.DB.Consumer.create(%{ external_id: "SampleID1", metadata: %{}})
+      Gateway.DB.Consumer.create(%{ external_id: "123e4567-4321-12d3-a456-426655440000", metadata: %{}})
 
     conn =
       :get
@@ -49,7 +49,7 @@ defmodule Gateway.HTTP.ConsumerTest do
 
   test "POST /consumers" do
     contents = %{
-      external_id: "SampleID1",
+      external_id: "321e4567-4321-12d3-a456-426655440000",
       metadata: %{
         existing_key: "some_value"
       }
@@ -79,10 +79,10 @@ defmodule Gateway.HTTP.ConsumerTest do
 
   test "PUT /consumers/:external_id" do
     { :ok, data } =
-      Gateway.DB.Consumer.create(%{ external_id: "SampleID1", metadata: %{ existing_key: "some_value" }})
+      Gateway.DB.Consumer.create(%{ external_id: "123e4567-e89b-12d3-a456-426655440000", metadata: %{ existing_key: "some_value" }})
 
     new_contents = %{
-      external_id: "new_external_id",
+      external_id: "123e4567-4321-12d3-a456-426655440000",
       metadata: %{
         existing_key: "new_value",
         new_key: "another_value"
@@ -106,14 +106,14 @@ defmodule Gateway.HTTP.ConsumerTest do
     resp = Poison.decode!(conn.resp_body)["data"]
 
     assert resp["updated_at"]
-    assert resp["external_id"] == "new_external_id"
+    assert resp["external_id"] == "123e4567-4321-12d3-a456-426655440000"
     assert resp["metadata"]["new_key"] == "another_value"
     assert resp["metadata"]["existing_key"] == "new_value"
   end
 
   test "DELETE /consumers/:external_id" do
     { :ok, data } =
-      Gateway.DB.Consumer.create(%{ external_id: "SampleID1", metadata: %{}})
+      Gateway.DB.Consumer.create(%{ external_id: "321e4567-4321-12d3-a456-426655440000", metadata: %{}})
 
     conn =
       :delete

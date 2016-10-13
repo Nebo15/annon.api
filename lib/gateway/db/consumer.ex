@@ -7,7 +7,7 @@ defmodule Gateway.DB.Consumer do
 
   @derive {Poison.Encoder, except: [:__meta__]}
 
-  @primary_key {:external_id, :string, autogenerate: false}
+  @primary_key {:external_id, Ecto.UUID, autogenerate: false}
   schema "consumers" do
     field :metadata, :map
 

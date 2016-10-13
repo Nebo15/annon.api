@@ -3,7 +3,7 @@ defmodule Gateway.DB.Repo.Migrations.AddConsumersTable do
 
   def change do
     create table(:consumers, primary_key: false) do
-      add :external_id, :string
+      add :external_id, :uuid
       add :metadata, :map
 
       timestamps()
