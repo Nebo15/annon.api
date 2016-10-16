@@ -1,6 +1,6 @@
 {
   "skip_files": [
     "test/*",
-    "/lib/gateway/tasks.ex"
+    "lib/gateway/tasks.ex"
   ]
 }

@@ -1,41 +1,41 @@
-defmodule Gateway.HTTP.API do
+defmodule Gateway.HTTP.Models.Consumers do
   @moduledoc """
-  REST for Api
-  Documentation http://docs.osapigateway.apiary.io/#reference/apis
+  REST for Consumers
+  Documentation http://docs.osapigateway.apiary.io/#reference/consumers
   """
   use Gateway.Helpers.CommonRouter
 
   get "/" do
-    Gateway.DB.Models.API
+    Gateway.DB.Consumer
     |> Gateway.DB.Repo.all
     |> render_show_response
     |> send_response(conn)
   end
 
-  get "/:api_id" do
-    Gateway.DB.Models.API
-    |> Gateway.DB.Repo.get(api_id)
+  get "/:consumer_id" do
+    Gateway.DB.Consumer
+    |> Gateway.DB.Repo.get(consumer_id)
     |> render_show_response
     |> send_response(conn)
   end
 
-  put "/:api_id" do
-    api_id
-    |> Gateway.DB.Models.API.update(conn.body_params)
+  put "/:consumer_id" do
+    consumer_id
+    |> Gateway.DB.Consumer.update(conn.body_params)
     |> render_show_response
     |> send_response(conn)
   end
 
   post "/" do
     conn.body_params
-    |> Gateway.DB.Models.API.create
+    |> Gateway.DB.Consumer.create
     |> render_create_response
     |> send_response(conn)
   end
 
-  delete "/:api_id" do
-    api_id
-    |> Gateway.DB.Models.API.delete
+  delete "/:consumer_id" do
+    consumer_id
+    |> Gateway.DB.Consumer.delete
     |> render_delete_response
     |> send_response(conn)
   end
@@ -43,6 +43,4 @@ defmodule Gateway.HTTP.API do
   def send_response({code, resp}, conn) do
     send_resp(conn, code, resp)
   end
-
-  forward "/", to: Gateway.HTTP.API.Plugins
 end
