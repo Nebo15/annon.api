@@ -11,6 +11,7 @@ config :gateway, Gateway.DB.Repo,
 
 config :gateway, ecto_repos: [Gateway.DB.Repo]
 
+<<<<<<< HEAD
 memory_stats = ~w(atom binary ets processes total)a
 
 config :exometer,  
@@ -46,6 +47,9 @@ config :exometer_core, report: [
 ]    
 
 config :logger, level: :warn
+=======
+config :logger, level: :debug
+>>>>>>> master
 
 config :gateway, :http,
   port: { :system, "GATEWAY_PORT", 4000 }
