@@ -9,4 +9,5 @@ defmodule Gateway.Router do
   plug :dispatch
 
   forward "/apis", to: Gateway.HTTP.API
+  forward "/consumers", to: Gateway.HTTP.Consumers
 end

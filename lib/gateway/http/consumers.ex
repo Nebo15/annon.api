@@ -1,4 +1,4 @@
-defmodule Gateway.HTTP.Models.Consumers do
+defmodule Gateway.HTTP.Consumers do
   @moduledoc """
   REST for Consumers
   Documentation http://docs.osapigateway.apiary.io/#reference/consumers

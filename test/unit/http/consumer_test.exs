@@ -10,9 +10,9 @@ defmodule Gateway.HTTP.ConsumerTest do
       |> Enum.map(fn({:ok, e}) -> e end)
 
     conn = :get
-      |> conn("/")
+      |> conn("/consumers")
       |> put_req_header("content-type", "application/json")
-      |> Gateway.HTTP.Models.Consumers.call([])
+      |> Gateway.Router.call([])
 
     expected_resp = %{
       meta: %{
@@ -30,9 +30,9 @@ defmodule Gateway.HTTP.ConsumerTest do
       Gateway.DB.Consumer.create(%{ external_id: "123e4567-4321-12d3-a456-426655440000", metadata: %{}})
 
     conn = :get
-      |> conn("/#{data.external_id}")
+      |> conn("/consumers/#{data.external_id}")
       |> put_req_header("content-type", "application/json")
-      |> Gateway.HTTP.Models.Consumers.call([])
+      |> Gateway.Router.call([])
 
     expected_resp = %{
       meta: %{
@@ -54,9 +54,9 @@ defmodule Gateway.HTTP.ConsumerTest do
     }
 
     conn = :post
-      |> conn("/", Poison.encode!(contents))
+      |> conn("/consumers", Poison.encode!(contents))
       |> put_req_header("content-type", "application/json")
-      |> Gateway.HTTP.Models.Consumers.call([])
+      |> Gateway.Router.call([])
 
     assert conn.status == 201
     resp = Poison.decode!(conn.resp_body)["data"]
@@ -82,9 +82,9 @@ defmodule Gateway.HTTP.ConsumerTest do
     }
 
     conn = :put
-      |> conn("/#{data.external_id}", Poison.encode!(new_contents))
+      |> conn("/consumers/#{data.external_id}", Poison.encode!(new_contents))
       |> put_req_header("content-type", "application/json")
-      |> Gateway.HTTP.Models.Consumers.call([])
+      |> Gateway.Router.call([])
 
     assert conn.status == 200
     resp = Poison.decode!(conn.resp_body)["data"]
@@ -100,9 +100,9 @@ defmodule Gateway.HTTP.ConsumerTest do
       Gateway.DB.Consumer.create(%{ external_id: "321e4567-4321-12d3-a456-426655440000", metadata: %{}})
 
     conn = :delete
-      |> conn("/#{data.external_id}")
+      |> conn("/consumers/#{data.external_id}")
       |> put_req_header("content-type", "application/json")
-      |> Gateway.HTTP.Models.Consumers.call([])
+      |> Gateway.Router.call([])
 
     resp = Poison.decode!(conn.resp_body)
 
