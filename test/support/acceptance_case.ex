@@ -18,9 +18,7 @@ defmodule Gateway.AcceptanceCase do
       use HTTPoison.Base
 
       # Configure acceptance testing on different host:port
-      conf = Application.get_env(:gateway, :http)
-      host = System.get_env("MIX_TEST_HOST") || conf[:http][:host] || "localhost"
-      port = System.get_env("MIX_TEST_PORT") || conf[:http][:port] || 4000
+      [port: port, host: host] = Confex.get_map(:gateway, :acceptance)
 
       @http_uri "http://#{host}:#{port}/"
 
