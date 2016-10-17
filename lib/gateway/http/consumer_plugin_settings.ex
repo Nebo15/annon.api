@@ -27,7 +27,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
     |> send_response(conn)
   end
 
-  post "/consumers/:external_id/plugins/" do
+  post "/consumers/:external_id/plugins" do
     external_id
     |> ConsumerPluginSettings.create(conn.body_params)
     |> render_show_response
