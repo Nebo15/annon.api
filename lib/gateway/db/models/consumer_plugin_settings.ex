@@ -5,12 +5,13 @@ defmodule Gateway.DB.Models.ConsumerPluginSettings do
   use Gateway.DB, :model
 
   alias Gateway.DB.Repo
-  alias Gateway.DB.Models.Consumer
+  alias Gateway.DB.Consumer
   alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.ConsumerPluginSettings
 
   @derive {Poison.Encoder, except: [:__meta__, :api]}
 
+  @foreign_key_type :string
   schema "customer_plugin_settings" do
     field :settings, :map
     belongs_to :consumer, Consumer, references: :external_id, foreign_key: :external_id
