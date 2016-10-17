@@ -43,4 +43,6 @@ defmodule Gateway.HTTP.Consumers do
   def send_response({code, resp}, conn) do
     send_resp(conn, code, resp)
   end
+
+  forward "/", to: Gateway.HTTP.ConsumerPluginSettings
 end
