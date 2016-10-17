@@ -6,7 +6,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
   alias Gateway.DB.Model.ConsumerPluginSettings
 
   setup do
-    consumer = create_fixture(Gateway.DB.Consumer)
+    consumer = create_fixture(Gateway.DB.Models.Consumer)
     api      = create_fixture(Gateway.DB.Models.API)
 
     {:ok, %{external_id: consumer.external_id, api: api}}
@@ -25,7 +25,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     conn = :get
     |> conn("/consumers/#{external_id}/plugins")
     |> put_req_header("content-type", "application/json")
-    |> Gateway.HTTP.Models.Consumers.call([])
+    |> Gateway.HTTP.Consumers.call([])
 
     assert Enum.count(Poison.decode!(conn.resp_body)["data"]) == Enum.count(1)
   end
