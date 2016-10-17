@@ -13,14 +13,21 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
   end
 
   test "GET /consumers/:external_id/plugins", %{external_id: external_id, api: api} do
-    plugin_params =
+    plugin_params1 =
       Gateway.DB.Models.Plugin
       |> EctoFixtures.ecto_fixtures()
       |> Map.put(:api_id, api.id)
 
-    { :ok, plugin } = Gateway.DB.Models.Plugin.create(%Gateway.DB.Models.API{}, plugin_params)
+    plugin_params2 =
+      Gateway.DB.Models.Plugin
+      |> EctoFixtures.ecto_fixtures()
+      |> Map.put(:api_id, api.id)
 
-    Gateway.DB.Models.ConsumerPluginSettings.create(external_id, %{plugin_id: plugin.id})
+    { :ok, plugin1 } = Gateway.DB.Models.Plugin.create(%Gateway.DB.Models.API{}, plugin_params1)
+    { :ok, plugin2 } = Gateway.DB.Models.Plugin.create(%Gateway.DB.Models.API{}, plugin_params2)
+
+    Gateway.DB.Models.ConsumerPluginSettings.create(external_id, %{plugin_id: plugin1.id})
+    Gateway.DB.Models.ConsumerPluginSettings.create(external_id, %{plugin_id: plugin2.id})
 
     conn = :get
     |> conn("/consumers/#{external_id}/plugins")
@@ -30,7 +37,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     x =
       Poison.decode!(conn.resp_body)["data"]
 
-    assert Enum.count(x) == 1
+    assert Enum.count(x) == 2
   end
 
   test "GET /consumers/:external_id/plugins/:name" do
