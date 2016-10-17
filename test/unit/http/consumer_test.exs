@@ -9,8 +9,7 @@ defmodule Gateway.HTTP.ConsumerTest do
       ]
       |> Enum.map(fn({:ok, e}) -> e end)
 
-    conn =
-      :get
+    conn = :get
       |> conn("/")
       |> put_req_header("content-type", "application/json")
       |> Gateway.HTTP.Models.Consumers.call([])
@@ -30,8 +29,7 @@ defmodule Gateway.HTTP.ConsumerTest do
     { :ok, data } =
       Gateway.DB.Consumer.create(%{ external_id: "123e4567-4321-12d3-a456-426655440000", metadata: %{}})
 
-    conn =
-      :get
+    conn = :get
       |> conn("/#{data.external_id}")
       |> put_req_header("content-type", "application/json")
       |> Gateway.HTTP.Models.Consumers.call([])
@@ -55,18 +53,10 @@ defmodule Gateway.HTTP.ConsumerTest do
       }
     }
 
-    conn =
-      :post
+    conn = :post
       |> conn("/", Poison.encode!(contents))
       |> put_req_header("content-type", "application/json")
       |> Gateway.HTTP.Models.Consumers.call([])
-
-    expected_resp = %{
-      meta: %{
-        code: 201,
-      },
-      data: contents
-    }
 
     assert conn.status == 201
     resp = Poison.decode!(conn.resp_body)["data"]
@@ -91,18 +81,10 @@ defmodule Gateway.HTTP.ConsumerTest do
       }
     }
 
-    conn =
-      :put
+    conn = :put
       |> conn("/#{data.external_id}", Poison.encode!(new_contents))
       |> put_req_header("content-type", "application/json")
       |> Gateway.HTTP.Models.Consumers.call([])
-
-    expected_resp = %{
-      meta: %{
-        code: 200,
-      },
-      data: new_contents
-    }
 
     assert conn.status == 200
     resp = Poison.decode!(conn.resp_body)["data"]
@@ -117,8 +99,7 @@ defmodule Gateway.HTTP.ConsumerTest do
     { :ok, data } =
       Gateway.DB.Consumer.create(%{ external_id: "321e4567-4321-12d3-a456-426655440000", metadata: %{}})
 
-    conn =
-      :delete
+    conn = :delete
       |> conn("/#{data.external_id}")
       |> put_req_header("content-type", "application/json")
       |> Gateway.HTTP.Models.Consumers.call([])
