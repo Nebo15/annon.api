@@ -1,10 +1,6 @@
 defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
   use Gateway.HTTPTestHelper
 
-  alias Gateway.DB.Repo
-  alias Gateway.DB.Models.Plugin
-  alias Gateway.DB.Model.ConsumerPluginSettings
-
   setup do
     consumer = create_fixture(Gateway.DB.Models.Consumer)
     api      = create_fixture(Gateway.DB.Models.API)
@@ -55,19 +51,15 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.Consumers.call([])
 
-    [x] =
+    [result] =
       Poison.decode!(conn.resp_body)["data"]
 
-      # [%{"external_id" => "79f0c7ce-9487-11e6-bf61-002312123cdf", "id" => 10,
-      # [% "inserted_at" => "2016-10-17T16:33:46.945422", "plugin_id" => 81,
-      # [% "settings" => nil, "updated_at" => "2016-10-17T16:33:46.945438"}]
-
-    assert x["id"] == cust_plugin1.id
-    assert x["external_id"] == external_id
-    assert x["plugin_id"] == plugin1.id
-    assert x["settings"] == cust_plugin1.settings
-    assert x["inserted_at"]
-    assert x["updated_at"]
+    assert result["id"] == cust_plugin1.id
+    assert result["external_id"] == cust_plugin1.external_id
+    assert result["plugin_id"] == cust_plugin1.plugin_id
+    assert result["settings"] == cust_plugin1.settings
+    assert result["inserted_at"]
+    assert result["updated_at"]
   end
 
   test "PUT /consumers/:external_id/plugins/:name" do
