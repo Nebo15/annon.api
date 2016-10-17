@@ -32,17 +32,7 @@ defmodule Gateway.AcceptanceCase do
         [{"Content-Type", "application/json"}]
       end
 
-      # try to decode response bodies as JSON
-      #   but reply with the raw body if there are
-      #   any errors (e.g., invalid JSON)
-      def process_response_body(body) do
-        try do
-          Poison.decode!(body, keys: :atoms!)
-        rescue
-          _ -> body
-        end
-      end
-
+      def process_response_body(body), do: Poison.decode!(body, keys: :atoms!)
       def assert_status({:ok, %HTTPoison.Response{} = response}, status), do: assert_status(response, status)
       def assert_status(%HTTPoison.Response{} = response, status) do
         assert response.status_code == status
