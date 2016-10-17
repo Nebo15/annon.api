@@ -1,6 +1,4 @@
 defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
-  @plugin_url "/"
-
   use Gateway.HTTPTestHelper
 
   alias Gateway.DB.Repo
@@ -8,8 +6,8 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
   alias Gateway.DB.Model.ConsumerPluginSettings
 
   setup do
-    {:ok, consumer} = EctoFixtures.ecto_fixtures(Gateway.DB.Consumer) |> Gateway.DB.Consumer.create
-    {:ok, api}      = EctoFixtures.ecto_fixtures(Gateway.DB.Models.API) |> Gateway.DB.Models.API.create
+    consumer = create_fixture(Gateway.DB.Models.Consumer)
+    api      = create_fixture(Gateway.DB.Models.API)
 
     {:ok, %{external_id: consumer.external_id, api: api}}
   end
@@ -42,5 +40,14 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
   end
 
   test "DELETE /consumers/:external_id/plugins/:name" do
+  end
+
+  defp create_fixture(module) do
+    {:ok, entity} =
+      module
+      |> EctoFixtures.ecto_fixtures()
+      |> module.create
+
+    entity
   end
 end
