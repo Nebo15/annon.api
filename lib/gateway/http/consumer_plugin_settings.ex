@@ -1,6 +1,8 @@
 defmodule Gateway.HTTP.ConsumerPluginSettings do
   use Gateway.Helpers.CommonRouter
 
+  import Ecto.Query, only: [from: 2]
+
   alias Gateway.DB.Repo
   alias Gateway.DB.Models.Consumer
   alias Gateway.DB.Models.ConsumerPluginSettings
@@ -13,7 +15,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
   end
 
   get "/consumers/:external_id/plugins/:plugin_name" do
-    load_plugin(plugin_name)
+    load_plugin(external_id, plugin_name)
     |> render_show_response
     |> send_response(conn)
   end
@@ -43,8 +45,13 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
     query =
       from p in Plugins,
         join: c in ConsumerPluginSettings, on: c.plugin_id == p.id,
-        where: p.name == ^plugin_name and c.external_id == ^external_id,
+        where: c.external_id == ^external_id,
+        where: p.name == ^plugin_name
 
     Repo.one(query)
+  end
+
+  def send_response({code, resp}, conn) do
+    send_resp(conn, code, resp)
   end
 end
