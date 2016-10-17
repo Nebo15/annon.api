@@ -11,15 +11,8 @@ defmodule Gateway.HTTPTestHelper do
         IO.inspect(a)
       end
 
-      def assert_halt(%Plug.Conn{halted: halted} = plug) do
-        assert halted === true
-        plug
-      end
-
-      def assert_not_halt(%Plug.Conn{halted: halted} = plug) do
-        assert halted === false
-        plug
-      end
+      def assert_halt(%Plug.Conn{halted: true} = plug), do: plug
+      def assert_not_halt(%Plug.Conn{halted: false} = plug), do: plug
 
       setup do
         :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Repo)

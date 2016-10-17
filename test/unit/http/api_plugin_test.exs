@@ -93,7 +93,7 @@ defmodule Gateway.HTTP.PluginTest do
     |> send_get()
     |> assert_conn_status(404)
 
-    conn = "/#{api_model.id}/plugins/#{p2.name}"
+    "/#{api_model.id}/plugins/#{p2.name}"
     |> send_get()
     |> assert_conn_status()
   end

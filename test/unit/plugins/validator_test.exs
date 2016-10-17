@@ -19,19 +19,19 @@ defmodule Gateway.Plugins.ValidatorTest do
     |> conn("/", Poison.encode!(%{}))
 
     connect
-    |> assign(:body, %{"foo" =>  "100500", "bar" => "a"})
+    |> Map.put(:body_params, %{"foo" =>  "100500", "bar" => "a"})
     |> assign(:schema, schema)
     |> Gateway.Plugins.Validator.call(%{})
     |> assert_halt
 
     connect
-    |> assign(:body, %{"foo" =>  100500, "bar" => "a"})
+    |> Map.put(:body_params, %{"foo" =>  100500, "bar" => "a"})
     |> assign(:schema, schema)
     |> Gateway.Plugins.Validator.call(%{})
     |> assert_not_halt
 
     connect
-    |> assign(:body, %{"foo" =>  100500})
+    |> Map.put(:body_params, %{"foo" =>  100500})
     |> assign(:schema, schema)
     |> Gateway.Plugins.Validator.call(%{})
     |> assert_halt

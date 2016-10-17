@@ -5,10 +5,10 @@ defmodule Gateway.Plugins.Validator do
   """
   import Plug.Conn
 
-  # when compile
+  # TODO: Get data from the model, when we would know api_id
+
   def init(opts), do: opts
 
-  # when run
   def call(conn, _) do
     if valid?(get_body(conn), get_schema(conn)) do
       conn
@@ -22,6 +22,9 @@ defmodule Gateway.Plugins.Validator do
   end
 
   def get_schema(%Plug.Conn{assigns: %{schema: %{} = schema}}), do: schema
-  def get_body(%Plug.Conn{assigns: %{body: %{} = body}}), do: body
+
+  # TODO: replace when we would know api_id
+  def get_schema(_), do: %{}
+  def get_body(%Plug.Conn{body_params: %{} = body}), do: body
 
 end
