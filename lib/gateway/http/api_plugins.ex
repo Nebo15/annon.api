@@ -14,11 +14,7 @@ defmodule Gateway.HTTP.API.Plugins do
 
   # list
   get "/:api_id/plugins" do
-    query = from p in Plugin,
-            where: p.api_id == ^api_id,
-            limit: 10
-
-    query
+    Plugin
     |> Repo.all(api_id: api_id)
     |> render_show_response
     |> send_response(conn)
