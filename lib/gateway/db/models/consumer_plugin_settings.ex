@@ -11,10 +11,9 @@ defmodule Gateway.DB.Models.ConsumerPluginSettings do
 
   @derive {Poison.Encoder, except: [:__meta__, :api]}
 
-  @foreign_key_type :string
-  schema "customer_plugin_settings" do
+  schema "consumer_plugin_settings" do
     field :settings, :map
-    belongs_to :consumer, Consumer, references: :external_id, foreign_key: :external_id
+    belongs_to :consumer, Consumer, references: :external_id, foreign_key: :external_id, type: :string
     belongs_to :plugin, Plugin
 
     timestamps()
