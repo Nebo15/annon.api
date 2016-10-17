@@ -9,7 +9,7 @@ defmodule Gateway.DB.Models.ConsumerPluginSettings do
   alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.ConsumerPluginSettings
 
-  @derive {Poison.Encoder, except: [:__meta__, :api]}
+  @derive {Poison.Encoder, except: [:__meta__, :consumer, :plugin]}
 
   schema "consumer_plugin_settings" do
     field :settings, :map

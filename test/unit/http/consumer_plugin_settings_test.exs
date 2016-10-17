@@ -20,12 +20,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
 
     { :ok, plugin } = Gateway.DB.Models.Plugin.create(%Gateway.DB.Models.API{}, plugin_params)
 
-    plugin.id
-    |> String.to_integer
-    |> IO.inspect
-
     Gateway.DB.Models.ConsumerPluginSettings.create(external_id, %{plugin_id: plugin.id})
-    |> IO.inspect
 
     conn = :get
     |> conn("/consumers/#{external_id}/plugins")
@@ -34,7 +29,6 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
 
     x =
       Poison.decode!(conn.resp_body)["data"]
-      |> IO.inspect
 
     assert Enum.count(x) == 1
   end
