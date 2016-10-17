@@ -28,7 +28,7 @@ defmodule Gateway.DB.Models.ConsumerPluginSettings do
     |> validate_map(:settings)
     |> assoc_constraint(:consumer)
     |> assoc_constraint(:plugin)
-    |> unique_constraint(:consumer_plugin_settings_external_id_plugin_id)
+    |> unique_constraint(:external_id_plugin_id)
   end
 
   def create(external_id, params) do

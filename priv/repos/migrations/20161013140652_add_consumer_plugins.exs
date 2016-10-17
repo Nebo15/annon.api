@@ -10,7 +10,7 @@ defmodule Gateway.DB.Repo.Migrations.AddConsumerPluginSettings do
       timestamps()
     end
 
-    index_name = :consumer_plugin_settings_external_id_plugin_id
+    index_name = :consumer_plugin_settings_external_id_plugin_id_index
 
     create unique_index(:consumer_plugin_settings, [:external_id, :plugin_id], name: index_name)
   end
