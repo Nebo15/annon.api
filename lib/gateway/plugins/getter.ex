@@ -16,16 +16,16 @@ defmodule Gateway.Plugins.Getter do
     models = Gateway.DB.Repo.all from Gateway.DB.Models.API,
              preload: [:plugins]
 
-    [config] = models
+    models
     |> Enum.filter(fn(x) -> correct?(x, conn) end)
-
-    config
-    |> Map.delete(:__meta__)
-    |> Map.delete(:__struct__)
+    |> normalize_config
 
   end
 
-  def correct?(%Gateway.DB.Models.API{request: %{} = r}, c) do
+  def normalize_config([%{} = config]), do: config |> Map.delete(:__meta__) |> Map.delete(:__struct__)
+  def normalize_config([]), do: nil
+
+  def correct?(%{request: %{} = r}, c) do
     correct_host?(r, c) and correct_port?(r, c) and correct_scheme?(r, c) and correct_path?(r, c)
   end
 

@@ -21,7 +21,7 @@ defmodule Gateway.Plugins.GetterTest do
     |> Map.put(:host, request.host)
     |> Map.put(:port, request.port)
     |> Map.put(:scheme, request.scheme)
-    |> Gateway.Plugins.Getter.call()
+    |> Gateway.Plugins.Getter.call(%{})
 
     assert config.id == model.id
     assert config.request == request
