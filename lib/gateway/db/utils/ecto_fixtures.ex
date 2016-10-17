@@ -41,6 +41,7 @@ defmodule EctoFixtures do
   defp value_to_json({key, {:embed, %Ecto.Embedded{cardinality: :many, related: related}}}, acc) do
     {nil, Map.put(acc, key, [ecto_fixtures(related)])}
   end
+  defp value_to_json({key, Ecto.UUID} , acc), do: {nil, Map.put(acc, key, UUID.uuid1())}
 
   def random_date(format), do: Timex.format!(Timex.now, format, :strftime)
   def random_float, do: Float.ceil(:rand.uniform + :rand.uniform(1000), 5)

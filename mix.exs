@@ -59,6 +59,7 @@ defmodule Gateway.Mixfile do
      {:faker, "~> 0.7.0", only: [:dev, :test]},
      {:dogma, "> 0.1.0", only: [:dev, :test]},
      {:poison, "~> 2.0"},
+     {:uuid, ">= 0.0.0"},
      {:benchfella, "~> 0.3", only: [:dev, :test]},
      {:ex_doc, ">= 0.0.0", only: [:dev, :test]},
      {:excoveralls, "~> 0.5", only: [:dev, :test]},
