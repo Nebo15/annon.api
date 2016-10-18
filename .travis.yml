@@ -54,7 +54,7 @@ script:
   - RUNNING_CONTAINERS=`docker ps | wc -l`;
   - if [ "${RUNNING_CONTAINERS//[[:space:]]/}" == "1" ]; then echo "[E] Container is not started!" exit 1; fi;
   # Run acceptance tests on Docker container
-  #- "MIX_TEST_HOST=localhost MIX_TEST_PORT=4000 mix test test/acceptance"
+  - "MIX_TEST_HOST=localhost MIX_TEST_PORT=4001 mix test test/acceptance"
 # after_success:
 
 # Also you can
