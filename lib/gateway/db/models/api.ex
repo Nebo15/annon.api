@@ -15,6 +15,7 @@ defmodule Gateway.DB.Models.API do
       field :host, :string
       field :port, :integer
       field :path, :string
+      field :method, :string
     end
 
     has_many :plugins, Gateway.DB.Models.Plugin
@@ -23,7 +24,7 @@ defmodule Gateway.DB.Models.API do
   end
 
   @required_api_fields [:name]
-  @required_request_fields [:scheme, :host, :port, :path]
+  @required_request_fields [:scheme, :host, :port, :path, :method]
 
   def changeset(api, params \\ %{}) do
     api
