@@ -37,8 +37,8 @@ defmodule Gateway.DB do
   defp validate_map({%Ecto.Changeset{} = ch, map, field}) when is_map(map) do
     {_, ch} = Enum.map_reduce(map, ch, fn({key, value}, acc) ->
       acc = acc
-      |> validate_map_key(key, field)
-      |> validate_map_value(value, field)
+      |> validate_map_key(to_string(key), field)
+      |> validate_map_value(to_string(value), field)
       {nil, acc}
     end)
     ch
