@@ -80,17 +80,17 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     }
 
     conn = :put
-    |> conn("/consumers/#{external_id}/plugins", Poison.encode!(contents))
+    |> conn("/consumers/#{external_id}/plugins/#{plugin1.name}", Poison.encode!(contents))
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.Consumers.call([])
 
-    [result] =
+    result =
       Poison.decode!(conn.resp_body)["data"]
 
     assert result["id"] == cust_plugin1.id
     assert result["external_id"] == cust_plugin1.external_id
     assert result["plugin_id"] == cust_plugin1.plugin_id
-    assert result["settings"] == contents
+    assert result["settings"] == contents[:settings]
   end
 
   test "POST /consumers/:external_id/plugins" do

@@ -43,8 +43,8 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
 
   defp load_plugin(external_id, plugin_name) do
     query =
-      from p in Plugin,
-        join: c in ConsumerPluginSettings, on: c.plugin_id == p.id,
+      from c in ConsumerPluginSettings,
+        join: p in Plugin, on: c.plugin_id == p.id,
         where: c.external_id == ^external_id,
         where: p.name == ^plugin_name
 
