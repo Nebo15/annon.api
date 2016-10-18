@@ -44,13 +44,13 @@ defmodule Gateway.DB do
     ch
   end
 
-  defp validate_map_key(ch, key, _field) when is_number(key) and key <= 999999999999, do: ch
+  defp validate_map_key(ch, key, _field) when is_number(key) and key <= 999_999_999_999, do: ch
   defp validate_map_key(ch, key, _field) when is_binary(key) and byte_size(key) <= 64, do: ch
   defp validate_map_key(ch, _key, field) do
     add_error(ch, field, "key must be a string with binary length <= 64")
   end
 
-  defp validate_map_value(ch, value, _field) when is_number(value) and value <= 999999999999, do: ch
+  defp validate_map_value(ch, value, _field) when is_number(value) and value <= 999_999_999_999, do: ch
   defp validate_map_value(ch, value, _field) when is_binary(value) and byte_size(value) <= 512, do: ch
   defp validate_map_value(ch, _value, field) do
     add_error(ch, field, "value must be a string with binary length <= 512")
