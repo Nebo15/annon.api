@@ -1,4 +1,4 @@
-defmodule Gateway.Plugins.JWT do
+defmodule Gateway.Plugins.Jwt do
   @moduledoc """
     Plugin for JWT verifying and decoding
   """
