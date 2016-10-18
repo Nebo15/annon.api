@@ -43,7 +43,7 @@ defmodule Gateway.Monitoring.ElixometerTest do
 #    update_gauge("register", 10)
 
     conn = :get
-    |> conn("/" <> @apis)
+    |> conn("/")
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.API.call([])
 
