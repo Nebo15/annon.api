@@ -11,7 +11,7 @@ defmodule Gateway.Plugins.JWT do
   def init([]), do: false
 
   def call(%Plug.Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
-    plugin = plugins
+    plugins
     |> get_enabled()
     |> execute(conn)
   end
@@ -25,11 +25,11 @@ defmodule Gateway.Plugins.JWT do
   defp filter_plugin(_), do: false
 
   defp execute(nil, conn), do: conn
-  defp execute(%Plugin{settings: %{"signature" => signature}} = plugin, conn) do
+  defp execute(%Plugin{settings: %{"signature" => signature}}, conn) do
     conn
     |> parse_auth(get_req_header(conn, "authorization"), signature)
   end
-  defp execute(plugin, conn) do
+  defp execute(_plugin, conn) do
     conn
     |> send_halt(501, "required field signature in Plugin.settings")
   end
@@ -49,7 +49,7 @@ defmodule Gateway.Plugins.JWT do
   defp evaluate(conn, %Token{error: message}), do: send_halt(conn, 401, message)
 
   defp send_halt(conn, code, message) do
-    conn = conn
+    conn
     |> put_resp_content_type("application/json")
     |> send_resp(code, create_json_response(code, message))
     |> halt

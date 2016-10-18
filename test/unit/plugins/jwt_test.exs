@@ -4,7 +4,6 @@ defmodule Gateway.Plugins.JWTTest do
   """
 
   use Gateway.HTTPTestHelper
-  alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.API, as: APIModel
   import Joken
 

@@ -12,6 +12,7 @@ defmodule Gateway.AcceptanceCase do
       import Ecto
       import Ecto.Changeset
       import Ecto.Query, only: [from: 2]
+      import Gateway.HTTPTestHelper
 
       alias Gateway.DB.Repo
       alias Gateway.DB.Models.Plugin
@@ -47,20 +48,6 @@ defmodule Gateway.AcceptanceCase do
         response
       end
       def get_body(%HTTPoison.Response{} = response), do: response.body
-
-      def get_api_model_data do
-        api_model = APIModel
-        |> EctoFixtures.ecto_fixtures()
-
-        api_model
-        |> Map.put(:plugins, [get_plugin_data(api_model.id), get_plugin_data(api_model.id)])
-      end
-
-      def get_plugin_data(api_id) do
-        Plugin
-        |> EctoFixtures.ecto_fixtures()
-        |> Map.put(:api_id, api_id)
-      end
 
       setup do
         on_exit fn ->
