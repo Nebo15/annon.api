@@ -60,7 +60,8 @@ defmodule Gateway.Mixfile do
      {:benchfella, "~> 0.3", only: [:dev, :test]},
      {:ex_doc, ">= 0.0.0", only: [:dev, :test]},
      {:excoveralls, "~> 0.5", only: [:dev, :test]},
-     {:credo, ">= 0.4.8", only: [:dev, :test]}]
+     {:credo, ">= 0.4.8", only: [:dev, :test]},
+     {:cassandra, "~> 0.1.1-pre"}]
   end
 
   # Settings for publishing in Hex package manager:
