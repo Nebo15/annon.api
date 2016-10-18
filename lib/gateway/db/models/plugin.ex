@@ -10,7 +10,8 @@ defmodule Gateway.DB.Models.Plugin do
   @derive {Poison.Encoder, except: [:__meta__, :api]}
 
   schema "plugins" do
-     field :name, :string
+     field :name, PluginName
+     field :is_enabled, :boolean, default: false
      field :settings, :map
      belongs_to :api, APIModel
 
@@ -22,11 +23,28 @@ defmodule Gateway.DB.Models.Plugin do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:name, :settings])
+    |> cast(params, [:name, :settings, :is_enabled])
     |> assoc_constraint(:api)
     |> unique_constraint(:api_id_name)
     |> validate_required([:name, :settings])
+    |> prepare_name
     |> validate_map(:settings)
+  end
+
+  def prepare_name(%Ecto.Changeset{} = changeset) do
+    changeset
+    |> fetch_field(:name)
+    |> capitalize_name
+    |> put_name(changeset)
+  end
+
+  def capitalize_name({:changes, name}) when is_binary(name), do: String.capitalize(name)
+  def capitalize_name(_), do: nil
+
+  def put_name(nil, changeset), do: changeset
+  def put_name(name, %Ecto.Changeset{} = changeset) when is_binary(name) do
+    changeset
+    |> put_change(:name, name)
   end
 
   def create(nil, _params), do: nil

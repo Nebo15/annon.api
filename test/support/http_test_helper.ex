@@ -14,7 +14,7 @@ defmodule Gateway.HTTPTestHelper do
         |> EctoFixtures.ecto_fixtures()
 
         api_model
-        |> Map.put(:plugins, [get_plugin_data(api_model.id), get_plugin_data(api_model.id)])
+        |> Map.put(:plugins, [get_plugin_data(api_model.id)])
       end
 
       def get_plugin_data(api_id) do
@@ -23,8 +23,14 @@ defmodule Gateway.HTTPTestHelper do
         |> Map.put(:api_id, api_id)
       end
 
-      setup do
+      setup tags do
         :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Repo)
+
+        unless tags[:async] do
+          Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Repo, {:shared, self()})
+        end
+
+        :ok
       end
     end
   end

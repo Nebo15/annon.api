@@ -1,6 +1,6 @@
-defmodule Gateway.Plugins.GetterTest do
+defmodule Gateway.Plugins.ApiLoaderTest do
   @moduledoc """
-  Testing Gateway.Plugins.Getter
+  Testing Gateway.Plugins.ApiLoader
   """
 
   use Gateway.HTTPTestHelper
@@ -9,19 +9,15 @@ defmodule Gateway.Plugins.GetterTest do
 
   test "correctly set config into private part" do
 
-    APIModel
-    |> EctoFixtures.ecto_fixtures()
-    |> APIModel.create()
-
     data = get_api_model_data()
-    {:ok, %Gateway.DB.Models.API{request: request} = model} = APIModel.create(data)
+    {:ok, %APIModel{request: request} = model} = APIModel.create(data)
 
     %{private: %{api_config: %{} = config}} = :get
     |> conn(request.path, Poison.encode!(%{}))
     |> Map.put(:host, request.host)
     |> Map.put(:port, request.port)
     |> Map.put(:scheme, request.scheme)
-    |> Gateway.Plugins.Getter.call(%{})
+    |> Gateway.Plugins.ApiLoader.call(%{})
 
     assert config.id == model.id
     assert config.request == request

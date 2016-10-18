@@ -55,7 +55,7 @@ defmodule Gateway.HTTP.PluginTest do
     %{plugins: [_, p2]} = data = get_api_model_data()
     {:ok, api_model} = APIModel.create(data)
 
-    plugin_data = %{name: "new_name", settings: p2.settings}
+    plugin_data = %{name: "test", settings: p2.settings}
 
     conn = "/#{api_model.id}/plugins/#{p2.name}"
     |> send_data(plugin_data, :put)
@@ -64,12 +64,12 @@ defmodule Gateway.HTTP.PluginTest do
     resp = Poison.decode!(conn.resp_body)["data"]
     assert resp["name"] == plugin_data.name
 
-    "/#{api_model.id}/plugins/new_name"
+    "/#{api_model.id}/plugins/test"
     |> send_get()
     |> assert_conn_status()
 
-    plugin_data = %{name: "new_name", settings: %{"test" => "updated"}}
-    conn = "/#{api_model.id}/plugins/new_name"
+    plugin_data = %{name: "test", settings: %{"test" => "updated"}}
+    conn = "/#{api_model.id}/plugins/test"
     |> send_data(plugin_data, :put)
     |> assert_conn_status()
 
