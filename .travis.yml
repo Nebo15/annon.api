@@ -28,6 +28,12 @@ branches:
 before_install:
   # Expose DB to Docker container
   - sudo /bin/bash ./bin/ci/init-db.sh
+  - sudo apt-get install -y nodejs
+  - sudo apt-get install -y git
+  - sudo git clone https://github.com/etsy/statsd.git
+  - cd statsd
+  - sudo echo "{port: 8125, mgmt_port: 8126, backends: ["./backends/console"]}" > config.js
+  - node stats.js config.js
 script:
   # Increment version in mix.exs
   # Uncomment this if you want to increment patch version on each Travis build.
