@@ -27,10 +27,8 @@ defmodule Gateway.Router do
 
   forward "/consumers", to: Gateway.HTTP.Consumers
 
-<<<<<<< HEAD
-=======
   match _ do
     send_resp(conn, 404, "{}")
   end
->>>>>>> 2f95cb72346b99a09a0a1e513342db80f2f749db
+
 end
