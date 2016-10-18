@@ -56,7 +56,7 @@ defmodule Gateway.Mixfile do
      {:ecto, ">= 2.1.0-rc.2", override: true},
      {:timex, "~> 3.0"},
      {:poison, "~> 2.0"},
-     {:poison, "~> 2.0"},
+     {:uuid, ">= 0.0.0"},
      {:joken, "~> 1.3"},
      {:faker, "~> 0.7.0", only: [:dev, :test]},
      {:dogma, "> 0.1.0", only: [:dev, :test]},
