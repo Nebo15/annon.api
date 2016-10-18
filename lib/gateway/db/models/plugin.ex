@@ -4,7 +4,6 @@ defmodule Gateway.DB.Models.Plugin do
   """
   use Gateway.DB, :model
   alias Gateway.DB.Repo
-  alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.API, as: APIModel
 
   @derive {Poison.Encoder, except: [:__meta__, :api]}
@@ -45,11 +44,4 @@ defmodule Gateway.DB.Models.Plugin do
     struct
     |> Repo.delete
   end
-
-  defp normalize_ecto_delete_resp({0, _}), do: nil
-  defp normalize_ecto_delete_resp({1, _}), do: {:ok, nil}
-
-  defp normalize_ecto_update_resp({0, _}), do: nil
-  defp normalize_ecto_update_resp({1, [struct]}), do: struct
-  defp normalize_ecto_update_resp({:error, ch}), do: {:error, ch}
 end
