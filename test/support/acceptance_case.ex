@@ -28,7 +28,7 @@ defmodule Gateway.AcceptanceCase do
         @http_uri <> url
       end
 
-      def get_port(), do: @port
+      def get_port, do: @port
 
       defp process_request_headers(_) do
         [{"Content-Type", "application/json"}]
