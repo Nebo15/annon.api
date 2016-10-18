@@ -10,9 +10,10 @@
   "db_connection": {:hex, :db_connection, "1.0.0", "63c03e520d54886a66104d34e32397ba960db6e74b596ce221592c07d6a40d8d", [:mix], [{:connection, "~> 1.0.2", [hex: :connection, optional: false]}, {:poolboy, "~> 1.5", [hex: :poolboy, optional: true]}, {:sbroker, "~> 1.0", [hex: :sbroker, optional: true]}]},
   "decimal": {:hex, :decimal, "1.2.0", "462960fd71af282e570f7b477f6be56bf8968e68277d4d0b641a635269bf4b0d", [:mix], []},
   "distillery": {:hex, :distillery, "0.10.1", "14fccade4b8ab849b99e21c4bdfaa1092dbacdce8afd33f5c369c6e114385b0e", [:mix], []},
-  "dogma": {:hex, :dogma, "0.1.9", "8f71a6afbae12ef50248a84916db6d4084d0e50aae069c49dbe124d513b71425", [:mix], [{:poison, ">= 2.0.0", [hex: :poison, optional: false]}]},
+  "dogma": {:hex, :dogma, "0.1.11", "40a148b556f2f5f5ceb4d1ee673813cfd3e64bb90c0da9cb24386b37576b11cf", [:mix], [{:poison, ">= 2.0.0", [hex: :poison, optional: false]}]},
   "earmark": {:hex, :earmark, "1.0.2", "a0b0904d74ecc14da8bd2e6e0248e1a409a2bc91aade75fcf428125603de3853", [:mix], []},
   "ecto": {:hex, :ecto, "2.1.0-rc.2", "90c34603d7330b50ec06949d571bce785c226dfeb85f7a32445e650c9e5bb57c", [:mix], [{:db_connection, "~> 1.0-rc.4", [hex: :db_connection, optional: true]}, {:decimal, "~> 1.2", [hex: :decimal, optional: false]}, {:mariaex, "~> 0.7.7", [hex: :mariaex, optional: true]}, {:poison, "~> 2.2", [hex: :poison, optional: true]}, {:poolboy, "~> 1.5", [hex: :poolboy, optional: false]}, {:postgrex, "~> 0.12.0", [hex: :postgrex, optional: true]}, {:sbroker, "~> 1.0-beta", [hex: :sbroker, optional: true]}]},
+  "ecto_enum": {:git, "https://github.com/gjaldon/ecto_enum", "1f0f0c5f4e01e373c800346b0000fb1ee3fb10b2", [branch: "ecto-2.0"]},
   "ex_doc": {:hex, :ex_doc, "0.14.3", "e61cec6cf9731d7d23d254266ab06ac1decbb7651c3d1568402ec535d387b6f7", [:mix], [{:earmark, "~> 1.0", [hex: :earmark, optional: false]}]},
   "excoveralls": {:hex, :excoveralls, "0.5.7", "5d26e4a7cdf08294217594a1b0643636accc2ad30e984d62f1d166f70629ff50", [:mix], [{:exjsx, "~> 3.0", [hex: :exjsx, optional: false]}, {:hackney, ">= 0.12.0", [hex: :hackney, optional: false]}]},
   "exjsx": {:hex, :exjsx, "3.2.1", "1bc5bf1e4fd249104178f0885030bcd75a4526f4d2a1e976f4b428d347614f0f", [:mix], [{:jsx, "~> 2.8.0", [hex: :jsx, optional: false]}]},
@@ -31,6 +32,5 @@
   "ranch": {:hex, :ranch, "1.2.1", "a6fb992c10f2187b46ffd17ce398ddf8a54f691b81768f9ef5f461ea7e28c762", [:make], []},
   "ssl_verify_fun": {:hex, :ssl_verify_fun, "1.1.0", "edee20847c42e379bf91261db474ffbe373f8acb56e9079acb6038d4e0bf414f", [:rebar, :make], []},
   "timex": {:hex, :timex, "3.1.0", "71c1bc6eef88f2bf8628224d62eab12dda5c5904e9db764289db1e360c622900", [:mix], [{:combine, "~> 0.7", [hex: :combine, optional: false]}, {:gettext, "~> 0.10", [hex: :gettext, optional: false]}, {:tzdata, "~> 0.1.8 or ~> 0.5", [hex: :tzdata, optional: false]}]},
-  "timex_ecto": {:hex, :timex_ecto, "3.0.5", "3ec6c25e10d2c0020958e5df64d2b5e690e441faa2c2259da8bc6bd3d7f39256", [:mix], [{:ecto, "~> 2.0", [hex: :ecto, optional: false]}, {:timex, "~> 3.0", [hex: :timex, optional: false]}]},
   "tzdata": {:hex, :tzdata, "0.5.9", "575be217b039057a47e133b72838cbe104fb5329b19906ea4e66857001c37edb", [:mix], [{:hackney, "~> 1.0", [hex: :hackney, optional: false]}]},
   "uuid": {:hex, :uuid, "1.1.5", "96cb36d86ee82f912efea4d50464a5df606bf3f1163d6bdbb302d98474969369", [:mix], []}}

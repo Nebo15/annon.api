@@ -12,14 +12,25 @@ defmodule Gateway.Plugins.Test do
   def init(opts), do: opts
 
   def call(%Plug.Conn{private: %{api_config: %APIModel{} = api}} = conn, opt) do
-    IO.inspect conn
+    IO.inspect api
 #    put_private(conn, :api_config, conn |> get_config)
     conn
   end
 
   def call(conn, _) do
     conn
+    |> put_resp_content_type("application/json")
+    |> send_resp(501, err_msg())
     |> halt
+  end
+
+  defp err_msg do
+    Poison.encode!(%{
+      meta: %{
+        code: 501,
+        error: "plug call error"
+      }
+    })
   end
 
 #  plug_call
