@@ -29,7 +29,7 @@ defmodule Gateway.DB.Models.Plugin do
   end
 
   def create(api_id, params) when is_map(params) do
-    %Gateway.DB.Models.Plugin{ api_id: api_id }
+    %Gateway.DB.Models.Plugin{api_id: api_id}
     |> changeset(params)
     |> Repo.insert
   end

@@ -30,21 +30,24 @@ defmodule Gateway.HTTP.API.Plugins do
 
   # get one
   get "/:api_id/plugins/:name" do
-    load_plugin(api_id, name)
+    api_id
+    |> load_plugin(name)
     |> render_plugin
     |> send_response(conn)
   end
 
   # update
   put "/:api_id/plugins/:name" do
-    load_plugin(api_id, name)
+    api_id
+    |> load_plugin(name)
     |> Plugin.update(conn.body_params)
     |> render_show_response
     |> send_response(conn)
   end
 
   delete "/:api_id/plugins/:name" do
-    load_plugin(api_id, name)
+    api_id
+    |> load_plugin(name)
     |> Plugin.delete()
     |> render_delete_response
     |> send_response(conn)
