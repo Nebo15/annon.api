@@ -12,7 +12,8 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
   end
 
   get "/consumers/:external_id/plugins/:plugin_name" do
-    load_plugin(external_id, plugin_name)
+    ConsumerPluginSettings.by_plugin_and_consumer(external_id, plugin_name)
+    |> Repo.one()
     |> render_show_response
     |> send_response(conn)
   end
@@ -34,11 +35,6 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
     ConsumerPluginSettings.delete(external_id, plugin_name)
     |> render_delete_response
     |> send_response(conn)
-  end
-
-  defp load_plugin(external_id, plugin_name) do
-    query = ConsumerPluginSettings.by_plugin_and_consumer(external_id, plugin_name)
-    Repo.one(query)
   end
 
   def send_response({code, resp}, conn) do
