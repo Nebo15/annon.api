@@ -8,3 +8,10 @@ config :gateway, Gateway.DB.Repo,
 config :logger, level: :warn
 
 config :gateway, sql_sandbox: true
+
+config(:exometer_core, report: [reporters: [{Gateway.Monitoring.TestReporter, []}]])
+
+config(:elixometer, update_frequency: 20,
+       reporter: Gateway.Monitoring.TestReporter,
+       env: Mix.env,
+       metric_prefix: "os.gateway")
