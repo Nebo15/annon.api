@@ -93,7 +93,36 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     assert result["settings"] == contents[:settings]
   end
 
-  test "POST /consumers/:external_id/plugins" do
+  test "POST /consumers/:external_id/plugins", %{external_id: external_id, api: api} do
+    plugin_params1 =
+      Gateway.DB.Models.Plugin
+      |> EctoFixtures.ecto_fixtures()
+      |> Map.put(:api_id, api.id)
+
+    { :ok, plugin1 } = Gateway.DB.Models.Plugin.create(%Gateway.DB.Models.API{}, plugin_params1)
+
+    contents = %{
+      plugin_id: plugin1.id,
+      settings: %{
+        "a" => 1,
+        "b" => 2
+      }
+    }
+
+    conn = :post
+    |> conn("/consumers/#{external_id}/plugins", Poison.encode!(contents))
+    |> put_req_header("content-type", "application/json")
+    |> Gateway.HTTP.Consumers.call([])
+
+    result =
+      Poison.decode!(conn.resp_body)["data"]
+
+    assert result["id"]
+    assert result["external_id"] == external_id
+    assert result["plugin_id"] == plugin1.id
+    assert result["settings"] == contents[:settings]
+    assert result["inserted_at"]
+    assert result["updated_at"]
   end
 
   test "DELETE /consumers/:external_id/plugins/:name" do
