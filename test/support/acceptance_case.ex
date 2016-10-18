@@ -22,16 +22,25 @@ defmodule Gateway.AcceptanceCase do
       [port: port, host: host] = Confex.get_map(:gateway, :acceptance)
 
       @http_uri "http://#{host}:#{port}/"
+      @port port
 
       def process_url(url) do
         @http_uri <> url
       end
 
+      def get_port(), do: @port
+
       defp process_request_headers(_) do
         [{"Content-Type", "application/json"}]
       end
 
-      def process_response_body(body), do: Poison.decode!(body, keys: :atoms!)
+      def process_response_body(body) do
+        try do
+          Poison.decode!(body)
+        rescue
+          _ -> body |> IO.inspect
+        end
+      end
       def assert_status({:ok, %HTTPoison.Response{} = response}, status), do: assert_status(response, status)
       def assert_status(%HTTPoison.Response{} = response, status) do
         assert response.status_code == status

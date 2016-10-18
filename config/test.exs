@@ -9,7 +9,7 @@ config :gateway, :http,
   port: { :system, "GATEWAY_PORT", 4000 }
 
 config :gateway, :acceptance,
-  port: { :system, "MIX_TEST_PORT", 4000 },
+  port: { :system, :integer, "MIX_TEST_PORT", 4000 },
   host: { :system, "MIX_TEST_HOST", "localhost" }
 
 config :logger, level: :warn

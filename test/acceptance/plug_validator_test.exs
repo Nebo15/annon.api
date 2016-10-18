@@ -12,11 +12,12 @@ defmodule Gateway.PlugValidatorAcceptanceTest do
           }
 
   test "post hook with empty data" do
+
     data = get_api_model_data()
-    |> Map.put(:request, %{host: "localhost", path: "/test", port: 4000, scheme: "http", method: "POST"})
+    |> Map.put(:request, %{host: "localhost", path: "/test", port: get_port(), scheme: "http", method: "POST"})
     |> Map.put(:plugins, [%{name: "Validator", settings: %{"schema" => Poison.encode!(@schema)}}])
 
-    '/apis'
+    "apis"
     |> post(Poison.encode!(data))
 
     "test"
@@ -24,7 +25,7 @@ defmodule Gateway.PlugValidatorAcceptanceTest do
     |> assert_status(404)
 
     "test"
-    |> post(Poison.encode!(%{}))
+    |> post!("{}")
     |> assert_status(422)
   end
 

@@ -28,6 +28,7 @@ branches:
 before_install:
   # Expose DB to Docker container
   - sudo /bin/bash ./bin/ci/init-db.sh
+  - "sudo echo '{port: 8125, mgmt_port: 8126, backends: [\"./backends/console\"]}' > config.js"
 script:
   # Increment version in mix.exs
   # Uncomment this if you want to increment patch version on each Travis build.
@@ -54,7 +55,7 @@ script:
   - RUNNING_CONTAINERS=`docker ps | wc -l`;
   - if [ "${RUNNING_CONTAINERS//[[:space:]]/}" == "1" ]; then echo "[E] Container is not started!" exit 1; fi;
   # Run acceptance tests on Docker container
-  - "MIX_TEST_HOST=localhost MIX_TEST_PORT=4001 mix test test/acceptance"
+  - " MIX_TEST_DATABASE=gateway MIX_TEST_HOST=localhost MIX_TEST_PORT=4001 mix test test/acceptance"
 # after_success:
 
 # Also you can
