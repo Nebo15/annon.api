@@ -12,14 +12,16 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
   end
 
   get "/consumers/:external_id/plugins/:plugin_name" do
-    ConsumerPluginSettings.by_plugin_and_consumer(external_id, plugin_name)
+    plugin_by(external_id, plugin_name)
     |> Repo.one()
     |> render_show_response
     |> send_response(conn)
   end
 
   put "/consumers/:external_id/plugins/:plugin_name" do
-    ConsumerPluginSettings.update(external_id, plugin_name, conn.body_params)
+    plugin_by(external_id, plugin_name)
+    |> ConsumerPluginSettings.update(conn.body_params)
+    |> normalize_ecto_update_resp
     |> render_show_response
     |> send_response(conn)
   end
@@ -32,12 +34,28 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
   end
 
   delete "/consumers/:external_id/plugins/:plugin_name" do
-    ConsumerPluginSettings.delete(external_id, plugin_name)
+    plugin_by(external_id, plugin_name)
+    |> Repo.delete_all
+    |> normalize_ecto_delete_resp
     |> render_delete_response
     |> send_response(conn)
+  end
+
+  defp plugin_by(external_id, plugin_name) do
+    from c in ConsumerPluginSettings,
+      join: p in Plugin, on: c.plugin_id == p.id,
+      where: c.external_id == ^external_id,
+      where: p.name == ^plugin_name
   end
 
   def send_response({code, resp}, conn) do
     send_resp(conn, code, resp)
   end
+
+  defp normalize_ecto_delete_resp({0, _}), do: nil
+  defp normalize_ecto_delete_resp({1, _}), do: {:ok, nil}
+
+  defp normalize_ecto_update_resp({0, _}), do: nil
+  defp normalize_ecto_update_resp({1, [struct]}), do: struct
+  defp normalize_ecto_update_resp({:error, ch}), do: {:error, ch}
 end
