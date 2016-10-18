@@ -10,15 +10,11 @@ defmodule Gateway.HTTP.API.Plugins do
 
   alias Gateway.DB.Repo
   alias Gateway.DB.Models.Plugin
-  alias Gateway.DB.Models.API, as: APIModel
+  alias Gateway.DB.Models.API
 
   # list
   get "/:api_id/plugins" do
-    query = from p in Plugin,
-            where: p.api_id == ^api_id,
-            limit: 10
-
-    query
+    Plugin
     |> Repo.all(api_id: api_id)
     |> render_show_response
     |> send_response(conn)
@@ -26,8 +22,7 @@ defmodule Gateway.HTTP.API.Plugins do
 
   # create
   post "/:api_id/plugins" do
-    APIModel
-    |> Repo.get(api_id)
+    api_id
     |> Plugin.create(conn.body_params)
     |> render_create_response
     |> send_response(conn)
@@ -35,12 +30,8 @@ defmodule Gateway.HTTP.API.Plugins do
 
   # get one
   get "/:api_id/plugins/:name" do
-    query = from p in Plugin,
-            where: p.api_id == ^api_id,
-            where: p.name == ^name
-
-    query
-    |> Repo.one
+    api_id
+    |> load_plugin(name)
     |> render_plugin
     |> send_response(conn)
   end
@@ -48,14 +39,16 @@ defmodule Gateway.HTTP.API.Plugins do
   # update
   put "/:api_id/plugins/:name" do
     api_id
-    |> Plugin.update(name, conn.body_params)
+    |> load_plugin(name)
+    |> Plugin.update(conn.body_params)
     |> render_show_response
     |> send_response(conn)
   end
 
   delete "/:api_id/plugins/:name" do
     api_id
-    |> Plugin.delete(name)
+    |> load_plugin(name)
+    |> Plugin.delete()
     |> render_delete_response
     |> send_response(conn)
   end
@@ -65,5 +58,15 @@ defmodule Gateway.HTTP.API.Plugins do
 
   def send_response({code, resp}, conn) do
     send_resp(conn, code, resp)
+  end
+
+  defp load_plugin(api_id, plugin_name) do
+    query =
+      from p in Plugin,
+        join: a in API, on: a.id == p.api_id,
+        where: a.id == ^api_id,
+        where: p.name == ^plugin_name
+
+    Repo.one(query)
   end
 end
