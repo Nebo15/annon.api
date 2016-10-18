@@ -25,7 +25,8 @@ defmodule Gateway.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [
-      applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto, :timex, :joken],
+      applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto, :timex, :joken, :ex_json_schema,
+                     :poison, :uuid, :httpoison],
       mod: {Gateway, []}
     ]
   end
@@ -64,7 +65,13 @@ defmodule Gateway.Mixfile do
      {:ex_doc, ">= 0.0.0", only: [:dev, :test]},
      {:excoveralls, "~> 0.5", only: [:dev, :test]},
      {:credo, ">= 0.4.8", only: [:dev, :test]},
+<<<<<<< HEAD
      {:cassandra, "~> 0.1.1-pre"}]
+=======
+     {:ex_json_schema, ">= 0.0.0"},
+     {:httpoison, ">= 0.0.0"},
+     ]
+>>>>>>> 2f95cb72346b99a09a0a1e513342db80f2f749db
   end
 
   # Settings for publishing in Hex package manager:

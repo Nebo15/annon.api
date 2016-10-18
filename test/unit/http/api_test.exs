@@ -1,7 +1,16 @@
 defmodule Gateway.HTTP.APITest do
   use Gateway.HTTPTestHelper
 
-  @correct_api_data %{ name: "Sample", request: %{ path: "/", port: 3000, scheme: "https", host: "sample.com" }}
+  @correct_api_data %{
+    name: "Sample",
+    request: %{
+      path: "/",
+      port: 3000,
+      scheme: "https",
+      host: "sample.com",
+      method: "GET"
+      }
+    }
 
   test "GET /apis" do
     data =
@@ -53,7 +62,8 @@ defmodule Gateway.HTTP.APITest do
         host: "example.com",
         port: 4000,
         path: "/a/b/c",
-        scheme: "http"
+        scheme: "http",
+        method: "POST"
       }
     }
 
@@ -86,7 +96,8 @@ defmodule Gateway.HTTP.APITest do
         host: "newhost.com",
         port: 4000,
         path: "/new/path/",
-        scheme: "https"
+        scheme: "https",
+        method: "POST"
       }
     }
 
@@ -106,6 +117,7 @@ defmodule Gateway.HTTP.APITest do
     assert resp["request"]["port"] == 4000
     assert resp["request"]["path"] == "/new/path/"
     assert resp["request"]["scheme"] == "https"
+    assert resp["request"]["method"] == "POST"
   end
 
   test "DELETE /apis/:api_id" do

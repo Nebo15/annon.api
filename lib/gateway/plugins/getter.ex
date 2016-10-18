@@ -17,20 +17,29 @@ defmodule Gateway.Plugins.Getter do
              preload: [:plugins]
 
     models
-    |> Enum.filter(fn(x) -> correct?(x, conn) end)
+    |> Enum.filter(fn(x) -> equal?(x, conn) end)
     |> normalize_config
-
   end
 
   def normalize_config([%{} = config]), do: config |> Map.delete(:__meta__) |> Map.delete(:__struct__)
   def normalize_config([]), do: nil
 
-  def correct?(%{request: %{} = r}, c) do
-    correct_host?(r, c) and correct_port?(r, c) and correct_scheme?(r, c) and correct_path?(r, c)
+  def equal?(%{request: %{} = r}, c) do
+    equal_host?(r, c) and equal_port?(r, c) and equal_scheme?(r, c) and equal_path?(r, c) and equal_method?(r, c)
   end
 
-  def correct_host?(%{host: host}, conn), do: conn.host == host
-  def correct_port?(%{port: port}, conn), do: conn.port == port
-  def correct_scheme?(%{scheme: scheme}, conn), do: conn.scheme == scheme
-  def correct_path?(%{path: path}, conn), do: conn.request_path == path
+  def equal_host?(%{host: host}, conn), do: conn.host == host
+  def equal_method?(%{method: method}, conn), do: conn.method == method
+  def equal_port?(%{port: port}, conn), do: conn.port == port
+  def equal_scheme?(%{scheme: scheme}, %Plug.Conn{scheme: conn_scheme}) when is_atom(conn_scheme) do
+    conn_scheme
+    |> Atom.to_string
+    |> equal_scheme?(scheme)
+  end
+  def equal_scheme?(%{scheme: scheme}, %Plug.Conn{scheme: conn_scheme}) when is_binary(conn_scheme) do
+    equal_scheme?(conn_scheme, scheme)
+  end
+  def equal_scheme?(conn_scheme, scheme) when is_binary(scheme) and is_binary(conn_scheme), do: scheme == conn_scheme
+
+  def equal_path?(%{path: path}, conn), do: conn.request_path == path
 end
