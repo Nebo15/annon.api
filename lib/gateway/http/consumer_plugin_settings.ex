@@ -35,19 +35,13 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
   end
 
   delete "/consumers/:external_id/plugins/:plugin_name" do
-    load_plugin(external_id, plugin_name)
-    |> ConsumerPluginSettings.delete
+    ConsumerPluginSettings.delete(external_id, plugin_name)
     |> render_delete_response
     |> send_response(conn)
   end
 
   defp load_plugin(external_id, plugin_name) do
-    query =
-      from c in ConsumerPluginSettings,
-        join: p in Plugin, on: c.plugin_id == p.id,
-        where: c.external_id == ^external_id,
-        where: p.name == ^plugin_name
-
+    query = ConsumerPluginSettings.by_plugin_and_consumer(external_id, plugin_name)
     Repo.one(query)
   end
 
