@@ -14,10 +14,11 @@ defmodule Gateway.AcceptanceCase do
       import Ecto.Query, only: [from: 2]
 
       alias Gateway.DB.Repo
+      alias Gateway.DB.Models.Plugin
+      alias Gateway.DB.Models.API, as: APIModel
 
       use HTTPoison.Base
 
-      # Configure acceptance testing on different host:port
       [port: port, host: host] = Confex.get_map(:gateway, :acceptance)
 
       @http_uri "http://#{host}:#{port}/"
@@ -36,8 +37,32 @@ defmodule Gateway.AcceptanceCase do
         assert response.status_code == status
         response
       end
-
       def get_body(%HTTPoison.Response{} = response), do: response.body
+
+      def get_api_model_data do
+        api_model = APIModel
+        |> EctoFixtures.ecto_fixtures()
+
+        api_model
+        |> Map.put(:plugins, [get_plugin_data(api_model.id), get_plugin_data(api_model.id)])
+      end
+
+      def get_plugin_data(api_id) do
+        Plugin
+        |> EctoFixtures.ecto_fixtures()
+        |> Map.put(:api_id, api_id)
+      end
+
+      setup do
+        on_exit fn ->
+          ["apis", "consumers", "plugins"]
+          |> Enum.map(fn table -> truncate_table Gateway.DB.Repo, table end)
+        end
+      end
+
+      defp truncate_table(repo, table) do
+        Ecto.Adapters.SQL.query(repo, "TRUNCATE #{table} RESTART IDENTITY")
+      end
     end
   end
 
