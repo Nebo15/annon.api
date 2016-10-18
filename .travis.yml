@@ -32,7 +32,7 @@ before_install:
   - sudo apt-get install -y git
   - sudo git clone https://github.com/etsy/statsd.git
   - cd statsd
-  - "sudo echo '{port: 8125, mgmt_port: 8126, backends: [\"./backends/console\"]}' > config.js"
+  - "sudo echo '{port: 8125, mgmt_port: 8126, backends: [\"./backends/console\"]}' > sudo config.js"
   - node stats.js config.js
 script:
   # Increment version in mix.exs
