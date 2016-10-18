@@ -5,8 +5,8 @@ defmodule Gateway.Router do
   use Plug.Router
 
   plug :match
-  plug Gateway.Plugins.Getter
-  plug Gateway.Plugins.Jwt
+  plug Gateway.Plugins.ApiLoader
+  plug Gateway.Plugins.JWT
   plug :dispatch
 
   forward "/apis", to: Gateway.HTTP.API
