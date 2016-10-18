@@ -25,7 +25,7 @@ defmodule Gateway.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [
-      applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto],
+      applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto, :timex, :joken],
       mod: {Gateway, []}
     ]
   end
@@ -48,15 +48,18 @@ defmodule Gateway.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:distillery, "~> 0.9"},
+    [{:distillery, "~> 0.10.1"},
      {:confex, "~> 1.4"},
      {:plug, ">= 0.0.0"},
      {:cowboy, ">= 0.0.0"},
      {:postgrex, ">= 0.0.0"},
-     {:ecto, ">= 2.1.0-rc.2"},
-     {:confex, ">= 0.0.0"},
-     {:dogma, "> 0.1.0", only: [:dev, :test]},
+     {:ecto, ">= 2.1.0-rc.2", override: true},
+     {:timex, "~> 3.0"},
      {:poison, "~> 2.0"},
+     {:uuid, ">= 0.0.0"},
+     {:joken, "~> 1.3"},
+     {:faker, "~> 0.7.0", only: [:dev, :test]},
+     {:dogma, "> 0.1.0", only: [:dev, :test]},
      {:benchfella, "~> 0.3", only: [:dev, :test]},
      {:ex_doc, ">= 0.0.0", only: [:dev, :test]},
      {:excoveralls, "~> 0.5", only: [:dev, :test]},

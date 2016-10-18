@@ -2,10 +2,9 @@ use Mix.Config
 
 config :gateway, Gateway.DB.Repo,
   adapter: Ecto.Adapters.Postgres,
-  priv: "priv/repos",
-  database: "gateway_test",
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox,
-  pool_size: 10
+  database: System.get_env("MIX_TEST_DATABASE") || "trader_test",
+  pool: Ecto.Adapters.SQL.Sandbox
+
+config :logger, level: :warn
+
+config :gateway, sql_sandbox: true
