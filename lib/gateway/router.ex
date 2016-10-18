@@ -6,6 +6,7 @@ defmodule Gateway.Router do
 
   plug :match
   plug Gateway.Plugins.Getter
+  plug Gateway.Plugins.Test
   plug :dispatch
 
   forward "/apis", to: Gateway.HTTP.API
