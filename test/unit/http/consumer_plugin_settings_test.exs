@@ -62,7 +62,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     assert result["updated_at"]
   end
 
-  test "PUT /consumers/:external_id/plugins/:name", %{external_id: external_id, api: api}do
+  test "PUT /consumers/:external_id/plugins/:name", %{external_id: external_id, api: api} do
     plugin_params1 =
       Gateway.DB.Models.Plugin
       |> EctoFixtures.ecto_fixtures()
