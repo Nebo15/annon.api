@@ -23,6 +23,9 @@ defmodule Gateway.HTTPTestHelper do
         |> Map.put(:api_id, api_id)
       end
 
+      def assert_halt(%Plug.Conn{halted: true} = plug), do: plug
+      def assert_not_halt(%Plug.Conn{halted: false} = plug), do: plug
+
       setup tags do
         :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Repo)
 
