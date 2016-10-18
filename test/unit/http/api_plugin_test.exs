@@ -2,7 +2,7 @@ defmodule Gateway.HTTP.PluginTest do
 
   @plugin_url "/"
 
-  use Gateway.HTTPTestHelper
+  use Gateway.UnitCase
   alias Gateway.DB.Models.API, as: APIModel
 
   test "GET /apis/:api_id" do

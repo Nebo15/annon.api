@@ -12,7 +12,7 @@ defmodule Gateway.AcceptanceCase do
       import Ecto
       import Ecto.Changeset
       import Ecto.Query, only: [from: 2]
-      import Gateway.HTTPTestHelper
+      import Gateway.Fixtures
 
       alias Gateway.DB.Repo
       alias Gateway.DB.Models.Plugin
