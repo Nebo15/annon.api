@@ -12,7 +12,7 @@ defmodule Gateway.Plugins.ApiLoader do
   def call(conn, _), do: put_private(conn, :api_config, conn |> get_config)
 
   # TODO: Get data from the cache, not from the DataBase
-  # ToDo: use join for preload'
+  # ToDo: use join for preload
   def get_config(conn) do
     models = Gateway.DB.Repo.all from Gateway.DB.Models.API,
              preload: [:plugins]

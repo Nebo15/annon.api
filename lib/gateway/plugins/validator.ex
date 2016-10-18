@@ -22,7 +22,7 @@ defmodule Gateway.Plugins.Validator do
       private: %{
         api_config: %{
           plugins: [
-            %{name: "Validator", settings: %{"schema" => schema}}
+            %{name: :Validator, settings: %{"schema" => schema}}
           ]
         }
       }

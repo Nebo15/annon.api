@@ -4,7 +4,6 @@ defmodule Gateway.Plugins.ApiLoaderTest do
   """
 
   use Gateway.HTTPTestHelper
-  alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.API, as: APIModel
 
   test "correctly set config into private part" do

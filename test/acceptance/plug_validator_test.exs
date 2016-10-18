@@ -1,6 +1,5 @@
 defmodule Gateway.PlugValidatorAcceptanceTest do
   use Gateway.AcceptanceCase, async: true
-  alias Gateway.DB.Models.API, as: APIModel
 
   @api_url "apis"
   @schema %{"type" => "object",
