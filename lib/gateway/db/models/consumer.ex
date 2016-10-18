@@ -1,4 +1,4 @@
-defmodule Gateway.DB.Consumer do
+defmodule Gateway.DB.Models.Consumer do
   @moduledoc """
   Consumer DB entity
   """
@@ -23,19 +23,19 @@ defmodule Gateway.DB.Consumer do
   end
 
   def create(params) do
-    consumer = %Gateway.DB.Consumer{}
+    consumer = %Gateway.DB.Models.Consumer{}
     changeset = changeset(consumer, params)
     Gateway.DB.Repo.insert(changeset)
   end
 
   def update(consumer_id, params) do
-    %Gateway.DB.Consumer{external_id: consumer_id}
+    %Gateway.DB.Models.Consumer{external_id: consumer_id}
     |> changeset(params)
     |> Gateway.DB.Repo.update()
   end
 
   def delete(consumer_id) do
-    %Gateway.DB.Consumer{external_id: consumer_id}
+    %Gateway.DB.Models.Consumer{external_id: consumer_id}
     |> Gateway.DB.Repo.delete()
   end
 end

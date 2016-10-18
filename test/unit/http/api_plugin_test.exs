@@ -126,18 +126,4 @@ defmodule Gateway.HTTP.PluginTest do
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.API.Plugins.call([])
   end
-
-  defp get_api_model_data do
-    api_model = APIModel
-    |> EctoFixtures.ecto_fixtures()
-
-    api_model
-    |> Map.put(:plugins, [get_plugin_data(api_model.id), get_plugin_data(api_model.id)])
-  end
-
-  defp get_plugin_data(api_id) do
-    Plugin
-    |> EctoFixtures.ecto_fixtures()
-    |> Map.put(:api_id, api_id)
-  end
 end
