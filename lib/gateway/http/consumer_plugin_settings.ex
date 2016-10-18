@@ -37,7 +37,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
   delete "/consumers/:external_id/plugins/:plugin_name" do
     load_plugin(external_id, plugin_name)
     |> ConsumerPluginSettings.delete
-    |> render_show_response
+    |> render_delete_response
     |> send_response(conn)
   end
 

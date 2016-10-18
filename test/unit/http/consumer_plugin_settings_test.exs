@@ -125,7 +125,25 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     assert result["updated_at"]
   end
 
-  test "DELETE /consumers/:external_id/plugins/:name" do
+  test "DELETE /consumers/:external_id/plugins/:name", %{external_id: external_id, api: api} do
+    plugin_params1 =
+      Gateway.DB.Models.Plugin
+      |> EctoFixtures.ecto_fixtures()
+      |> Map.put(:api_id, api.id)
+
+    { :ok, plugin1 } = Gateway.DB.Models.Plugin.create(%Gateway.DB.Models.API{}, plugin_params1)
+
+    { :ok, cust_plugin1 } = Gateway.DB.Models.ConsumerPluginSettings.create(external_id, %{plugin_id: plugin1.id, settings: %{ "a" => 10, "b" => 20}})
+
+    conn = :delete
+    |> conn("/consumers/#{external_id}/plugins/#{plugin1.name}")
+    |> put_req_header("content-type", "application/json")
+    |> Gateway.HTTP.Consumers.call([])
+
+    result =
+      Poison.decode!(conn.resp_body)
+
+    assert result["meta"]["description"] == "Resource was deleted"
   end
 
   defp create_fixture(module) do
