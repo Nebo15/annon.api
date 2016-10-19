@@ -11,4 +11,7 @@ end
 
 release :gateway do
   set version: current_version(:gateway)
+  set applications: [
+    gateway: :permanent
+  ]
 end
