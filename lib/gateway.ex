@@ -8,6 +8,7 @@ defmodule Gateway do
     import Supervisor.Spec, warn: false
 
     public_http_config = Confex.get_map(:gateway, :public_http)
+    private_http_config = Confex.get_map(:gateway, :private_http)
 
     children = [
       supervisor(Gateway.DB.Repo, []),

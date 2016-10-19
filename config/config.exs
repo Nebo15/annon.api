@@ -16,4 +16,7 @@ config :logger, level: :debug
 config :gateway, :public_http,
   port: { :system, "GATEWAY_PORT", 4000 }
 
+config :gateway, :private_http,
+  port: { :system, "GATEWAY_PORT", 4001 }
+
 import_config "#{Mix.env}.exs"
