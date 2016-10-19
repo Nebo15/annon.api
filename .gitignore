@@ -19,6 +19,9 @@ erl_crash.dump
 # Don't commit benchmark snapshots
 bench/snapshots
 
+# Ignore Exometer logs
+/log
+
 # Don't commit editor configs
 .idea
 *.iws
