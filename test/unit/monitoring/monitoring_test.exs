@@ -1,5 +1,5 @@
 defmodule Gateway.Monitoring.ElixometerTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
   use Gateway.HTTPTestHelper
 
   use Elixometer
@@ -15,34 +15,24 @@ defmodule Gateway.Monitoring.ElixometerTest do
     :timer.sleep 10
   end
 
-  defp to_elixometer_name(metric_name) when is_bitstring(metric_name) do
-    metric_name
-    |> String.split(".")
-    |> Enum.map(&String.to_atom/1)
-  end
-
-  def metric_exists(metric_name) when is_bitstring(metric_name) do
-    metric_name |> to_elixometer_name |> metric_exists
-  end
-
-  def metric_exists(metric_name) when is_list(metric_name) do
-    wait_for_messages
-    metric_name in Reporter.metric_names
-  end
-
-  test "a gauge registers its name" do
+  test "metrics work properly" do
     make_connection()
-    make_connection()
-
-    IO.inspect Reporter.metric_names
-    IO.inspect :exometer_report.list_metrics
     assert {:ok, [value: 1, ms_since_reset: _]} = Elixometer.get_metric_value("os.gateway.test.counters.apis_request_count")
+    make_connection()
+    assert {:ok, [value: 2, ms_since_reset: _]} = Elixometer.get_metric_value("os.gateway.test.counters.apis_status_count_200")
+    make_connection()
+    IO.inspect Reporter.metric_names
+    assert {:ok, _} = Elixometer.get_metric_value("os.gateway.test.histograms.apis_request_size")
+    make_connection()
+    assert {:ok, _} = Elixometer.get_metric_value("os.gateway.test.histograms.apis_latency")
   end
 
   defp make_connection() do
     :get
-    |> conn("/")
+    |> conn("/apis")
     |> put_req_header("content-type", "application/json")
-    |> Gateway.HTTP.API.call([])
+    |> Gateway.Router.call([])
+
+    :timer.sleep(10)
   end
 end
