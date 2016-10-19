@@ -33,8 +33,8 @@ config :exometer,
 
 config :elixometer,
  reporter: :exometer_report_statsd,
-   env: Mix.env,
-   metric_prefix: "os.gateway"
+ env: Mix.env,
+ metric_prefix: "os.gateway"
 
 config :exometer_core, report: [
   reporters: [
