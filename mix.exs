@@ -25,7 +25,7 @@ defmodule Gateway.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [
-      applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto, :timex, :joken, :ex_json_schema,
+      applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto, :ecto_enum, :timex, :joken, :ex_json_schema,
                      :poison, :uuid, :httpoison],
       mod: {Gateway, []}
     ]

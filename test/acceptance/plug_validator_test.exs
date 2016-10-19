@@ -21,6 +21,7 @@ defmodule Gateway.Acceptance.PlugValidatorTest do
 
     "apis"
     |> post(Poison.encode!(data))
+    |> assert_status(200)
 
     "test"
     |> get()
