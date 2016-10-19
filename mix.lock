@@ -14,6 +14,7 @@
   "dogma": {:hex, :dogma, "0.1.11", "40a148b556f2f5f5ceb4d1ee673813cfd3e64bb90c0da9cb24386b37576b11cf", [:mix], [{:poison, ">= 2.0.0", [hex: :poison, optional: false]}]},
   "earmark": {:hex, :earmark, "1.0.2", "a0b0904d74ecc14da8bd2e6e0248e1a409a2bc91aade75fcf428125603de3853", [:mix], []},
   "ecto": {:hex, :ecto, "2.1.0-rc.2", "90c34603d7330b50ec06949d571bce785c226dfeb85f7a32445e650c9e5bb57c", [:mix], [{:db_connection, "~> 1.0-rc.4", [hex: :db_connection, optional: true]}, {:decimal, "~> 1.2", [hex: :decimal, optional: false]}, {:mariaex, "~> 0.7.7", [hex: :mariaex, optional: true]}, {:poison, "~> 2.2", [hex: :poison, optional: true]}, {:poolboy, "~> 1.5", [hex: :poolboy, optional: false]}, {:postgrex, "~> 0.12.0", [hex: :postgrex, optional: true]}, {:sbroker, "~> 1.0-beta", [hex: :sbroker, optional: true]}]},
+  "ecto_enum": {:git, "https://github.com/gjaldon/ecto_enum", "1f0f0c5f4e01e373c800346b0000fb1ee3fb10b2", [branch: "ecto-2.0"]},
   "ex_doc": {:hex, :ex_doc, "0.14.3", "e61cec6cf9731d7d23d254266ab06ac1decbb7651c3d1568402ec535d387b6f7", [:mix], [{:earmark, "~> 1.0", [hex: :earmark, optional: false]}]},
   "ex_json_schema": {:hex, :ex_json_schema, "0.5.1", "83356e5a673d6fbe75da612a44b8f84942711630414d8be5e342f3597b03939a", [:mix], []},
   "excoveralls": {:hex, :excoveralls, "0.5.7", "5d26e4a7cdf08294217594a1b0643636accc2ad30e984d62f1d166f70629ff50", [:mix], [{:exjsx, "~> 3.0", [hex: :exjsx, optional: false]}, {:hackney, ">= 0.12.0", [hex: :hackney, optional: false]}]},

@@ -1,5 +1,5 @@
 defmodule Gateway.HTTP.APITest do
-  use Gateway.HTTPTestHelper
+  use Gateway.UnitCase
 
   @correct_api_data %{
     name: "Sample",

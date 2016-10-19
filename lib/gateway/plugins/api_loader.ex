@@ -1,28 +1,30 @@
-defmodule Gateway.Plugins.Getter do
+defmodule Gateway.Plugins.APILoader do
 
   @moduledoc """
   Plugin which get all configuration by endpoint
   """
 
   import Plug.Conn
-  import Ecto.Query
+  import Ecto.Query, only: [from: 2]
 
   def init(opts), do: opts
 
   def call(conn, _), do: put_private(conn, :api_config, conn |> get_config)
 
   # TODO: Get data from the cache, not from the DataBase
+  # ToDo: use join for preload
   def get_config(conn) do
     models = Gateway.DB.Repo.all from Gateway.DB.Models.API,
              preload: [:plugins]
 
     models
     |> Enum.filter(fn(x) -> equal?(x, conn) end)
-    |> normalize_config
+    |> get_one
+
   end
 
-  def normalize_config([%{} = config]), do: config |> Map.delete(:__meta__) |> Map.delete(:__struct__)
-  def normalize_config([]), do: nil
+  def get_one([model]), do: model
+  def get_one(_), do: nil
 
   def equal?(%{request: %{} = r}, c) do
     equal_host?(r, c) and equal_port?(r, c) and equal_scheme?(r, c) and equal_path?(r, c) and equal_method?(r, c)

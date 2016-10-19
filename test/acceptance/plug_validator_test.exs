@@ -1,6 +1,5 @@
-defmodule Gateway.PlugValidatorAcceptanceTest do
+defmodule Gateway.Acceptance.PlugValidatorTest do
   use Gateway.AcceptanceCase, async: true
-  alias Gateway.DB.Models.API, as: APIModel
 
   @api_url "apis"
   @schema %{"type" => "object",
@@ -15,10 +14,14 @@ defmodule Gateway.PlugValidatorAcceptanceTest do
 
     data = get_api_model_data()
     |> Map.put(:request, %{host: "localhost", path: "/test", port: get_port(), scheme: "http", method: "POST"})
-    |> Map.put(:plugins, [%{name: "Validator", settings: %{"schema" => Poison.encode!(@schema)}}])
+    |> Map.put(:plugins, [
+      %{name: "JWT", is_enabled: false, settings: %{"signature" => "secret"}},
+      %{name: "Validator", is_enabled: true, settings: %{"schema" => Poison.encode!(@schema)}}
+    ])
 
     "apis"
     |> post(Poison.encode!(data))
+    |> assert_status(201)
 
     "test"
     |> get()
