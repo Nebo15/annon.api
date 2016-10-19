@@ -22,8 +22,6 @@ defmodule Gateway.Monitoring do
     |> metric_name("request_count")
     |> update_counter(1)
 
-    IO.inspect :exometer_report.list_metrics
-
     req_start_time = :erlang.monotonic_time(@unit)
     conn = Plug.Conn.register_before_send conn, fn conn ->
       request_duration = :erlang.monotonic_time(@unit) - req_start_time
