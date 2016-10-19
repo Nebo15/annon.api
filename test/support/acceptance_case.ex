@@ -9,6 +9,7 @@ defmodule Gateway.AcceptanceCase do
 
   using do
     quote do
+      import Joken
       import Ecto
       import Ecto.Changeset
       import Ecto.Query, only: [from: 2]
@@ -31,8 +32,8 @@ defmodule Gateway.AcceptanceCase do
 
       def get_port, do: @port
 
-      defp process_request_headers(_) do
-        [{"Content-Type", "application/json"}]
+      defp process_request_headers(headers \\ []) do
+        headers ++ [{"Content-Type", "application/json"}]
       end
 
       def process_response_body(body) do
@@ -48,6 +49,13 @@ defmodule Gateway.AcceptanceCase do
         response
       end
       def get_body(%HTTPoison.Response{} = response), do: response.body
+
+      def jwt_token(payload, signature) do
+        payload
+        |> token
+        |> sign(hs256(signature))
+        |> get_compact
+      end
 
       setup do
         on_exit fn ->

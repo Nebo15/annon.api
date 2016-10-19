@@ -3,13 +3,14 @@ defmodule Gateway.DB.Models.Consumer do
   Consumer DB entity
   """
 
-  use Ecto.Schema
+  use Gateway.DB, :model
 
-  @derive {Poison.Encoder, except: [:__meta__]}
+  @derive {Poison.Encoder, except: [:__meta__, :plugins]}
 
   @primary_key {:external_id, Ecto.UUID, autogenerate: false}
   schema "consumers" do
     field :metadata, :map
+    has_many :plugins, Gateway.DB.Models.ConsumerPluginSettings, references: :external_id, foreign_key: :external_id
 
     timestamps()
   end
@@ -18,8 +19,9 @@ defmodule Gateway.DB.Models.Consumer do
 
   def changeset(consumer, params \\ %{}) do
     consumer
-    |> Ecto.Changeset.cast(params, @required_consumer_fields ++ [:metadata])
-    |> Ecto.Changeset.validate_required(@required_consumer_fields)
+    |> cast(params, @required_consumer_fields ++ [:metadata])
+    |> cast_assoc(:plugins)
+    |> validate_required(@required_consumer_fields)
   end
 
   def create(params) do

@@ -2,11 +2,17 @@ defmodule Gateway.Plugins.JWT do
   @moduledoc """
     Plugin for JWT verifying and decoding
   """
-  import Plug.Conn
   import Joken
+  import Plug.Conn
+  import Ecto.Query, only: [from: 2]
+
   alias Joken.Token
+  alias Gateway.DB.Repo
   alias Gateway.DB.Models.Plugin
+  alias Gateway.DB.Models.Consumer
   alias Gateway.DB.Models.API, as: APIModel
+  alias Gateway.DB.Models.ConsumerPluginSettings
+  require Logger
 
   def init([]), do: false
 
@@ -35,18 +41,36 @@ defmodule Gateway.Plugins.JWT do
   end
 
   defp parse_auth(conn, ["Bearer " <> incoming_token], signature) do
-
-    verified_token = incoming_token
+    incoming_token
     |> token()
     |> with_signer(hs256(signature))
     |> verify()
-
-    evaluate(conn, verified_token)
+    |> evaluate(conn)
   end
   defp parse_auth(conn, _header, _signature), do: send_halt(conn, 401, "unauthorized")
 
-  defp evaluate(conn, %Token{error: nil} = token), do: put_private(conn, :jwt_token, token)
-  defp evaluate(conn, %Token{error: message}), do: send_halt(conn, 401, message)
+  defp evaluate(%Token{error: nil} = token, conn) do
+    conn
+    |> merge_consumer_settings(token)
+    |> put_private(:jwt_token, token)
+  end
+  defp evaluate(%Token{error: message}, conn), do: send_halt(conn, 401, message)
+
+  defp merge_consumer_settings(
+    %Plug.Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, %Token{claims: %{"id" => id}}) do
+
+    Logger.warn id
+    query = from c in Consumer,
+            where: c.external_id == ^id,
+            join: s in assoc(c, :plugins),
+            where: s.is_enabled == true,
+            preload: [plugins: s]
+    a = Repo.all(query)
+    Logger.warn(inspect a)
+
+    conn
+  end
+  defp merge_consumer_settings(conn, _token), do: conn
 
   defp send_halt(conn, code, message) do
     conn

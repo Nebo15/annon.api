@@ -1,4 +1,4 @@
-defmodule Gateway.Acceptance.PlugValidatorTest do
+defmodule Gateway.Acceptance.Plug.ValidatorTest do
   use Gateway.AcceptanceCase, async: true
 
   @api_url "apis"

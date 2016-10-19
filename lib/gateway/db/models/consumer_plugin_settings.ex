@@ -13,6 +13,7 @@ defmodule Gateway.DB.Models.ConsumerPluginSettings do
 
   schema "consumer_plugin_settings" do
     field :settings, :map
+    field :is_enabled, :boolean
     belongs_to :consumer, Consumer, references: :external_id, foreign_key: :external_id, type: :string
     belongs_to :plugin, Plugin
 
