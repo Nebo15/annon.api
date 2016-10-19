@@ -36,7 +36,5 @@ defmodule Gateway.Helpers.Cassandra do
     records
     |> Enum.map(&Task.async(fn -> Connection.execute(cassandra_conn, query, &1) end))
     |> Enum.map(&Task.await/1)
-
-    {:ok, cassandra_conn}
   end
 end
