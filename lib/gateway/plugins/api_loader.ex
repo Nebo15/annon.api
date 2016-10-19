@@ -1,4 +1,4 @@
-defmodule Gateway.Plugins.ApiLoader do
+defmodule Gateway.Plugins.APILoader do
 
   @moduledoc """
   Plugin which get all configuration by endpoint

@@ -1,6 +1,6 @@
-defmodule Gateway.Plugins.ApiLoaderTest do
+defmodule Gateway.Plugins.APILoaderTest do
   @moduledoc """
-  Testing Gateway.Plugins.ApiLoader
+  Testing Gateway.Plugins.APILoader
   """
 
   use Gateway.UnitCase
@@ -17,7 +17,7 @@ defmodule Gateway.Plugins.ApiLoaderTest do
     |> Map.put(:port, request.port)
     |> Map.put(:method, request.method)
     |> Map.put(:scheme, request.scheme)
-    |> Gateway.Plugins.ApiLoader.call(%{})
+    |> Gateway.Plugins.APILoader.call(%{})
 
     assert config.id == model.id
     assert config.request == request

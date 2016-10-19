@@ -1,6 +1,6 @@
 defmodule Gateway.Plugins.JWTTest do
   @moduledoc """
-  Testing Gateway.Plugins.ApiLoader
+  Testing Gateway.Plugins.APILoader
   """
 
   use Gateway.UnitCase

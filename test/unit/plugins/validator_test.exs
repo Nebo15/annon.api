@@ -15,24 +15,28 @@ defmodule Gateway.Plugins.ValidatorTest do
       "required" => ["bar"]
     }
 
+    model = %APIModel{plugins: [
+      %Plugin{is_enabled: true, name: :Validator, settings: %{"schema" => Poison.encode!(schema)}}
+    ]}
+
     connect = :get
     |> conn("/", Poison.encode!(%{}))
 
     connect
     |> Map.put(:body_params, %{"foo" =>  "100500", "bar" => "a"})
-    |> assign(:schema, schema)
+    |> put_private(:api_config, model)
     |> Gateway.Plugins.Validator.call(%{})
     |> assert_halt
 
     connect
     |> Map.put(:body_params, %{"foo" =>  100500, "bar" => "a"})
-    |> assign(:schema, schema)
+    |> put_private(:api_config, model)
     |> Gateway.Plugins.Validator.call(%{})
     |> assert_not_halt
 
     connect
     |> Map.put(:body_params, %{"foo" =>  100500})
-    |> assign(:schema, schema)
+    |> put_private(:api_config, model)
     |> Gateway.Plugins.Validator.call(%{})
     |> assert_halt
   end
