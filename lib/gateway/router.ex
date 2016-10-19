@@ -26,4 +26,8 @@ defmodule Gateway.Router do
   match _ do
     send_resp(conn, 404, "{}")
   end
+<<<<<<< HEAD
+=======
+
+>>>>>>> b2906083ec8e02b83cb5c1b98094f1d77bdd8cc8
 end

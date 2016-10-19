@@ -6,6 +6,7 @@ cache:
 services:
   - docker
   - postgresql
+  - cassandra
 addons:
   postgresql: "9.5"
 elixir:
