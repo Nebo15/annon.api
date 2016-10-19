@@ -27,7 +27,7 @@ defmodule Gateway.Acceptance.PlugValidatorTest do
     |> get()
     |> assert_status(404)
 
-    "test"
+    "apis"
     |> post!("{}")
     |> assert_status(422)
   end
