@@ -20,11 +20,5 @@ config(:elixometer, update_frequency: 20,
 
 config :exometer,
    report: [
-     reporters: [{Gateway.Monitoring.TestReporter, []}],
-     subscribers: [
-       {
-         Gateway.Monitoring.TestReporter,
-         [:erlang, :memory], memory_stats, 1_000, true
-       }
-     ]
+     reporters: [{Gateway.Monitoring.TestReporter, []}]
    ]
