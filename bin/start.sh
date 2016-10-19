@@ -20,8 +20,8 @@ echo "[I] Starting a Docker container '${PROJECT_NAME}' (version '${PROJECT_VERS
 echo "[I] Assigning parent host '${HOST_NAME}' with IP '${HOST_IP}'."
 
 docker run \
-       -p 4002:4000 \
-       -p 4003:4001 \
+       -p 5000:4000 \
+       -p 5001:4001 \
        --env-file .env \
        -d \
        --add-host=$HOST_NAME:$HOST_IP \
