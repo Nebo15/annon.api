@@ -47,7 +47,8 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
   end
 
   test "PUT /consumers/:external_id/plugins/:name", %{external_id: external_id, plugin: plugin} do
-    { :ok, cust_plugin1 } = Gateway.DB.Models.ConsumerPluginSettings.create(external_id, %{plugin_id: plugin.id, settings: %{ "a" => 10, "b" => 20}})
+    params = %{plugin_id: plugin.id, settings: %{ "a" => 10, "b" => 20}}
+    { :ok, cust_plugin1 } = Gateway.DB.Models.ConsumerPluginSettings.create(external_id, params)
 
     contents = %{
       settings: %{
@@ -96,7 +97,8 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
   end
 
   test "DELETE /consumers/:external_id/plugins/:name", %{external_id: external_id, plugin: plugin} do
-    Gateway.DB.Models.ConsumerPluginSettings.create(external_id, %{plugin_id: plugin.id, settings: %{ "a" => 10, "b" => 20}})
+    params = %{plugin_id: plugin.id, settings: %{ "a" => 10, "b" => 20}}
+    Gateway.DB.Models.ConsumerPluginSettings.create(external_id, params)
 
     conn = :delete
     |> conn("/consumers/#{external_id}/plugins/#{plugin.name}")

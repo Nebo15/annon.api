@@ -32,7 +32,7 @@ defmodule Gateway.DB.Models.ConsumerPluginSettings do
   end
 
   def create(external_id, params) do
-    %ConsumerPluginSettings{ external_id: external_id }
+    %ConsumerPluginSettings{external_id: external_id}
     |> changeset(params)
     |> Repo.insert
   end

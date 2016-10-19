@@ -1,4 +1,8 @@
 defmodule Gateway.HTTP.ConsumerPluginSettings do
+  @moduledoc """
+  REST for ConsumerPluginSettings
+  Documentation http://docs.osapigateway.apiary.io/#reference/apis
+  """
   use Gateway.Helpers.CommonRouter
 
   import Ecto.Query, only: [from: 2]
@@ -15,14 +19,16 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
   end
 
   get "/consumers/:external_id/plugins/:plugin_name" do
-    plugin_by(external_id, plugin_name)
+    external_id
+    |> plugin_by(plugin_name)
     |> Repo.one()
     |> render_show_response
     |> send_response(conn)
   end
 
   put "/consumers/:external_id/plugins/:plugin_name" do
-    plugin_by(external_id, plugin_name)
+    external_id
+    |> plugin_by(plugin_name)
     |> ConsumerPluginSettings.update(conn.body_params)
     |> normalize_ecto_update_resp
     |> render_show_response
@@ -37,7 +43,8 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
   end
 
   delete "/consumers/:external_id/plugins/:plugin_name" do
-    plugin_by(external_id, plugin_name)
+    external_id
+    |> plugin_by(plugin_name)
     |> Repo.delete_all
     |> normalize_ecto_delete_resp
     |> render_delete_response
