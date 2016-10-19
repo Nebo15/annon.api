@@ -31,15 +31,18 @@ defmodule Gateway.Monitoring.ElixometerTest do
   end
 
   test "a gauge registers its name" do
-#    update_gauge("register", 10)
+    make_connection()
+    make_connection()
 
-    conn = :get
-    |> conn("/")
-    |> put_req_header("content-type", "application/json")
-    |> Gateway.HTTP.API.call([])
-    
     IO.inspect Reporter.metric_names
     IO.inspect :exometer_report.list_metrics
     assert {:ok, [value: 1, ms_since_reset: _]} = Elixometer.get_metric_value("os.gateway.test.counters.apis_request_count")
+  end
+
+  defp make_connection() do
+    :get
+    |> conn("/")
+    |> put_req_header("content-type", "application/json")
+    |> Gateway.HTTP.API.call([])
   end
 end
