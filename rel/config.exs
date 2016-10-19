@@ -8,7 +8,7 @@ environment :default do
   set include_erts: false
   set include_src: false
   set applications: [
-    app_name: :permanent
+    gateway: :permanent
   ]
 end
 
