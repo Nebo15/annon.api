@@ -48,14 +48,16 @@ defmodule Gateway.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:distillery, "~> 0.9"},
+    [{:distillery, "~> 0.10.1"},
      {:confex, "~> 1.4"},
      {:plug, ">= 0.0.0"},
      {:cowboy, ">= 0.0.0"},
      {:postgrex, ">= 0.0.0"},
-     {:ecto, ">= 2.1.0-rc.2"},
+     {:ecto, ">= 2.1.0-rc.2", override: true},
+     {:timex, "~> 3.0"},
+     {:poison, "~> 2.0"},
+     {:faker, "~> 0.7.0", only: [:dev, :test]},
      {:dogma, "> 0.1.0", only: [:dev, :test]},
-     {:poison, "~> 2.0", only: [:dev, :test]},
      {:benchfella, "~> 0.3", only: [:dev, :test]},
      {:ex_doc, ">= 0.0.0", only: [:dev, :test]},
      {:excoveralls, "~> 0.5", only: [:dev, :test]},

@@ -1,5 +1,7 @@
 # Gateway
 
+[![Coverage Status](https://coveralls.io/repos/github/Nebo15/os.gateway/badge.svg?branch=master&t=y562b4)](https://coveralls.io/github/Nebo15/os.gateway?branch=master)
+
 **TODO: Add description**
 
 ## Installation
