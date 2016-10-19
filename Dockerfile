@@ -1,26 +1,15 @@
-FROM nebo15/alpine-erlang:latest
+FROM nebo15/alpine-elixir:latest
 
 # Maintainers
 MAINTAINER Nebo#15 support@nebo15.com
 
 # Configure environment variables and other settings
 ENV TERM=xterm \
-    ELIXIR_VERSION=1.3.2-r0 \
     MIX_ENV=prod \
     APP_NAME=gateway \
-    APP_PORT=4000
+    APP_PORT=4001
 
 WORKDIR ${HOME}
-
-# Install Elixir
-RUN \
-    echo "@edge http://nl.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
-    apk --no-cache --update add elixir@edge=$ELIXIR_VERSION git && \
-    mix local.hex --force && \
-    mix local.rebar --force
-
-# Reduce container size
-RUN rm -rf /var/cache/apk/*
 
 # Install and compile project dependencies
 COPY mix.* ./
@@ -73,4 +62,4 @@ RUN $APP_NAME/hooks/pre-run.sh
 #    Interactive: gateway/bin/gateway console
 #    Foreground: gateway/bin/gateway foreground
 #    Daemon: gateway/bin/gateway start
-CMD $APP_NAME/bin/$APP_NAME foreground
+CMD $APP_NAME/bin/$APP_NAME   foreground
