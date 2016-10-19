@@ -3,11 +3,7 @@ defmodule Gateway.Router do
   Gateway HTTP Router
   """
   use Plug.Router
-<<<<<<< HEAD
-  
-=======
 
->>>>>>> origin/OSL-381
   plug Gateway.Monitoring
   plug Plug.Parsers, parsers: [:json],
                      pass:  ["application/json"],

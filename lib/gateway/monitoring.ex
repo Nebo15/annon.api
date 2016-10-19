@@ -1,16 +1,4 @@
 defmodule Gateway.Monitoring do
-<<<<<<< HEAD
-    import Plug.Conn
-
-    def init(opts) do
-        opts
-    end
-
-    def call(conn, opts) do
-        IO.inspect Plug.Con..read_body(conn)
-    end    
-end
-=======
   @moduledoc """
     Monitoring data reporting to statsd
 """
@@ -33,6 +21,8 @@ end
     conn.path_info
     |> metric_name("request_count")
     |> update_counter(1)
+
+    IO.inspect :exometer_report.list_metrics
 
     req_start_time = :erlang.monotonic_time(@unit)
     conn = Plug.Conn.register_before_send conn, fn conn ->
@@ -90,4 +80,3 @@ end
     |> byte_size
   end
 end
->>>>>>> origin/OSL-381

@@ -37,8 +37,9 @@ defmodule Gateway.Monitoring.ElixometerTest do
     |> conn("/")
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.API.call([])
-
-    assert metric_exists Confex.get(:elixometer, :metric_prefix) <> "." <> to_string(Confex.get(:elixometer, :env)) <>
-                                                                    ".counters." <> @apis <> "_request_count.value"
+    
+    IO.inspect Reporter.metric_names
+    IO.inspect :exometer_report.list_metrics
+    assert {:ok, [value: 1, ms_since_reset: _]} = Elixometer.get_metric_value("os.gateway.test.counters.apis_request_count")
   end
 end
