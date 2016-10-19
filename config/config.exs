@@ -13,7 +13,7 @@ config :gateway, ecto_repos: [Gateway.DB.Repo]
 
 config :logger, level: :debug
 
-config :gateway, :http,
+config :gateway, :public_http,
   port: { :system, "GATEWAY_PORT", 4000 }
 
 import_config "#{Mix.env}.exs"
