@@ -12,6 +12,8 @@ config :gateway, :acceptance,
   port: { :system, :integer, "MIX_TEST_PORT", 4000 },
   host: { :system, "MIX_TEST_HOST", "localhost" }
 
-config :logger, level: :warn
+config :logger, level: :debug
+
+config :ex_unit, capture_log: true
 
 config :gateway, sql_sandbox: true
