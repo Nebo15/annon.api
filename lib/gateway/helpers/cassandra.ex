@@ -5,40 +5,38 @@ defmodule Gateway.Helpers.Cassandra do
   alias Cassandra.Connection
 
   @insert_query """
-    insert into logs (id, created_at, idempotency_key, ip_address, request) values (?, toTimestamp(now()), ?, ?, ?);
+    insert into gateway.logs (id, created_at, idempotency_key, ip_address, request) values (?, toTimestamp(now()), ?, ?, ?);
   """
 
   @update_query """
-    update logs set response = ?, latencies = ?, status_code = ? where id = ?;
+    update gateway.logs set response = ?, latencies = ?, status_code = ? where id = ?;
   """
 
-  defp init do
-    cassandra_hostname = Confex.get(:cassandra, :hostname)
-    cassandra_port = Confex.get(:cassandra, :port)
-    cassandra_keyspace = Confex.get(:cassandra, :keyspace)
-    {:ok, cassandra_conn} = Connection.start_link [
-      hostname: cassandra_hostname,
-      port: cassandra_port,
-      keyspace: cassandra_keyspace
-    ]
-    cassandra_conn
+  @create_keyspace_query """
+    create keyspace if not exists gateway with replication = {'class' : 'SimpleStrategy', 'replication_factor' : 1};
+  """
+
+  defp get_query(cassandra_conn, :create_keyspace) do
+    Connection.prepare cassandra_conn, @create_keyspace_query
   end
 
-  defp get_query(cassandra_conn, :insert) do
+  defp get_query(cassandra_conn, :insert_logs) do
     Connection.prepare cassandra_conn, @insert_query
   end
 
-  defp get_query(cassandra_conn, :update) do
+  defp get_query(cassandra_conn, :update_logs) do
     Connection.prepare cassandra_conn, @update_query
   end
 
-  def write_logs(records, type) do
-    cassandra_conn = init
+  def execute_query(records, type) do
+    cassandra_conn = Process.whereis Cassandra
 
     {:ok, query} = get_query(cassandra_conn, type)
 
     records
     |> Enum.map(&Task.async(fn -> Connection.execute(cassandra_conn, query, &1) end))
     |> Enum.map(&Task.await/1)
+
+    {:ok, cassandra_conn}
   end
 end

@@ -16,9 +16,9 @@ config :logger, level: :debug
 config :gateway, :http,
   port: { :system, "GATEWAY_PORT", 4000 }
 
-config :cassandra,
-  hostname: "127.0.0.1",
+config :cassandra, :connection,
+  hostname: "localhost",
   port: 9042,
-  keyspace: "gateway"
+  keyspace: "system"
 
 import_config "#{Mix.env}.exs"

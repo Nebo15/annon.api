@@ -11,6 +11,7 @@ defmodule Gateway do
 
     children = [
       supervisor(Gateway.DB.Repo, []),
+      supervisor(Gateway.Workers.Cassandra, []),
       Plug.Adapters.Cowboy.child_spec(:http, Gateway.Router, [], http_config)
     ]
 

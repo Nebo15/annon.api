@@ -76,7 +76,7 @@ defmodule Gateway.Logger do
     records = [
       %{id: id, idempotency_key: idempotency_key, ip_address: conn.remote_ip, request: request_string}
     ]
-    write_logs(records, :insert)
+    execute_query(records, :insert_logs)
   end
 
   defp log(conn, :response) do
@@ -86,7 +86,7 @@ defmodule Gateway.Logger do
     records = [
       %{id: id, response: response_string, latencies: latencies_string, status_code: conn.status}
     ]
-    write_logs(records, :update)
+    execute_query(records, :update_logs)
   end
 
   def call(conn, _opts) do
