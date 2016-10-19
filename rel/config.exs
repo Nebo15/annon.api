@@ -7,6 +7,9 @@ environment :default do
   set dev_mode: false
   set include_erts: false
   set include_src: false
+  set applications: [
+    app_name: :permanent
+  ]
 end
 
 release :gateway do
