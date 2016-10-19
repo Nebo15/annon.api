@@ -1,4 +1,4 @@
-defmodule Gateway.Router do
+defmodule Gateway.PublicRouter do
   @moduledoc """
   Gateway HTTP Router
   """
