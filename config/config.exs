@@ -13,11 +13,8 @@ config :gateway, ecto_repos: [Gateway.DB.Repo]
 
 memory_stats = ~w(atom binary ets processes total)a
 
-<<<<<<< HEAD
-config :exometer,  
-=======
 config :exometer,
->>>>>>> origin/OSL-381
+
    predefined: [
      {
        ~w(erlang memory)a,
@@ -42,9 +39,15 @@ config :elixometer,
     metric_prefix: "myapp"
 =======
 config :elixometer,
+<<<<<<< HEAD
   reporter: :exometer_report_statsd,
     env: Mix.env,
     metric_prefix: "os.gateway"
+>>>>>>> origin/OSL-381
+=======
+ reporter: :exometer_report_statsd,
+ env: Mix.env,
+ metric_prefix: "os.gateway"
 >>>>>>> origin/OSL-381
 
 config :exometer_core, report: [

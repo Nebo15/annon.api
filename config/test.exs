@@ -9,9 +9,9 @@ config :logger, level: :warn
 
 config :gateway, sql_sandbox: true
 
-config(:exometer_core, report: [reporters: [{Gateway.Monitoring.TestReporter, []}]])
+memory_stats = ~w(atom binary ets processes total)a
 
-config(:elixometer, update_frequency: 20,
-       reporter: Gateway.Monitoring.TestReporter,
-       env: Mix.env,
-       metric_prefix: "os.gateway")
+config :exometer,
+   report: [
+     reporters: [{Gateway.Monitoring.TestReporter, []}]
+   ]
