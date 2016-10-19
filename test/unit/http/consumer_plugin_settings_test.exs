@@ -1,5 +1,5 @@
 defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
-  use Gateway.HTTPTestHelper
+  use Gateway.UnitCase
 
   setup do
     consumer = create_fixture(Gateway.DB.Models.Consumer)
