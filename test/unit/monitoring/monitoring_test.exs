@@ -30,15 +30,6 @@ defmodule Gateway.Monitoring.ElixometerTest do
     metric_name in Reporter.metric_names
   end
 
-  def subscription_exists(metric_name) when is_bitstring(metric_name) do
-    metric_name |> to_elixometer_name |> subscription_exists
-  end
-
-  def subscription_exists(metric_name) when is_list(metric_name) do
-    wait_for_messages
-    metric_name in Reporter.subscriptions
-  end
-
   test "a gauge registers its name" do
 #    update_gauge("register", 10)
 
