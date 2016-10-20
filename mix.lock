@@ -47,4 +47,5 @@
   "ssl_verify_fun": {:hex, :ssl_verify_fun, "1.1.0", "edee20847c42e379bf91261db474ffbe373f8acb56e9079acb6038d4e0bf414f", [:rebar, :make], []},
   "timex": {:hex, :timex, "3.1.0", "71c1bc6eef88f2bf8628224d62eab12dda5c5904e9db764289db1e360c622900", [:mix], [{:combine, "~> 0.7", [hex: :combine, optional: false]}, {:gettext, "~> 0.10", [hex: :gettext, optional: false]}, {:tzdata, "~> 0.1.8 or ~> 0.5", [hex: :tzdata, optional: false]}]},
   "tzdata": {:hex, :tzdata, "0.5.9", "575be217b039057a47e133b72838cbe104fb5329b19906ea4e66857001c37edb", [:mix], [{:hackney, "~> 1.0", [hex: :hackney, optional: false]}]},
-  "uuid": {:hex, :uuid, "1.1.5", "96cb36d86ee82f912efea4d50464a5df606bf3f1163d6bdbb302d98474969369", [:mix], []}}
+  "uuid": {:git, "https://github.com/okeuday/uuid.git", "41e4e0edc4fe6291227b3fe74f7c2362f2525b21", [tag: "v1.4.1"]},
+  "yyid": {:hex, :yyid, "0.1.2", "529ac7f5ff6744d57a95c931bf8476874fdf4eb80c6958df76f58cccb7375738", [:mix], []}}

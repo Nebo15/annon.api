@@ -19,7 +19,7 @@ defmodule Gateway.Acceptance.Plug.JWTTest do
                      },
                      "required" => ["foo"]
                    }
-  @consumer_id UUID.uuid1()
+  @consumer_id YYID.new
   @consumer %{
     external_id: @consumer_id,
     metadata: %{"key": "value"},
