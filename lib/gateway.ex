@@ -19,6 +19,6 @@ defmodule Gateway do
   end
 
   defp endpoint_spec(type) do
-    Plug.Adapters.Cowboy.child_spec(:http, Gateway.PublicRouter, [], Confex.get_map(:gateway, type)),
+    Plug.Adapters.Cowboy.child_spec(:http, Gateway.PublicRouter, [], Confex.get_map(:gateway, type))
   end
 end
