@@ -11,8 +11,6 @@ defmodule Gateway.Plugins.JWT do
   alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.Consumer
   alias Gateway.DB.Models.API, as: APIModel
-  alias Gateway.DB.Models.ConsumerPluginSettings
-  require Logger
 
   def init([]), do: false
 
@@ -56,21 +54,50 @@ defmodule Gateway.Plugins.JWT do
   end
   defp evaluate(%Token{error: message}, conn), do: send_halt(conn, 401, message)
 
-  defp merge_consumer_settings(
+  def merge_consumer_settings(
     %Plug.Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, %Token{claims: %{"id" => id}}) do
 
-    Logger.warn id
+    id
+    |> get_consumer_settings()
+    |> merge_plugins(plugins)
+    |> put_api_to_conn(conn)
+  end
+  def merge_consumer_settings(conn, _token), do: conn
+
+  def merge_plugins(consumer, default) when is_list(consumer) and length(consumer) > 0
+                                        and is_list(default) and length(default) > 0 do
+    {_, plugins} = Enum.map_reduce(default, [], fn(d_plugin, acc) ->
+
+      mergerd_plugin = consumer
+      |> Enum.filter(fn({c_id, _}) -> c_id == d_plugin.id end)
+      |> merge_plugin(d_plugin)
+
+      {nil, List.insert_at(acc, -1, mergerd_plugin)}
+    end)
+    plugins
+  end
+  def merge_plugins(_consumer, _default), do: nil
+  def merge_plugin([{_, consumer_settings}], %Plugin{} = plugin) do
+    plugin
+    |> Map.put(:settings, consumer_settings)
+    |> Map.put(:is_enabled, true)
+  end
+  def merge_plugin(_, plugin), do: plugin
+
+  def put_api_to_conn(nil, conn), do: conn
+  def put_api_to_conn(plugins, %Plug.Conn{private: %{api_config: %APIModel{} = api}} = conn) when is_list(plugins) do
+    conn
+    |> put_private(:api_config, Map.put(api, :plugins, plugins))
+  end
+
+  def get_consumer_settings(external_id) do
     query = from c in Consumer,
-            where: c.external_id == ^id,
+            where: c.external_id == ^external_id,
             join: s in assoc(c, :plugins),
             where: s.is_enabled == true,
-            preload: [plugins: s]
-    a = Repo.all(query)
-    Logger.warn(inspect a)
-
-    conn
+            select: {s.plugin_id, s.settings}
+    Repo.all(query)
   end
-  defp merge_consumer_settings(conn, _token), do: conn
 
   defp send_halt(conn, code, message) do
     conn

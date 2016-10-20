@@ -59,7 +59,7 @@ defmodule Gateway.AcceptanceCase do
 
       setup do
         on_exit fn ->
-          ["apis", "consumers", "plugins"]
+          ["apis", "plugins", "consumers", "consumer_plugin_settings"]
           |> Enum.map(fn table -> truncate_table Gateway.DB.Repo, table end)
         end
       end

@@ -3,7 +3,7 @@ defmodule Gateway.DB.Repo.Migrations.AddConsumerPluginSettings do
 
   def change do
     create table(:consumer_plugin_settings) do
-      add :external_id, :string
+      add :external_id, :uuid
       add :plugin_id, :integer
       add :settings, :map
 
