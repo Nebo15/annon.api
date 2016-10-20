@@ -9,6 +9,7 @@ defmodule Gateway.AcceptanceCase do
 
   using do
     quote do
+      import Joken
       import Ecto
       import Ecto.Changeset
       import Ecto.Query, only: [from: 2]
@@ -42,11 +43,24 @@ defmodule Gateway.AcceptanceCase do
       end
       def get_body(%HTTPoison.Response{} = response), do: response.body
 
-      setup do
-        on_exit fn ->
-          ["apis", "consumers", "plugins"]
-          |> Enum.map(fn table -> truncate_table Gateway.DB.Repo, table end)
+      def jwt_token(payload, signature) do
+        payload
+        |> token
+        |> sign(hs256(signature))
+        |> get_compact
+      end
+
+      setup tags do
+        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Repo)
+
+        unless tags[:async] do
+          Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Repo, {:shared, self()})
         end
+
+        ["apis", "plugins", "consumers", "consumer_plugin_settings"]
+        |> Enum.map(fn table -> truncate_table Gateway.DB.Repo, table end)
+
+        :ok
       end
 
       defp truncate_table(repo, table) do
@@ -54,5 +68,4 @@ defmodule Gateway.AcceptanceCase do
       end
     end
   end
-
 end
