@@ -7,7 +7,7 @@ MAINTAINER Nebo#15 support@nebo15.com
 ENV TERM=xterm \
     MIX_ENV=prod \
     APP_NAME=gateway \
-    APP_PORT=5000
+    APP_PORT=4001
 
 WORKDIR ${HOME}
 
