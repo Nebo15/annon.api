@@ -10,15 +10,14 @@ defmodule Gateway do
     children = [
       supervisor(Gateway.DB.Repo, []),
       http_endpoint_spec(:private_http),
-      http_endpoint_spec(:public_http),
-      Plug.Adapters.Cowboy.child_spec(:http, Gateway.PrivateRouter, [], private_http_config)
+      http_endpoint_spec(:public_http)
     ]
 
     opts = [strategy: :one_for_one, name: Gateway.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
-  defp endpoint_spec(type) do
+  defp http_endpoint_spec(type) do
     Plug.Adapters.Cowboy.child_spec(:http, Gateway.PublicRouter, [], Confex.get_map(:gateway, type))
   end
 end
