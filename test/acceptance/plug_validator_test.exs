@@ -27,8 +27,8 @@ defmodule Gateway.Acceptance.PlugValidatorTest do
     |> get(:public)
     |> assert_status(404)
 
-    "apis"
-    |> post("{}", :private)
+    "test"
+    |> post("{}", :public)
     |> assert_status(422)
   end
 
