@@ -2,8 +2,7 @@ defmodule Gateway.HTTP.PluginTest do
 
   @plugin_url "/"
 
-  use Gateway.HTTPTestHelper
-  alias Gateway.DB.Models.Plugin
+  use Gateway.UnitCase
   alias Gateway.DB.Models.API, as: APIModel
 
   test "GET /apis/:api_id" do
@@ -52,24 +51,24 @@ defmodule Gateway.HTTP.PluginTest do
   end
 
   test "PUT /apis/:api_id/plugins/:name" do
-    %{plugins: [_, p2]} = data = get_api_model_data()
-    {:ok, api_model} = APIModel.create(data)
+    %{plugins: [p1, _]} = data = get_api_model_data()
+    {:ok, api_model} = APIModel.create(Map.put(data, :plugins, [p1]))
 
-    plugin_data = %{name: "new_name", settings: p2.settings}
+    plugin_data = %{name: "Validator", settings: p1.settings}
 
-    conn = "/#{api_model.id}/plugins/#{p2.name}"
+    conn = "/#{api_model.id}/plugins/#{p1.name}"
     |> send_data(plugin_data, :put)
     |> assert_conn_status()
 
     resp = Poison.decode!(conn.resp_body)["data"]
     assert resp["name"] == plugin_data.name
 
-    "/#{api_model.id}/plugins/new_name"
+    "/#{api_model.id}/plugins/Validator"
     |> send_get()
     |> assert_conn_status()
 
-    plugin_data = %{name: "new_name", settings: %{"test" => "updated"}}
-    conn = "/#{api_model.id}/plugins/new_name"
+    plugin_data = %{name: "Validator", settings: %{"test" => "updated"}}
+    conn = "/#{api_model.id}/plugins/Validator"
     |> send_data(plugin_data, :put)
     |> assert_conn_status()
 

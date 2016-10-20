@@ -1,5 +1,5 @@
 defmodule Gateway.HTTP.ConsumerTest do
-  use Gateway.HTTPTestHelper
+  use Gateway.UnitCase
 
   test "GET /consumers" do
     data =

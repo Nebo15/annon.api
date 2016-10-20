@@ -11,7 +11,6 @@ defmodule Gateway.API.ModelCase do
   """
 
   use ExUnit.CaseTemplate
-  alias Gateway.DB.Models.Plugin
 
   using do
     quote do
@@ -22,6 +21,7 @@ defmodule Gateway.API.ModelCase do
       import Ecto.Changeset
       import Ecto.Query
       import Gateway.API.ModelCase
+      import Gateway.Fixtures
     end
   end
 
@@ -33,11 +33,6 @@ defmodule Gateway.API.ModelCase do
     end
 
     :ok
-  end
-
-  def get_plugin_fixture do
-    Plugin
-    |> EctoFixtures.ecto_fixtures
   end
 
   @doc """

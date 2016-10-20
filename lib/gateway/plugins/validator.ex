@@ -4,38 +4,34 @@ defmodule Gateway.Plugins.Validator do
   See more https://github.com/jonasschmidt/ex_json_schema
   """
   import Plug.Conn
+  alias Gateway.DB.Models.Plugin
+  alias Gateway.DB.Models.API, as: APIModel
 
   def init(opts), do: opts
 
-  def call(conn, _), do: valid?(get_body(conn), get_schema(conn), conn)
-  def valid?(body, schema, conn) do
-    case ExJsonSchema.Validator.validate(schema, body) do
-      :ok -> conn
-      {:error, errors} -> conn |> send_422(errors) |> halt
-    end
-
+  def call(%Plug.Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
+    plugins
+    |> get_enabled()
+    |> validate(conn)
   end
+  def call(conn, _), do: conn
 
-  def get_schema(%Plug.Conn{assigns: %{schema: %{} = schema}}), do: schema
-  def get_schema(
-    %Plug.Conn{
-      private: %{
-        api_config: %{
-          plugins: [
-            %{name: "Validator", settings: %{"schema" => schema}}
-          ]
-        }
-      }
-    }), do: schema |> Poison.decode!
+  defp validate(%Plugin{settings: %{"schema" => schema}}, %Plug.Conn{body_params: %{} = body} = conn) do
+    schema
+    |> Poison.decode!()
+    |> ExJsonSchema.Validator.validate(body)
+    |> normalize_validation(conn)
+  end
+  defp validate(_, conn), do: conn
 
-  def get_schema(_), do: %{}
-  def get_body(%Plug.Conn{body_params: %{} = body}), do: body
-  defp send_422(conn, errors) do
+  defp normalize_validation(:ok, conn), do: conn
+  defp normalize_validation({:error, errors}, conn) do
     conn
-     |> put_resp_content_type("application/json")
-     |> send_resp(422, create_json_response(errors))
-     |> halt
+    |> put_resp_content_type("application/json")
+    |> send_resp(422, create_json_response(errors))
+    |> halt
   end
+
   defp create_json_response(errors) when is_list(errors) do
     Poison.encode!(%{
       meta: %{
@@ -57,5 +53,12 @@ defmodule Gateway.Plugins.Validator do
   defp get_rule_name("can't be blank"), do: :required
   defp get_rule_name("is invalid"), do: :invalid
   defp get_rule_name(msg), do: msg
+
+  defp get_enabled(plugins) when is_list(plugins) do
+    plugins
+    |> Enum.find(&filter_plugin/1)
+  end
+  defp filter_plugin(%Plugin{name: :Validator, is_enabled: true}), do: true
+  defp filter_plugin(_), do: false
 
 end

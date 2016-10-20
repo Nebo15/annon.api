@@ -13,7 +13,7 @@ defmodule Gateway.Router do
   plug Plug.Parsers, parsers: [:json],
                      pass: ["application/json"],
                      json_decoder: Poison
-  plug Gateway.Plugins.Getter
+  plug Gateway.Plugins.APILoader
   plug Gateway.Plugins.Validator
   plug :dispatch
 
