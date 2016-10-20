@@ -11,7 +11,6 @@ defmodule Gateway.Plugins.JWT do
   alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.Consumer
   alias Gateway.DB.Models.API, as: APIModel
-  require Logger
 
   def init([]), do: false
 
@@ -67,7 +66,8 @@ defmodule Gateway.Plugins.JWT do
 
   def merge_plugins(consumer, default) when is_list(consumer) and length(consumer) > 0
                                         and is_list(default) and length(default) > 0 do
-    {_, plugins} = Enum.map_reduce(default, [], fn(d_plugin, acc) ->
+    default
+    |> Enum.map_reduce([], fn(d_plugin, acc) ->
 
       mergerd_plugin = consumer
       |> Enum.filter(fn({c_id, _}) -> c_id == d_plugin.id end)
@@ -75,13 +75,14 @@ defmodule Gateway.Plugins.JWT do
 
       {nil, List.insert_at(acc, -1, mergerd_plugin)}
     end)
-    plugins
+    |> elem(1)
   end
+
   def merge_plugins(_consumer, _default), do: nil
+
   def merge_plugin([{_, consumer_settings}], %Plugin{} = plugin) do
     plugin
-    |> Map.put(:settings, consumer_settings)
-    |> Map.put(:is_enabled, true)
+    |> Map.merge(%{settings: consumer_settings, is_enabled: true})
   end
   def merge_plugin(_, plugin), do: plugin
 
