@@ -20,16 +20,14 @@ defmodule Gateway.AcceptanceCase do
 
       @config Confex.get_map(:gateway, :acceptance)
 
-      def get(url, endpoint_type), do: request(:get, endpoint_type, url, "")
-      def post(url, body, endpoint_type), do: request(:post, endpoint_type, url, body)
+      def get(url, endpoint_type, headers \\ []), do: request(:get, endpoint_type, url, "", headers)
+      def post(url, body, endpoint_type, headers \\ []), do: request(:post, endpoint_type, url, body, headers)
 
-      def request(request_type, endpoint_type, url, body) do
+      def request(request_type, endpoint_type, url, body, custom_headers) do
         port = get_port(endpoint_type)
         host = get_host(endpoint_type)
 
-        headers = [
-          {"Content-Type", "application/json"}
-        ]
+        headers = [{"Content-Type", "application/json"} | custom_headers]
 
         HTTPoison.request(request_type, "http://#{host}:#{port}/#{url}", body, headers)
       end
