@@ -41,30 +41,30 @@ defmodule Gateway.Acceptance.Plug.JWTTest do
     ])
 
     @api_url
-    |> post(Poison.encode!(data))
+    |> post(Poison.encode!(data), :private)
     |> assert_status(201)
 
     @consumer_url
-    |> post(Poison.encode!(@consumer))
+    |> post(Poison.encode!(@consumer), :private)
     |> assert_status(201)
 
     url = @consumer_url <> "/#{@consumer_id}/plugins"
     url
-    |> post(Poison.encode!(@consumer_plugin))
+    |> post(Poison.encode!(@consumer_plugin), :private)
     |> assert_status(201)
 
     token = jwt_token(@payload, "secret")
 
     "jwt/test"
-    |> post!(Poison.encode!(%{bar: "string"}), [{"authorization", "Bearer invalid.credentials.signature"}])
+    |> post!(Poison.encode!(%{bar: "string"}), :public, [{"authorization", "Bearer invalid.credentials.signature"}])
     |> assert_status(401)
 
     "jwt/test"
-    |> post!(Poison.encode!(%{bar: "string"}), [{"authorization", "Bearer #{token}"}])
+    |> post!(Poison.encode!(%{bar: "string"}), :public, [{"authorization", "Bearer #{token}"}])
     |> assert_status(422)
 
     "jwt/test"
-    |> post!(Poison.encode!(%{foo: "string", bar: 123}), [{"authorization", "Bearer #{token}"}])
+    |> post!(Poison.encode!(%{foo: "string", bar: 123}), :public, [{"authorization", "Bearer #{token}"}])
     |> assert_status(404)
   end
 end
