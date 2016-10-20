@@ -11,6 +11,7 @@ defmodule Gateway.Plugins.JWT do
   alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.Consumer
   alias Gateway.DB.Models.API, as: APIModel
+  require Logger
 
   def init([]), do: false
 

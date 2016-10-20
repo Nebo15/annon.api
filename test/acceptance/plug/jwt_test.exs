@@ -1,5 +1,5 @@
 defmodule Gateway.Acceptance.Plug.JWTTest do
-  use Gateway.AcceptanceCase, async: true
+  use Gateway.AcceptanceCase
 
   @api_url "apis"
   @consumer_url "consumers"
@@ -34,9 +34,10 @@ defmodule Gateway.Acceptance.Plug.JWTTest do
   test "jwt consumer plugins settings rewrite" do
 
     data = get_api_model_data()
-    |> Map.put(:request, %{host: "localhost", path: "/jwt/test", port: get_port(), scheme: "http", method: "POST"})
+    |> Map.put(:request,
+      %{host: get_host(:public), path: "/jwt/test", port: get_port(:public), scheme: "http", method: "POST"})
     |> Map.put(:plugins, [
-      %{name: "JWT", is_enabled: true, settings: %{"signature" => "secret"}},
+      %{name: "JWT", is_enabled: true, settings: %{"signature" => "jwt_test_secret"}},
       %{name: "Validator", is_enabled: false, settings: %{"schema" => Poison.encode!(@schema)}}
     ])
 
@@ -53,18 +54,18 @@ defmodule Gateway.Acceptance.Plug.JWTTest do
     |> post(Poison.encode!(@consumer_plugin), :private)
     |> assert_status(201)
 
-    token = jwt_token(@payload, "secret")
+    token = jwt_token(@payload, "jwt_test_secret")
 
     "jwt/test"
-    |> post!(Poison.encode!(%{bar: "string"}), :public, [{"authorization", "Bearer invalid.credentials.signature"}])
+    |> post(Poison.encode!(%{bar: "string"}), :public, [{"authorization", "Bearer invalid.credentials.signature"}])
     |> assert_status(401)
 
     "jwt/test"
-    |> post!(Poison.encode!(%{bar: "string"}), :public, [{"authorization", "Bearer #{token}"}])
+    |> post(Poison.encode!(%{bar: "string"}), :public, [{"authorization", "Bearer #{token}"}])
     |> assert_status(422)
 
     "jwt/test"
-    |> post!(Poison.encode!(%{foo: "string", bar: 123}), :public, [{"authorization", "Bearer #{token}"}])
+    |> post(Poison.encode!(%{foo: "string", bar: 123}), :public, [{"authorization", "Bearer #{token}"}])
     |> assert_status(404)
   end
 end

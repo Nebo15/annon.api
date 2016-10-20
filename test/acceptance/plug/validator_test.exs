@@ -1,5 +1,5 @@
 defmodule Gateway.Acceptance.Plug.ValidatorTest do
-  use Gateway.AcceptanceCase, async: true
+  use Gateway.AcceptanceCase
 
   @api_url "apis"
   @schema %{"type" => "object",
