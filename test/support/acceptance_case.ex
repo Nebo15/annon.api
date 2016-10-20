@@ -24,8 +24,8 @@ defmodule Gateway.AcceptanceCase do
       def post(url, body, endpoint_type), do: request(:post, endpoint_type, url, body)
 
       def request(request_type, endpoint_type, url, body) do
-        port = Keyword.get(@config, endpoint_type)[:port]
-        host = Keyword.get(@config, endpoint_type)[:host]
+        port = get_port(endpoint_type)
+        host = get_host(endpoint_type)
 
         headers = [
           {"Content-Type", "application/json"}
@@ -34,9 +34,8 @@ defmodule Gateway.AcceptanceCase do
         HTTPoison.request(request_type, "http://#{host}:#{port}/#{url}", body, headers)
       end
 
-      def get_port(type) do
-        @config[type][:port]
-      end
+      def get_port(endpoint_type), do: @config[endpoint_type][:port]
+      def get_host(endpoint_type), do: @config[endpoint_type][:host]
 
       def assert_status({:ok, %HTTPoison.Response{} = response}, status), do: assert_status(response, status)
       def assert_status(%HTTPoison.Response{} = response, status) do

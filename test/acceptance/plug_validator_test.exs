@@ -13,7 +13,7 @@ defmodule Gateway.Acceptance.PlugValidatorTest do
   test "post hook with empty data" do
 
     data = get_api_model_data()
-    |> Map.put(:request, %{host: "localhost", path: "/test", port: get_port(:public), scheme: "http", method: "POST"})
+    |> Map.put(:request, %{host: get_host(:public), path: "/test", port: get_port(:public), scheme: "http", method: "POST"})
     |> Map.put(:plugins, [
       %{name: "JWT", is_enabled: false, settings: %{"signature" => "secret"}},
       %{name: "Validator", is_enabled: true, settings: %{"schema" => Poison.encode!(@schema)}}
