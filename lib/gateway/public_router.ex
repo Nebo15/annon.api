@@ -9,6 +9,7 @@ defmodule Gateway.PublicRouter do
                      pass: ["application/json"],
                      json_decoder: Poison
   plug Gateway.Plugins.APILoader
+  plug Gateway.Plugins.JWT
   plug Gateway.Plugins.Validator
   plug :dispatch
 

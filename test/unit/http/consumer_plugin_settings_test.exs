@@ -17,7 +17,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     Gateway.DB.Models.ConsumerPluginSettings.create(external_id, %{plugin_id: plugin2.id})
 
     conn = :get
-    |> conn("/consumers/#{external_id}/plugins")
+    |> conn("/#{external_id}/plugins")
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.Consumers.call([])
 
@@ -31,7 +31,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     { :ok, cust_plugin1 } = Gateway.DB.Models.ConsumerPluginSettings.create(external_id, %{plugin_id: plugin.id})
 
     conn = :get
-    |> conn("/consumers/#{external_id}/plugins")
+    |> conn("/#{external_id}/plugins")
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.Consumers.call([])
 
@@ -58,7 +58,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     }
 
     conn = :put
-    |> conn("/consumers/#{external_id}/plugins/#{plugin.name}", Poison.encode!(contents))
+    |> conn("/#{external_id}/plugins/#{plugin.name}", Poison.encode!(contents))
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.Consumers.call([])
 
@@ -81,7 +81,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     }
 
     conn = :post
-    |> conn("/consumers/#{external_id}/plugins", Poison.encode!(contents))
+    |> conn("/#{external_id}/plugins", Poison.encode!(contents))
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.Consumers.call([])
 
@@ -101,7 +101,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     Gateway.DB.Models.ConsumerPluginSettings.create(external_id, params)
 
     conn = :delete
-    |> conn("/consumers/#{external_id}/plugins/#{plugin.name}")
+    |> conn("/#{external_id}/plugins/#{plugin.name}")
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.Consumers.call([])
 

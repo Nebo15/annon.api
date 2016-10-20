@@ -11,14 +11,14 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
   alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.ConsumerPluginSettings
 
-  get "/consumers/:external_id/plugins" do
+  get "/:external_id/plugins" do
     ConsumerPluginSettings
     |> Repo.all(external_id: external_id)
     |> render_show_response
     |> send_response(conn)
   end
 
-  get "/consumers/:external_id/plugins/:plugin_name" do
+  get "/:external_id/plugins/:plugin_name" do
     external_id
     |> plugin_by(plugin_name)
     |> Repo.one()
@@ -26,7 +26,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
     |> send_response(conn)
   end
 
-  put "/consumers/:external_id/plugins/:plugin_name" do
+  put "/:external_id/plugins/:plugin_name" do
     external_id
     |> plugin_by(plugin_name)
     |> ConsumerPluginSettings.update(conn.body_params)
@@ -35,14 +35,14 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
     |> send_response(conn)
   end
 
-  post "/consumers/:external_id/plugins" do
+  post "/:external_id/plugins" do
     external_id
     |> ConsumerPluginSettings.create(conn.body_params)
-    |> render_show_response
+    |> render_create_response
     |> send_response(conn)
   end
 
-  delete "/consumers/:external_id/plugins/:plugin_name" do
+  delete "/:external_id/plugins/:plugin_name" do
     external_id
     |> plugin_by(plugin_name)
     |> Repo.delete_all
