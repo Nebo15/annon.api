@@ -2,10 +2,11 @@ defmodule Gateway.Helpers.Cassandra do
   @moduledoc """
   Helper for working with Cassandra
   """
-  alias Cassandra.Connection
+  alias CQEx.Query, as: Q
 
   @insert_query """
-    insert into gateway.logs (id, created_at, idempotency_key, ip_address, request) values (?, toTimestamp(now()), ?, ?, ?);
+    insert into gateway.logs (id, created_at, idempotency_key, ip_address, request)
+      values (?, toTimestamp(now()), ?, ?, ?);
   """
 
   @update_query """
@@ -16,25 +17,45 @@ defmodule Gateway.Helpers.Cassandra do
     create keyspace if not exists gateway with replication = {'class' : 'SimpleStrategy', 'replication_factor' : 1};
   """
 
-  defp get_query(cassandra_conn, :create_keyspace) do
-    Connection.prepare cassandra_conn, @create_keyspace_query
+  @create_logs_table_query """
+    create table if not exists gateway.logs (
+      id text,
+      created_at timestamp,
+      idempotency_key text,
+      ip_address inet,
+      request blob,
+      response blob,
+      latencies blob,
+      status_code int,
+      PRIMARY KEY (id)
+    );
+  """
+
+  defp get_statement(:create_keyspace) do
+    @create_keyspace_query
   end
 
-  defp get_query(cassandra_conn, :insert_logs) do
-    Connection.prepare cassandra_conn, @insert_query
+  defp get_statement(:create_logs_table) do
+    @create_logs_table_query
   end
 
-  defp get_query(cassandra_conn, :update_logs) do
-    Connection.prepare cassandra_conn, @update_query
+  defp get_statement(:insert_logs) do
+    @insert_query
   end
 
-  def execute_query(records, type) do
-    cassandra_conn = Process.whereis Cassandra
+  defp get_statement(:update_logs) do
+    @update_query
+  end
 
-    {:ok, query} = get_query(cassandra_conn, type)
+  def execute_query(values, type) do
+    {:ok, client} = :cqerl.get_client({})
 
-    records
-    |> Enum.map(&Task.async(fn -> Connection.execute(cassandra_conn, query, &1) end))
-    |> Enum.map(&Task.await/1)
+    query = %Q{
+      statement: get_statement(type),
+      values: values
+    }
+
+    client
+    |> Q.call!(query)
   end
 end

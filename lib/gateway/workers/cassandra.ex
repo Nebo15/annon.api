@@ -2,10 +2,12 @@ defmodule Gateway.Workers.Cassandra do
   @moduledoc """
   Cassandra worker
   """
-  use Connection
+  import Gateway.Helpers.Cassandra
 
   def start_link do
-    cassandra_config = Confex.get_map(:cassandra, :connection)
-    Connection.start_link(Cassandra.Connection, cassandra_config, name: Cassandra)
+    {pid, _reference} = CQEx.Client.new!
+    execute_query([], :create_keyspace)
+    execute_query([], :create_logs_table)
+    {:ok, pid}
   end
 end

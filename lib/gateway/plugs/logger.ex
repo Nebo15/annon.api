@@ -73,20 +73,16 @@ defmodule Gateway.Logger do
     id = parse_header(conn.resp_headers, "x-request-id")
     idempotency_key = parse_header(conn.resp_headers, "x-idempotency-key")
     {:ok, request_string} = get_json_string(conn, &get_request_data/1)
-    records = [
-      %{id: id, idempotency_key: idempotency_key, ip_address: conn.remote_ip, request: request_string}
-    ]
-    execute_query(records, :insert_logs)
+    values = %{id: id, idempotency_key: idempotency_key, ip_address: conn.remote_ip, request: request_string}
+    execute_query(values, :insert_logs)
   end
 
   defp log(conn, :response) do
     id = parse_header(conn.resp_headers, "x-request-id")
     {:ok, response_string} = get_json_string(conn, &get_response_data/1)
     {:ok, latencies_string} = get_json_string(conn, &get_latencies_data/1)
-    records = [
-      %{id: id, response: response_string, latencies: latencies_string, status_code: conn.status}
-    ]
-    execute_query(records, :update_logs)
+    values = %{id: id, response: response_string, latencies: latencies_string, status_code: conn.status}
+    execute_query(values, :update_logs)
   end
 
   def call(conn, _opts) do

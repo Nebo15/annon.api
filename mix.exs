@@ -26,7 +26,7 @@ defmodule Gateway.Mixfile do
   def application do
     [
       applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto, :ecto_enum, :timex, :joken, :ex_json_schema,
-                     :poison, :uuid, :httpoison],
+                     :poison, :uuid, :httpoison, :cqex],
       mod: {Gateway, []}
     ]
   end
@@ -58,7 +58,6 @@ defmodule Gateway.Mixfile do
      {:ecto_enum, git: "https://github.com/gjaldon/ecto_enum", branch: "ecto-2.0", override: true},
      {:timex, "~> 3.0"},
      {:poison, "~> 2.0"},
-     {:uuid, ">= 0.0.0"},
      {:joken, "~> 1.3"},
      {:ex_json_schema, ">= 0.0.0"},
      {:httpoison, ">= 0.0.0"},
@@ -68,7 +67,8 @@ defmodule Gateway.Mixfile do
      {:ex_doc, ">= 0.0.0", only: [:dev, :test]},
      {:excoveralls, "~> 0.5", only: [:dev, :test]},
      {:credo, ">= 0.4.8", only: [:dev, :test]},
-     {:cassandra, "~> 0.1.1-pre"},
+     {:cqex, "~> 0.2.0"},
+     {:cqerl, github: "matehat/cqerl"},
      {:ex_json_schema, ">= 0.0.0"},
      {:httpoison, ">= 0.0.0"}]
   end

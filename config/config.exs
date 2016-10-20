@@ -19,9 +19,7 @@ config :gateway, :public_http,
 config :gateway, :private_http,
   port: { :system, "GATEWAY_PRIVATE_PORT", 5001 }
 
-config :cassandra, :connection,
-  hostname: "localhost",
-  port: 9042,
-  keyspace: "system"
+config :cqerl,
+  cassandra_nodes: [ "127.0.0.1:9042" ]
 
 import_config "#{Mix.env}.exs"

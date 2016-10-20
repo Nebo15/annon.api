@@ -9,13 +9,9 @@ defmodule Gateway do
 
     children = [
       supervisor(Gateway.DB.Repo, []),
-<<<<<<< HEAD
       supervisor(Gateway.Workers.Cassandra, []),
-      Plug.Adapters.Cowboy.child_spec(:http, Gateway.Router, [], http_config)
-=======
       http_endpoint_spec(Gateway.PrivateRouter, :private_http),
       http_endpoint_spec(Gateway.PublicRouter, :public_http)
->>>>>>> 10ba333d925bfe247e46b81912a3362664cafa21
     ]
 
     opts = [strategy: :one_for_one, name: Gateway.Supervisor]
