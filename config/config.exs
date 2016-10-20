@@ -14,9 +14,9 @@ config :gateway, ecto_repos: [Gateway.DB.Repo]
 config :logger, level: :debug
 
 config :gateway, :public_http,
-  port: { :system, "GATEWAY_PUBLIC_PORT", 4000 }
+  port: { :system, "GATEWAY_PUBLIC_PORT", 5000 }
 
 config :gateway, :private_http,
-  port: { :system, "GATEWAY_PRIVATE_PORT", 4001 }
+  port: { :system, "GATEWAY_PRIVATE_PORT", 5001 }
 
 import_config "#{Mix.env}.exs"

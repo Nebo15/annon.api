@@ -7,11 +7,11 @@ config :gateway, Gateway.DB.Repo,
 
 config :gateway, :acceptance,
   private: [
-    port: { :system, :integer, "MIX_TEST_PRIVATE_PORT", 4001 },
+    port: { :system, :integer, "MIX_TEST_PRIVATE_PORT", 5001 },
     host: { :system, "MIX_TEST_HOST", "localhost" }
   ],
   public: [
-    port: { :system, :integer, "MIX_TEST_PUBLIC_PORT", 4000 },
+    port: { :system, :integer, "MIX_TEST_PUBLIC_PORT", 5000 },
     host: { :system, "MIX_TEST_HOST", "localhost" }
   ]
 
