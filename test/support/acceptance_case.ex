@@ -19,30 +19,23 @@ defmodule Gateway.AcceptanceCase do
       alias Gateway.DB.Models.Plugin
       alias Gateway.DB.Models.API, as: APIModel
 
-      use HTTPoison.Base
+      @config Confex.get_map(:gateway, :acceptance)
 
-      [port: port, host: host] = Confex.get_map(:gateway, :acceptance)
+      def get(url, endpoint_type, headers \\ []), do: request(:get, endpoint_type, url, "", headers)
+      def post(url, body, endpoint_type, headers \\ []), do: request(:post, endpoint_type, url, body, headers)
 
-      @http_uri "http://#{host}:#{port}/"
-      @port port
+      def request(request_type, endpoint_type, url, body, custom_headers) do
+        port = get_port(endpoint_type)
+        host = get_host(endpoint_type)
 
-      def process_url(url) do
-        @http_uri <> url
+        headers = [{"Content-Type", "application/json"} | custom_headers]
+
+        HTTPoison.request(request_type, "http://#{host}:#{port}/#{url}", body, headers)
       end
 
-      def get_port, do: @port
+      def get_port(endpoint_type), do: @config[endpoint_type][:port]
+      def get_host(endpoint_type), do: @config[endpoint_type][:host]
 
-      defp process_request_headers(headers \\ []) do
-        headers ++ [{"Content-Type", "application/json"}]
-      end
-
-      def process_response_body(body) do
-        try do
-          Poison.decode!(body)
-        rescue
-          _ -> body |> IO.inspect
-        end
-      end
       def assert_status({:ok, %HTTPoison.Response{} = response}, status), do: assert_status(response, status)
       def assert_status(%HTTPoison.Response{} = response, status) do
         assert response.status_code == status

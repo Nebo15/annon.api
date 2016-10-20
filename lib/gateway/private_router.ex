@@ -1,4 +1,4 @@
-defmodule Gateway.Router do
+defmodule Gateway.PrivateRouter do
   @moduledoc """
   Gateway HTTP Router
   """
@@ -8,9 +8,6 @@ defmodule Gateway.Router do
   plug Plug.Parsers, parsers: [:json],
                      pass: ["application/json"],
                      json_decoder: Poison
-  plug Gateway.Plugins.APILoader
-  plug Gateway.Plugins.JWT
-  plug Gateway.Plugins.Validator
   plug :dispatch
 
   forward "/apis", to: Gateway.HTTP.API
