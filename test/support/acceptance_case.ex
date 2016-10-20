@@ -18,21 +18,27 @@ defmodule Gateway.AcceptanceCase do
       alias Gateway.DB.Models.Plugin
       alias Gateway.DB.Models.API, as: APIModel
 
-      use HTTPoison.Base
+      @config Confex.get_map(:gateway, :acceptance)
 
-      [port: port, host: host] = Confex.get_map(:gateway, :acceptance)
+      def post(url, body, kind) do
+        port = Keyword.get(@config, kind)[:port]
+        host = Keyword.get(@config, kind)[:host]
 
-      @http_uri "http://#{host}:#{port}/"
-      @port port
-
-      def process_url(url) do
-        @http_uri <> url
+        "http://#{host}:#{port}/#{url}"
+        |> HTTPoison.post(body, [{"Content-Type", "application/json"}])
       end
 
-      def get_port, do: @port
+      def get(url, kind) do
+        port = Keyword.get(@config, kind)[:port]
+        host = Keyword.get(@config, kind)[:host]
 
-      defp process_request_headers(_) do
-        [{"Content-Type", "application/json"}]
+        "http://#{host}:#{port}/#{url}"
+        |> HTTPoison.get([{"Content-Type", "application/json"}])
+        |> IO.inspect
+      end
+
+      def get_port(type) do
+        @config[type][:port]
       end
 
       def process_response_body(body) do
