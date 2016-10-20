@@ -12,7 +12,7 @@ defmodule Gateway.HTTP.ConsumerTest do
     conn = :get
       |> conn("/consumers")
       |> put_req_header("content-type", "application/json")
-      |> Gateway.Router.call([])
+      |> Gateway.PrivateRouter.call([])
 
     expected_resp = %{
       meta: %{
@@ -32,7 +32,7 @@ defmodule Gateway.HTTP.ConsumerTest do
     conn = :get
       |> conn("/consumers/#{data.external_id}")
       |> put_req_header("content-type", "application/json")
-      |> Gateway.Router.call([])
+      |> Gateway.PrivateRouter.call([])
 
     expected_resp = %{
       meta: %{
@@ -56,7 +56,7 @@ defmodule Gateway.HTTP.ConsumerTest do
     conn = :post
       |> conn("/consumers", Poison.encode!(contents))
       |> put_req_header("content-type", "application/json")
-      |> Gateway.Router.call([])
+      |> Gateway.PrivateRouter.call([])
 
     assert conn.status == 201
     resp = Poison.decode!(conn.resp_body)["data"]
@@ -84,7 +84,7 @@ defmodule Gateway.HTTP.ConsumerTest do
     conn = :put
       |> conn("/consumers/#{data.external_id}", Poison.encode!(new_contents))
       |> put_req_header("content-type", "application/json")
-      |> Gateway.Router.call([])
+      |> Gateway.PrivateRouter.call([])
 
     assert conn.status == 200
     resp = Poison.decode!(conn.resp_body)["data"]
@@ -102,7 +102,7 @@ defmodule Gateway.HTTP.ConsumerTest do
     conn = :delete
       |> conn("/consumers/#{data.external_id}")
       |> put_req_header("content-type", "application/json")
-      |> Gateway.Router.call([])
+      |> Gateway.PrivateRouter.call([])
 
     resp = Poison.decode!(conn.resp_body)
 
