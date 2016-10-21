@@ -14,8 +14,11 @@ defmodule Gateway.Plugins.APILoader do
   # TODO: Get data from the cache, not from the DataBase
   # ToDo: use join for preload
   def get_config(conn) do
-    models = Gateway.DB.Repo.all from Gateway.DB.Models.API,
-             preload: [:plugins]
+    query = from a in Gateway.DB.Models.API,
+            preload: [:plugins]
+
+    models = query
+    |> Gateway.DB.Repo.all()
 
     models
     |> Enum.filter(fn(x) -> equal?(x, conn) end)

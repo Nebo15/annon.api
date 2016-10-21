@@ -21,4 +21,8 @@ defmodule Gateway.Fixtures do
     |> Map.put(:name, name)
   end
 
+  def get_consumer_data do
+    Gateway.DB.Models.Consumer
+    |> EctoFixtures.ecto_fixtures()
+  end
 end

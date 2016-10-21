@@ -2,10 +2,14 @@ defmodule Gateway.Plugins.JWT do
   @moduledoc """
     Plugin for JWT verifying and decoding
   """
-  import Plug.Conn
   import Joken
+  import Plug.Conn
+  import Ecto.Query, only: [from: 2]
+
   alias Joken.Token
+  alias Gateway.DB.Repo
   alias Gateway.DB.Models.Plugin
+  alias Gateway.DB.Models.Consumer
   alias Gateway.DB.Models.API, as: APIModel
 
   def init([]), do: false
@@ -35,18 +39,67 @@ defmodule Gateway.Plugins.JWT do
   end
 
   defp parse_auth(conn, ["Bearer " <> incoming_token], signature) do
-
-    verified_token = incoming_token
+    incoming_token
     |> token()
     |> with_signer(hs256(signature))
     |> verify()
-
-    evaluate(conn, verified_token)
+    |> evaluate(conn)
   end
   defp parse_auth(conn, _header, _signature), do: send_halt(conn, 401, "unauthorized")
 
-  defp evaluate(conn, %Token{error: nil} = token), do: put_private(conn, :jwt_token, token)
-  defp evaluate(conn, %Token{error: message}), do: send_halt(conn, 401, message)
+  defp evaluate(%Token{error: nil} = token, conn) do
+    conn
+    |> merge_consumer_settings(token)
+    |> put_private(:jwt_token, token)
+  end
+  defp evaluate(%Token{error: message}, conn), do: send_halt(conn, 401, message)
+
+  def merge_consumer_settings(
+    %Plug.Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, %Token{claims: %{"id" => id}}) do
+
+    id
+    |> get_consumer_settings()
+    |> merge_plugins(plugins)
+    |> put_api_to_conn(conn)
+  end
+  def merge_consumer_settings(conn, _token), do: conn
+
+  def merge_plugins(consumer, default) when is_list(consumer) and length(consumer) > 0
+                                        and is_list(default) and length(default) > 0 do
+    default
+    |> Enum.map_reduce([], fn(d_plugin, acc) ->
+
+      mergerd_plugin = consumer
+      |> Enum.filter(fn({c_id, _}) -> c_id == d_plugin.id end)
+      |> merge_plugin(d_plugin)
+
+      {nil, List.insert_at(acc, -1, mergerd_plugin)}
+    end)
+    |> elem(1)
+  end
+
+  def merge_plugins(_consumer, _default), do: nil
+
+  def merge_plugin([{_, consumer_settings}], %Plugin{} = plugin) do
+    plugin
+    |> Map.merge(%{settings: consumer_settings, is_enabled: true})
+  end
+  def merge_plugin(_, plugin), do: plugin
+
+  def put_api_to_conn(nil, conn), do: conn
+  def put_api_to_conn(plugins, %Plug.Conn{private: %{api_config: %APIModel{} = api}} = conn) when is_list(plugins) do
+    conn
+    |> put_private(:api_config, Map.put(api, :plugins, plugins))
+  end
+
+  def get_consumer_settings(external_id) do
+    query = from c in Consumer,
+            where: c.external_id == ^external_id,
+            join: s in assoc(c, :plugins),
+            where: s.is_enabled == true,
+            select: {s.plugin_id, s.settings}
+    Repo.all(query)
+  end
 
   defp send_halt(conn, code, message) do
     conn
