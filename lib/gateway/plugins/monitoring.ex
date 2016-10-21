@@ -10,7 +10,7 @@ defmodule Gateway.Plugins.Monitoring do
     opts
   end
 
-  def call(conn, opts) do
+  def call(conn, _opts) do
     request_size = headers_size(conn) + body_size(conn) + query_string_size(conn)
 
     metric_name = conn.path_info
@@ -23,7 +23,7 @@ defmodule Gateway.Plugins.Monitoring do
     |> ExStatsD.increment
 
     req_start_time = :erlang.monotonic_time(@unit)
-    conn = Plug.Conn.register_before_send conn, fn conn ->
+    Plug.Conn.register_before_send conn, fn conn ->
       request_duration = :erlang.monotonic_time(@unit) - req_start_time
 
       metric_name = conn.request_path
@@ -67,7 +67,7 @@ defmodule Gateway.Plugins.Monitoring do
   end
 
   defp body_size(conn) do
-    {:ok, body, conn} = read_body(conn)
+    {:ok, body, _} = read_body(conn)
     body
     |> byte_size
   end
