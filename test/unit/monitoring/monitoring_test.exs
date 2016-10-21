@@ -4,10 +4,6 @@ defmodule Gateway.Monitoring.ElixometerTest do
 
   @apis "apis"
 
-  setup do
-    :ok
-  end
-
   test "metrics work properly" do
     make_connection()
     assert check_statsd("counters", "os.gateway.apis_request_count")
