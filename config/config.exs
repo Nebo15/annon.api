@@ -11,6 +11,11 @@ config :gateway, Gateway.DB.Repo,
 
 config :gateway, ecto_repos: [Gateway.DB.Repo]
 
+config :ex_statsd,
+       host: "localhost",
+       port: 8125,
+       namespace: "os.gateway"
+
 config :logger, level: :debug
 
 config :gateway, :public_http,

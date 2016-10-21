@@ -28,7 +28,7 @@ branches:
 before_install:
   # Expose DB to Docker container
   - sudo /bin/bash ./bin/ci/init-db.sh
-  - "sudo echo '{port: 8125, mgmt_port: 8126, backends: [\"./backends/console\"]}' > config.js"
+  - sudo /bin/bash ./bin/ci/init-statsd.sh
 script:
   # Increment version in mix.exs
   # Uncomment this if you want to increment patch version on each Travis build.
