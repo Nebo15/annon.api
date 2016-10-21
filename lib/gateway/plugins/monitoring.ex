@@ -26,19 +26,19 @@ defmodule Gateway.Plugins.Monitoring do
     conn = Plug.Conn.register_before_send conn, fn conn ->
       request_duration = :erlang.monotonic_time(@unit) - req_start_time
 
-    metric_name = conn.request_path
-    |> metric_name("latency")
+      metric_name = conn.request_path
+      |> metric_name("latency")
 
-    request_duration
-    |> ExStatsD.timer(metric_name)
+      request_duration
+      |> ExStatsD.timer(metric_name)
 
-    conn = assign(conn, :latencies_gateway, request_duration)
+      conn = assign(conn, :latencies_gateway, request_duration)
 
-    conn.request_path
-    |> metric_name("status_count_" <> to_string(conn.status))
-    |> ExStatsD.increment
+      conn.request_path
+      |> metric_name("status_count_" <> to_string(conn.status))
+      |> ExStatsD.increment
 
-    conn
+      conn
     end
   end
 
