@@ -1,7 +1,7 @@
 defmodule Gateway.Plugins.ValidatorTest do
   use Gateway.UnitCase
 
-  test "user is redirected when current_user is not assigned" do
+  test "validator correct" do
     schema = %{
       "type" => "object",
       "properties" => %{

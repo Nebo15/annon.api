@@ -11,6 +11,7 @@ defmodule Gateway.PublicRouter do
   plug Gateway.Plugins.APILoader
   plug Gateway.Plugins.JWT
   plug Gateway.Plugins.Validator
+  plug Gateway.Plugins.Proxy
   plug :dispatch
 
   match _ do
