@@ -1,13 +1,13 @@
 defmodule Gateway.Plugins.Monitoring do
   @moduledoc """
-    Monitoring data reporting to statsd
-"""
+  Monitoring data reporting to statsd
+  """
   import Plug.Conn
 
   @unit :milli_seconds
 
   def init(opts) do
-        opts
+    opts
   end
 
   def call(conn, opts) do
