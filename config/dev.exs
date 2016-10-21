@@ -1,3 +1,4 @@
 use Mix.Config
 
-# Configuration for test environment
+config :libcluster,
+  strategy: Cluster.Strategy.Epmd
