@@ -11,11 +11,7 @@ defmodule Gateway.Monitoring.ElixometerTest do
   test "metrics work properly" do
     make_connection()
     assert check_statsd("counters", "os.gateway.apis_request_count")
-    #make_connection()
     assert check_statsd("counters", "os.gateway.apis_status_count_200")
-    #make_connection()
-    # assert {:ok, _} = Elixometer.get_metric_value("os.gateway.test.histograms.apis_request_size")
-    #make_connection()
     assert check_statsd("timers", "os.gateway.apis_latency")
   end
 
