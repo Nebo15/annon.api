@@ -50,6 +50,12 @@ defmodule Gateway.AcceptanceCase do
         |> get_compact
       end
 
+      def http_api_create(data) do
+        "apis"
+        |> post(Poison.encode!(data), :private)
+        |> assert_status(201)
+      end
+
       setup tags do
         :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Repo)
 
