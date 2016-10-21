@@ -10,7 +10,7 @@ defmodule Gateway.Helpers.Cassandra do
   """
 
   @update_query """
-    update gateway.logs set response = ?, latencies = ?, status_code = ? where id = ?;
+    update gateway.logs set api = ?, consumer = ?, response = ?, latencies = ?, status_code = ? where id = ?;
   """
 
   @create_keyspace_query """
@@ -20,6 +20,8 @@ defmodule Gateway.Helpers.Cassandra do
   @create_logs_table_query """
     create table if not exists gateway.logs (
       id text,
+      api blob,
+      consumer blob,
       created_at timestamp,
       idempotency_key text,
       ip_address inet,

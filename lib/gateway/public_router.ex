@@ -12,7 +12,7 @@ defmodule Gateway.PublicRouter do
   plug Gateway.Plugins.APILoader
   plug Gateway.Plugins.JWT
   plug Gateway.Plugins.Validator
-  plug Gateway.Plugins.Logger,
+  plug Gateway.Plugins.Logger
   plug :dispatch
 
   match _ do

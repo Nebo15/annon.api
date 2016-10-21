@@ -30,7 +30,15 @@ defmodule Gateway.Plugins.Logger do
   defp get_json_string(conn, data_func) do
     conn
     |> data_func.()
-    |> Poison.encode
+    |> Poison.encode!
+  end
+
+  defp get_api_data(_conn) do
+    %{}
+  end
+
+  defp get_consumer_data(_conn) do
+    %{}
   end
 
   defp get_request_data(conn) do
@@ -62,16 +70,25 @@ defmodule Gateway.Plugins.Logger do
   defp log(conn, :request) do
     id = parse_header(conn.resp_headers, "x-request-id")
     idempotency_key = parse_header(conn.resp_headers, "x-idempotency-key")
-    {:ok, request_string} = get_json_string(conn, &get_request_data/1)
-    records = [%{id: id, idempotency_key: idempotency_key, ip_address: conn.remote_ip, request: request_string}]
+    records = [%{
+      id: id,
+      idempotency_key: idempotency_key,
+      ip_address: conn.remote_ip,
+      request: get_json_string(conn, &get_request_data/1)
+    }]
     execute_query(records, :insert_logs)
   end
 
   defp log(conn, :response) do
     id = parse_header(conn.resp_headers, "x-request-id")
-    {:ok, response_string} = get_json_string(conn, &get_response_data/1)
-    {:ok, latencies_string} = get_json_string(conn, &get_latencies_data/1)
-    records = [%{id: id, response: response_string, latencies: latencies_string, status_code: conn.status}]
+    records = [%{
+      id: id,
+      api: get_json_string(conn, &get_api_data/1),
+      consumer: get_json_string(conn, &get_consumer_data/1),
+      response: get_json_string(conn, &get_response_data/1),
+      latencies: get_json_string(conn, &get_latencies_data/1),
+      status_code: conn.status
+    }]
     execute_query(records, :update_logs)
   end
 
