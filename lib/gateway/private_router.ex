@@ -5,9 +5,6 @@ defmodule Gateway.PrivateRouter do
   use Plug.Router
 
   plug Gateway.Plugins.Monitoring
-  plug Plug.Parsers, parsers: [:json],
-                     pass:  ["application/json"],
-                     json_decoder: Poison
 
   plug :match
   plug Plug.Parsers, parsers: [:json],
