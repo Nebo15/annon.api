@@ -75,11 +75,7 @@ defmodule Gateway.Plugins.Monitoring do
 
   defp query_string_size(conn) do
     conn
-    |> fetch_query_params
-    |> Map.get(:query_params)
-    |> Map.to_list
-    |> Enum.map(&Tuple.to_list(&1))
-    |> Enum.join
+    |> Map.get(:query_string)
     |> byte_size
   end
 end
