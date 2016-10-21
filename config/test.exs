@@ -17,10 +17,3 @@ config :logger, level: :debug
 config :ex_unit, capture_log: true
 
 config :gateway, sql_sandbox: true
-
-memory_stats = ~w(atom binary ets processes total)a
-
-config :exometer,
-  report: [
-    reporters: [{Gateway.Monitoring.TestReporter, []}]
-   ]

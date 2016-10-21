@@ -1,9 +1,8 @@
-defmodule Gateway.Monitoring do
+defmodule Gateway.Plugins.Monitoring do
   @moduledoc """
     Monitoring data reporting to statsd
 """
   import Plug.Conn
-  use Elixometer
 
   @unit :milli_seconds
 
@@ -16,7 +15,7 @@ defmodule Gateway.Monitoring do
 
     metric_name = conn.path_info
     |> metric_name("request_size")
-    
+
     ExStatsD.histogram(request_size, metric_name)
 
     conn.path_info
@@ -29,7 +28,7 @@ defmodule Gateway.Monitoring do
 
     metric_name = conn.request_path
     |> metric_name("latency")
-    
+
     request_duration
     |> ExStatsD.timer(metric_name)
 

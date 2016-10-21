@@ -4,7 +4,7 @@ defmodule Gateway.Router do
   """
   use Plug.Router
 
-  plug Gateway.Monitoring
+  plug Gateway.Plugins.Monitoring
   plug Plug.Parsers, parsers: [:json],
                      pass:  ["application/json"],
                      json_decoder: Poison

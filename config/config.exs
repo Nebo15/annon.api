@@ -11,41 +11,6 @@ config :gateway, Gateway.DB.Repo,
 
 config :gateway, ecto_repos: [Gateway.DB.Repo]
 
-memory_stats = ~w(atom binary ets processes total)a
-
-config :exometer,
-
-   predefined: [
-     {
-       ~w(erlang memory)a,
-       {:function, :erlang, :memory, [], :proplist, memory_stats},
-       []
-     }
-   ],
-   report: [
-     reporters: [{:exometer_report_statsd, []}],
-     subscribers: [
-       {
-         :exometer_report_statsd,
-         [:erlang, :memory], memory_stats, 1_000, true
-       }
-     ]
-   ]
-
-config :elixometer,
- reporter: :exometer_report_statsd,
- env: Mix.env,
- metric_prefix: "os.gateway"
-
-config :exometer_core, report: [
-  reporters: [
-    exometer_report_statsd: [
-      host: "localhost",
-      port: 8125
-    ]
-  ]
-]
-
 config :ex_statsd,
        host: "localhost",
        port: 8125,

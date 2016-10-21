@@ -26,7 +26,7 @@ defmodule Gateway.Mixfile do
   def application do
     [
       applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto, :ecto_enum, :timex, :joken, :ex_json_schema,
-                     :poison, :uuid, :httpoison, :elixometer, :exometer, :ex_statsd],
+                     :poison, :uuid, :httpoison, :ex_statsd],
       mod: {Gateway, []}
     ]
   end
@@ -70,10 +70,6 @@ defmodule Gateway.Mixfile do
      {:credo, ">= 0.4.8", only: [:dev, :test]},
      {:ex_json_schema, ">= 0.0.0"},
      {:httpoison, ">= 0.0.0"},
-     {:elixometer, github: "pinterest/elixometer"},
-     {:exometer, github: "Feuerlabs/exometer"},
-     {:exometer_core, "~>1.4.0", override: true},
-     {:lager, "~> 3.2.1", override: true},
      {:amqp_client, git: "https://github.com/dsrosario/amqp_client.git", branch: "erlang_otp_19", override: true},
      {:ex_statsd, ">= 0.5.1"}
     ]
