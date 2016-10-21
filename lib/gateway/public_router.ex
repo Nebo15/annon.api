@@ -14,6 +14,8 @@ defmodule Gateway.PublicRouter do
   plug Gateway.Plugins.Monitoring
   plug :dispatch
 
+  # TODO: remove this route & update monitoring_test.exs
+  #       when @Samorai finishes OSL-383
   get "/monitoring_test" do
     send_resp(conn, 200, "Temporal route")
   end
