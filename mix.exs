@@ -26,7 +26,7 @@ defmodule Gateway.Mixfile do
   def application do
     [
       applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto, :ecto_enum, :timex, :joken, :ex_json_schema,
-                     :poison, :uuid, :httpoison, :elixometer, :exometer],
+                     :poison, :uuid, :httpoison, :elixometer, :exometer, :ex_statsd],
       mod: {Gateway, []}
     ]
   end
@@ -67,7 +67,6 @@ defmodule Gateway.Mixfile do
      {:benchfella, "~> 0.3", only: [:dev, :test]},
      {:ex_doc, ">= 0.0.0", only: [:dev, :test]},
      {:excoveralls, "~> 0.5", only: [:dev, :test]},
-<<<<<<< HEAD
      {:credo, ">= 0.4.8", only: [:dev, :test]},
      {:ex_json_schema, ">= 0.0.0"},
      {:httpoison, ">= 0.0.0"},
@@ -75,11 +74,9 @@ defmodule Gateway.Mixfile do
      {:exometer, github: "Feuerlabs/exometer"},
      {:exometer_core, "~>1.4.0", override: true},
      {:lager, "~> 3.2.1", override: true},
-     {:amqp_client, git: "https://github.com/dsrosario/amqp_client.git", branch: "erlang_otp_19", override: true}
+     {:amqp_client, git: "https://github.com/dsrosario/amqp_client.git", branch: "erlang_otp_19", override: true},
+     {:ex_statsd, ">= 0.5.1"}
     ]
-=======
-     {:credo, ">= 0.4.8", only: [:dev, :test]}]
->>>>>>> master
   end
 
   # Settings for publishing in Hex package manager:

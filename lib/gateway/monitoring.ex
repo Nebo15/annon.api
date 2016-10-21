@@ -14,27 +14,31 @@ defmodule Gateway.Monitoring do
   def call(conn, opts) do
     request_size = headers_size(conn) + body_size(conn) + query_string_size(conn)
 
-    conn.path_info
+    metric_name = conn.path_info
     |> metric_name("request_size")
-    |> update_histogram(request_size)
+    
+    ExStatsD.histogram(request_size, metric_name)
 
     conn.path_info
     |> metric_name("request_count")
-    |> update_counter(1)
+    |> ExStatsD.increment
 
     req_start_time = :erlang.monotonic_time(@unit)
     conn = Plug.Conn.register_before_send conn, fn conn ->
       request_duration = :erlang.monotonic_time(@unit) - req_start_time
 
-    conn.request_path
+    metric_name = conn.request_path
     |> metric_name("latency")
-    |> update_histogram(request_duration)
+    
+    request_duration
+    |> ExStatsD.timer(metric_name)
 
     conn = assign(conn, :latencies_gateway, request_duration)
 
     conn.request_path
     |> metric_name("status_count_" <> to_string(conn.status))
-    |> update_counter(1)
+    |> ExStatsD.increment
+
     conn
     end
   end

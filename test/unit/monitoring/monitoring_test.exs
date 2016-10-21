@@ -1,6 +1,6 @@
 defmodule Gateway.Monitoring.ElixometerTest do
   use ExUnit.Case, async: false
-  use Gateway.HTTPTestHelper
+  use Gateway.UnitCase
 
   use Elixometer
   alias Gateway.Monitoring.TestReporter, as: Reporter
@@ -17,18 +17,13 @@ defmodule Gateway.Monitoring.ElixometerTest do
 
   test "metrics work properly" do
     make_connection()
-    assert {:ok, [value: 1, ms_since_reset: _]} =
-      Elixometer.get_metric_value("os.gateway.test.counters.apis_request_count")
+    assert check_statsd("counters", "os.gateway.apis_request_count")
     make_connection()
-    assert {:ok, [value: 2, ms_since_reset: _]} =
-      Elixometer.get_metric_value("os.gateway.test.counters.apis_status_count_200")
+    assert check_statsd("counters", "os.gateway.apis_status_count_200")
     make_connection()
-    IO.inspect Reporter.metric_names
-    assert {:ok, _} =
-      Elixometer.get_metric_value("os.gateway.test.histograms.apis_request_size")
+    # assert {:ok, _} = Elixometer.get_metric_value("os.gateway.test.histograms.apis_request_size")
     make_connection()
-    assert {:ok, _} =
-      Elixometer.get_metric_value("os.gateway.test.histograms.apis_latency")
+    assert check_statsd("timers", "os.gateway.apis_latency")
   end
 
   defp make_connection do
@@ -38,5 +33,14 @@ defmodule Gateway.Monitoring.ElixometerTest do
     |> Gateway.Router.call([])
 
     :timer.sleep(50)
+  end
+
+  defp check_statsd(metric_type, metric_name) do
+    {:ok, socket} = :gen_tcp.connect('localhost', 8126, [:list, {:active, false}])
+    :ok = :gen_tcp.send(socket, metric_type)
+    {:ok, _ = response} = :gen_tcp.recv(socket, 0)
+    response = List.to_string(response)
+    IO.inspect response
+    String.contains?(response, metric_name)    
   end
 end
