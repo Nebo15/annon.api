@@ -26,7 +26,7 @@ defmodule Gateway.Mixfile do
   def application do
     [
       applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto, :ecto_enum, :timex, :joken, :ex_json_schema,
-                     :poison, :uuid, :httpoison],
+                     :poison, :uuid, :httpoison, :ex_statsd],
       mod: {Gateway, []}
     ]
   end
@@ -68,9 +68,14 @@ defmodule Gateway.Mixfile do
      {:ex_doc, ">= 0.0.0", only: [:dev, :test]},
      {:excoveralls, "~> 0.5", only: [:dev, :test]},
      {:credo, ">= 0.4.8", only: [:dev, :test]},
+<<<<<<< HEAD
      {:cassandra, ">= 0.1.1-pre"},
      {:ex_json_schema, ">= 0.0.0"},
      {:httpoison, ">= 0.0.0"}]
+=======
+     {:ex_statsd, ">= 0.5.1"}
+    ]
+>>>>>>> ec2fabc15b7772c9901d8bec0672b8e640e8d97e
   end
 
   # Settings for publishing in Hex package manager:

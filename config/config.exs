@@ -11,13 +11,18 @@ config :gateway, Gateway.DB.Repo,
 
 config :gateway, ecto_repos: [Gateway.DB.Repo]
 
+config :ex_statsd,
+       host: "localhost",
+       port: 8125,
+       namespace: "os.gateway"
+
 config :logger, level: :debug
 
 config :gateway, :public_http,
-  port: { :system, "GATEWAY_PUBLIC_PORT", 5000 }
+  port: { :system, :integer, "GATEWAY_PUBLIC_PORT", 5000 }
 
 config :gateway, :private_http,
-  port: { :system, "GATEWAY_PRIVATE_PORT", 5001 }
+  port: { :system, :integer, "GATEWAY_PRIVATE_PORT", 5001 }
 
 config :cassandra, :connection,
   hostname: "localhost",
