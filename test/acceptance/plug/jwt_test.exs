@@ -68,4 +68,22 @@ defmodule Gateway.Acceptance.Plug.JWTTest do
     |> post(Poison.encode!(%{foo: "string", bar: 123}), :public, [{"authorization", "Bearer #{token}"}])
     |> assert_status(404)
   end
+
+  test "jwt default plugins settings" do
+    get_api_model_data()
+    |> Map.put(:request,
+      %{host: get_host(:public), path: "/jwt/default", port: get_port(:public), scheme: "http", method: "GET"})
+    |> Map.put(:plugins, [
+      %{name: "JWT", is_enabled: true, settings: %{"signature" => "jwt_default_secret"}},
+    ])
+    |> http_api_create()
+
+    "jwt/default"
+    |> get(:public, [{"authorization", "Bearer invalid.credentials.signature"}])
+    |> assert_status(401)
+
+    "jwt/default"
+    |> get(:public, [{"authorization", "Bearer #{jwt_token(@payload, "jwt_default_secret")}"}])
+    |> assert_status(404)
+  end
 end
