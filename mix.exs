@@ -69,7 +69,7 @@ defmodule Gateway.Mixfile do
      {:excoveralls, "~> 0.5", only: [:dev, :test]},
      {:credo, ">= 0.4.8", only: [:dev, :test]},
      {:cqex, "~> 0.2.0"},
-     {:cqerl, github: "matehat/cqerl"},
+     {:cqerl, github: "gmile/cqerl", branch: "remove-re2-rependency"},
      {:ex_json_schema, ">= 0.0.0"},
      {:httpoison, ">= 0.0.0"}]
   end
