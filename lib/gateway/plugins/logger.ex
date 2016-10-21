@@ -1,4 +1,4 @@
-defmodule Gateway.Logger do
+defmodule Gateway.Plugins.Logger do
   @moduledoc """
   Request/response logger plug
   """
@@ -18,19 +18,9 @@ defmodule Gateway.Logger do
     conn.resp_body
   end
 
-  defp get_header_name(header) do
-    {header_name, _} = header
-    header_name
-  end
-
-  defp get_header_value(header) do
-    {_, header_value} = header
-    header_value
-  end
-
   defp parse_header(headers, header_name) do
-    headers = Enum.filter(headers, fn(header) -> get_header_name(header) === header_name end)
-    result = with [header | _] <- headers, do: get_header_value(header)
+    headers = Enum.filter(headers, fn(header) -> elem(header, 0) === header_name end)
+    result = with [header | _] <- headers, do: elem(header, 1)
     if result === [] do "" else result end
   end
 
@@ -73,16 +63,16 @@ defmodule Gateway.Logger do
     id = parse_header(conn.resp_headers, "x-request-id")
     idempotency_key = parse_header(conn.resp_headers, "x-idempotency-key")
     {:ok, request_string} = get_json_string(conn, &get_request_data/1)
-    values = %{id: id, idempotency_key: idempotency_key, ip_address: conn.remote_ip, request: request_string}
-    execute_query(values, :insert_logs)
+    records = [%{id: id, idempotency_key: idempotency_key, ip_address: conn.remote_ip, request: request_string}]
+    execute_query(records, :insert_logs)
   end
 
   defp log(conn, :response) do
     id = parse_header(conn.resp_headers, "x-request-id")
     {:ok, response_string} = get_json_string(conn, &get_response_data/1)
     {:ok, latencies_string} = get_json_string(conn, &get_latencies_data/1)
-    values = %{id: id, response: response_string, latencies: latencies_string, status_code: conn.status}
-    execute_query(values, :update_logs)
+    records = [%{id: id, response: response_string, latencies: latencies_string, status_code: conn.status}]
+    execute_query(records, :update_logs)
   end
 
   def call(conn, _opts) do

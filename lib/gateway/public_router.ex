@@ -8,9 +8,11 @@ defmodule Gateway.PublicRouter do
   plug Plug.Parsers, parsers: [:json],
                      pass: ["application/json"],
                      json_decoder: Poison
+  plug Plug.RequestId
   plug Gateway.Plugins.APILoader
   plug Gateway.Plugins.JWT
   plug Gateway.Plugins.Validator
+  plug Gateway.Plugins.Logger,
   plug :dispatch
 
   match _ do

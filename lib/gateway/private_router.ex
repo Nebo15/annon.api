@@ -4,9 +4,6 @@ defmodule Gateway.PrivateRouter do
   """
   use Plug.Router
 
-  plug Plug.RequestId
-  plug Gateway.Logger,
-
   plug :match
   plug Plug.Parsers, parsers: [:json],
                      pass: ["application/json"],

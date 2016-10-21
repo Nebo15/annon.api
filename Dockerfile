@@ -12,9 +12,6 @@ ENV TERM=xterm \
 WORKDIR ${HOME}
 
 # Install and compile project dependencies
-RUN apk add --no-cache g++
-RUN apk add --no-cache make
-RUN apk add --no-cache erlang-eunit
 COPY mix.* ./
 RUN mix do deps.get, deps.compile
 
