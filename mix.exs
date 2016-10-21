@@ -68,12 +68,7 @@ defmodule Gateway.Mixfile do
      {:ex_doc, ">= 0.0.0", only: [:dev, :test]},
      {:excoveralls, "~> 0.5", only: [:dev, :test]},
      {:credo, ">= 0.4.8", only: [:dev, :test]},
-<<<<<<< HEAD
      {:cassandra, ">= 0.1.1-pre"},
-=======
-     {:cqex, "~> 0.2.0"},
-     {:cqerl, github: "gmile/cqerl", branch: "remove-re2-rependency"},
->>>>>>> 2a17d0b01d1ac72de2ab349e6a52511b05f4a78f
      {:ex_json_schema, ">= 0.0.0"},
      {:httpoison, ">= 0.0.0"}]
   end

@@ -12,10 +12,6 @@ ENV TERM=xterm \
 WORKDIR ${HOME}
 
 # Install and compile project dependencies
-<<<<<<< HEAD
-=======
-RUN apk add --no-cache erlang-eunit
->>>>>>> 2a17d0b01d1ac72de2ab349e6a52511b05f4a78f
 COPY mix.* ./
 RUN mix do deps.get, deps.compile
 
