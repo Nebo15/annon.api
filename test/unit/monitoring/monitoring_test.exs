@@ -19,7 +19,7 @@ defmodule Gateway.Monitoring.ElixometerTest do
     :get
     |> conn("/apis")
     |> put_req_header("content-type", "application/json")
-    |> Gateway.Router.call([])
+    |> Gateway.PrivateRouter.call([])
 
     :timer.sleep(50)
   end
