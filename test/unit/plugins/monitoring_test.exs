@@ -1,4 +1,4 @@
-defmodule Gateway.Monitoring.ElixometerTest do
+defmodule Gateway.MonitoringTest do
   use ExUnit.Case, async: false
   use Gateway.UnitCase
 
