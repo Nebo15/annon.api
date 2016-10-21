@@ -97,7 +97,7 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
     |> http_api_create()
 
     token = jwt_token(%{"scopes" => "invalid"}, @jwt_secret)
-    IO.inspect "acl/scopes"
+    "acl/scopes"
     |> get(:public, [{"authorization", "Bearer #{token}"}])
     |> assert_status(501)
   end
