@@ -7,7 +7,7 @@ defmodule Gateway.Plugins.ACL do
   alias Joken.Token
   alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.API, as: APIModel
-require Logger
+
   def init([]), do: false
 
   def call(%Plug.Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
@@ -19,21 +19,17 @@ require Logger
   def call(conn, _), do: conn
 
   defp execute(nil, _conn), do: true
-  defp execute(%Plugin{settings: %{"scope" => scope}},
-               %Plug.Conn{private: %{jwt_token: %Token{claims: %{"scopes" => t_scopes}}}}) do
-    scope
-    |> validate_scopes(t_scopes)
+  defp execute(%Plugin{settings: %{"scope" => plugin_scope}},
+               %Plug.Conn{private: %{jwt_token: %Token{claims: %{"scopes" => token_scopes}}}}) do
+    plugin_scope
+    |> validate_scopes(token_scopes)
   end
   defp execute(%Plugin{settings: %{"scope" => _}}, _conn), do: {:error, 403, "forbidden"}
   defp execute(_plugin, _conn), do: {:error, 501, "required field scope in Plugin.settings"}
 
 
-  def validate_scopes(scope, scopes) when is_list(scopes) do
-    Enum.member?(scopes, scope)
-  end
-  def validate_scopes(_scope, _scopes) do
-   {:error, 501, "Plugin.settings.scopes and JWT.scopes must be a list"}
-  end
+  def validate_scopes(scope, scopes) when is_list(scopes), do: Enum.member?(scopes, scope)
+  def validate_scopes(_scope, _scopes), do: {:error, 501, "JWT.scopes must be a list"}
 
   def normalize_resp(true, conn), do: conn
   def normalize_resp(false, conn), do: conn |> send_halt(403, "forbidden")

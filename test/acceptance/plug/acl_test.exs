@@ -76,7 +76,7 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
     get_api_model_data()
     |> Map.put(:plugins, [
       %{name: "JWT", is_enabled: true, settings: %{"signature" => @jwt_secret}},
-      %{name: "ACL", is_enabled: true, settings: %{"scopes" => 123}}])
+      %{name: "ACL", is_enabled: true, settings: %{"scope" => 123}}])
     |> Map.put(:request,
       %{host: get_host(:public), path: "/acl/scopes", port: get_port(:public), scheme: "http", method: "GET"})
     |> http_api_create()
@@ -91,13 +91,13 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
     get_api_model_data()
     |> Map.put(:plugins, [
       %{name: "JWT", is_enabled: true, settings: %{"signature" => @jwt_secret}},
-      %{name: "ACL", is_enabled: true, settings: %{"scopes" => Poison.encode!(["acl_read"])}}])
+      %{name: "ACL", is_enabled: true, settings: %{"scope" => "acl_read"}}])
     |> Map.put(:request,
       %{host: get_host(:public), path: "/acl/scopes", port: get_port(:public), scheme: "http", method: "GET"})
     |> http_api_create()
 
     token = jwt_token(%{"scopes" => "invalid"}, @jwt_secret)
-    "acl/scopes"
+    IO.inspect "acl/scopes"
     |> get(:public, [{"authorization", "Bearer #{token}"}])
     |> assert_status(501)
   end
