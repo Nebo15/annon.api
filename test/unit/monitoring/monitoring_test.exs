@@ -6,16 +6,16 @@ defmodule Gateway.Monitoring.ElixometerTest do
 
   test "metrics work properly" do
     make_connection()
-    assert check_statsd("counters", "os.gateway.apis_request_count")
-    assert check_statsd("counters", "os.gateway.apis_status_count_200")
-    assert check_statsd("timers", "os.gateway.apis_latency")
+    assert check_statsd("counters", "os.gateway.monitoring_test_request_count")
+    assert check_statsd("counters", "os.gateway.monitoring_test_status_count_200")
+    assert check_statsd("timers", "os.gateway.monitoring_test_latency")
   end
 
   defp make_connection do
     :get
-    |> conn("/apis")
+    |> conn("/monitoring_test")
     |> put_req_header("content-type", "application/json")
-    |> Gateway.PrivateRouter.call([])
+    |> Gateway.PublicRouter.call([])
 
     :timer.sleep(50)
   end
