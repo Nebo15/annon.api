@@ -60,24 +60,26 @@ defmodule Gateway.Plugins.Monitoring do
 
   defp headers_size(conn) do
     conn.req_headers
-    |> Enum.map(fn(x) -> Tuple.to_list(x) end)
+    |> Enum.map(&Tuple.to_list(&1))
     |> List.flatten
-    |> Enum.join("")
+    |> Enum.join
     |> byte_size
   end
 
   defp body_size(conn) do
-    {:ok, body, _} = read_body(conn)
-    body
+    conn
+    |> read_body
+    |> elem(1)
     |> byte_size
   end
 
   defp query_string_size(conn) do
-    conn = fetch_query_params(conn)
-    conn.query_params
+    conn
+    |> fetch_query_params
+    |> Map.get(:query_params)
     |> Map.to_list
-    |> Enum.map(fn(x) -> Tuple.to_list(x) end)
-    |> Enum.join("")
+    |> Enum.map(&Tuple.to_list(&1))
+    |> Enum.join
     |> byte_size
   end
 end
