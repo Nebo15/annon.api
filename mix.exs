@@ -68,8 +68,6 @@ defmodule Gateway.Mixfile do
      {:ex_doc, ">= 0.0.0", only: [:dev, :test]},
      {:excoveralls, "~> 0.5", only: [:dev, :test]},
      {:credo, ">= 0.4.8", only: [:dev, :test]},
-     {:ex_json_schema, ">= 0.0.0"},
-     {:httpoison, ">= 0.0.0"},
      {:amqp_client, git: "https://github.com/dsrosario/amqp_client.git", branch: "erlang_otp_19", override: true},
      {:ex_statsd, ">= 0.5.1"}
     ]
