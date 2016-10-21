@@ -72,21 +72,6 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
     |> assert_status(501)
   end
 
-  test "invalid Plugins.Settings.scopes type" do
-    get_api_model_data()
-    |> Map.put(:plugins, [
-      %{name: "JWT", is_enabled: true, settings: %{"signature" => @jwt_secret}},
-      %{name: "ACL", is_enabled: true, settings: %{"scope" => 123}}])
-    |> Map.put(:request,
-      %{host: get_host(:public), path: "/acl/scopes", port: get_port(:public), scheme: "http", method: "GET"})
-    |> http_api_create()
-
-    token = jwt_token(%{"scopes" => ["acl_read"]}, @jwt_secret)
-    "acl/scopes"
-    |> get(:public, [{"authorization", "Bearer #{token}"}])
-    |> assert_status(501)
-  end
-
   test "invalid JWT.scopes type" do
     get_api_model_data()
     |> Map.put(:plugins, [
