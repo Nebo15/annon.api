@@ -4,8 +4,6 @@ defmodule Gateway.PrivateRouter do
   """
   use Plug.Router
 
-  plug Gateway.Plugins.Monitoring
-
   plug :match
   plug Plug.Parsers, parsers: [:json],
                      pass: ["application/json"],
