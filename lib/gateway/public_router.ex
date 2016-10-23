@@ -13,11 +13,8 @@ defmodule Gateway.PublicRouter do
   plug Gateway.Plugins.JWT
   plug Gateway.Plugins.ACL
   plug Gateway.Plugins.Validator
-<<<<<<< HEAD
-  plug Gateway.Plugins.Logger
-=======
   plug Gateway.Plugins.Monitoring
->>>>>>> a12ff37bd6f56c6c4f9a28857fc9e4180671bbda
+  plug Gateway.Plugins.Logger
   plug :dispatch
 
   # TODO: remove this route & update monitoring_test.exs
