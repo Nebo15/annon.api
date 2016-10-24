@@ -68,11 +68,7 @@ defmodule Gateway.Mixfile do
      {:ex_doc, ">= 0.0.0", only: [:dev, :test]},
      {:excoveralls, "~> 0.5", only: [:dev, :test]},
      {:credo, ">= 0.4.8", only: [:dev, :test]},
-<<<<<<< HEAD
      {:cassandra, ">= 1.0.0-beta"},
-=======
-     {:cassandra, ">= 0.1.1-pre"},
->>>>>>> 8e929e9b63fbaa634935199c31d2f51e0d9376a6
      {:ex_json_schema, ">= 0.0.0"},
      {:httpoison, ">= 0.0.0"},
      {:ex_statsd, ">= 0.5.1"}
