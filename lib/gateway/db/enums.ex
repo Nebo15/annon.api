@@ -1,4 +1,4 @@
 import EctoEnum
 
 # plugins
-defenum PluginName, :name, ["JWT", "Validator", "Proxy"]
+defenum PluginName, :name, ["JWT", "Validator", "ACL", "Proxy"]
