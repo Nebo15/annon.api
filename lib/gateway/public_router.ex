@@ -16,6 +16,7 @@ defmodule Gateway.PublicRouter do
   plug Gateway.Plugins.Validator
   plug Gateway.Plugins.Monitoring
   plug Gateway.Plugins.Logger
+  plug Gateway.Plugins.Proxy
   plug :dispatch
 
   # TODO: remove this route & update monitoring_test.exs

@@ -9,21 +9,6 @@ defmodule Gateway.Plugins.Logger do
     opts
   end
 
-  defp get_body(conn, :request) do
-    {:ok, body, _conn} = read_body(conn)
-    body
-  end
-
-  defp get_body(conn, :response) do
-    conn.resp_body
-  end
-
-  defp parse_header(headers, header_name) do
-    headers = Enum.filter(headers, fn(header) -> elem(header, 0) === header_name end)
-    result = with [header | _] <- headers, do: elem(header, 1)
-    if result === [] do "" else result end
-  end
-
   defp modify_headers_list([]), do: []
   defp modify_headers_list([{key, value}|t]), do: [%{key => value}] ++ modify_headers_list(t)
 
@@ -47,7 +32,7 @@ defmodule Gateway.Plugins.Logger do
       uri: conn.request_path,
       query: conn.query_string,
       headers: modify_headers_list(conn.req_headers),
-      body: get_body(conn, :request)
+      body: conn.body_params
     }
   end
 
@@ -55,7 +40,7 @@ defmodule Gateway.Plugins.Logger do
     %{
       status_code: conn.status,
       headers: modify_headers_list(conn.resp_headers),
-      body: get_body(conn, :response)
+      body: conn.resp_body
     }
   end
 
@@ -68,8 +53,12 @@ defmodule Gateway.Plugins.Logger do
   end
 
   defp log(conn, :request) do
-    id = parse_header(conn.resp_headers, "x-request-id")
-    idempotency_key = parse_header(conn.resp_headers, "x-idempotency-key")
+    id = conn
+    |> get_resp_header("x-request-id")
+    |> Enum.at(0) || ""
+    idempotency_key = conn
+    |> get_resp_header("x-idempotency-key")
+    |> Enum.at(0) || ""
     records = [%{
       id: id,
       idempotency_key: idempotency_key,
@@ -80,7 +69,9 @@ defmodule Gateway.Plugins.Logger do
   end
 
   defp log(conn, :response) do
-    id = parse_header(conn.resp_headers, "x-request-id")
+    id = conn
+    |> get_resp_header("x-request-id")
+    |> Enum.at(0) || ""
     records = [%{
       id: id,
       api: get_json_string(conn, &get_api_data/1),
