@@ -19,14 +19,13 @@ config :ex_statsd,
 config :logger, level: :debug
 
 config :gateway, :public_http,
-  port: { :system, :integer, "GATEWAY_PUBLIC_PORT", 4000 }
+  port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 4000}
 
 config :gateway, :private_http,
-  port: { :system, :integer, "GATEWAY_PRIVATE_PORT", 4001 }
+  port: {:system, :integer, "GATEWAY_PRIVATE_PORT", 4001}
 
 config :cassandra, :connection,
   hostname: {:system, "CASSANDRA_DB_HOST", "localhost"},
   port: {:system, :integer, "CASSANDRA_DB_PORT", 9042}
-
 
 import_config "#{Mix.env}.exs"
