@@ -23,6 +23,7 @@ defmodule Gateway.AcceptanceCase do
 
       def get(url, endpoint_type, headers \\ []), do: request(:get, endpoint_type, url, "", headers)
       def post(url, body, endpoint_type, headers \\ []), do: request(:post, endpoint_type, url, body, headers)
+      def delete(url, endpoint_type, headers \\ []), do: request(:delete, endpoint_type, url, "", headers)
 
       def request(request_type, endpoint_type, url, body, custom_headers) do
         port = get_port(endpoint_type)
