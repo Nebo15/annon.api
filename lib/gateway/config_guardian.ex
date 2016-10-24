@@ -31,10 +31,12 @@ defmodule Gateway.ConfigGuardian do
   end
 
   def handle_info(:reload_config, state) do
-    IO.puts("#{inspect node()} is going to reload the config now!")
+    apis =
+      Gateway.DB.Models.API
+      |> Gateway.DB.Repo.all()
+      |> Enum.map(fn api -> {{:api, api.id}, api} end)
 
-    #   api = Gateway.DB.Models.API.get(1)
-    #   :ets.insert(:config, {{:apis, }}, )
+    :ets.insert(:config, apis)
 
     {:noreply, state}
   end

@@ -7,7 +7,10 @@ defmodule Gateway.ConfigReloader do
   def init(opts), do: opts
 
   def call(conn, _) do
-    if conn.method in ["POST", "PUT", "DELETE"] do
+    destructive_method? = conn.method in ["POST", "PUT", "DELETE"]
+    successful_status? = true # conn.status in [200, 201]
+
+    if destructive_method? && successful_status? do
       Gateway.ConfigGuardian.reload_config()
     end
 
