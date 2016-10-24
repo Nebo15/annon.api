@@ -15,12 +15,12 @@ otp_release:
 env:
   global:
     - MIX_ENV=test
-    - DOCKER_HUB_ACCOUNT=place_your_account_name_here
+    - DOCKER_HUB_ACCOUNT=nebo15
     - MAIN_BRANCHES="master develop staging" # Branches on which you want version to be incremented
     - RELEASE_BRANCH="master"
     - COVERALLS_REPO_TOKEN=cgG2HzcgLtSNdXmuIP9BarEdCFx9ePTPY
     # Docker credentials
-    - secure: "..."
+  - secure: jT3fV9i5qISqpcRDlSJHpOOnpxvZmAFK7RzfNRBwiZjU4SY3/2XMbZFemv3HRRirDsDyaNlHoycO4KHZKM6/04Lev82C+wX8LsNvzHAi52Yd5Eh133R2U4aI90fPy9VX6BowdjMB4nnLsW3hksWEFoSDdhzRKlCVljmDyjrmyiTvcedI76WtxILDJ9OWYtRizEVbdjmLHmIXv8vNOA5FDUfNOuHn+GhKJUUwXlyMjvzEwz1AheC2cUeS4Hgc96U01owe13AYLHItsQNQas8k1AFGRu0LmDDop5fiUgBBPTmVGvQLUO3otungigs9MsqgKT+39pCRJHirSF9dReAQXQe5xXFkhbKHXdTuLn3Uc+TeAJPiZ7PCLCmGGalZjEkKTXnhJ1vkh0+tAI1wZOC04rjPTz0AEU53spgwktklPHzOAqBDsoK+dDNzoTvlFvVGcK23UiGuMUIiyuABFdAZ9/rRgbn3uBttzT6vpRHFU5T5CPeHvpzTAjpJGn1QztJPvHySVMtcWlb9arq7xVC/mLx9xHS3WweAqvMY4RHAMeRMoxmPBeEO5DlMhOvKkfmD2p+O4v/MsM723FzrwC4Z2dN2QCq2vjfnFtDizey0ML5qJmVYxUVMCSFylKkYbdiZ5RNxKme5rCI/RVz6Vz9EPGW/NL0nDCGdvMiI11gFt+M=
 branches:
   # Releases are generated automatically, stop infinite build loop
   except:
@@ -57,28 +57,10 @@ script:
   - if [ "${RUNNING_CONTAINERS//[[:space:]]/}" == "1" ]; then echo "[E] Container is not started!" exit 1; fi;
   # Run acceptance tests on Docker container
   - " MIX_TEST_DATABASE=gateway MIX_TEST_HOST=localhost MIX_TEST_PORT=4000 mix test test/acceptance "
-# after_success:
-
-# Also you can
-# - automatically build images and push them to Docker Hub;
-# - create new git tag with build version and GitHub release on it.
-#
-# To do so you need to encrypt your docker user name and password and add to environment variables:
-#
-#   $ travis encrypt DOCKER_USERNAME=sample_username DOCKER_PASSWORD=strong_password
-#
-# More info: https://docs.travis-ci.com/user/encryption-keys/
-#
-# Additionally should add env "DOCKER_HUB_ACCOUNT=org_name" to set Hub's organization or account that will hold images.
-# Sample:
-#
-#   env:
-#     global:
-#       - DOCKER_HUB_ACCOUNT=org_name # Docker Hub Account or Organization that will hold images
-#       - secure: "encrypeted_credentials" # Encrypted credentials to login into Docker Hub
-#
-# Then uncomment following lines:
-#
-# after_success:
-#   # Submit Docker container to Docker Hub and create GitHub Release by pushing tag with changelog
-#   - ./bin/ci/push.sh
+after_success:
+  # Submit Docker container to Docker Hub and create GitHub Release by pushing tag with changelog
+  - ./bin/ci/push.sh
+notifications:
+  slack:
+    rooms:
+      secure: JP7eQT1AH9RDGBeDmPXIu4q8c3p2ee6WZfgrpBotyZvwcw+FvFgSwam4CYO5xmslo+m0kPJdCeMbIJ4sVZIQBXVrgLTXHkvR9fjdAj5l/VrEqvTbAb69MhX3T5kejZ4RXVOCPUjVYLKl8M0cvaYPTCx811wyJWJUWnB69toIJSyEaBHzg2eiW/qO9XCoLIsWFR0AFt905A9mjyjD3vr7bZUO9WSYL9ojo9ybMBamtOwXPN+84seBgKJ7jRR55su+D86PpZLvdeZ5SA7b5L63JPVqxnME19JEkwXj/tmf3UbBELa2EKaR9BbRAiBMeIsneBx4bgRhTLKG3WNNglEHQHIkPqDH3yzPDm7C5zv/N39Gzsk3WxKEUl5JDe3zHU2tNQfpWrRpwQANNdsWZQ1kF8YyVUsoyt82jCsmLMk81lPWDN9yzR/gZmNkH1IouysJFnM3aIex1XOeT5KFYQn1PeIAxo7M+vxjD1WeLU6zr1y7G8n7+q9dbxSxF6woh8DujQh7dusg46XNLErv+xe3IOMt1TtdnDiatMMOoGEBYhnTCuOhm4id9Vq2gbmBcHlJlmYQO/EtXWoh9fnoGq8dPa07sEujQMuMAqb+nnwHWJnKaq4rw7Jxzd/K3pIJaOGQuqt1uhZtF5ON/CpVMIT3tkMlJK97a3UaEUVkhgY/mHA=
