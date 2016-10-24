@@ -16,7 +16,7 @@ defmodule Gateway.Plugins.Idempotency do
   end
   def call(conn, _), do: conn
 
-  defp execute(nil, _conn), do: true
+  defp execute(nil, conn), do: conn
   defp execute(%Plugin{}, %Plug.Conn{} = conn) do
     conn
     |> get_req_header("x-idempotency-key")
