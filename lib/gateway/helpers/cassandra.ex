@@ -2,7 +2,11 @@ defmodule Gateway.Helpers.Cassandra do
   @moduledoc """
   Helper for working with Cassandra
   """
-  alias Cassandra.Connection
+  alias Gateway.DB.Cassandra
+
+  @select_by_id_query """
+    select * from gateway.logs where id = ?;
+  """
 
   @insert_query """
     insert into gateway.logs (id, created_at, idempotency_key, ip_address, request)
@@ -33,29 +37,31 @@ defmodule Gateway.Helpers.Cassandra do
     );
   """
 
-  defp get_query(cassandra_conn, :create_keyspace) do
-    Connection.prepare cassandra_conn, @create_keyspace_query
+  defp get_query(:create_keyspace) do
+    Cassandra.prepare @create_keyspace_query
   end
 
-  defp get_query(cassandra_conn, :create_logs_table) do
-    Connection.prepare cassandra_conn, @create_logs_table_query
+  defp get_query(:create_logs_table) do
+    Cassandra.prepare @create_logs_table_query
   end
 
-  defp get_query(cassandra_conn, :insert_logs) do
-    Connection.prepare cassandra_conn, @insert_query
+  defp get_query(:select_by_id) do
+    Cassandra.prepare @select_by_id_query
   end
 
-  defp get_query(cassandra_conn, :update_logs) do
-    Connection.prepare cassandra_conn, @update_query
+  defp get_query(:insert_logs) do
+    Cassandra.prepare @insert_query
+  end
+
+  defp get_query(:update_logs) do
+    Cassandra.prepare @update_query
   end
 
   def execute_query(records, type) do
-    cassandra_conn = Process.whereis Cassandra
-
-    {:ok, query} = get_query(cassandra_conn, type)
+    {:ok, query} = get_query(type)
 
     records
-    |> Enum.map(&Task.async(fn -> Connection.execute(cassandra_conn, query, &1) end))
+    |> Enum.map(&Task.async(fn -> Cassandra.execute(query, values: &1) end))
     |> Enum.map(&Task.await/1)
   end
 end
