@@ -10,9 +10,12 @@ defmodule Gateway.ConfigGuardian do
     Cluster.Events.publish(:reload_config)
   end
 
+  # Server code
+
   def init(_) do
-    IO.inspect self()
     Cluster.Events.subscribe(self())
+
+    # :ets.init_table(:config, [:set, :public, :named_table])
 
     # Auto-discover existing nodes. To be replaced
     :net_adm.names
