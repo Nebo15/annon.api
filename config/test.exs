@@ -15,6 +15,13 @@ config :gateway, :acceptance,
     host: { :system, "MIX_TEST_HOST", "localhost" }
   ]
 
+config :gateway, :public_http,
+  port: { :system, :integer, "GATEWAY_PUBLIC_PORT", 5000 }
+
+config :gateway, :private_http,
+  port: { :system, :integer, "GATEWAY_PRIVATE_PORT", 5001 }
+
+
 config :logger, level: :debug
 
 config :ex_unit, capture_log: true
