@@ -24,4 +24,8 @@ config :gateway, :public_http,
 config :gateway, :private_http,
   port: { :system, :integer, "GATEWAY_PRIVATE_PORT", 5001 }
 
+config :cassandra, :connection,
+  hostname: "localhost",
+  port: 9042
+
 import_config "#{Mix.env}.exs"

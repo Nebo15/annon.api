@@ -11,6 +11,11 @@ defmodule Gateway.PrivateRouter do
   plug :dispatch
 
   forward "/apis", to: Gateway.HTTP.API
+
+  get "/" do
+    send_resp(conn, 200, "{result: ok}")
+  end
+
   forward "/consumers", to: Gateway.HTTP.Consumers
 
   match _ do

@@ -8,11 +8,13 @@ defmodule Gateway.PublicRouter do
   plug Plug.Parsers, parsers: [:json],
                      pass: ["application/json"],
                      json_decoder: Poison
+  plug Plug.RequestId
   plug Gateway.Plugins.APILoader
   plug Gateway.Plugins.JWT
   plug Gateway.Plugins.ACL
   plug Gateway.Plugins.Validator
   plug Gateway.Plugins.Monitoring
+  plug Gateway.Plugins.Logger
   plug :dispatch
 
   # TODO: remove this route & update monitoring_test.exs
