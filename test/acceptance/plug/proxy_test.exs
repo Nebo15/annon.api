@@ -2,23 +2,6 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
   use Gateway.AcceptanceCase
 
   @api_url "apis"
-  @consumer_url "consumers"
-
-  @schema %{"type" => "object",
-            "properties" => %{
-              "foo" => %{ "type" => "number"},
-              "bar" => %{ "type" => "string"}
-            },
-            "required" => ["bar"]
-          }
-
-  @consumer_schema %{"type" => "object",
-                     "properties" => %{
-                       "foo" => %{ "type" => "string"},
-                       "bar" => %{ "type" => "number"}
-                     },
-                     "required" => ["foo"]
-                   }
 
   @consumer_id UUID.uuid1()
 

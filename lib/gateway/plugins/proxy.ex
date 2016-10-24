@@ -35,7 +35,6 @@ defmodule Gateway.Plugins.Proxy do
   end
 
   def do_request(link, conn, method) do
-
     body = conn
     |> Map.get(:body_params)
     |> Poison.encode!()
@@ -46,10 +45,9 @@ defmodule Gateway.Plugins.Proxy do
     |> get_response
   end
 
-  def get_response({:ok, %HTTPoison.Response{} = response}), do: get_response(response)
   def get_response(%HTTPoison.Response{} = response), do: response
 
-  defp make_link(proxy), do: proxy |> get_scheme() |> get_host(proxy) |> get_port(proxy) |> get_path(proxy)
+  def make_link(proxy), do: proxy |> get_scheme() |> get_host(proxy) |> get_port(proxy) |> get_path(proxy)
 
   defp get_scheme(%{"scheme" => scheme} = s), do: get_scheme("", s)
   defp get_scheme(%{}), do: ""
