@@ -15,7 +15,7 @@ defmodule Gateway.ConfigGuardian do
   def init(_) do
     Cluster.Events.subscribe(self())
 
-    # :ets.init_table(:config, [:set, :public, :named_table])
+    :ets.new(:config, [:set, :public, :named_table])
 
     # Auto-discover existing nodes. To be replaced
     :net_adm.names
