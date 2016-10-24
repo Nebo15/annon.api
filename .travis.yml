@@ -60,6 +60,8 @@ script:
 after_success:
   # Submit Docker container to Docker Hub and create GitHub Release by pushing tag with changelog
   - ./bin/ci/push.sh
+after_failure:
+  - docker logs gateway --details --since 5h
 notifications:
   slack:
     rooms:
