@@ -23,7 +23,6 @@ defmodule Gateway.Plugins.APILoader do
     models
     |> Enum.filter(fn(x) -> equal?(x, conn) end)
     |> get_one
-
   end
 
   def get_one([model]), do: model

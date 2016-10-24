@@ -17,8 +17,4 @@ defmodule Gateway.PrivateRouter do
   end
 
   forward "/consumers", to: Gateway.HTTP.Consumers
-
-  match _ do
-    send_resp(conn, 404, "{}")
-  end
 end
