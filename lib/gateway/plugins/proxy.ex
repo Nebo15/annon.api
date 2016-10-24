@@ -31,7 +31,7 @@ defmodule Gateway.Plugins.Proxy do
     |> do_request(conn, method)
     |> get_response
 
-    send_resp(conn, response.status_code, response.body) |> halt
+    conn |> send_resp(response.status_code, response.body) |> halt
   end
 
   def do_request(link, conn, method) do
