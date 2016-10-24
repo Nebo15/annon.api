@@ -6,7 +6,7 @@ defmodule Gateway.ConfigGuardian do
   end
 
   def reload_config() do
-    send(__MODULE__, :reload_config)
+    Gateway.ConfigGuardian.do_reload_config()
     Cluster.Events.publish(:reload_config)
   end
 
@@ -31,13 +31,17 @@ defmodule Gateway.ConfigGuardian do
   end
 
   def handle_info(:reload_config, state) do
+    Gateway.ConfigGuardian.do_reload_config()
+
+    {:noreply, state}
+  end
+
+  def do_reload_config() do
     apis =
       Gateway.DB.Models.API
       |> Gateway.DB.Repo.all()
       |> Enum.map(fn api -> {{:api, api.id}, api} end)
 
     :ets.insert(:config, apis)
-
-    {:noreply, state}
   end
 end

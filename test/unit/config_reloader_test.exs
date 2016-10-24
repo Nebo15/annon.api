@@ -20,10 +20,5 @@ defmodule ConfigReloaderTest do
     [{_, api}] = :ets.lookup(:config, {:api, api_model.id})
 
     assert api.name == "New name"
-
-    # check the config once again, confirm it's changed
-  end
-
-  test "does not reload the config cache during GET requests" do
   end
 end
