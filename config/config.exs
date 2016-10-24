@@ -24,7 +24,7 @@ config :gateway, :public_http,
 config :gateway, :private_http,
   port: {:system, :integer, "GATEWAY_PRIVATE_PORT", 4001}
 
-config :cassandra, :connection,
+config :gateway, Gateway.DB.Cassandra,
   hostname: {:system, "CASSANDRA_DB_HOST", "localhost"},
   port: {:system, :integer, "CASSANDRA_DB_PORT", 9042}
 
