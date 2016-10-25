@@ -52,6 +52,7 @@ defmodule Gateway.Mixfile do
     [{:distillery, "~> 0.10.1"},
      {:libcluster, github: "gmile/libcluster", branch: "publish-across-cluster"},
      {:confex, "~> 1.4"},
+     {:porcelain, ">= 2.0.0"},
      {:plug, ">= 0.0.0"},
      {:cowboy, ">= 0.0.0"},
      {:postgrex, ">= 0.0.0", override: true},
