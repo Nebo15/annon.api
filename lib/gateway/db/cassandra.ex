@@ -26,7 +26,7 @@ defmodule Gateway.DB.Cassandra do
     })
 #    |> IO.inspect
 
-    %{query: query, prepared: prepared, params: %CQL.QueryParams{values: values},}
+#    %{query: query, prepared: prepared, params: %CQL.QueryParams{values: values},}
 #    |> IO.inspect
   end
 
