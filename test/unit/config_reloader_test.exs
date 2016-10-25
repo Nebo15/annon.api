@@ -1,4 +1,4 @@
-defmodule ConfigReloaderTest do
+defmodule Gateway.ConfigReloaderTest do
   use Gateway.UnitCase
 
   test "reload the config cache if it changes" do
@@ -36,42 +36,17 @@ defmodule ConfigReloaderTest do
       |> Enum.map(fn %{pub: pub, priv: priv, name: name} ->
            sname = "#{name}@#{host}"
 
-           proc =
-             [
-               "GATEWAY_PUBLIC_PORT=#{pub}",
-               "GATEWAY_PRIVATE_PORT=#{priv}",
-               "elixir",
-               "--sname #{sname}",
-               "--cookie #{cookie}",
-               "--no-halt",
-               "-S mix run"
-             ]
-             |> Enum.join(" ")
-             |> IO.inspect
-             |> Porcelain.spawn_shell(out: {:send, self()})
-
-           {sname, proc}
-         end)
-
-    nodes
-    |> Enum.each(fn({sname, %Porcelain.Process{ pid: pid }}) ->
-         sname
-         |> String.to_char_list
-         |> List.to_atom
-
-         receive do
-           {_, :data, :out, data} ->
-             IO.inspect data
-         end
-
-         # |> :rpc.call(Application, :ensure_all_started, [:gateway])
-
-         # Porcelain.Process.signal{ pid: pid }}
+           env_vars = [
+             { "GATEWAY_PUBLIC_PORT", pub },
+             { "GATEWAY_PRIVATE_PORT", priv }
+           ]
        end)
 
     Enum.each(nodes, fn {name, proc} ->
-      Porcelain.Process.signal(proc, :kill)
-      |> IO.inspect
+      name |> IO.inspect
+      :rpc.eval_everywhere([name], :init, :stop, [])
+      # Porcelain.Process.signal(proc, :kill)
+      # |> IO.inspect
     end)
   end
 end
