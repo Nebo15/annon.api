@@ -1,7 +1,7 @@
 defmodule Gateway.Mixfile do
   use Mix.Project
 
-  @version "0.1.3"
+  @version "0.1.4"
 
   def project do
     [app: :gateway,
@@ -62,16 +62,15 @@ defmodule Gateway.Mixfile do
      {:ex_json_schema, ">= 0.0.0"},
      {:httpoison, ">= 0.0.0"},
      {:uuid, ">= 0.0.0"},
+     {:cassandra, ">= 1.0.0-beta"},
+     {:httpoison, ">= 0.0.0"},
+     {:ex_statsd, ">= 0.5.1"},
      {:faker, "~> 0.7.0", only: [:dev, :test]},
      {:dogma, "> 0.1.0", only: [:dev, :test]},
      {:benchfella, "~> 0.3", only: [:dev, :test]},
      {:ex_doc, ">= 0.0.0", only: [:dev, :test]},
      {:excoveralls, "~> 0.5", only: [:dev, :test]},
      {:credo, ">= 0.4.8", only: [:dev, :test]},
-     {:cassandra, ">= 1.0.0-beta"},
-     {:ex_json_schema, ">= 0.0.0"},
-     {:httpoison, ">= 0.0.0"},
-     {:ex_statsd, ">= 0.5.1"}
     ]
   end
 
