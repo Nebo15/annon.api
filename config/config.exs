@@ -25,8 +25,8 @@ config :gateway, :private_http,
   port: {:system, :integer, "GATEWAY_PRIVATE_PORT", 4001}
 
 config :gateway, Gateway.DB.Cassandra,
-  hostname: {:system, "CASSANDRA_DB_HOST", "localhost"},
   name: {:system, "CASSANDRA_PROCESS_NAME", Cassandra},
+  host: {:system, "CASSANDRA_DB_HOST", "localhost"},
   port: {:system, :integer, "CASSANDRA_DB_PORT", 9042},
   contact_points: [{:system, "CASSANDRA_DB_HOST", "localhost"}],
   async_init: false
