@@ -18,7 +18,7 @@ defmodule Gateway.Plugins.Proxy do
 
   defp execute(nil, conn), do: conn
   defp execute(%Plugin{} = plugin, conn) do
-    settings = plugin
+    plugin
     |> get_settings()
     # TODO: maybe add some headers from the settings
     # TODO: check variables
@@ -49,7 +49,7 @@ defmodule Gateway.Plugins.Proxy do
 
   def make_link(proxy), do: proxy |> get_scheme() |> get_host(proxy) |> get_port(proxy) |> get_path(proxy)
 
-  defp get_scheme(%{"scheme" => scheme} = s), do: get_scheme("", s)
+  defp get_scheme(%{"scheme" => _scheme} = s), do: get_scheme("", s)
   defp get_scheme(%{}), do: ""
   defp get_scheme(_, %{"scheme" => scheme}), do: scheme <> "://"
   defp get_scheme(_, %{}), do: ""
