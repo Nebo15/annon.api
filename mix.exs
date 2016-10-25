@@ -26,7 +26,7 @@ defmodule Gateway.Mixfile do
   def application do
     [
       applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto, :ecto_enum, :timex, :joken, :ex_json_schema,
-                     :poison, :uuid, :httpoison, :cassandra, :ex_statsd],
+                     :poison, :uuid, :httpoison, :ex_statsd, :cassandra],
       mod: {Gateway, []}
     ]
   end

@@ -38,32 +38,32 @@ defmodule Gateway.Helpers.Cassandra do
   """
 
   defp get_query(:create_keyspace) do
-    Gateway.Workers.Cassandra.prepare @create_keyspace_query
+    Cassandra.prepare @create_keyspace_query
   end
 
   defp get_query(:create_logs_table) do
     execute_query([%{}], :create_keyspace)
 
-    Gateway.Workers.Cassandra.prepare @create_logs_table_query
+    Cassandra.prepare @create_logs_table_query
   end
 
   defp get_query(:select_by_id) do
-    Gateway.Workers.Cassandra.prepare @select_by_id_query
+    Cassandra.prepare @select_by_id_query
   end
 
   defp get_query(:insert_logs) do
-    Gateway.Workers.Cassandra.prepare @insert_query
+    Cassandra.prepare @insert_query
   end
 
   defp get_query(:update_logs) do
-    Gateway.Workers.Cassandra.prepare @update_query
+    Cassandra.prepare @update_query
   end
 
   def execute_query(records, type) do
     {:ok, query} = get_query(type)
 
     records
-    |> Enum.map(&Task.async(fn -> Gateway.Workers.Cassandra.execute(query, values: &1) end))
+    |> Enum.map(&Task.async(fn -> Cassandra.execute(query, values: &1) end))
     |> Enum.map(&Task.await/1)
   end
 end

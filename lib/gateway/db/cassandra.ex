@@ -7,13 +7,10 @@ defmodule Gateway.DB.Cassandra do
   require Logger
 
   def start_link do
-    cassandra_config =
     {:ok, pid} = Cassandra.Connection.start_link(conf())
 
-    Gateway.Helpers.Cassandra.execute_query([%{}], :create_keyspace)
-    Gateway.Helpers.Cassandra.execute_query([%{}], :create_logs_table)
-    execute_query([%{}], :create_keyspace)
-    execute_query([%{}], :create_logs_table)
+#    Gateway.Helpers.Cassandra.execute_query([%{}], :create_keyspace)
+#    Gateway.Helpers.Cassandra.execute_query([%{}], :create_logs_table)
     {:ok, pid}
   end
 
