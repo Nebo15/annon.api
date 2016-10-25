@@ -5,6 +5,7 @@ defmodule Gateway.Plugins.Logger do
   import Gateway.Helpers.Cassandra
   import Plug.Conn
 
+  require Logger
   def init(opts) do
     opts
   end
@@ -18,13 +19,9 @@ defmodule Gateway.Plugins.Logger do
     |> Poison.encode!
   end
 
-  defp get_api_data(_conn) do
-    %{}
-  end
+  defp get_api_data(_conn), do: %{}
 
-  defp get_consumer_data(_conn) do
-    %{}
-  end
+  defp get_consumer_data(_conn), do: %{}
 
   defp get_request_data(conn) do
     %{
@@ -56,9 +53,11 @@ defmodule Gateway.Plugins.Logger do
     id = conn
     |> get_resp_header("x-request-id")
     |> Enum.at(0) || ""
+
     idempotency_key = conn
-    |> get_resp_header("x-idempotency-key")
+    |> get_req_header("x-idempotency-key")
     |> Enum.at(0) || ""
+
     records = [%{
       id: id,
       idempotency_key: idempotency_key,

@@ -4,25 +4,31 @@ defmodule Gateway.Helpers.Cassandra do
   """
   alias Gateway.DB.Cassandra
 
+  @truncate "TRUNCATE gateway.logs;"
+
   @select_by_id_query """
-    select * from gateway.logs where id = ?;
+    SELECT * FROM gateway.logs WHERE id = ?;
+  """
+
+  @select_by_idempotency_key_query """
+    SELECT * FROM gateway.logs WHERE idempotency_key = ? LIMIT 1 ALLOW FILTERING;
   """
 
   @insert_query """
-    insert into gateway.logs (id, created_at, idempotency_key, ip_address, request)
+    INSERT INTO gateway.logs (id, created_at, idempotency_key, ip_address, request)
       values (?, toTimestamp(now()), ?, ?, ?);
   """
 
   @update_query """
-    update gateway.logs set api = ?, consumer = ?, response = ?, latencies = ?, status_code = ? where id = ?;
+    UPDATE gateway.logs SET api = ?, consumer = ?, response = ?, latencies = ?, status_code = ? WHERE id = ?;
   """
 
   @create_keyspace_query """
-    create keyspace if not exists gateway with replication = {'class' : 'SimpleStrategy', 'replication_factor' : 1};
+    CREATE keyspace IF NOT EXISTS gateway WITH replication = {'class' : 'SimpleStrategy', 'replication_factor' : 1};
   """
 
   @create_logs_table_query """
-    create table if not exists gateway.logs (
+    CREATE table IF NOT EXISTS gateway.logs (
       id text,
       api blob,
       consumer blob,
@@ -37,31 +43,28 @@ defmodule Gateway.Helpers.Cassandra do
     );
   """
 
-  defp get_query(:create_keyspace) do
-    Cassandra.prepare @create_keyspace_query
-  end
+  defp get_query(:truncate), do: @truncate
 
-  defp get_query(:create_logs_table) do
-    Cassandra.prepare @create_logs_table_query
-  end
+  defp get_query(:create_keyspace), do: @create_keyspace_query
+  defp get_query(:create_logs_table), do: @create_logs_table_query
 
-  defp get_query(:select_by_id) do
-    Cassandra.prepare @select_by_id_query
-  end
+  defp get_query(:select_by_id), do: @select_by_id_query
+  defp get_query(:select_by_idempotency_key), do: @select_by_idempotency_key_query
 
-  defp get_query(:insert_logs) do
-    Cassandra.prepare @insert_query
-  end
+  defp get_query(:insert_logs), do: @insert_query
 
-  defp get_query(:update_logs) do
-    Cassandra.prepare @update_query
+  defp get_query(:update_logs), do: @update_query
+
+  defp prepare_query(type) do
+    {:ok, query} = type
+    |> get_query
+    |> Cassandra.prepare
+    query
   end
 
   def execute_query(records, type) do
-    {:ok, query} = get_query(type)
-
     records
-    |> Enum.map(&Task.async(fn -> Cassandra.execute(query, values: &1) end))
+    |> Enum.map(&Task.async(fn -> Cassandra.execute(prepare_query(type), values: &1) end))
     |> Enum.map(&Task.await/1)
   end
 end

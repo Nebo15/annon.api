@@ -4,6 +4,7 @@ defmodule Gateway.Plugins.Idempotency do
   """
   import Plug.Conn
 
+  alias Gateway.Helpers.Cassandra
   alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.API, as: APIModel
 
@@ -16,34 +17,40 @@ defmodule Gateway.Plugins.Idempotency do
   end
   def call(conn, _), do: conn
 
-  defp execute(nil, conn), do: conn
-  defp execute(%Plugin{}, %Plug.Conn{} = conn) do
+  defp execute(%Plugin{}, %Plug.Conn{method: "POST", body_params: params} = conn) do
     conn
     |> get_req_header("x-idempotency-key")
-    |> load_request
+    |> load_log_request
+    |> validate_request(params)
     |> normalize_resp(conn)
   end
+  defp execute(_, conn), do: conn
 
-  defp load_request([key]) when is_binary(key) do
-    # ToDo: load request from cassandra
-    {:ok, [%{
-      response: Poison.encode!(%{
-        headers: %{"x-request-id" => "9a2bd452-99e6-11e6-9fd4-685b35cd61c2", "content-type" => "application/json"},
-        body: %{meta: %{code: 200}}
-      }),
-      status_code: 200
-    }]}
-
+  defp load_log_request([key]) when is_binary(key) do
+    Cassandra.execute_query([%{idempotency_key: key}], :select_by_idempotency_key)
   end
-  defp load_request(_), do: nil
+  defp load_log_request(_), do: nil
 
-  defp normalize_resp({:ok, [%{response: response, status_code: code}]}, conn) do
+  defp validate_request([ok: [%{"request" => request} = log_request]], params) do
+    equal? = request
+    |> Poison.decode!()
+    |> Map.fetch("body")
+    |> elem(1)
+    |> Map.equal?(params)
+
+    {equal?, log_request}
+  end
+  defp validate_request(_, _params), do: nil
+
+  defp normalize_resp({true, %{"response" => response, "status_code" => code}}, conn) do
     response = Poison.decode!(response)
+
     conn
-    |> merge_resp_headers(response["headers"])
+    |> merge_resp_headers(format_headers(response["headers"]))
     |> send_resp(code, Poison.encode!(response["body"]))
     |> halt
   end
+  defp normalize_resp({false, _}, conn), do: conn |> send_halt(409, "different POST parameters")
   defp normalize_resp(_, conn), do: conn
 
   defp send_halt(conn, code, message) do
@@ -60,6 +67,9 @@ defmodule Gateway.Plugins.Idempotency do
       }
     })
   end
+
+  defp format_headers([]), do: []
+  defp format_headers([map|t]), do: [Enum.at(map, 0)] ++ format_headers(t)
 
   defp get_enabled(plugins) when is_list(plugins) do
     plugins

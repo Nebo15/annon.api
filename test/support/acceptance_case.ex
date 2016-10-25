@@ -18,6 +18,7 @@ defmodule Gateway.AcceptanceCase do
       alias Gateway.DB.Repo
       alias Gateway.DB.Models.Plugin
       alias Gateway.DB.Models.API, as: APIModel
+      alias Gateway.Helpers.Cassandra
 
       @config Confex.get_map(:gateway, :acceptance)
 
@@ -66,6 +67,7 @@ defmodule Gateway.AcceptanceCase do
 
         ["apis", "plugins", "consumers", "consumer_plugin_settings"]
         |> Enum.map(fn table -> truncate_table Gateway.DB.Repo, table end)
+        Cassandra.execute_query([%{}], :truncate)
 
         :ok
       end
