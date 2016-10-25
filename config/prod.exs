@@ -7,3 +7,8 @@ config :gateway, Gateway.DB.Repo,
   password: "${DB_PASSWORD}",
   hostname: "${DB_HOST}",
   port: "${DB_PORT}"
+
+config :libcluster,
+  strategy: Cluster.Strategy.Kubernetes,
+  kubernetes_selector: "app=myapp",
+  kubernetes_node_basename: "myapp"
