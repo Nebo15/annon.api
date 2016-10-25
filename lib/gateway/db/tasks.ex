@@ -9,6 +9,8 @@ defmodule :os_gateway_tasks do
   def migrate! do
     migrations_dir = Path.join(["priv", "repos", "migrations"])
 
+    load_app()
+
     Gateway.DB.Repo
     |> start_repo
     |> Ecto.Migrator.run(migrations_dir, :up, all: true)
@@ -24,13 +26,12 @@ defmodule :os_gateway_tasks do
   end
 
   defp start_repo(repo) do
-    load_app()
     repo.start_link()
     repo
   end
 
   defp load_app do
-    start_applications([:logger, :postgrex, :ecto])
+    start_applications([:logger, :postgrex, :ecto, :cassandra])
     :ok = Application.load(:gateway)
   end
 
