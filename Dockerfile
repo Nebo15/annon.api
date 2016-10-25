@@ -13,6 +13,7 @@ WORKDIR ${HOME}
 
 # Install and compile project dependencies
 COPY mix.* ./
+#RUN cp -R  /www/elixir-cassandra /www/elixir-cassandra
 RUN mix do deps.get, deps.compile
 
 # Add project sources
