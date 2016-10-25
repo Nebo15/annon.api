@@ -17,15 +17,7 @@ defmodule Gateway.ConfigGuardian do
 
     :ets.new(:config, [:set, :public, :named_table])
 
-    # Auto-discover existing nodes. To be replaced
-    :net_adm.names
-    |> elem(1)
-    |> Enum.map(fn({vm, _port}) ->
-      (vm ++ '@localhost')
-      |> List.to_atom
-    end)
-    |> Enum.filter(fn(vm) -> vm != node() end)
-    |> Cluster.Strategy.connect_nodes()
+    :net_adm.world()
 
     {:ok, []}
   end
