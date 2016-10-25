@@ -17,4 +17,6 @@ defmodule Gateway.PrivateRouter do
   end
 
   forward "/consumers", to: Gateway.HTTP.Consumers
+
+  forward "/requests", to: Gateway.HTTP.Requests
 end

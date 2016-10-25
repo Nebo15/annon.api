@@ -4,8 +4,16 @@ defmodule Gateway.Helpers.Cassandra do
   """
   alias Gateway.DB.Cassandra
 
+  @select_all_query """
+    select * from gateway.logs where token(id) > token(?) and token(id) < token(?) limit ?;
+  """
+
   @select_by_id_query """
     select * from gateway.logs where id = ?;
+  """
+
+  @delete_by_id_query """
+    delete from gateway.logs where id = ?;
   """
 
   @insert_query """
@@ -45,8 +53,16 @@ defmodule Gateway.Helpers.Cassandra do
     Cassandra.prepare @create_logs_table_query
   end
 
+  defp get_query(:select_all) do
+    Cassandra.prepare @select_all_query
+  end
+
   defp get_query(:select_by_id) do
     Cassandra.prepare @select_by_id_query
+  end
+
+  defp get_query(:delete_by_id) do
+    Cassandra.prepare @delete_by_id_query
   end
 
   defp get_query(:insert_logs) do
