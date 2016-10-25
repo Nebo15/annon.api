@@ -28,4 +28,7 @@ config :cassandra, :connection,
   hostname: "localhost",
   port: 9042
 
+config :libcluster,
+  strategy: Cluster.Strategy.Epmd
+
 import_config "#{Mix.env}.exs"
