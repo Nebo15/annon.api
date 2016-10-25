@@ -2,7 +2,7 @@ defmodule Gateway.Helpers.Cassandra do
   @moduledoc """
   Helper for working with Cassandra
   """
-  alias Gateway.Workers.Cassandra
+  alias Gateway.DB.Cassandra
 
   @select_by_id_query """
     select * from gateway.logs where id = ?;
@@ -42,8 +42,6 @@ defmodule Gateway.Helpers.Cassandra do
   end
 
   defp get_query(:create_logs_table) do
-    execute_query([%{}], :create_keyspace)
-
     Cassandra.prepare @create_logs_table_query
   end
 
@@ -63,7 +61,7 @@ defmodule Gateway.Helpers.Cassandra do
     {:ok, query} = get_query(type)
 
     records
-    |> Enum.map(&Task.async(fn -> Cassandra.execute(query, values: &1) end))
+    |> Enum.map(&Task.async(fn -> Cassandra.execute(query, type, &1) end))
     |> Enum.map(&Task.await/1)
   end
 end
