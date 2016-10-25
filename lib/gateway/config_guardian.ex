@@ -36,6 +36,12 @@ defmodule Gateway.ConfigGuardian do
     {:noreply, state}
   end
 
+  def handle_info({:nodeup, _}, state) do
+    Gateway.ConfigGuardian.do_reload_config()
+
+    {:noreply, state}
+  end
+
   def do_reload_config() do
     apis =
       Gateway.DB.Models.API
