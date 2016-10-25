@@ -5,7 +5,6 @@ defmodule Gateway.Plugins.Logger do
   import Gateway.Helpers.Cassandra
   import Plug.Conn
 
-  require Logger
   def init(opts) do
     opts
   end
