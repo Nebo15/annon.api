@@ -28,6 +28,7 @@ config :gateway, Gateway.DB.Cassandra,
   hostname: {:system, "CASSANDRA_DB_HOST", "localhost"},
   name: {:system, "CASSANDRA_PROCESS_NAME", Cassandra},
   port: {:system, :integer, "CASSANDRA_DB_PORT", 9042},
-  contact_points: [{:system, "CASSANDRA_DB_HOST", "localhost"}]
+  contact_points: [{:system, "CASSANDRA_DB_HOST", "localhost"}],
+  async_init: false
 
 import_config "#{Mix.env}.exs"
