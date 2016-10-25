@@ -61,7 +61,7 @@ defmodule Gateway.Helpers.Cassandra do
     {:ok, query} = get_query(type)
 
     records
-    |> Enum.map(&Task.async(fn -> Cassandra.execute(query, values: &1) end))
+    |> Enum.map(&Task.async(fn -> Cassandra.execute(query, type, &1) end))
     |> Enum.map(&Task.await/1)
   end
 end

@@ -7,12 +7,14 @@ MAINTAINER Nebo#15 support@nebo15.com
 ENV TERM=xterm \
     MIX_ENV=prod \
     APP_NAME=gateway \
-    APP_PORT=4001
+    GATEWAY_PUBLIC_PORT=4000 \
+    GATEWAY_PRIVATE_PORT=4001
 
 WORKDIR ${HOME}
 
 # Install and compile project dependencies
 COPY mix.* ./
+
 RUN mix do deps.get, deps.compile
 
 # Add project sources
@@ -48,7 +50,7 @@ USER default
 ENV REPLACE_OS_VARS=true
 
 # Exposes this port from the docker container to the host machine
-# EXPOSE ${APP_PORT}
+EXPOSE ${GATEWAY_PUBLIC_PORT} ${GATEWAY_PRIVATE_PORT}
 
 # Change workdir to a released directory
 WORKDIR /opt
