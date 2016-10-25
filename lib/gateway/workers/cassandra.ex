@@ -5,13 +5,6 @@ defmodule Gateway.Workers.Cassandra do
 #  alias Gateway.DB.CassandraAPI
 #  import Gateway.Helpers.Cassandra
 
-  def start_link do
-    conn = Cassandra.Connection.start_link(Confex.get_map(:cassandra, :connection))
-
-    Gateway.Helpers.Cassandra.execute_query([%{}], :create_keyspace)
-    Gateway.Helpers.Cassandra.execute_query([%{}], :create_logs_table)
-    conn
-  end
   def send(frame) do
     Cassandra.Connection.send(Cassandra, CQL.encode(frame))
   end
