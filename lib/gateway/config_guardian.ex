@@ -17,7 +17,14 @@ defmodule Gateway.ConfigGuardian do
 
     :ets.new(:config, [:set, :public, :named_table])
 
-    :net_adm.world()
+    case Confex.get(:libcluster, :strategy) do
+      Cluster.Strategy.Epmd ->
+        :net_adm.world()
+      Cluster.Strategy.Kubernetes = s ->
+        send(s, :load)
+    end
+
+    send(self(), :reload_config)
 
     {:ok, []}
   end
