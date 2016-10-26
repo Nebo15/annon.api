@@ -16,7 +16,7 @@ config :ex_statsd,
        port: 8125,
        namespace: "os.gateway"
 
-config :logger, level: :debug
+config :logger, level: :debug, metadata: [:request_id]
 
 config :gateway, :public_http,
   port: { :system, :integer, "GATEWAY_PUBLIC_PORT", 5000 }

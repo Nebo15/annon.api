@@ -21,12 +21,8 @@ defmodule Gateway.Plugins.APILoader do
     |> Gateway.DB.Repo.all()
 
     models
-    |> Enum.filter(fn(x) -> equal?(x, conn) end)
-    |> get_one
+    |> Enum.find(fn(x) -> equal?(x, conn) end)
   end
-
-  def get_one([model]), do: model
-  def get_one(_), do: nil
 
   def equal?(%{request: %{} = r}, c) do
     equal_host?(r, c) and equal_port?(r, c) and equal_scheme?(r, c) and equal_path?(r, c) and equal_method?(r, c)
