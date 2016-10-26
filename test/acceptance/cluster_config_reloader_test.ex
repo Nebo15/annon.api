@@ -3,8 +3,8 @@ defmodule Gateway.ClusterConfigReloaderTest do
 
   @tag cluster: true
   test "correct communication between processes" do
-    # spawns two nodes with "private" ports
-    # at 6001 and 6003 respectively
+    # spawns two nodes:
+    # node1@127.0.0.1 and node2@127.0.0.1
     Gateway.Cluster.spawn()
 
     {:ok, api} =
@@ -37,9 +37,11 @@ defmodule Gateway.ClusterConfigReloaderTest do
   end
 
   defp check_api_on_node(api_id, field, node) do
-    [{_, api}] = :rpc.block_call(node, :ets, :lookup, [:config, {:api, api_id}])
-
-    Map.get(api, field)
+    node
+    |> :rpc.block_call(:ets, :lookup, [:config, {:api, api_id}])
+    |> hd()
+    |> elem(1)
+    |> Map.get(field)
   end
 
   defp update_api(api_id, field, value) do
