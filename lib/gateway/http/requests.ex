@@ -29,7 +29,7 @@ defmodule Gateway.HTTP.Requests do
 
   delete "/:request_id" do
     execute_query([%{id: request_id}], :delete_by_id)
-    {:ok, ""}
+    {:ok, %{}}
     |> render_delete_response
     |> send_response(conn)
   end
