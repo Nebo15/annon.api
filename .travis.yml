@@ -57,12 +57,14 @@ script:
   - sleep 5
   - docker ps
   - RUNNING_CONTAINERS=`docker ps | wc -l`;
-  - if [ "${RUNNING_CONTAINERS//[[:space:]]/}" == "1" ]; then echo "[E] Container is not started!" exit 1; fi;
+  - if [ "${RUNNING_CONTAINERS//[[:space:]]/}" = "1" ]; then echo "[E] Container is not started\!"; docker logs gateway --details --since 5h; exit 1; fi;
   # Run acceptance tests on Docker container
-  - " MIX_TEST_DATABASE=gateway MIX_LOGGER_TEST_DATABASE=gateway_logger MIX_TEST_HOST=localhost MIX_TEST_PORT=4000 mix test --exclude pending test/acceptance"
+  - "MIX_TEST_DATABASE=gateway MIX_LOGGER_TEST_DATABASE=gateway_logger MIX_TEST_HOST=localhost MIX_TEST_PORT=4000 mix test --exclude pending test/acceptance"
 after_success:
   # Submit Docker container to Docker Hub and create GitHub Release by pushing tag with changelog
   - ./bin/ci/push.sh
+after_failure:
+  - docker logs gateway --details --since 5h
 notifications:
   slack:
     rooms:
