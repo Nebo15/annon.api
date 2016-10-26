@@ -47,7 +47,7 @@ defmodule Gateway.Plugins.Idempotency do
 
     conn
     |> merge_resp_headers(format_headers(response["headers"]))
-    |> send_resp(code, Poison.encode!(response["body"]))
+    |> send_resp(code, response["body"])
     |> halt
   end
   defp normalize_resp({false, _}, conn), do: conn |> send_halt(409, "different POST parameters")
