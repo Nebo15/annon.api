@@ -56,6 +56,12 @@ defmodule Gateway.AcceptanceCase do
         "apis"
         |> post(Poison.encode!(data), :private)
         |> assert_status(201)
+        |> assert_resp_body_json()
+      end
+
+      def assert_resp_body_json(%HTTPoison.Response{body: body} = resp) do
+        assert {:ok, _} = Poison.decode(body)
+        resp
       end
 
       setup tags do

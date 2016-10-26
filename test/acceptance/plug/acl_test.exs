@@ -87,12 +87,12 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
     |> assert_status(501)
   end
 
-  def api_acl_data(request_data, scopes) when is_binary(scopes) do
+  def api_acl_data(request_data, scope) when is_binary(scope) do
     get_api_model_data()
     |> Map.put(:request, request_data)
     |> Map.put(:plugins, [
       %{name: "JWT", is_enabled: true, settings: %{"signature" => @jwt_secret}},
-      %{name: "ACL", is_enabled: true, settings: %{"scope" => scopes}}
+      %{name: "ACL", is_enabled: true, settings: %{"scope" => scope}}
     ])
   end
 end

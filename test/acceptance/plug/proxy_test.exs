@@ -11,17 +11,12 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
   }
 
   @payload %{"id" => @consumer_id, "name" => "John Doe"}
+  @token_secret "proxy_secret"
 
   test "proxy plugin" do
 
-    data = get_api_model_data()
-    |> Map.put(:request,
-      %{host: get_host(:public), path: "/proxy/test", port: get_port(:public), scheme: "http", method: "GET"})
-    |> Map.put(:plugins, [
-      %{name: "JWT", is_enabled: true, settings: %{"signature" => "jwt_test_secret"}}])
-
     api_id = @api_url
-    |> post(Poison.encode!(data), :private)
+    |> post(Poison.encode!(get_api_proxy_data("/proxy/test")), :private)
     |> assert_status(201)
     |> get_body()
     |> Poison.decode!
@@ -45,7 +40,7 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
     |> assert_status(201)
 
     response = "proxy/test"
-    |> get(:public, [{"authorization", "Bearer #{jwt_token(@payload, "jwt_test_secret")}"}])
+    |> get(:public, [{"authorization", "Bearer #{jwt_token(@payload, @token_secret)}"}])
     |> assert_status(200)
     |> get_body()
     |> Poison.decode!
@@ -56,6 +51,33 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
     assert response["request"]["path"] == "/proxy/test"
     assert response["request"]["port"] == get_port(:public)
 
+  end
+
+  test "proxy without sheme and path" do
+    proxy_plugin = %{ name: "Proxy", is_enabled: true,
+                      settings: %{
+                        "proxy_to" => Poison.encode!(%{
+                          host: get_host(:private),
+                          port: get_port(:private),
+                          })
+                      }
+                    }
+    "/apis"
+    |> get_api_proxy_data()
+    |> Map.put(:plugins, [proxy_plugin])
+    |> http_api_create()
+
+    "apis"
+    |> get(:public, [{"authorization", "Bearer #{jwt_token(@payload, @token_secret)}"}])
+    |> assert_status(200)
+  end
+
+  def get_api_proxy_data(path) do
+    get_api_model_data()
+    |> Map.put(:request,
+      %{host: get_host(:public), path: path, port: get_port(:public), scheme: "http", method: "GET"})
+    |> Map.put(:plugins, [
+      %{name: "JWT", is_enabled: true, settings: %{"signature" => @token_secret}}])
   end
 
 end
