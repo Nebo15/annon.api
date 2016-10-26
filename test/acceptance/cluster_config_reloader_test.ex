@@ -28,6 +28,7 @@ defmodule Gateway.ClusterConfigReloaderTest do
     assert "New name" == check_api_on_node(api.id, "name", 6001)
     assert "New name" == check_api_on_node(api.id, "name", 6003)
 
+    # cleanup after the test
     Gateway.DB.Models.API
     |> Gateway.DB.Repo.delete_all()
   end
