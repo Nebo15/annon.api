@@ -27,7 +27,7 @@ defmodule Gateway.Plugins.Proxy do
 
   defp do_proxy(%{proxy: proxy}, %Plug.Conn{method: method} = conn) do
     response = proxy
-    |> make_link()
+    |> make_link(conn)
     |> do_request(conn, method)
     |> get_response
 
@@ -47,12 +47,16 @@ defmodule Gateway.Plugins.Proxy do
 
   def get_response(%HTTPoison.Response{} = response), do: response
 
-  def make_link(proxy), do: proxy |> get_scheme() |> get_host(proxy) |> get_port(proxy) |> get_path(proxy)
+  def make_link(proxy, conn) do
+    proxy
+    |> get_scheme(conn)
+    |> get_host(proxy)
+    |> get_port(proxy)
+    |> get_path(proxy, conn)
+  end
 
-  defp get_scheme(%{"scheme" => _scheme} = s), do: get_scheme("", s)
-  defp get_scheme(%{}), do: ""
-  defp get_scheme(_, %{"scheme" => scheme}), do: scheme <> "://"
-  defp get_scheme(_, %{}), do: ""
+  defp get_scheme(%{"scheme" => scheme}, _conn), do: scheme <> "://"
+  defp get_scheme(_, %Plug.Conn{scheme: scheme}), do: Atom.to_string(scheme) <> "://"
 
   defp get_host(pr, %{"host" => host}), do: pr <> host
   defp get_host(pr, %{}), do: pr
@@ -61,8 +65,8 @@ defmodule Gateway.Plugins.Proxy do
   defp get_port(pr, %{"port" => port}), do: pr <> ":" <> port
   defp get_port(pr, %{}), do: pr
 
-  defp get_path(pr, %{"path" => path}), do: pr <> path
-  defp get_path(pr, %{}), do: pr
+  defp get_path(pr, %{"path" => path}, _conn), do: pr <> path
+  defp get_path(pr, %{}, %Plug.Conn{request_path: path}), do: pr <> path
 
   defp get_settings(%Plugin{settings: %{"proxy_to" => proxy}}), do: %{proxy: Poison.decode!(proxy)}
   defp get_enabled(plugins) when is_list(plugins) do
