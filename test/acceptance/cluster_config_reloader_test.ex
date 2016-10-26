@@ -20,25 +20,26 @@ defmodule Gateway.ClusterConfigReloaderTest do
       }
       |> Gateway.DB.Models.API.create()
 
-    assert "Test api" == check_api_on_node(api.id, "name", 6001)
-    assert "Test api" == check_api_on_node(api.id, "name", 6003)
+    Process.sleep(1000)
+
+    assert "Test api" == check_api_on_node(api.id, :name, :'node1@127.0.0.1')
+    assert "Test api" == check_api_on_node(api.id, :name, :'node2@127.0.0.1')
 
     update_api(api.id, "name", "New name")
 
-    assert "New name" == check_api_on_node(api.id, "name", 6001)
-    assert "New name" == check_api_on_node(api.id, "name", 6003)
+    Process.sleep(1000)
 
-    # cleanup after the test
+    assert "New name" == check_api_on_node(api.id, :name, :'node1@127.0.0.1')
+    assert "New name" == check_api_on_node(api.id, :name, :'node2@127.0.0.1')
+
     Gateway.DB.Models.API
     |> Gateway.DB.Repo.delete_all()
   end
 
-  defp check_api_on_node(api_id, field, port) do
-    "http://localhost:#{port}/apis/#{api_id}"
-    |> HTTPoison.get!()
-    |> Map.get(:body)
-    |> Poison.decode!
-    |> get_in(["data", field])
+  defp check_api_on_node(api_id, field, node) do
+    [{_, api}] = :rpc.block_call(node, :ets, :lookup, [:config, {:api, api_id}])
+
+    Map.get(api, field)
   end
 
   defp update_api(api_id, field, value) do
