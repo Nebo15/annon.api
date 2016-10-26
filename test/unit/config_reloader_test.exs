@@ -48,11 +48,10 @@ defmodule Gateway.ConfigReloaderTest do
     assert "New name" == check_on_node("name", 6003)
   end
 
-  defp check_on_node(port, field) do
+  defp check_on_node(field, port) do
     HTTPoison.get!("http://localhost:#{port}/apis")
     |> Map.get(:body)
     |> Poison.decode!
     |> get_in(["data", field])
-    |> IO.inspect
   end
 end
