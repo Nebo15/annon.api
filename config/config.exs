@@ -25,13 +25,13 @@ config :ex_statsd,
        port: 8125,
        namespace: "os.gateway"
 
-config :logger, level: :debug, metadata: [:request_id]
+config :logger, level: :debug
 
 config :gateway, :public_http,
-  port: { :system, :integer, "GATEWAY_PUBLIC_PORT", 5000 }
+  port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 4000}
 
 config :gateway, :private_http,
-  port: { :system, :integer, "GATEWAY_PRIVATE_PORT", 5001 }
+  port: {:system, :integer, "GATEWAY_PRIVATE_PORT", 4001}
 
 config :libcluster,
   strategy: { :system, :module, "LIBCLUSTER_STRATEGY", Cluster.Strategy.Epmd }
