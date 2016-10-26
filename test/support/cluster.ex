@@ -19,6 +19,7 @@ defmodule Gateway.Cluster do
     {:ok, node} = :slave.start(to_char_list("127.0.0.1"), node_name(node_host), inet_loader_args())
     add_code_paths(node)
     transfer_configuration(node)
+    apply_additional_configuration(node)
     ensure_applications_started(node)
     {:ok, node}
   end
@@ -46,6 +47,26 @@ defmodule Gateway.Cluster do
         rpc(node, Application, :put_env, [app_name, key, val])
       end
     end
+  end
+
+  defp apply_additional_configuration(node) do
+    config =
+      case node do
+        :'node1@127.0.0.1' ->
+          [
+            {:public_http, [port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 6000}]},
+            {:private_http, [port: {:system, :integer, "GATEWAY_PRIVATE_PORT", 6001}]}
+          ]
+        :'node2@127.0.0.1' ->
+          [
+            {:public_http, [port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 6002}]},
+            {:private_http, [port: {:system, :integer, "GATEWAY_PRIVATE_PORT", 6003}]}
+          ]
+      end
+
+    Enum.each(config, fn({key, val}) ->
+      rpc(node, Application, :put_env, [:gateway, key, val])
+    end)
   end
 
   defp ensure_applications_started(node) do

@@ -23,9 +23,36 @@ defmodule Gateway.ConfigReloaderTest do
   end
 
   test "correct communication between processes" do
-    public_config = {:public_http, [port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 5000}]}
+    {:ok, api} =
+      %{
+        name: "Test api",
+        request: %{
+          scheme: "HTTP",
+          host: "example.com",
+          port: "80",
+          path: "/",
+          method: "GET"
+        }
+      }
+      |> Gateway.DB.Models.API.create()
+      |> IO.inspect
 
-    nodes = Gateway.Cluster.spawn()
-            |> IO.inspect
+    Gateway.Cluster.spawn()
+
+    assert "Test api" == check_on_node("name", 6001)
+    assert "Test api" == check_on_node("name", 6003)
+
+    HTTPoison.put!("http://localhost:6001/apis/#{api.id}", [], Poison.encode!(%{name: "New name"}))
+
+    assert "New name" == check_on_node("name", 6001)
+    assert "New name" == check_on_node("name", 6003)
+  end
+
+  defp check_on_node(port, field) do
+    HTTPoison.get!("http://localhost:#{port}/apis")
+    |> Map.get(:body)
+    |> Poison.decode!
+    |> get_in(["data", field])
+    |> IO.inspect
   end
 end
