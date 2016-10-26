@@ -1,4 +1,9 @@
 defmodule Gateway.ClusterConfigReloaderTest do
+  @moduledoc """
+  Integration test to check that the config cache is reloaded
+  across cluster after a config change
+  """
+
   use Gateway.UnitCase
 
   @tag cluster: true

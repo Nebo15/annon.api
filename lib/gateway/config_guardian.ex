@@ -5,11 +5,11 @@ defmodule Gateway.ConfigGuardian do
 
   use GenServer
 
-  def start_link() do
+  def start_link do
     GenServer.start_link(__MODULE__, [], [name: __MODULE__])
   end
 
-  def reload_config() do
+  def reload_config do
     Gateway.ConfigGuardian.do_reload_config()
     Cluster.Events.publish(:reload_config)
   end
@@ -49,7 +49,7 @@ defmodule Gateway.ConfigGuardian do
     {:noreply, state}
   end
 
-  def do_reload_config() do
+  def do_reload_config do
     apis =
       Gateway.DB.Models.API
       |> Gateway.DB.Repo.all()
