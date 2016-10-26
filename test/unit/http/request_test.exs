@@ -11,11 +11,11 @@ defmodule Gateway.HTTP.RequestTest do
       |> Gateway.PublicRouter.call([])
   end
 
-  defp repeat_random_post(count) when count === 1 do
-    random_post
+  defp repeat_random_post(1) do
+    random_post()
   end
   defp repeat_random_post(count) do
-    random_post
+    random_post()
     repeat_random_post(count - 1)
   end
 
@@ -34,7 +34,7 @@ defmodule Gateway.HTTP.RequestTest do
   end
 
   test "GET /requests/:request_id" do
-    id = random_post
+    id = random_post()
     |> get_resp_header("x-request-id")
     |> Enum.at(0) || ""
 
@@ -49,7 +49,7 @@ defmodule Gateway.HTTP.RequestTest do
   end
 
   test "DELETE /requests/:request_id" do
-    id = random_post
+    id = random_post()
     |> get_resp_header("x-request-id")
     |> Enum.at(0) || ""
 
