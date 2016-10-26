@@ -18,7 +18,7 @@ defmodule Gateway.Plugins.Proxy do
 
   defp execute(nil, conn), do: conn
   defp execute(%Plugin{} = plugin, conn) do
-    _settings = plugin
+    plugin
     |> get_settings()
     # TODO: maybe add some headers from the settings
     # TODO: check variables
