@@ -10,6 +10,7 @@ defmodule Gateway.HTTPHelpers.Response do
   def render_show_response({:error, changeset}), do: render_errors_response(changeset)
   def render_show_response(nil), do: render_not_found_response()
   def render_show_response(resource), do: render_response(resource, 200)
+  def render_show_response(resource, %{paging: data}), do: render_response(resource, 200, %{paging: data})
 
   def render_delete_response({:ok, resource}), do: render_response(resource, 200, "Resource was deleted")
   def render_delete_response(_), do: render_not_found_response()
@@ -54,6 +55,13 @@ defmodule Gateway.HTTPHelpers.Response do
     |> encode_response
   end
 
+  def render_response(resource, code, %{paging: data}) do
+    resource
+    |> response_struct(code)
+    |> put_paging_data(data)
+    |> encode_response
+  end
+
   def render_response(resource, code, description) do
     resource
     |> response_struct(code)
@@ -68,6 +76,10 @@ defmodule Gateway.HTTPHelpers.Response do
       },
       data: resource
     }
+  end
+
+  def put_paging_data(struct, data) do
+    Map.put(struct, "paging", data)
   end
 
   def put_description(%{meta: meta} = struct, text) do
