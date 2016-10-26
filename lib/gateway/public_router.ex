@@ -12,6 +12,7 @@ defmodule Gateway.PublicRouter do
   plug Gateway.Plugins.APILoader
   plug Gateway.Plugins.JWT
   plug Gateway.Plugins.ACL
+  plug Gateway.Plugins.Idempotency
   plug Gateway.Plugins.Validator
   plug Gateway.Plugins.Monitoring
   plug Gateway.Plugins.Logger

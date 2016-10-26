@@ -18,11 +18,13 @@ defmodule Gateway.AcceptanceCase do
       alias Gateway.DB.Repo
       alias Gateway.DB.Models.Plugin
       alias Gateway.DB.Models.API, as: APIModel
+      alias Gateway.Helpers.Cassandra
 
       @config Confex.get_map(:gateway, :acceptance)
 
       def get(url, endpoint_type, headers \\ []), do: request(:get, endpoint_type, url, "", headers)
       def post(url, body, endpoint_type, headers \\ []), do: request(:post, endpoint_type, url, body, headers)
+      def delete(url, endpoint_type, headers \\ []), do: request(:delete, endpoint_type, url, "", headers)
 
       def request(request_type, endpoint_type, url, body, custom_headers) do
         port = get_port(endpoint_type)
@@ -65,6 +67,7 @@ defmodule Gateway.AcceptanceCase do
 
         ["apis", "plugins", "consumers", "consumer_plugin_settings"]
         |> Enum.map(fn table -> truncate_table Gateway.DB.Repo, table end)
+        Cassandra.execute_query([%{}], :truncate)
 
         :ok
       end
