@@ -90,8 +90,18 @@ defmodule Gateway.HTTP.Requests do
     |> modify_record_part("api", &Poison.decode!/1)
   end
 
+  defp remove_extra_keys(record) do
+    record
+    |> Map.delete("request")
+    |> Map.delete("response")
+    |> Map.delete("latencies")
+    |> Map.delete("consumer")
+  end
+
   defp modify_records(records) do
-    Enum.map(records, fn(record) -> modify_record(record) end)
+    records
+    |> Enum.map(fn(record) -> modify_record(record) end)
+    |> Enum.map(fn(record) -> remove_extra_keys(record) end)
   end
 
   def render_request(request) when request === nil, do: render_not_found_response("Request not found")
