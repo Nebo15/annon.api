@@ -1,4 +1,4 @@
-defmodule Gateway.ConfigReloaderTest do
+defmodule Gateway.ClusterConfigReloaderTest do
   use Gateway.UnitCase
 
   @tag cluster: true
