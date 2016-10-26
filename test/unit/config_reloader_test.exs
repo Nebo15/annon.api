@@ -23,30 +23,9 @@ defmodule Gateway.ConfigReloaderTest do
   end
 
   test "correct communication between processes" do
-    Application.ensure_started(:porcelain)
+    public_config = {:public_http, [port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 5000}]}
 
-    host = "localhost"
-    cookie = "test_cookie"
-
-    nodes =
-      [
-        %{ pub: 6000, priv: 6001, name: "testnode1" },
-        %{ pub: 6002, priv: 6003, name: "testnode2" }
-      ]
-      |> Enum.map(fn %{pub: pub, priv: priv, name: name} ->
-           sname = "#{name}@#{host}"
-
-           env_vars = [
-             { "GATEWAY_PUBLIC_PORT", pub },
-             { "GATEWAY_PRIVATE_PORT", priv }
-           ]
-       end)
-
-    Enum.each(nodes, fn {name, proc} ->
-      name |> IO.inspect
-      :rpc.eval_everywhere([name], :init, :stop, [])
-      # Porcelain.Process.signal(proc, :kill)
-      # |> IO.inspect
-    end)
+    nodes = Gateway.Cluster.spawn()
+            |> IO.inspect
   end
 end
