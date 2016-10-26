@@ -1,4 +1,4 @@
-defmodule Gateway.HTTP.ConsumerTest do
+defmodule Gateway.HTTP.RequestTest do
   use Gateway.UnitCase
 
   @random_url "random_url"
