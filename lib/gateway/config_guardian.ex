@@ -1,4 +1,8 @@
 defmodule Gateway.ConfigGuardian do
+  @moduledoc """
+  The module is in charge of reloading the config across the cluster
+  """
+
   use GenServer
 
   def start_link() do

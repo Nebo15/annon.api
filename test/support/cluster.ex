@@ -16,16 +16,16 @@ defmodule Gateway.Cluster do
   end
 
   defp spawn_node(node_host) do
-    {:ok, node} = :slave.start(to_char_list("127.0.0.1"), node_name(node_host), inet_loader_args())
-    add_code_paths(node)
-    transfer_configuration(node)
-    apply_additional_configuration(node)
-    ensure_applications_started(node)
-    {:ok, node}
+    {:ok, new_node} = :slave.start(to_char_list("127.0.0.1"), node_name(node_host), inet_loader_args())
+    add_code_paths(new_node)
+    transfer_configuration(new_node)
+    apply_additional_configuration(new_node)
+    ensure_applications_started(new_node)
+    {:ok, new_node}
   end
 
-  defp rpc(node, module, method, args) do
-    :rpc.block_call(node, module, method, args)
+  defp rpc(new_node, module, method, args) do
+    :rpc.block_call(new_node, module, method, args)
   end
 
   defp inet_loader_args do
@@ -37,8 +37,8 @@ defmodule Gateway.Cluster do
     :erl_boot_server.add_slave(ipv4)
   end
 
-  defp add_code_paths(node) do
-    :rpc.block_call(node, :code, :add_paths, [:code.get_path()])
+  defp add_code_paths(new_node) do
+    :rpc.block_call(new_node, :code, :add_paths, [:code.get_path()])
   end
 
   defp transfer_configuration(node) do
@@ -49,9 +49,9 @@ defmodule Gateway.Cluster do
     end
   end
 
-  defp apply_additional_configuration(node) do
+  defp apply_additional_configuration(new_node) do
     config =
-      case node do
+      case new_node do
         :'node1@127.0.0.1' ->
           [
             {:public_http, [port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 6000}]},
@@ -65,15 +65,15 @@ defmodule Gateway.Cluster do
       end
 
     Enum.each(config, fn({key, val}) ->
-      rpc(node, Application, :put_env, [:gateway, key, val])
+      rpc(new_node, Application, :put_env, [:gateway, key, val])
     end)
   end
 
-  defp ensure_applications_started(node) do
-    rpc(node, Application, :ensure_all_started, [:mix])
-    rpc(node, Mix, :env, [Mix.env()])
+  defp ensure_applications_started(new_node) do
+    rpc(new_node, Application, :ensure_all_started, [:mix])
+    rpc(new_node, Mix, :env, [Mix.env()])
     for {app_name, _, _} <- Application.loaded_applications do
-      rpc(node, Application, :ensure_all_started, [app_name])
+      rpc(new_node, Application, :ensure_all_started, [app_name])
     end
   end
 
