@@ -68,8 +68,6 @@ defmodule Gateway.Plugins.Logger do
 
     records
     |> LogRecord.create
-    #execute_query(records, :insert_logs)
-    
   end
 
   defp get_key(key) when is_binary(key), do: String.to_atom(key)
@@ -80,15 +78,18 @@ defmodule Gateway.Plugins.Logger do
     id = conn
     |> get_resp_header("x-request-id")
     |> Enum.at(0) || ""
-    records = [%{
+
+    records = %{
       id: id,
-      api: get_json_string(conn, &get_api_data/1),
-      consumer: get_json_string(conn, &get_consumer_data/1),
-      response: get_json_string(conn, &get_response_data/1),
-      latencies: get_json_string(conn, &get_latencies_data/1),
+      api: get_api_data(conn) |> prepare_params,
+      consumer: get_consumer_data(conn) |> prepare_params,
+      response: get_response_data(conn) |> prepare_params,
+      latencies: get_latencies_data(conn) |> prepare_params,
       status_code: conn.status
-    }]
-    #execute_query(records, :update_logs)
+    }
+
+    records
+    |> LogRecord.update
   end
 
   def call(conn, _opts) do

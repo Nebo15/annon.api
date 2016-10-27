@@ -2,15 +2,15 @@ defmodule Gateway.Logger.DB.Models.LogRecord do
   @moduledoc """
   Log record DB entity
   """
-
+  alias Gateway.Logger.DB.Repo
   use Gateway.DB, :model
+  alias Ecto.Adapters.SQL
 
   @derive {Poison.Encoder, except: [:__meta__, :plugins]}
 
-  @primary_key {:_id, :id, autogenerate: false}
+  @primary_key {:id, :string, autogenerate: false}
 
   schema "logs" do
-    field :id, :string
     field :api, :map
     field :consumer, :map
     field :idempotency_key, :string
@@ -24,16 +24,24 @@ defmodule Gateway.Logger.DB.Models.LogRecord do
   end
 
   def create(params \\ %{}) do
-    IO.inspect params
     %Gateway.Logger.DB.Models.LogRecord{}
     |> cast(params,[:id, :idempotency_key, :ip_address, :request])
-    |> IO.inspect
-    |> Gateway.Logger.DB.Repo.insert
+    |> Repo.insert
   end
 
-  def update(record_id, params) do
-    %Gateway.Logger.DB.Models.LogRecord{id: record_id}
-    |> cast(params, [:api, :consumer, :response, :latencies, :status_code])
-    |> Gateway.Logger.DB.Repo.update()
+  def update(params) do
+    %Gateway.Logger.DB.Models.LogRecord{id: Map.get(params, :id)}
+    |> cast(params, [:id, :api, :consumer, :response, :latencies, :status_code])
+    |> Repo.update
+  end
+
+  def get_record_by(selector) do
+    Repo.one from Gateway.Logger.DB.Models.LogRecord,
+    where: ^selector,
+    limit: 1
+  end
+
+  def cleanup do
+    SQL.query(Repo,"truncate table logs", [])
   end
 end
