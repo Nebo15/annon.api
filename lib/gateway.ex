@@ -12,7 +12,7 @@ defmodule Gateway do
       supervisor(Gateway.Workers.Cassandra, []),
       http_endpoint_spec(Gateway.PrivateRouter, :private_http),
       http_endpoint_spec(Gateway.PublicRouter, :public_http),
-      worker(Gateway.ConfigGuardian, [])
+      worker(Gateway.AutoClustering, [])
     ]
 
     opts = [strategy: :one_for_one, name: Gateway.Supervisor]

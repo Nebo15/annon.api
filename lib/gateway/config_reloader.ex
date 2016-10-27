@@ -11,7 +11,7 @@ defmodule Gateway.ConfigReloader do
     successful_status? = conn.status in [200, 201]
 
     if destructive_method? && successful_status? do
-      Gateway.ConfigGuardian.reload_config()
+      Gateway.AutoClustering.reload_config()
     end
 
     conn

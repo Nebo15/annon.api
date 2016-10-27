@@ -1,4 +1,4 @@
-defmodule Gateway.ConfigGuardian do
+defmodule Gateway.AutoClustering do
   @moduledoc """
   The module is in charge of reloading the config across the cluster
   """
@@ -10,7 +10,7 @@ defmodule Gateway.ConfigGuardian do
   end
 
   def reload_config do
-    Gateway.ConfigGuardian.do_reload_config()
+    Gateway.AutoClustering.do_reload_config()
     Cluster.Events.publish(:reload_config)
   end
 
@@ -34,13 +34,13 @@ defmodule Gateway.ConfigGuardian do
   end
 
   def handle_info(:reload_config, state) do
-    Gateway.ConfigGuardian.do_reload_config()
+    Gateway.AutoClustering.do_reload_config()
 
     {:noreply, state}
   end
 
   def handle_info({:nodeup, _}, state) do
-    Gateway.ConfigGuardian.do_reload_config()
+    Gateway.AutoClustering.do_reload_config()
 
     {:noreply, state}
   end
