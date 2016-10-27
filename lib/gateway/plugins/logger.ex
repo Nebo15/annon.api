@@ -62,13 +62,19 @@ defmodule Gateway.Plugins.Logger do
     records = %{
       id: id,
       idempotency_key: idempotency_key,
-      ip_address: conn.remote_ip,
-      request: get_json_string(conn, &get_request_data/1)
+      ip_address: conn.remote_ip |> Tuple.to_list |> Enum.join("."),
+      request: get_request_data(conn) |> prepare_params
     }
+
+    records
     |> LogRecord.create
     #execute_query(records, :insert_logs)
     
   end
+
+  defp get_key(key) when is_binary(key), do: String.to_atom(key)
+  defp get_key(key) when is_atom(key), do: key
+  defp prepare_params(params), do: for {key, val} <- params, into: %{}, do: {get_key(key), val}
 
   defp log(conn, :response) do
     id = conn

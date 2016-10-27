@@ -2,7 +2,8 @@ defmodule Gateway.Logger.DB.Repo.Migrations.AddLogsTable do
   use Ecto.Migration
 
   def change do
-    create table(:logs) do
+    create table(:logs, primary_key: false) do
+      add :id, :string, primary_key: true
       add :api, :map
       add :consumer, :map
       add :idempotency_key, :string

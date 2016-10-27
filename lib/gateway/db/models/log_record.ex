@@ -7,10 +7,10 @@ defmodule Gateway.Logger.DB.Models.LogRecord do
 
   @derive {Poison.Encoder, except: [:__meta__, :plugins]}
 
-  @primary_key {:_id, :id, autogenerate: true}
+  @primary_key {:_id, :id, autogenerate: false}
 
   schema "logs" do
-    field :id, :integer
+    field :id, :string
     field :api, :map
     field :consumer, :map
     field :idempotency_key, :string
@@ -24,8 +24,10 @@ defmodule Gateway.Logger.DB.Models.LogRecord do
   end
 
   def create(params \\ %{}) do
+    IO.inspect params
     %Gateway.Logger.DB.Models.LogRecord{}
     |> cast(params,[:id, :idempotency_key, :ip_address, :request])
+    |> IO.inspect
     |> Gateway.Logger.DB.Repo.insert
   end
 
