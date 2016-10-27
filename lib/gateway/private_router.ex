@@ -9,6 +9,7 @@ defmodule Gateway.PrivateRouter do
                      pass: ["application/json"],
                      json_decoder: Poison
   plug :dispatch
+  plug Gateway.ConfigReloader
 
   forward "/apis", to: Gateway.HTTP.API
 

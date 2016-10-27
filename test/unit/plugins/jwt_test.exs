@@ -31,7 +31,7 @@ defmodule Gateway.Plugins.JWTTest do
 
   test "jwt sucessful auth" do
 
-    {:ok, %APIModel{request: request} = model} = create_api
+    {:ok, %APIModel{request: request} = model} = create_api()
 
     %Plug.Conn{private: %{jwt_token: %Joken.Token{} = jwt_token}} = :get
     |> prepare_conn(request)

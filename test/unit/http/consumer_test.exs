@@ -4,8 +4,8 @@ defmodule Gateway.HTTP.ConsumerTest do
   test "GET /consumers" do
     data =
       [
-        get_consumer_data |> Gateway.DB.Models.Consumer.create(),
-        get_consumer_data |> Gateway.DB.Models.Consumer.create()
+        get_consumer_data() |> Gateway.DB.Models.Consumer.create(),
+        get_consumer_data() |> Gateway.DB.Models.Consumer.create()
       ]
       |> Enum.map(fn({:ok, e}) -> e end)
 
@@ -27,7 +27,7 @@ defmodule Gateway.HTTP.ConsumerTest do
 
   test "GET /consumers/:external_id" do
     { :ok, data } =
-      get_consumer_data
+      get_consumer_data()
       |> Gateway.DB.Models.Consumer.create()
 
     conn = :get
@@ -65,7 +65,7 @@ defmodule Gateway.HTTP.ConsumerTest do
 
   test "PUT /consumers/:external_id" do
     { :ok, data } =
-      get_consumer_data
+      get_consumer_data()
       |> Gateway.DB.Models.Consumer.create()
 
     new_contents = %{
@@ -92,7 +92,7 @@ defmodule Gateway.HTTP.ConsumerTest do
 
   test "DELETE /consumers/:external_id" do
     { :ok, data } =
-      get_consumer_data
+      get_consumer_data()
       |> Gateway.DB.Models.Consumer.create()
 
     conn = :delete
