@@ -35,10 +35,19 @@ defmodule Gateway.Logger.DB.Models.LogRecord do
     |> Repo.update
   end
 
+  def delete(params) do
+    %Gateway.Logger.DB.Models.LogRecord{id: Map.get(params, :id)}
+    |> Repo.delete
+  end
+
   def get_record_by(selector) do
     Repo.one from Gateway.Logger.DB.Models.LogRecord,
     where: ^selector,
     limit: 1
+  end
+
+  def get_records do
+    Repo.all(%Gateway.Logger.DB.Models.LogRecord{})
   end
 
   def cleanup do

@@ -6,6 +6,7 @@ defmodule Gateway.Plugins.Logger do
   import Plug.Conn
   alias Gateway.Logger.DB.Repo
   alias Gateway.Logger.DB.Models.LogRecord
+  alias EctoFixtures
 
   def init(opts) do
     opts
@@ -22,6 +23,7 @@ defmodule Gateway.Plugins.Logger do
 
   defp get_api_data(conn) do
     conn.private.api_config
+    |> Poison.encode!
   end
 
   defp get_consumer_data(_conn), do: %{}
@@ -74,6 +76,7 @@ defmodule Gateway.Plugins.Logger do
 
   defp get_key(key) when is_binary(key), do: String.to_atom(key)
   defp get_key(key) when is_atom(key), do: key
+  defp prepare_params(params) when params == nil, do: %{}
   defp prepare_params(params), do: for {key, val} <- params, into: %{}, do: {get_key(key), val}
 
   defp log(conn, :response) do
@@ -83,7 +86,7 @@ defmodule Gateway.Plugins.Logger do
 
     records = %{
       id: id,
-      api: get_api_data(conn) |> prepare_params,
+      api: get_api_data(conn),
       consumer: get_consumer_data(conn) |> prepare_params,
       response: get_response_data(conn) |> prepare_params,
       latencies: get_latencies_data(conn) |> prepare_params,

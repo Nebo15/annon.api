@@ -10,7 +10,7 @@ defmodule Gateway.HTTPHelpers.Response do
   def render_show_response({:error, changeset}), do: render_errors_response(changeset)
   def render_show_response(nil), do: render_not_found_response()
   def render_show_response(resource), do: render_response(resource, 200)
-  def render_show_response(resource, %{paging: data}), do: render_response(resource, 200, %{paging: data})
+  #def render_show_response(resource, %{paging: data}), do: render_response(resource, 200, %{paging: data})
 
   def render_delete_response({:ok, resource}), do: render_response(resource, 200, "Resource was deleted")
   def render_delete_response(_), do: render_not_found_response()

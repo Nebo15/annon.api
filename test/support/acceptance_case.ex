@@ -73,6 +73,7 @@ defmodule Gateway.AcceptanceCase do
 
         ["apis", "plugins", "consumers", "consumer_plugin_settings"]
         |> Enum.map(fn table -> truncate_table Gateway.DB.Repo, table end)
+        
         LogRecord.cleanup
 
         :ok
@@ -81,6 +82,11 @@ defmodule Gateway.AcceptanceCase do
       defp truncate_table(repo, table) do
         Ecto.Adapters.SQL.query(repo, "TRUNCATE #{table} RESTART IDENTITY")
       end
+
+  defp get_key(key) when is_binary(key), do: String.to_atom(key)
+  defp get_key(key) when is_atom(key), do: key
+  defp prepare_params(params) when params == nil, do: %{}
+  defp prepare_params(params), do: for {key, val} <- params, into: %{}, do: {get_key(key), val}      
     end
   end
 end

@@ -5,6 +5,11 @@ config :gateway, Gateway.DB.Repo,
   database: System.get_env("MIX_TEST_DATABASE") || "gateway_test",
   pool: Ecto.Adapters.SQL.Sandbox
 
+config :gateway, Gateway.Logger.DB.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  database: System.get_env("MIX_LOGGER_TEST_DATABASE") || "gateway_logger_test",
+  pool: Ecto.Adapters.SQL.Sandbox
+
 config :gateway, :acceptance,
   private: [
     port: { :system, :integer, "MIX_TEST_PRIVATE_PORT", 5001 },
@@ -15,7 +20,7 @@ config :gateway, :acceptance,
     host: { :system, "MIX_TEST_HOST", "localhost" }
   ]
 
-config :logger, level: :debug
+config :logger, level: :info
 
 config :ex_unit, capture_log: true
 

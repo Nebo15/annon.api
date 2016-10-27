@@ -23,7 +23,7 @@ defmodule Gateway.HTTP.RequestTest do
     repeat_random_post(3)
 
     conn = :get
-      |> conn("/requests?limit=3")
+      |> conn("/requests")
       |> put_req_header("content-type", "application/json")
       |> Gateway.PrivateRouter.call([])
 

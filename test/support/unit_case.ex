@@ -10,6 +10,7 @@ defmodule Gateway.UnitCase do
       use Plug.Test
       alias Gateway.DB.Models.Plugin
       alias Gateway.DB.Models.API, as: APIModel
+      alias Gateway.Logger.DB.Models.LogRecord
       import Gateway.UnitCase
       import Gateway.Fixtures
     end
@@ -24,6 +25,8 @@ defmodule Gateway.UnitCase do
     unless tags[:async] do
       Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Repo, {:shared, self()})
     end
+
+    
 
     :ok
   end
