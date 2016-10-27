@@ -10,5 +10,5 @@ config :gateway, Gateway.DB.Repo,
 
 config :libcluster,
   strategy: Cluster.Strategy.Kubernetes,
-  kubernetes_selector: "app=myapp",
-  kubernetes_node_basename: "myapp"
+  kubernetes_selector: "app=gateway",
+  kubernetes_node_basename: "gateway"
