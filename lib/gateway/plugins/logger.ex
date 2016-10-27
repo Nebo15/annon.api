@@ -2,7 +2,7 @@ defmodule Gateway.Plugins.Logger do
   @moduledoc """
   Request/response logger plug
   """
-  import Gateway.Helpers.Cassandra
+  
   import Plug.Conn
   alias Gateway.Logger.DB.Repo
   alias Gateway.Logger.DB.Models.LogRecord
