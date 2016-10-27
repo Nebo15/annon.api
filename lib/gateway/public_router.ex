@@ -14,8 +14,8 @@ defmodule Gateway.PublicRouter do
   plug Gateway.Plugins.ACL
   plug Gateway.Plugins.Idempotency
   plug Gateway.Plugins.Validator
-  plug Gateway.Plugins.Monitoring
   plug Gateway.Plugins.Logger
+  plug Gateway.Plugins.Monitoring
   plug Gateway.Plugins.Proxy
   plug :dispatch
 

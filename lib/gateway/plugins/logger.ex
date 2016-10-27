@@ -20,7 +20,9 @@ defmodule Gateway.Plugins.Logger do
     |> Poison.encode!
   end
 
-  defp get_api_data(_conn), do: %{}
+  defp get_api_data(conn) do
+    conn.private.api_config
+  end
 
   defp get_consumer_data(_conn), do: %{}
 
@@ -42,9 +44,9 @@ defmodule Gateway.Plugins.Logger do
     }
   end
 
-  defp get_latencies_data(_conn) do
+  defp get_latencies_data(conn) do
     %{
-      gateway: "",
+      gateway: conn.assigns.latencies_gateway,
       upstream: "",
       client_request: ""
     }
