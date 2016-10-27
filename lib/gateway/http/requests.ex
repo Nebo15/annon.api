@@ -5,6 +5,7 @@ defmodule Gateway.HTTP.Requests do
   """
   use Gateway.Helpers.CommonRouter
   import Gateway.Helpers.Cassandra
+  import Gateway.Helpers.IP
 
   get "/" do
     result = conn
@@ -58,12 +59,6 @@ defmodule Gateway.HTTP.Requests do
     }
   end
 
-  defp modify_ip(ip) do
-    ip
-    |> Tuple.to_list
-    |> Enum.join(".")
-  end
-
   defp modify_date(timestamp) do
     timestamp
     |> DateTime.from_unix!(:milliseconds)
@@ -82,7 +77,7 @@ defmodule Gateway.HTTP.Requests do
   defp modify_record(record) do
     record
     |> modify_record_part("created_at", &modify_date/1)
-    |> modify_record_part("ip_address", &modify_ip/1)
+    |> modify_record_part("ip_address", &ip_to_string/1)
     |> modify_record_part("request", &Poison.decode!/1)
     |> modify_record_part("response", &Poison.decode!/1)
     |> modify_record_part("latencies", &Poison.decode!/1)
