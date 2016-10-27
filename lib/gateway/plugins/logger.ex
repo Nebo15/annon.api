@@ -4,6 +4,8 @@ defmodule Gateway.Plugins.Logger do
   """
   import Gateway.Helpers.Cassandra
   import Plug.Conn
+  alias Gateway.Logger.DB.Repo
+  alias Gateway.Logger.DB.Models.LogRecord
 
   def init(opts) do
     opts
@@ -57,13 +59,15 @@ defmodule Gateway.Plugins.Logger do
     |> get_req_header("x-idempotency-key")
     |> Enum.at(0) || ""
 
-    records = [%{
+    records = %{
       id: id,
       idempotency_key: idempotency_key,
       ip_address: conn.remote_ip,
       request: get_json_string(conn, &get_request_data/1)
-    }]
-    execute_query(records, :insert_logs)
+    }
+    |> LogRecord.create
+    #execute_query(records, :insert_logs)
+    
   end
 
   defp log(conn, :response) do
@@ -78,7 +82,7 @@ defmodule Gateway.Plugins.Logger do
       latencies: get_json_string(conn, &get_latencies_data/1),
       status_code: conn.status
     }]
-    execute_query(records, :update_logs)
+    #execute_query(records, :update_logs)
   end
 
   def call(conn, _opts) do

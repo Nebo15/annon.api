@@ -2,14 +2,23 @@ use Mix.Config
 
 config :gateway, Gateway.DB.Repo,
   adapter: Ecto.Adapters.Postgres,
-  priv: "priv/repos",
+  priv: "priv/repos/gateway",
   database: "gateway",
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
   pool_size: 10
 
-config :gateway, ecto_repos: [Gateway.DB.Repo]
+config :gateway, Gateway.Logger.DB.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  priv: "priv/repos/logger",
+  database: "gateway_logger",
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost",
+  pool_size: 10  
+
+config :gateway, ecto_repos: [Gateway.DB.Repo, Gateway.Logger.DB.Repo]
 
 config :ex_statsd,
        host: "localhost",
