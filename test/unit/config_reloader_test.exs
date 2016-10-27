@@ -6,8 +6,6 @@ defmodule Gateway.ConfigReloaderTest do
       get_api_model_data()
       |> Gateway.DB.Models.API.create()
 
-    # check the config
-
     new_contents = %{
       "name" => "New name"
     }
