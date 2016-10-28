@@ -8,7 +8,7 @@ defmodule Gateway.Plugins.Logger do
   alias Gateway.DB.Models.Log
   alias Gateway.DB.Models.API, as: APIModel
   alias EctoFixtures
-require Logger
+
   def init(opts) do
     opts
   end

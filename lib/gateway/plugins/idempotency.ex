@@ -7,7 +7,7 @@ defmodule Gateway.Plugins.Idempotency do
   alias Gateway.DB.Models.Log
   alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.API, as: APIModel
-require Logger
+
   def init([]), do: false
 
   def call(%Plug.Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
