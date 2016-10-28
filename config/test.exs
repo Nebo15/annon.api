@@ -20,7 +20,7 @@ config :gateway, :acceptance,
     host: { :system, "MIX_TEST_HOST", "localhost" }
   ]
 
-config :logger, level: :info
+config :logger, level: :debug
 
 config :ex_unit, capture_log: true
 

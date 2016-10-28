@@ -102,8 +102,7 @@ defmodule Gateway.HTTP.ConsumerTest do
 
     resp = Poison.decode!(conn.resp_body)
 
-    assert conn.status == 200
-    assert resp["data"]["external_id"] == data.external_id
-    assert resp["meta"]["description"] == "Resource was deleted"
+    assert 200 == conn.status
+    assert "Resource was deleted" == resp["meta"]["description"]
   end
 end
