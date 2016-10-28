@@ -6,7 +6,7 @@ defmodule Gateway.Logger.DB.Models.LogRecord do
   use Gateway.DB, :model
   alias Ecto.Adapters.SQL
 
-  @derive {Poison.Encoder, except: [:__meta__, :plugins]}
+  @derive {Poison.Encoder, except: [:__meta__]}
 
   @primary_key {:id, :string, autogenerate: false}
 

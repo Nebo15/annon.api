@@ -5,13 +5,11 @@ defmodule Gateway.HTTP.LoggerApi do
   """
   use Gateway.Helpers.CommonRouter
   alias Gateway.Logger.DB.Models.LogRecord
-  alias Gateway.Utils.ModelToMap
 
   get "/" do
     records = LogRecord.get_records
 
     records
-    |> ModelToMap.convert
     |> render_show_response
     |> send_response(conn)
   end
@@ -20,7 +18,6 @@ defmodule Gateway.HTTP.LoggerApi do
     result = LogRecord.get_record_by([id: request_id])
 
     result
-    |> ModelToMap.convert
     |> render_request
     |> send_response(conn)
   end
