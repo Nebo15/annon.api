@@ -2,9 +2,8 @@ defmodule Gateway.DB.Models.Log do
   @moduledoc """
   Log record DB entity
   """
-  alias Gateway.DB.Logger.Repo
   use Gateway.DB, :model
-  alias Ecto.Adapters.SQL
+  alias Gateway.DB.Logger.Repo
 
   @derive {Poison.Encoder, except: [:__meta__]}
 
@@ -30,21 +29,27 @@ defmodule Gateway.DB.Models.Log do
     |> validate_required([:ip_address, :request])
   end
 
+  def changeset_response(api, params \\ %{}) do
+    api
+    |> cast(params, [:api, :consumer, :idempotency_key, :ip_address, :request, :response, :latencies, :status_code])
+    |> validate_required([:api, :consumer, :latencies, :response, :status_code])
+  end
+
   def create(params \\ %{}) do
     %Gateway.DB.Models.Log{}
     |> cast(params, [:id, :idempotency_key, :ip_address, :request])
     |> Repo.insert
   end
 
-  def update(id, params) do
+  def put_response(id, params) do
     %Gateway.DB.Models.Log{id: id}
-    |> changeset(params)
-    |> Gateway.DB.Repo.update()
+    |> changeset_response(params)
+    |> Repo.update()
   end
 
   def delete(id) do
     %Gateway.DB.Models.Log{id: id}
-    |> Gateway.DB.Repo.delete()
+    |> Repo.delete()
   end
 
   def get_record_by(selector) do
@@ -57,9 +62,5 @@ defmodule Gateway.DB.Models.Log do
     query = (from record in Gateway.DB.Models.Log)
     query
     |> Repo.all
-  end
-
-  def cleanup do
-    SQL.query(Repo, "truncate table logs", [])
   end
 end

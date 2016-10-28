@@ -66,11 +66,11 @@ defmodule Gateway.AcceptanceCase do
 
       setup tags do
         :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Repo)
-        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Logger.Repo)
+#        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Logger.Repo)
 
         unless tags[:async] do
           Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Repo, {:shared, self()})
-          Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Logger.Repo, {:shared, self()})
+#          Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Logger.Repo, {:shared, self()})
         end
 
         ["apis", "plugins", "consumers", "consumer_plugin_settings"]

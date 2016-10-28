@@ -6,8 +6,9 @@ defmodule Gateway.Plugins.Logger do
   import Plug.Conn
   alias Gateway.DB.Logger.Repo
   alias Gateway.DB.Models.Log
+  alias Gateway.DB.Models.API, as: APIModel
   alias EctoFixtures
-
+require Logger
   def init(opts) do
     opts
   end
@@ -43,7 +44,7 @@ defmodule Gateway.Plugins.Logger do
     conn
     |> get_resp_header("x-request-id")
     |> Enum.at(0)
-    |> Log.update(%{api: get_api_data(conn),
+    |> Log.put_response(%{api: get_api_data(conn),
                     consumer: get_consumer_data(conn),
                     response: get_response_data(conn),
                     latencies: get_latencies_data(conn),
@@ -60,11 +61,13 @@ defmodule Gateway.Plugins.Logger do
     |> Poison.encode!
   end
 
-  defp get_api_data(conn) do
-    case conn.private.api_config do
-      nil -> %{}
-      _ -> conn.private.api_config
-    end
+  defp get_api_data(%Plug.Conn{private: %{api_config: nil}}), do: %{}
+  defp get_api_data(%Plug.Conn{private: %{api_config: %APIModel{id: id, name: name, request: request}}}) do
+    %{
+      id: id,
+      name: name,
+      request: request
+    }
   end
 
   defp get_consumer_data(_conn), do: %{} |> prepare_params
