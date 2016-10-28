@@ -1,7 +1,7 @@
 defmodule Gateway.Mixfile do
   use Mix.Project
 
-  @version "0.1.6"
+  @version "0.1.7"
 
   def project do
     [app: :gateway,
@@ -26,7 +26,7 @@ defmodule Gateway.Mixfile do
   def application do
     [
       applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto, :ecto_enum, :timex, :joken, :ex_json_schema,
-                     :poison, :uuid, :httpoison, :ex_statsd],
+                     :poison, :uuid, :httpoison, :ex_statsd, :libcluster],
       mod: {Gateway, []}
     ]
   end
@@ -50,6 +50,7 @@ defmodule Gateway.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [{:distillery, "~> 0.10.1"},
+     {:libcluster, github: "gmile/libcluster", branch: "publish-across-cluster"},
      {:confex, "~> 1.4"},
      {:plug, ">= 0.0.0"},
      {:cowboy, ">= 0.0.0"},

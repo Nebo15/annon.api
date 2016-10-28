@@ -11,7 +11,8 @@ defmodule Gateway do
       supervisor(Gateway.DB.Repo, []),
       supervisor(Gateway.Logger.DB.Repo, []),
       http_endpoint_spec(Gateway.PrivateRouter, :private_http),
-      http_endpoint_spec(Gateway.PublicRouter, :public_http)
+      http_endpoint_spec(Gateway.PublicRouter, :public_http),
+      worker(Gateway.AutoClustering, [])
     ]
 
     opts = [strategy: :one_for_one, name: Gateway.Supervisor]
