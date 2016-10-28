@@ -24,8 +24,8 @@ defmodule Gateway.HTTP.Requests do
   end
 
   delete "/:request_id" do
-    Log.delete(%{id: request_id})
-    {:ok, %{}}
+    request_id
+    |> Log.delete()
     |> render_delete_response
     |> send_response(conn)
   end
