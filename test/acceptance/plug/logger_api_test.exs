@@ -1,5 +1,6 @@
-defmodule Gateway.HTTP.RequestTest do
-  use Gateway.UnitCase
+defmodule Gateway.HTTP.LoggerApiTest do
+  use Gateway.AcceptanceCase
+  use Plug.Test
 
   @random_url "random_url"
   @random_data %{"data" => "random"}

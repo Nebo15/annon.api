@@ -18,7 +18,6 @@ defmodule Gateway.AcceptanceCase do
       alias Gateway.DB.Repo
       alias Gateway.DB.Models.Plugin
       alias Gateway.DB.Models.API, as: APIModel
-      alias Gateway.Logger.DB.Models.LogRecord
 
       @config Confex.get_map(:gateway, :acceptance)
 
@@ -43,6 +42,7 @@ defmodule Gateway.AcceptanceCase do
         assert response.status_code == status
         response
       end
+
       def get_body(%HTTPoison.Response{} = response), do: response.body
 
       def jwt_token(payload, signature) do
@@ -73,8 +73,9 @@ defmodule Gateway.AcceptanceCase do
 
         ["apis", "plugins", "consumers", "consumer_plugin_settings"]
         |> Enum.map(fn table -> truncate_table Gateway.DB.Repo, table end)
-        
-        LogRecord.cleanup
+
+        ["logs"]
+        |> Enum.map(fn table -> truncate_table Gateway.Logger.DB.Repo, table end)
 
         :ok
       end
@@ -83,10 +84,11 @@ defmodule Gateway.AcceptanceCase do
         Ecto.Adapters.SQL.query(repo, "TRUNCATE #{table} RESTART IDENTITY")
       end
 
-  defp get_key(key) when is_binary(key), do: String.to_atom(key)
-  defp get_key(key) when is_atom(key), do: key
-  defp prepare_params(params) when params == nil, do: %{}
-  defp prepare_params(params), do: for {key, val} <- params, into: %{}, do: {get_key(key), val}      
+      defp get_key(key) when is_binary(key), do: String.to_atom(key)
+      defp get_key(key) when is_atom(key), do: key
+      defp prepare_params(params) when params == nil, do: %{}
+      defp prepare_params(params), do: for {key, val} <- params, into: %{}, do: {get_key(key), val}
+
     end
   end
 end

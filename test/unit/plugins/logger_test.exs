@@ -1,4 +1,4 @@
-defmodule Gateway.Acceptance.Plug.LoggerTest do
+defmodule Gateway.LoggerTest do
   use Gateway.AcceptanceCase
   alias Gateway.Logger.DB.Models.LogRecord
 
@@ -12,7 +12,7 @@ defmodule Gateway.Acceptance.Plug.LoggerTest do
   test "check logger plug" do
     {:ok, response} = @random_url
     |> post(Poison.encode!(@random_data), :public)
-    
+
     id = response
     |> get_header("x-request-id")
     |> Enum.at(0)
@@ -24,7 +24,7 @@ defmodule Gateway.Acceptance.Plug.LoggerTest do
     |> prepare_params
     |> Map.get(:uri)
     assert(uri_to_check === "/" <> @random_url, "Invalid uri has been logged")
-    
+
     body_to_check = result.request
     |> prepare_params
     |> Map.get(:body)

@@ -2,7 +2,7 @@ defmodule Gateway.Plugins.Logger do
   @moduledoc """
   Request/response logger plug
   """
-  
+
   import Plug.Conn
   alias Gateway.Logger.DB.Repo
   alias Gateway.Logger.DB.Models.LogRecord
@@ -22,11 +22,13 @@ defmodule Gateway.Plugins.Logger do
   end
 
   defp get_api_data(conn) do
-    conn.private.api_config
-    |> Poison.encode!
+    case conn.private.api_config do
+      nil -> %{}
+      _ -> conn.private.api_config
+    end
   end
 
-  defp get_consumer_data(_conn), do: %{}
+  defp get_consumer_data(_conn), do: %{} |> prepare_params
 
   defp get_request_data(conn) do
     %{
@@ -36,6 +38,7 @@ defmodule Gateway.Plugins.Logger do
       headers: modify_headers_list(conn.req_headers),
       body: conn.body_params
     }
+    |> prepare_params
   end
 
   defp get_response_data(conn) do
@@ -44,6 +47,7 @@ defmodule Gateway.Plugins.Logger do
       headers: modify_headers_list(conn.resp_headers),
       body: conn.resp_body
     }
+    |> prepare_params
   end
 
   defp get_latencies_data(conn) do
@@ -52,6 +56,7 @@ defmodule Gateway.Plugins.Logger do
       upstream: "",
       client_request: ""
     }
+    |> prepare_params
   end
 
   defp log(conn, :request) do
@@ -67,10 +72,8 @@ defmodule Gateway.Plugins.Logger do
       id: id,
       idempotency_key: idempotency_key,
       ip_address: conn.remote_ip |> Tuple.to_list |> Enum.join("."),
-      request: get_request_data(conn) |> prepare_params
+      request: get_request_data(conn)
     }
-
-    records
     |> LogRecord.create
   end
 
@@ -87,13 +90,11 @@ defmodule Gateway.Plugins.Logger do
     records = %{
       id: id,
       api: get_api_data(conn),
-      consumer: get_consumer_data(conn) |> prepare_params,
-      response: get_response_data(conn) |> prepare_params,
-      latencies: get_latencies_data(conn) |> prepare_params,
+      consumer: get_consumer_data(conn),
+      response: get_response_data(conn),
+      latencies: get_latencies_data(conn),
       status_code: conn.status
     }
-
-    records
     |> LogRecord.update
   end
 

@@ -16,7 +16,7 @@ config :gateway, Gateway.Logger.DB.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
-  pool_size: 10  
+  pool_size: 10
 
 config :gateway, ecto_repos: [Gateway.DB.Repo, Gateway.Logger.DB.Repo]
 

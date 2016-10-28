@@ -1,4 +1,4 @@
-defmodule Gateway.HTTP.Requests do
+defmodule Gateway.HTTP.LoggerApi do
   @moduledoc """
   REST API to get Requests logs data
   Documentation http://docs.osapigateway.apiary.io/#reference/requests
@@ -18,7 +18,7 @@ defmodule Gateway.HTTP.Requests do
 
   get "/:request_id" do
     result = LogRecord.get_record_by([id: request_id])
-    
+
     result
     |> ModelToMap.convert
     |> render_request

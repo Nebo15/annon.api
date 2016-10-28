@@ -25,7 +25,7 @@ defmodule Gateway.Logger.DB.Models.LogRecord do
 
   def create(params \\ %{}) do
     %Gateway.Logger.DB.Models.LogRecord{}
-    |> cast(params,[:id, :idempotency_key, :ip_address, :request])
+    |> cast(params, [:id, :idempotency_key, :ip_address, :request])
     |> Repo.insert
   end
 
@@ -47,10 +47,12 @@ defmodule Gateway.Logger.DB.Models.LogRecord do
   end
 
   def get_records do
-    Repo.all(%Gateway.Logger.DB.Models.LogRecord{})
+    query = (from record in Gateway.Logger.DB.Models.LogRecord)
+    query
+    |> Repo.all
   end
 
   def cleanup do
-    SQL.query(Repo,"truncate table logs", [])
+    SQL.query(Repo, "truncate table logs", [])
   end
 end
