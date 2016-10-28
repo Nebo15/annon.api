@@ -7,10 +7,10 @@ defmodule Gateway.HTTP.Requests do
   alias Gateway.DB.Models.Log
 
   get "/" do
-    records = Log.get_records
     # ToDo: pagination
-
-    records
+    conn
+    |> get_limit()
+    |> Log.get_records()
     |> render_show_response
     |> send_response(conn)
   end

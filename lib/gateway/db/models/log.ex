@@ -63,4 +63,11 @@ defmodule Gateway.DB.Models.Log do
     query
     |> Repo.all
   end
+
+  def get_records(limit) when is_integer(limit) do
+    query = from record in Gateway.DB.Models.Log,
+            limit: ^limit
+    query
+    |> Repo.all
+  end
 end
