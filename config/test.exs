@@ -5,7 +5,7 @@ config :gateway, Gateway.DB.Repo,
   database: System.get_env("MIX_TEST_DATABASE") || "gateway_test",
   pool: Ecto.Adapters.SQL.Sandbox
 
-config :gateway, Gateway.Logger.DB.Repo,
+config :gateway, Gateway.DB.Logger.Repo,
   adapter: Ecto.Adapters.Postgres,
   database: System.get_env("MIX_LOGGER_TEST_DATABASE") || "gateway_logger_test",
   pool: Ecto.Adapters.SQL.Sandbox

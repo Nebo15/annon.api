@@ -1,8 +1,8 @@
-defmodule Gateway.Logger.DB.Models.LogRecord do
+defmodule Gateway.DB.Models.Log do
   @moduledoc """
   Log record DB entity
   """
-  alias Gateway.Logger.DB.Repo
+  alias Gateway.DB.Logger.Repo
   use Gateway.DB, :model
   alias Ecto.Adapters.SQL
 
@@ -23,31 +23,38 @@ defmodule Gateway.Logger.DB.Models.LogRecord do
     timestamps()
   end
 
+
+  def changeset(api, params \\ %{}) do
+    api
+    |> cast(params, [:api, :consumer, :idempotency_key, :ip_address, :request, :response, :latencies, :status_code])
+    |> validate_required([:ip_address, :request])
+  end
+
   def create(params \\ %{}) do
-    %Gateway.Logger.DB.Models.LogRecord{}
+    %Gateway.DB.Models.Log{}
     |> cast(params, [:id, :idempotency_key, :ip_address, :request])
     |> Repo.insert
   end
 
-  def update(params) do
-    %Gateway.Logger.DB.Models.LogRecord{id: Map.get(params, :id)}
-    |> cast(params, [:id, :api, :consumer, :response, :latencies, :status_code])
-    |> Repo.update
+  def update(id, params) do
+    %Gateway.DB.Models.Log{id: id}
+    |> changeset(params)
+    |> Gateway.DB.Repo.update()
   end
 
-  def delete(params) do
-    %Gateway.Logger.DB.Models.LogRecord{id: Map.get(params, :id)}
-    |> Repo.delete
+  def delete(id) do
+    %Gateway.DB.Models.Log{id: id}
+    |> Gateway.DB.Repo.delete()
   end
 
   def get_record_by(selector) do
-    Repo.one from Gateway.Logger.DB.Models.LogRecord,
+    Repo.one from Gateway.DB.Models.Log,
     where: ^selector,
     limit: 1
   end
 
   def get_records do
-    query = (from record in Gateway.Logger.DB.Models.LogRecord)
+    query = (from record in Gateway.DB.Models.Log)
     query
     |> Repo.all
   end

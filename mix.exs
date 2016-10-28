@@ -63,7 +63,6 @@ defmodule Gateway.Mixfile do
      {:ex_json_schema, ">= 0.0.0"},
      {:httpoison, ">= 0.0.0"},
      {:uuid, ">= 0.0.0"},
-     {:cassandra, ">= 1.0.0-beta"},
      {:httpoison, ">= 0.0.0"},
      {:ex_statsd, ">= 0.5.1"},
      {:faker, "~> 0.7.0", only: [:dev, :test]},

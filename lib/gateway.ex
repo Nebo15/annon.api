@@ -9,7 +9,7 @@ defmodule Gateway do
 
     children = [
       supervisor(Gateway.DB.Repo, []),
-      supervisor(Gateway.Logger.DB.Repo, []),
+      supervisor(Gateway.DB.Logger.Repo, []),
       http_endpoint_spec(Gateway.PrivateRouter, :private_http),
       http_endpoint_spec(Gateway.PublicRouter, :public_http),
       worker(Gateway.AutoClustering, [])

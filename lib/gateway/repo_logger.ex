@@ -1,4 +1,4 @@
-defmodule Gateway.Logger.DB.Repo do
+defmodule Gateway.DB.Logger.Repo do
   @moduledoc """
   Repo for Gateway Logger database.
   """
