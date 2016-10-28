@@ -21,7 +21,7 @@ defmodule Gateway.Plugins.APILoader do
     |> Gateway.DB.Repo.all()
 
     models
-    |> Enum.find(fn(x) -> true end)
+    |> Enum.find(fn(x) -> equal?(x, conn) end)
   end
 
   def equal?(%{request: %{} = r}, c) do
