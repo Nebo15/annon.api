@@ -6,29 +6,28 @@ defmodule Gateway.Plugins.IPRestriction do
   import Gateway.HTTPHelpers.Response
   import Gateway.Helpers.IP
 
+  defp get_plugins(%Plug.Conn{private: %{api_config: %{plugins: plugins}}}), do: plugins
+  defp get_plugins(_conn), do: []
+
   defp get_plugin_settings(conn) do
-    api_config = conn.private.api_config || %{}
-    plugins = Map.get(api_config, :plugins, [])
-    settings = for plugin <- plugins, plugin.name === :IPRestriction, do: plugin.settings
-    List.first(settings)
+    conn.private.api_config
+    |> get_plugins()
+    |> Enum.find(fn(plugin) -> plugin.name === :IPRestriction end)
   end
 
-  defp get_list(conn, key) do
-    settings = get_plugin_settings(conn) || %{}
-    Map.get(settings, key, [])
+  defp get_list(%Plug.Conn{} = conn, key), do: conn |> get_plugin_settings() |> get_list(key)
+  defp get_list(nil, _key), do: []
+  defp get_list(settings, key), do: Map.get(settings, key, [])
+
+  defp blacklisted?(conn, ip) do
+    conn
+    |> get_list(:ip_blacklist)
+    |> Enum.any?(fn(item) -> compare_ips(item, ip) end)
   end
 
-  defp is_blacklisted(conn, ip) do
-    blacklist = get_list(conn, :ip_blacklist)
-    Enum.any?(blacklist, fn(item) -> compare_ips(item, ip) end)
-  end
-
-  defp is_whitelisted(conn, ip) do
-    whitelist = get_list(conn, :ip_whitelist)
-    if Enum.empty?(whitelist),
-    do: true,
-    else: Enum.any?(whitelist, fn(item) -> compare_ips(item, ip) end)
-  end
+  defp whitelisted?(%Plug.Conn{} = conn, ip), do: conn |> get_list(:ip_whitelist) |> whitelisted?(ip)
+  defp whitelisted?([], _ip), do: true
+  defp whitelisted?(whitelist, ip), do: Enum.any?(whitelist, fn(item) -> compare_ips(item, ip) end)
 
   defp compare_ips(ip1, ip2) do
     ip1_list = String.split(ip1, ".")
@@ -44,8 +43,8 @@ defmodule Gateway.Plugins.IPRestriction do
   end
 
   defp check_ip(conn, ip) do
-    blacklisted = is_blacklisted(conn, ip)
-    whitelisted = is_whitelisted(conn, ip)
+    blacklisted = blacklisted?(conn, ip)
+    whitelisted = whitelisted?(conn, ip)
     whitelisted || !blacklisted
   end
 
