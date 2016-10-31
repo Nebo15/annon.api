@@ -27,10 +27,12 @@ defmodule Gateway.HTTP.RequestTest do
       |> put_req_header("content-type", "application/json")
       |> Gateway.PrivateRouter.call([])
 
-    assert conn.status === 200
+    assert 200 == conn.status
 
-    body = Poison.decode! conn.resp_body
-    assert length(body["data"]) === 3
+    assert 3 == conn.resp_body
+    |> Poison.decode!()
+    |> Map.fetch!("data")
+    |> length()
   end
 
   test "GET /requests/:request_id" do

@@ -2,11 +2,54 @@ defmodule Gateway.Plugins.Logger do
   @moduledoc """
   Request/response logger plug
   """
-  import Gateway.Helpers.Cassandra
+
   import Plug.Conn
+  alias Gateway.DB.Logger.Repo
+  alias Gateway.DB.Models.Log
+  alias Gateway.DB.Models.API, as: APIModel
+  alias EctoFixtures
 
   def init(opts) do
     opts
+  end
+
+  def call(conn, _opts) do
+    log(conn, :request)
+    conn = register_before_send(conn, fn conn ->
+      log(conn, :response)
+      conn
+    end)
+    conn
+  end
+
+  defp log(conn, :request) do
+    id = conn
+    |> get_resp_header("x-request-id")
+    |> Enum.at(0)
+
+    idempotency_key = conn
+    |> get_req_header("x-idempotency-key")
+    |> Enum.at(0) || ""
+
+    records = %{
+      id: id,
+      idempotency_key: idempotency_key,
+      ip_address: conn.remote_ip |> Tuple.to_list |> Enum.join("."),
+      request: get_request_data(conn)
+    }
+    |> Log.create
+  end
+
+  defp log(conn, :response) do
+    conn
+    |> get_resp_header("x-request-id")
+    |> Enum.at(0)
+    |> Log.put_response(%{api: get_api_data(conn),
+                    consumer: get_consumer_data(conn),
+                    response: get_response_data(conn),
+                    latencies: get_latencies_data(conn),
+                    status_code: conn.status
+                    })
   end
 
   defp modify_headers_list([]), do: []
@@ -18,11 +61,16 @@ defmodule Gateway.Plugins.Logger do
     |> Poison.encode!
   end
 
-  defp get_api_data(conn) do
-    conn.private.api_config
+  defp get_api_data(%Plug.Conn{private: %{api_config: nil}}), do: %{}
+  defp get_api_data(%Plug.Conn{private: %{api_config: %APIModel{id: id, name: name, request: request}}}) do
+    %{
+      id: id,
+      name: name,
+      request: request
+    }
   end
 
-  defp get_consumer_data(_conn), do: %{}
+  defp get_consumer_data(_conn), do: %{} |> prepare_params
 
   defp get_request_data(conn) do
     %{
@@ -32,6 +80,7 @@ defmodule Gateway.Plugins.Logger do
       headers: modify_headers_list(conn.req_headers),
       body: conn.body_params
     }
+    |> prepare_params
   end
 
   defp get_response_data(conn) do
@@ -40,6 +89,7 @@ defmodule Gateway.Plugins.Logger do
       headers: modify_headers_list(conn.resp_headers),
       body: conn.resp_body
     }
+    |> prepare_params
   end
 
   defp get_latencies_data(conn) do
@@ -48,47 +98,11 @@ defmodule Gateway.Plugins.Logger do
       upstream: "",
       client_request: ""
     }
+    |> prepare_params
   end
 
-  defp log(conn, :request) do
-    id = conn
-    |> get_resp_header("x-request-id")
-    |> Enum.at(0) || ""
-
-    idempotency_key = conn
-    |> get_req_header("x-idempotency-key")
-    |> Enum.at(0) || ""
-
-    records = [%{
-      id: id,
-      idempotency_key: idempotency_key,
-      ip_address: conn.remote_ip,
-      request: get_json_string(conn, &get_request_data/1)
-    }]
-    execute_query(records, :insert_logs)
-  end
-
-  defp log(conn, :response) do
-    id = conn
-    |> get_resp_header("x-request-id")
-    |> Enum.at(0) || ""
-    records = [%{
-      id: id,
-      api: get_json_string(conn, &get_api_data/1),
-      consumer: get_json_string(conn, &get_consumer_data/1),
-      response: get_json_string(conn, &get_response_data/1),
-      latencies: get_json_string(conn, &get_latencies_data/1),
-      status_code: conn.status
-    }]
-    execute_query(records, :update_logs)
-  end
-
-  def call(conn, _opts) do
-    log(conn, :request)
-    conn = register_before_send(conn, fn conn ->
-      log(conn, :response)
-      conn
-    end)
-    conn
-  end
+  defp get_key(key) when is_binary(key), do: String.to_atom(key)
+  defp get_key(key) when is_atom(key), do: key
+  defp prepare_params(params) when params == nil, do: %{}
+  defp prepare_params(params), do: for {key, val} <- params, into: %{}, do: {get_key(key), val}
 end

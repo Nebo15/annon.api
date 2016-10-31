@@ -4,33 +4,33 @@ defmodule Gateway.HTTP.Requests do
   Documentation http://docs.osapigateway.apiary.io/#reference/requests
   """
   use Gateway.Helpers.CommonRouter
+<<<<<<< HEAD
   import Gateway.Helpers.Cassandra
   import Gateway.Helpers.IP
+=======
+  alias Gateway.DB.Models.Log
+>>>>>>> d73cb957b8cb5d085c2c6162ca708c19cb724831
 
   get "/" do
-    result = conn
-    |> get_input_paging_params
-    |> execute_query(:select_all)
-    records = result[:ok]
-    output_paging_params = get_output_paging_params(conn, records)
-    records
-    |> modify_records
-    |> render_show_response(%{paging: output_paging_params})
+    # ToDo: pagination
+    conn
+    |> get_limit()
+    |> Log.get_records()
+    |> render_show_response
     |> send_response(conn)
   end
 
   get "/:request_id" do
-    result = execute_query([%{id: request_id}], :select_by_id)
-    result[:ok]
-    |> Enum.at(0)
-    |> modify_record
+    result = Log.get_record_by([id: request_id])
+
+    result
     |> render_request
     |> send_response(conn)
   end
 
   delete "/:request_id" do
-    execute_query([%{id: request_id}], :delete_by_id)
-    {:ok, %{}}
+    request_id
+    |> Log.delete()
     |> render_delete_response
     |> send_response(conn)
   end
@@ -42,6 +42,7 @@ defmodule Gateway.HTTP.Requests do
     |> String.to_integer
   end
 
+<<<<<<< HEAD
   defp get_input_paging_params(conn) do
     starting_after = conn.params["starting_after"] || ""
     ending_before = conn.params["ending_before"] || ""
@@ -91,6 +92,8 @@ defmodule Gateway.HTTP.Requests do
     |> Enum.map(fn(record) -> Map.drop(record, ["requesr", "response", "latencies", "consumer"]) end)
   end
 
+=======
+>>>>>>> d73cb957b8cb5d085c2c6162ca708c19cb724831
   def render_request(nil), do: render_not_found_response("Request not found")
   def render_request(request), do: render_show_response(request)
 
