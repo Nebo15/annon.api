@@ -7,6 +7,11 @@ defmodule Gateway.AcceptanceCase do
 
   use ExUnit.CaseTemplate
 
+  def random_string(length) do
+    data = :crypto.strong_rand_bytes(length)
+    data |> Base.url_encode64 |> binary_part(0, length)
+  end
+
   using do
     quote do
       import Joken
@@ -90,10 +95,6 @@ defmodule Gateway.AcceptanceCase do
       defp get_key(key) when is_atom(key), do: key
       defp prepare_params(params) when params == nil, do: %{}
       defp prepare_params(params), do: for {key, val} <- params, into: %{}, do: {get_key(key), val}
-
-      def random_string(length) do
-        :crypto.strong_rand_bytes(length) |> Base.url_encode64 |> binary_part(0, length)
-      end      
 
     end
   end

@@ -1,7 +1,8 @@
 defmodule Gateway.Acceptance.Plug.IdempotencyTest do
   use Gateway.AcceptanceCase
+  alias Gateway.AcceptanceCase
 
-  @idempotency_key random_string(32)
+  @idempotency_key AcceptanceCase.random_string(32)
 
   test "test idempotency POST request" do
 

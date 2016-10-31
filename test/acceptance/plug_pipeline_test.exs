@@ -1,8 +1,9 @@
 defmodule Gateway.Acceptance.PlugPipelineTest do
   use Gateway.AcceptanceCase
+  alias Gateway.AcceptanceCase
 
-  @consumer_id random_string(32)
-  @idempotency_key random_string(32)
+  @consumer_id AcceptanceCase.random_string(32)
+  @idempotency_key AcceptanceCase.random_string(32)
 
   @payload %{"id" => @consumer_id, "name" => "John Doe", "scopes" => ["api_read", "api_create", "api_delete"]}
   @token_secret "pipeline_secret"

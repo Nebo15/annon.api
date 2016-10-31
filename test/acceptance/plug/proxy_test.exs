@@ -1,9 +1,10 @@
 defmodule Gateway.Acceptance.Plug.ProxyTest do
   use Gateway.AcceptanceCase
+  alias Gateway.AcceptanceCase
 
   @api_url "apis"
 
-  @consumer_id random_string(32)
+  @consumer_id AcceptanceCase.random_string(32)
 
   @consumer %{
     external_id: @consumer_id,

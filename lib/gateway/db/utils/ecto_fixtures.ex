@@ -53,7 +53,7 @@ defmodule EctoFixtures do
   defp value_to_json({key, {:embed, %Ecto.Embedded{cardinality: :many, related: related}}}, acc) do
     {nil, Map.put(acc, key, [ecto_fixtures(related)])}
   end
-  
+
   enum_value PluginName
 
   def random_date(format), do: Timex.format!(Timex.now, format, :strftime)
