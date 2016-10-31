@@ -132,7 +132,13 @@ defmodule Gateway.HTTP.APITest do
     resp = Poison.decode!(conn.resp_body)
 
     assert conn.status == 200
-    assert resp["data"]["id"] == data.id
     assert resp["meta"]["description"] == "Resource was deleted"
+
+    # ToDo: bug https://finstar.atlassian.net/browse/OSL-502
+#    conn = :delete
+#    |> conn("/#{data.id}")
+#    |> put_req_header("content-type", "application/json")
+#    |> Gateway.HTTP.API.call([])
+#    assert 404 == conn.status
   end
 end

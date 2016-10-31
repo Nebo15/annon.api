@@ -3,7 +3,7 @@ defmodule Gateway.Acceptance.Plug.IdempotencyTest do
 
   @idempotency_key UUID.uuid1()
 
-  test "test idempotency DELETE request" do
+  test "test idempotency POST request" do
 
     api_data = "POST"
     |> api_idempotency_data("/idempotency", true)
