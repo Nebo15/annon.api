@@ -12,13 +12,10 @@ defmodule :os_gateway_tasks do
 
     Gateway.DB.Repo
     |> start_repo
-    |> Ecto.Migrator.run(migrations_dir, :up, all: true)
 
-    Gateway.DB.Cassandra
+    Gateway.DB.Logger.Repo
     |> start_repo
-
-    Gateway.Helpers.Cassandra.execute_query([%{}], :create_keyspace)
-    Gateway.Helpers.Cassandra.execute_query([%{}], :create_logs_table)
+    |> Ecto.Migrator.run(migrations_dir, :up, all: true)
 
     System.halt(0)
     :init.stop()
@@ -30,7 +27,7 @@ defmodule :os_gateway_tasks do
   end
 
   defp load_app do
-    start_applications([:logger, :postgrex, :ecto, :cassandra])
+    start_applications([:logger, :postgrex, :ecto])
     :ok = Application.load(:gateway)
   end
 
