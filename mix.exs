@@ -26,7 +26,7 @@ defmodule Gateway.Mixfile do
   def application do
     [
       applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto, :ecto_enum, :timex, :joken, :ex_json_schema,
-                     :poison, :uuid, :httpoison, :ex_statsd, :libcluster],
+                     :poison, :httpoison, :ex_statsd, :libcluster],
       mod: {Gateway, []}
     ]
   end
@@ -62,7 +62,6 @@ defmodule Gateway.Mixfile do
      {:joken, "~> 1.3"},
      {:ex_json_schema, ">= 0.0.0"},
      {:httpoison, ">= 0.0.0"},
-     {:uuid, ">= 0.0.0"},
      {:httpoison, ">= 0.0.0"},
      {:ex_statsd, ">= 0.5.1"},
      {:faker, "~> 0.7.0", only: [:dev, :test]},

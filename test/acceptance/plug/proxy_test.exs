@@ -3,7 +3,7 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
 
   @api_url "apis"
 
-  @consumer_id UUID.uuid1()
+  @consumer_id random_string(32)
 
   @consumer %{
     external_id: @consumer_id,

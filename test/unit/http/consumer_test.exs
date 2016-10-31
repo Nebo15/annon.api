@@ -69,7 +69,7 @@ defmodule Gateway.HTTP.ConsumerTest do
       |> Gateway.DB.Models.Consumer.create()
 
     new_contents = %{
-      external_id: UUID.uuid1(),
+      external_id: random_string(32),
       metadata: %{
         existing_key: "new_value",
         new_key: "another_value"

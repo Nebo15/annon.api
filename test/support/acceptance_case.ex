@@ -91,6 +91,10 @@ defmodule Gateway.AcceptanceCase do
       defp prepare_params(params) when params == nil, do: %{}
       defp prepare_params(params), do: for {key, val} <- params, into: %{}, do: {get_key(key), val}
 
+      def random_string(length) do
+        :crypto.strong_rand_bytes(length) |> Base.url_encode64 |> binary_part(0, length)
+      end      
+
     end
   end
 end
