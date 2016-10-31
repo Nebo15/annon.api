@@ -6,27 +6,26 @@ defmodule Gateway.Plugins.IPRestriction do
   import Gateway.HTTPHelpers.Response
   import Gateway.Helpers.IP
 
-  defp get_plugins(%Plug.Conn{private: %{api_config: %{plugins: plugins}}}), do: plugins
-  defp get_plugins(_conn), do: []
-
-  defp get_plugin_settings(conn) do
-    conn.private.api_config
-    |> get_plugins()
-    |> Enum.find(fn(plugin) -> plugin.name === :IPRestriction end)
+  defp get_plugin(%Plug.Conn{private: %{api_config: %{plugins: plugins}}}) do
+    Enum.find(plugins, fn(plugin) -> plugin.name === :IPRestriction end)
   end
+  defp get_plugin(_conn), do: %{}
 
-  defp get_list(%Plug.Conn{} = conn, key), do: conn |> get_plugin_settings() |> get_list(key)
+  defp get_settings(nil), do: %{}
+  defp get_settings(plugin), do: Map.get(plugin, :settings, %{})
+
+  defp get_list(%Plug.Conn{} = conn, key), do: conn |> get_plugin() |> get_settings() |> get_list(key)
   defp get_list(nil, _key), do: []
   defp get_list(settings, key), do: Map.get(settings, key, [])
 
   defp blacklisted?(conn, ip) do
     conn
-    |> get_list(:ip_blacklist)
+    |> get_list("ip_blacklist")
     |> Enum.any?(fn(item) -> compare_ips(item, ip) end)
   end
 
-  defp whitelisted?(%Plug.Conn{} = conn, ip), do: conn |> get_list(:ip_whitelist) |> whitelisted?(ip)
-  defp whitelisted?([], _ip), do: true
+  defp whitelisted?(%Plug.Conn{} = conn, ip), do: conn |> get_list("ip_whitelist") |> whitelisted?(ip)
+  defp whitelisted?([], _ip), do: nil
   defp whitelisted?(whitelist, ip), do: Enum.any?(whitelist, fn(item) -> compare_ips(item, ip) end)
 
   defp compare_ips(ip1, ip2) do
@@ -45,7 +44,7 @@ defmodule Gateway.Plugins.IPRestriction do
   defp check_ip(conn, ip) do
     blacklisted = blacklisted?(conn, ip)
     whitelisted = whitelisted?(conn, ip)
-    whitelisted || !blacklisted
+    whitelisted || (whitelisted === nil && !blacklisted)
   end
 
   def init(opts), do: opts
