@@ -71,9 +71,16 @@ defmodule Gateway.Plugins.IPRestriction do
     ip = ip_to_string conn.remote_ip
     conn = register_before_send(conn, fn conn ->
       allow = check_ip(plugin, ip)
-      if allow,
-        do: conn,
-        else: with {code, body} <- render_response(%{}, 400, "blacklisted"), do: resp(conn, code, body)
+
+      if allow do
+        conn
+      else
+        with {code, body} <- render_response(%{}, 400, "blacklisted") do
+          conn
+          |> resp(code, body)
+          |> halt()
+        end
+      end
     end)
     conn
   end
