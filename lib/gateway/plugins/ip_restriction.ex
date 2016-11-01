@@ -68,18 +68,15 @@ defmodule Gateway.Plugins.IPRestriction do
 
   defp execute(nil, conn), do: conn
   defp execute(%Plugin{} = plugin, conn) do
-    ip = ip_to_string conn.remote_ip
     register_before_send(conn, fn conn ->
-      allow = check_ip(plugin, ip)
-
-      if allow do
+      if check_ip(plugin, ip_to_string(conn.remote_ip)) do
         conn
       else
-        with {code, body} <- render_response(%{}, 400, "blacklisted") do
-          conn
-          |> resp(code, body)
-          |> halt()
-        end
+        {code, body} = render_response(%{}, 400, "blacklisted")
+
+        conn
+        |> resp(code, body)
+        |> halt()
       end
     end)
   end
