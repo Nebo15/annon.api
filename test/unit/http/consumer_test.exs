@@ -16,14 +16,12 @@ defmodule Gateway.HTTP.ConsumerTest do
       |> Gateway.PrivateRouter.call([])
 
     expected_resp = %{
-      meta: %{
-        code: 200,
-      },
+      meta: EView.MetaRender.render("list", conn),
       data: data
     }
 
-    assert conn.status == 200
-    assert conn.resp_body == Poison.encode!(expected_resp)
+    assert 200 == conn.status
+    assert Poison.encode!(expected_resp) == conn.resp_body
   end
 
   test "GET /consumers/:external_id" do
@@ -32,19 +30,17 @@ defmodule Gateway.HTTP.ConsumerTest do
       |> Gateway.DB.Models.Consumer.create()
 
     conn = :get
-      |> conn("/consumers/#{data.external_id}")
+      |> conn("consumers/#{data.external_id}")
       |> put_req_header("content-type", "application/json")
       |> Gateway.PrivateRouter.call([])
 
     expected_resp = %{
-      meta: %{
-        code: 200,
-      },
+      meta: EView.MetaRender.render("object", conn),
       data: data
     }
 
-    assert conn.status == 200
-    assert conn.resp_body == Poison.encode!(expected_resp)
+    assert 200 == conn.status
+    assert Poison.encode!(expected_resp) == Gateway.Test.Helper.remove_type(conn.resp_body)
   end
 
   test "POST /consumers" do
@@ -86,9 +82,9 @@ defmodule Gateway.HTTP.ConsumerTest do
     resp = Poison.decode!(conn.resp_body)["data"]
 
     assert resp["updated_at"]
-    assert resp["external_id"] == new_contents[:external_id]
-    assert resp["metadata"]["new_key"] == "another_value"
-    assert resp["metadata"]["existing_key"] == "new_value"
+    assert new_contents[:external_id] == resp["external_id"]
+    assert "another_value" == resp["metadata"]["new_key"]
+    assert "new_value" == resp["metadata"]["existing_key"]
   end
 
   test "DELETE /consumers/:external_id" do
@@ -101,9 +97,6 @@ defmodule Gateway.HTTP.ConsumerTest do
       |> put_req_header("content-type", "application/json")
       |> Gateway.PrivateRouter.call([])
 
-    resp = Poison.decode!(conn.resp_body)
-
     assert 200 == conn.status
-    assert "Resource was deleted" == resp["meta"]["description"]
   end
 end

@@ -2,92 +2,38 @@ defmodule Gateway.HTTPHelpers.Response do
   @moduledoc """
   Gateway HTTP Helpers Response
   """
-  def render_create_response({:ok, resource}), do: render_response(resource, 201)
-  def render_create_response({:error, changeset}), do: render_errors_response(changeset)
-  def render_create_response(nil), do: render_not_found_response()
 
-  def render_show_response({:ok, resource}), do: render_response(resource, 200)
-  def render_show_response({:error, changeset}), do: render_errors_response(changeset)
-  def render_show_response(nil), do: render_not_found_response()
-  def render_show_response(resource), do: render_response(resource, 200)
-  def render_show_response(resource, %{paging: data}), do: render_response(resource, 200, %{paging: data})
+  def render_create_response({:ok, resourse}, conn), do: render_response(resourse, conn, 201)
+  def render_create_response({:error, changeset}, conn), do: render_errors_response(changeset, conn)
+  def render_create_response(nil, conn), do: render_not_found_response(conn)
 
-  def render_delete_response({:ok, _resource}), do: render_response(%{}, 200, "Resource was deleted")
-  def render_delete_response(_), do: render_not_found_response()
+  def render_show_response({:ok, resource}, conn), do: render_response(resource, conn)
+  def render_show_response({:error, changeset}, conn), do: render_errors_response(changeset, conn)
+  def render_show_response(nil, conn), do: render_not_found_response(conn)
+  def render_show_response(resource, conn), do: render_response(resource, conn)
 
-  def render_not_found_response(msg \\ "The requested API doesn’t exist") when is_binary msg do
-    encode_response(%{
-      meta: %{
-        code: 404,
-        description: msg
-      }
-    })
+  def render_delete_response({:ok, _resource}, conn), do: render_response(%{}, conn)
+  def render_delete_response(_, conn), do: render_not_found_response(conn)
+
+  def render_not_found_response(conn), do: Plug.Conn.send_resp(conn, 404, Poison.encode!(%{}))
+  def render_errors_response(changeset, conn), do: Plug.Conn.send_resp(conn, 422, changeset)
+
+  def render_response(resource, conn, status \\ 200) do
+    conn
+    |> Plug.Conn.send_resp(status, get_resp_body(resource))
   end
 
-  def render_errors_response(changeset) do
-    code = 422
+  def get_resp_body(resource) when is_list(resource), do: Poison.encode!(resource)
+  def get_resp_body(resource) when is_map(resource), do: resource |> set_type() |> Poison.encode!()
 
-    errors = Ecto.Changeset.traverse_errors(changeset, fn
-      msg -> err_detail(msg)
-    end)
+  def set_type(resourse) when resourse != %{} do
+    type = resourse
+    |> Map.get(:__struct__)
+    |> EView.DataRender.extract_object_name
 
-    response_body = %{
-      meta: %{
-        code: code,
-        description: "Validation errors",
-        errors: errors
-      }
-    }
-
-    encode_response(response_body)
+    resourse
+    |> Map.put(:type, type)
   end
 
-  defp err_detail({message, values}) do
-    Enum.reduce values, message, fn {k, v}, acc ->
-      String.replace(acc, "%{#{k}}", to_string(v))
-    end
-  end
-  defp err_detail(message), do: message
-
-  def render_response(resource, code) do
-    resource
-    |> response_struct(code)
-    |> encode_response
-  end
-
-  def render_response(resource, code, %{paging: data}) do
-    resource
-    |> response_struct(code)
-    |> put_paging_data(data)
-    |> encode_response
-  end
-
-  def render_response(resource, code, description) do
-    resource
-    |> response_struct(code)
-    |> put_description(description)
-    |> encode_response
-  end
-
-  def response_struct(resource, code) do
-    %{
-      meta: %{
-        code: code
-      },
-      data: resource
-    }
-  end
-
-  def put_paging_data(struct, data) do
-    Map.put(struct, "paging", data)
-  end
-
-  def put_description(%{meta: meta} = struct, text) do
-    struct
-    |> Map.put(:meta, Map.put(meta, :description, text))
-  end
-
-  def encode_response(%{meta: %{code: code}} = struct) do
-    {code, Poison.encode!(struct)}
-  end
+  def set_type(resourse), do: resourse
 end

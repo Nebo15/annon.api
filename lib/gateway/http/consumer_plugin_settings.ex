@@ -3,7 +3,10 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
   REST for ConsumerPluginSettings
   Documentation http://docs.osapigateway.apiary.io/#reference/apis
   """
-  use Gateway.Helpers.CommonRouter
+  use Plug.Router
+  plug :match
+  plug :dispatch
+  import Gateway.HTTPHelpers.Response
 
   import Ecto.Query, only: [from: 2]
 
@@ -14,41 +17,36 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
   get "/:external_id/plugins" do
     ConsumerPluginSettings
     |> Repo.all(external_id: external_id)
-    |> render_show_response
-    |> send_response(conn)
+    |> render_show_response(conn)
   end
 
   get "/:external_id/plugins/:plugin_name" do
     external_id
     |> plugin_by(plugin_name)
     |> Repo.one()
-    |> render_show_response
-    |> send_response(conn)
+    |> render_show_response(conn)
   end
 
   put "/:external_id/plugins/:plugin_name" do
     external_id
     |> plugin_by(plugin_name)
     |> ConsumerPluginSettings.update(conn.body_params)
-    |> normalize_ecto_update_resp
-    |> render_show_response
-    |> send_response(conn)
+    |> normalize_ecto_update_resp()
+    |> render_show_response(conn)
   end
 
   post "/:external_id/plugins" do
     external_id
     |> ConsumerPluginSettings.create(conn.body_params)
-    |> render_create_response
-    |> send_response(conn)
+    |> render_create_response(conn)
   end
 
   delete "/:external_id/plugins/:plugin_name" do
     external_id
     |> plugin_by(plugin_name)
-    |> Repo.delete_all
-    |> normalize_ecto_delete_resp
-    |> render_delete_response
-    |> send_response(conn)
+    |> Repo.delete_all()
+    |> normalize_ecto_delete_resp()
+    |> render_delete_response(conn)
   end
 
   defp plugin_by(external_id, plugin_name) do
@@ -56,10 +54,6 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
       join: p in Plugin, on: c.plugin_id == p.id,
       where: c.external_id == ^external_id,
       where: p.name == ^plugin_name
-  end
-
-  def send_response({code, resp}, conn) do
-    send_resp(conn, code, resp)
   end
 
   defp normalize_ecto_delete_resp({0, _}), do: nil

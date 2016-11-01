@@ -73,10 +73,7 @@ defmodule Gateway.LoggerTest do
       |> Gateway.PrivateRouter.call([])
 
     expected_resp = %{
-      meta: %{
-        code: 200,
-        description: "Resource was deleted"
-      },
+      meta: EView.MetaRender.render("object", conn),
       data: %{}
     }
 
