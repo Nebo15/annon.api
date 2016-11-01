@@ -7,7 +7,7 @@ defmodule Gateway.DB.Models.API do
   alias Gateway.DB.Repo
   alias Gateway.DB.Models.API, as: APIModel
 
-  @derive {Poison.Encoder, except: [:__meta__, :plugins]}
+  @derive {Poison.Encoder, except: [:__meta__]}
 
   schema "apis" do
     field :name, :string
