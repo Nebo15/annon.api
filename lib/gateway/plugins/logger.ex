@@ -4,7 +4,6 @@ defmodule Gateway.Plugins.Logger do
   """
 
   import Plug.Conn
-  alias Gateway.DB.Logger.Repo
   alias Gateway.DB.Models.Log
   alias Gateway.DB.Models.API, as: APIModel
   alias EctoFixtures
@@ -31,7 +30,7 @@ defmodule Gateway.Plugins.Logger do
     |> get_req_header("x-idempotency-key")
     |> Enum.at(0) || ""
 
-    records = %{
+    %{
       id: id,
       idempotency_key: idempotency_key,
       ip_address: conn.remote_ip |> Tuple.to_list |> Enum.join("."),
@@ -54,12 +53,6 @@ defmodule Gateway.Plugins.Logger do
 
   defp modify_headers_list([]), do: []
   defp modify_headers_list([{key, value}|t]), do: [%{key => value}] ++ modify_headers_list(t)
-
-  defp get_json_string(conn, data_func) do
-    conn
-    |> data_func.()
-    |> Poison.encode!
-  end
 
   defp get_api_data(%Plug.Conn{private: %{api_config: nil}}), do: %{}
   defp get_api_data(%Plug.Conn{private: %{api_config: %APIModel{id: id, name: name, request: request}}}) do

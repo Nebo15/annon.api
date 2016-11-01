@@ -59,27 +59,25 @@ defmodule Gateway.DB.Models.Plugin do
     %Plugin{}
     |> Plugin.changeset(params)
     |> update_plugin(api_id, name)
-    |> normalize_ecto_update_resp
+    |> normalize_ecto_update
   end
-  defp update_plugin(%Ecto.Changeset{valid?: true, changes: changes}, api_id, name) do
-    query = from(p in Plugin, where: p.api_id == ^api_id, where: p.name == ^name)
-    Repo.update_all(query, [set: Map.to_list(changes)], returning: true)
-  end
+
   defp update_plugin(%Ecto.Changeset{valid?: false} = ch, _api_id, _name), do: {:error, ch}
+  defp update_plugin(%Ecto.Changeset{valid?: true, changes: changes}, api_id, name) do
+    q = (from p in Plugin,
+     where: p.api_id == ^api_id,
+     where: p.name == ^name)
+    q
+    |> Repo.update_all([set: Map.to_list(changes)], returning: true)
+  end
+
 
   def delete(api_id, name) do
-    query = from p in Plugin,
-            where: p.api_id == ^api_id,
-            where: p.name == ^name
-    query
+    q = (from p in Plugin,
+     where: p.api_id == ^api_id,
+     where: p.name == ^name)
+    q
     |> Repo.delete_all
-    |> normalize_ecto_delete_resp
+    |> normalize_ecto_delete
   end
-
-  defp normalize_ecto_delete_resp({0, _}), do: nil
-  defp normalize_ecto_delete_resp({1, _}), do: {:ok, nil}
-
-  defp normalize_ecto_update_resp({0, _}), do: nil
-  defp normalize_ecto_update_resp({1, [struct]}), do: struct
-  defp normalize_ecto_update_resp({:error, ch}), do: {:error, ch}
 end

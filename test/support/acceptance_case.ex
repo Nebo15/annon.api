@@ -22,6 +22,7 @@ defmodule Gateway.AcceptanceCase do
       @config Confex.get_map(:gateway, :acceptance)
 
       def get(url, endpoint_type, headers \\ []), do: request(:get, endpoint_type, url, "", headers)
+      def put(url, body, endpoint_type, headers \\ []), do: request(:put, endpoint_type, url, body, headers)
       def post(url, body, endpoint_type, headers \\ []), do: request(:post, endpoint_type, url, body, headers)
       def delete(url, endpoint_type, headers \\ []), do: request(:delete, endpoint_type, url, "", headers)
 

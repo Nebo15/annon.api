@@ -34,8 +34,7 @@ defmodule Gateway.Acceptance.Plug.IdempotencyTest do
 
     assert 2 == body
     |> Poison.decode!()
-    |> Map.fetch("data")
-    |> elem(1)
+    |> Map.fetch!("data")
     |> Enum.count()
   end
 
