@@ -30,6 +30,8 @@ before_install:
   - sudo /bin/bash ./bin/ci/init-db.sh
   - sudo /bin/bash ./bin/ci/init-cassandra.sh
   - sudo /bin/bash ./bin/ci/init-statsd.sh
+before_script:
+  - epmd -daemon
 script:
   # Increment version in mix.exs
   # Uncomment this if you want to increment patch version on each Travis build.
