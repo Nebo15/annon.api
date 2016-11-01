@@ -8,11 +8,6 @@ defmodule Gateway.Plugins.IPRestriction do
   alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.API, as: APIModel
 
-  defp get_plugin(%Plug.Conn{private: %{api_config: %{plugins: plugins}}}) do
-    Enum.find(plugins, fn(plugin) -> plugin.name === :IPRestriction end)
-  end
-  defp get_plugin(_conn), do: %{}
-
   defp get_enabled(plugins) when is_list(plugins) do
     plugins
     |> Enum.find(&filter_plugin/1)
