@@ -18,9 +18,12 @@ defmodule Gateway.Plugins.Proxy do
 
   defp execute(nil, conn), do: conn
   defp execute(%Plugin{} = plugin, conn) do
-    _settings = plugin
+    conn = plugin
+    |> get_additional_headers
+    |> add_additional_headers(conn)
+
+    plugin
     |> get_settings()
-    # TODO: maybe add some headers from the settings
     # TODO: check variables
     |> do_proxy(conn)
   end
@@ -54,6 +57,14 @@ defmodule Gateway.Plugins.Proxy do
     |> get_port(proxy)
     |> get_path(proxy, conn)
   end
+
+  defp add_additional_headers(headers, conn) do
+    for {key, value} <- headers, do: put_req_header(conn, key, value)
+    conn
+  end
+
+  defp get_additional_headers(%Plugin{settings: %{"additional_headers" => headers}}), do: headers
+  defp get_additional_headers(_), do: []
 
   defp get_scheme(%{"scheme" => scheme}, _conn), do: scheme <> "://"
   defp get_scheme(_, %Plug.Conn{scheme: scheme}), do: Atom.to_string(scheme) <> "://"
