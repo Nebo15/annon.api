@@ -69,7 +69,7 @@ defmodule Gateway.Plugins.IPRestriction do
   defp execute(nil, conn), do: conn
   defp execute(%Plugin{} = plugin, conn) do
     ip = ip_to_string conn.remote_ip
-    conn = register_before_send(conn, fn conn ->
+    register_before_send(conn, fn conn ->
       allow = check_ip(plugin, ip)
 
       if allow do
@@ -82,6 +82,5 @@ defmodule Gateway.Plugins.IPRestriction do
         end
       end
     end)
-    conn
   end
 end
