@@ -4,6 +4,8 @@ defmodule Gateway.DB.Models.API do
   """
 
   use Gateway.DB, :model
+  alias Gateway.DB.Repo
+  alias Gateway.DB.Models.API, as: APIModel
 
   @derive {Poison.Encoder, except: [:__meta__, :plugins]}
 
@@ -41,19 +43,25 @@ defmodule Gateway.DB.Models.API do
   end
 
   def create(params) do
-    %Gateway.DB.Models.API{}
+    %APIModel{}
     |> changeset(params)
     |> Gateway.DB.Repo.insert
   end
 
   def update(api_id, params) do
-    %Gateway.DB.Models.API{id: String.to_integer(api_id)}
-    |> changeset(params)
-    |> Gateway.DB.Repo.update()
+    try do
+      %Gateway.DB.Models.API{id: String.to_integer(api_id)}
+      |> changeset(params)
+      |> Gateway.DB.Repo.update()
+    rescue
+      Ecto.StaleEntryError -> nil
+    end
   end
 
   def delete(api_id) do
-    %Gateway.DB.Models.API{id: String.to_integer(api_id)}
-    |> Gateway.DB.Repo.delete()
+    q = from a in APIModel, where: a.id == ^api_id
+    q
+    |> Repo.delete_all
+    |> normalize_ecto_delete
   end
 end
