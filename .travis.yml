@@ -39,7 +39,8 @@ script:
   # Install dependencies
   - mix deps.get
   # Run all tests except pending ones
-  - mix test --exclude pending --trace
+  - mix test --exclude pending --trace --exclude cluster
+  - mix test --exclude pending --trace --only cluster
   # Submit code coverage report to Coveralls
   # Add --pro if you using private repo.
   - mix coveralls.travis --pro --exclude pending
