@@ -1,5 +1,6 @@
 defmodule Gateway.Acceptance.Plug.JWTTest do
   use Gateway.AcceptanceCase
+  alias Gateway.Test.Helper
 
   @api_url "apis"
   @consumer_url "consumers"
@@ -19,7 +20,7 @@ defmodule Gateway.Acceptance.Plug.JWTTest do
                      },
                      "required" => ["foo"]
                    }
-  @consumer_id UUID.uuid1()
+  @consumer_id Helper.random_string(32)
   @consumer %{
     external_id: @consumer_id,
     metadata: %{"key": "value"},
