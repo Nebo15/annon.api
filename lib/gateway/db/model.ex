@@ -52,6 +52,7 @@ defmodule Gateway.DB do
 
   defp validate_map_value(ch, value, _field) when is_number(value) and value <= 999_999_999_999, do: ch
   defp validate_map_value(ch, value, _field) when is_binary(value) and byte_size(value) <= 2048, do: ch
+  defp validate_map_value(ch, value, _field) when is_list(value), do: ch
   defp validate_map_value(ch, _value, field) do
     add_error(ch, field, "value must be a string with binary length <= 2048")
   end
