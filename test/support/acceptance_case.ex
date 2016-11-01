@@ -7,11 +7,6 @@ defmodule Gateway.AcceptanceCase do
 
   use ExUnit.CaseTemplate
 
-  def random_string(length) do
-    data = :crypto.strong_rand_bytes(length)
-    data |> Base.url_encode64 |> binary_part(0, length)
-  end
-
   using do
     quote do
       import Joken
