@@ -39,8 +39,9 @@ RUN \
     rm -rf /opt/app/* && \
     chmod -R 777 $HOME && \
     chmod -R 777 /opt/$APP_NAME && \
-    chmod -R 777 /var/log \
-    empd -d
+    chmod -R 777 /var/log
+
+RUN epmd -daemon
 
 # Change user to "default"
 USER default
