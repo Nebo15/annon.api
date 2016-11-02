@@ -34,6 +34,6 @@ config :gateway, :private_http,
   port: { :system, :integer, "GATEWAY_PRIVATE_PORT", 5001 }
 
 config :libcluster,
-  strategy: { :system, "LIBCLUSTER_STRATEGY", Cluster.Strategy.Epmd }
+  strategy: { :system, :module, "LIBCLUSTER_STRATEGY", Cluster.Strategy.Epmd }
 
 import_config "#{Mix.env}.exs"

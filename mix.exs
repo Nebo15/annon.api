@@ -50,8 +50,8 @@ defmodule Gateway.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [{:distillery, "~> 0.10.1"},
-     {:libcluster, github: "gmile/libcluster", branch: "publish-across-cluster"},
-     {:confex, "~> 1.4"},
+     {:libcluster, github: "gmile/libcluster", branch: "master"},
+     {:confex, github: "gmile/confex", branch: "support-atom-as-config-value", override: true},
      {:plug, ">= 0.0.0"},
      {:cowboy, ">= 0.0.0"},
      {:postgrex, ">= 0.0.0", override: true},
