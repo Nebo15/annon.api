@@ -11,13 +11,6 @@ defmodule Gateway.MonitoringTest do
     assert check_statsd("timers", "os.gateway.apis_latency")
   end
 
-  @public_url %{
-    scheme: "http",
-    host: "www.example.com",
-    port: 80,
-    path: "/apis",
-  }
-
   defp make_connection do
     { :ok, api } = create_api_endpoint()
     create_proxy_plugin(api)
@@ -44,17 +37,29 @@ defmodule Gateway.MonitoringTest do
   defp create_api_endpoint do
     Gateway.DB.Models.API.create(%{
       name: "Test api",
-      request: Map.put(@public_url, :method, "GET")
+      request: %{
+        method: "GET",
+        scheme: "http",
+        host: "www.example.com",
+        port: 80,
+        path: "/apis",
+      }
     })
   end
 
   defp create_proxy_plugin(api) do
+    proxy = Poison.encode!(%{
+      mathod: "GET",
+      scheme: "http",
+      host: "localhost",
+      port: 5001,
+      path: "/apis"
+    })
+
     Gateway.DB.Models.Plugin.create(api, %{
       name: "Proxy",
       is_enabled: true,
-      settings: %{
-        "proxy_to" => Poison.encode!(@public_url)
-      }
+      settings: %{ "proxy_to" => proxy }
     })
   end
 end
