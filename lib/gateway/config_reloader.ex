@@ -1,5 +1,4 @@
 defmodule Gateway.ConfigReloader do
-
   @moduledoc """
   Plugin which get all configuration by endpoint
   """

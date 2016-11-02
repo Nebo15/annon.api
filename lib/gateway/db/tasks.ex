@@ -1,7 +1,6 @@
 defmodule :os_gateway_tasks do
   @moduledoc """
   Nice way to apply migrations inside a released application.
-
   Example:
       ./bin/$APP_NAME command "tr_db_tasks" migrate!
   """
@@ -9,8 +8,12 @@ defmodule :os_gateway_tasks do
   def migrate! do
     migrations_dir = Path.join(["priv", "repos", "migrations"])
 
-    repo = Gateway.DB.Repo
-    repo
+    load_app()
+
+    Gateway.DB.Repo
+    |> start_repo
+
+    Gateway.DB.Logger.Repo
     |> start_repo
     |> Ecto.Migrator.run(migrations_dir, :up, all: true)
 
@@ -19,14 +22,13 @@ defmodule :os_gateway_tasks do
   end
 
   defp start_repo(repo) do
-    load_app()
     repo.start_link()
     repo
   end
 
   defp load_app do
     start_applications([:logger, :postgrex, :ecto])
-    :ok = Application.load(:tr_db)
+    :ok = Application.load(:gateway)
   end
 
   defp start_applications(apps) do

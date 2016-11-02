@@ -38,8 +38,8 @@ defmodule Gateway.DB.Models.Plugin do
     |> put_name(changeset)
   end
 
-  def capitalize_name({:changes, name}) when is_binary(name), do: String.capitalize(name)
-  def capitalize_name(_), do: nil
+  defp capitalize_name({:changes, name}) when is_binary(name), do: String.capitalize(name)
+  defp capitalize_name(_), do: nil
 
   def put_name(nil, changeset), do: changeset
   def put_name(name, %Ecto.Changeset{} = changeset) when is_binary(name) do
