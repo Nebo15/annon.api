@@ -73,12 +73,64 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
     |> assert_status(200)
   end
 
-  def get_api_proxy_data(path) do
+  test "proxy with additional headers" do
+    api_id = @api_url
+    |> post(Poison.encode!(get_api_proxy_data("/proxy/test_headers", false)), :private)
+    |> assert_status(201)
+    |> get_body()
+    |> Poison.decode!
+    |> Map.get("data")
+    |> Map.get("id")
+
+    @api_url
+    |> post(Poison.encode!(get_api_proxy_data("/proxy/test")), :private)
+    |> assert_status(201)
+
+    proxy_plugin = %{ name: "Proxy", is_enabled: true,
+                      settings: %{
+                        "proxy_to" => Poison.encode!(%{
+                          host: get_host(:public),
+                          path: "/proxy/test",
+                          port: get_port(:public),
+                          scheme: "http"
+                          })
+                      }
+                    }
+
+    url = @api_url <> "/#{api_id}/plugins"
+    url
+    |> post(Poison.encode!(proxy_plugin), :private)
+    |> assert_status(201)
+
+    "proxy/test_headers"
+    |> get(:public)
+    |> assert_status(401)
+
+    new_settings = Map.put(proxy_plugin.settings, "additional_headers",
+      [%{"authorization" => "Bearer #{jwt_token(@payload, @token_secret)}"}])
+    proxy_plugin = Map.put(proxy_plugin, :settings, new_settings)
+
+    url = @api_url <> "/#{api_id}/plugins/Proxy"
+    url
+    |> delete(:private)
+    |> assert_status(200)
+
+    url = @api_url <> "/#{api_id}/plugins"
+    url
+    |> post(Poison.encode!(proxy_plugin), :private)
+    |> assert_status(201)
+
+    "proxy/test_headers"
+    |> get(:public)
+    |> assert_status(404)
+  end
+
+  def get_api_proxy_data(path, enable_jwt \\ true) do
     get_api_model_data()
     |> Map.put(:request,
       %{host: get_host(:public), path: path, port: get_port(:public), scheme: "http", method: "GET"})
     |> Map.put(:plugins, [
-      %{name: "JWT", is_enabled: true, settings: %{"signature" => @token_secret}}])
+      %{name: "JWT", is_enabled: enable_jwt, settings: %{"signature" => @token_secret}}])
   end
 
 end

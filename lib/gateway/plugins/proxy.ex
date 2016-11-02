@@ -20,11 +20,11 @@ defmodule Gateway.Plugins.Proxy do
   defp execute(nil, conn), do: conn
   defp execute(%Plugin{} = plugin, conn) do
     conn = plugin
-    |> get_additional_headers
+    |> get_additional_headers()
     |> add_additional_headers(conn)
 
     plugin
-    |> get_settings()
+    |> get_proxy_to_settings()
     # TODO: check variables
     |> do_proxy(conn)
   end
@@ -62,8 +62,7 @@ defmodule Gateway.Plugins.Proxy do
   defp add_additional_headers(headers, conn) do
     headers = headers ++ [%{"x-forwarded-for" => ip_to_string(conn.remote_ip)}]
     headers
-    |> Enum.map(fn(header) -> with {key, value} <- header |> Enum.at(0), do: put_req_header(conn, key, value) end)
-    |> List.last()
+    |> Enum.reduce(conn, fn(header, conn) -> with {k, v} <- header |> Enum.at(0), do: put_req_header(conn, k, v) end)
   end
 
   defp get_additional_headers(%Plugin{settings: %{"additional_headers" => headers}}), do: headers
@@ -82,7 +81,7 @@ defmodule Gateway.Plugins.Proxy do
   defp get_path(pr, %{"path" => path}, _conn), do: pr <> path
   defp get_path(pr, %{}, %Plug.Conn{request_path: path}), do: pr <> path
 
-  defp get_settings(%Plugin{settings: %{"proxy_to" => proxy}}), do: %{proxy: Poison.decode!(proxy)}
+  defp get_proxy_to_settings(%Plugin{settings: %{"proxy_to" => proxy}}), do: %{proxy: Poison.decode!(proxy)}
   defp get_enabled(plugins) when is_list(plugins) do
     plugins
     |> Enum.find(&filter_plugin/1)
