@@ -34,7 +34,7 @@ defmodule Gateway.Plugins.APILoader do
 
     IO.puts "Result:"
     case :ets.match_object(:config, {:_, match_spec}) do
-      [{_, api}] -> api
+      [{_, api} | _] -> api
       _ -> nil
     end
     |> IO.inspect
