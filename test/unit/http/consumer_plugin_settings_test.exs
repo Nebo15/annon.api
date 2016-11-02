@@ -21,10 +21,8 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.Consumers.call([])
 
-    result =
-      Poison.decode!(conn.resp_body)["data"]
-
-    assert Enum.count(result) == 2
+    result = Poison.decode!(conn.resp_body)["data"]
+    assert 2 == Enum.count(result)
   end
 
   test "GET /consumers/:external_id/plugins/:name", %{external_id: external_id, plugin: plugin} do
@@ -35,13 +33,12 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.Consumers.call([])
 
-    [result] =
-      Poison.decode!(conn.resp_body)["data"]
+    [result] = Poison.decode!(conn.resp_body)["data"]
 
-    assert result["id"] == cust_plugin1.id
-    assert result["external_id"] == cust_plugin1.external_id
-    assert result["plugin_id"] == cust_plugin1.plugin_id
-    assert result["settings"] == cust_plugin1.settings
+    assert cust_plugin1.id == result["id"]
+    assert cust_plugin1.external_id == result["external_id"]
+    assert cust_plugin1.plugin_id == result["plugin_id"]
+    assert cust_plugin1.settings == result["settings"]
     assert result["inserted_at"]
     assert result["updated_at"]
   end
@@ -65,10 +62,10 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     result =
       Poison.decode!(conn.resp_body)["data"]
 
-    assert result["id"] == cust_plugin1.id
-    assert result["external_id"] == cust_plugin1.external_id
-    assert result["plugin_id"] == cust_plugin1.plugin_id
-    assert result["settings"] == contents[:settings]
+    assert cust_plugin1.id == result["id"]
+    assert cust_plugin1.external_id == result["external_id"]
+    assert cust_plugin1.plugin_id == result["plugin_id"]
+    assert contents[:settings] == result["settings"]
   end
 
   test "POST /consumers/:external_id/plugins", %{external_id: external_id, plugin: plugin} do
@@ -85,13 +82,12 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.Consumers.call([])
 
-    result =
-      Poison.decode!(conn.resp_body)["data"]
+    result = Poison.decode!(conn.resp_body)["data"]
 
     assert result["id"]
-    assert result["external_id"] == external_id
-    assert result["plugin_id"] == plugin.id
-    assert result["settings"] == contents[:settings]
+    assert external_id == result["external_id"]
+    assert plugin.id == result["plugin_id"]
+    assert contents[:settings] == result["settings"]
     assert result["inserted_at"]
     assert result["updated_at"]
   end
@@ -105,10 +101,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.Consumers.call([])
 
-    result =
-      Poison.decode!(conn.resp_body)
-
-    assert result["meta"]["description"] == "Resource was deleted"
+    assert 200 == conn.status
   end
 
   defp create_fixture(module) do

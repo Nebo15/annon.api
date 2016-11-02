@@ -26,14 +26,12 @@ defmodule Gateway.HTTP.APITest do
     |> Gateway.HTTP.API.call([])
 
     expected_resp = %{
-      meta: %{
-        code: 200,
-      },
+      meta: EView.MetaRender.render("list", conn),
       data: data
     }
 
-    assert conn.status == 200
-    assert conn.resp_body == Poison.encode!(expected_resp)
+    assert 200 == conn.status
+    assert Poison.encode!(expected_resp) == conn.resp_body
   end
 
   test "GET /apis/:api_id" do
@@ -45,14 +43,12 @@ defmodule Gateway.HTTP.APITest do
     |> Gateway.HTTP.API.call([])
 
     expected_resp = %{
-      meta: %{
-        code: 200,
-      },
+      meta: EView.MetaRender.render("object", conn),
       data: data
     }
 
-    assert conn.status == 200
-    assert conn.resp_body == Poison.encode!(expected_resp)
+    assert 200 == conn.status
+    assert Poison.encode!(expected_resp) == Gateway.Test.Helper.remove_type(conn.resp_body)
   end
 
   test "POST /apis" do
@@ -79,11 +75,11 @@ defmodule Gateway.HTTP.APITest do
     assert resp["updated_at"]
     assert resp["inserted_at"]
 
-    assert resp["name"] == "Sample"
-    assert resp["request"]["host"] == "example.com"
-    assert resp["request"]["port"] == 4000
-    assert resp["request"]["path"] == "/a/b/c"
-    assert resp["request"]["scheme"] == "http"
+    assert "Sample" == resp["name"]
+    assert "example.com" == resp["request"]["host"]
+    assert 4000 == resp["request"]["port"]
+    assert "/a/b/c" == resp["request"]["path"]
+    assert "http" == resp["request"]["scheme"]
   end
 
   test "PUT /apis/:api_id" do
@@ -112,12 +108,12 @@ defmodule Gateway.HTTP.APITest do
     assert resp["id"]
     assert resp["updated_at"]
 
-    assert resp["name"] == "New name"
-    assert resp["request"]["host"] == "newhost.com"
-    assert resp["request"]["port"] == 4000
-    assert resp["request"]["path"] == "/new/path/"
-    assert resp["request"]["scheme"] == "https"
-    assert resp["request"]["method"] == "POST"
+    assert "New name" == resp["name"]
+    assert "newhost.com" == resp["request"]["host"]
+    assert 4000 == resp["request"]["port"]
+    assert "/new/path/" == resp["request"]["path"]
+    assert "https" == resp["request"]["scheme"]
+    assert "POST" == resp["request"]["method"]
   end
 
   test "DELETE /apis/:api_id" do
@@ -129,10 +125,9 @@ defmodule Gateway.HTTP.APITest do
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.API.call([])
 
-    resp = Poison.decode!(conn.resp_body)
+    Poison.decode!(conn.resp_body)
 
-    assert conn.status == 200
-    assert resp["meta"]["description"] == "Resource was deleted"
+    assert 200 == conn.status
 
     # ToDo: bug https://finstar.atlassian.net/browse/OSL-502
 #    conn = :delete
