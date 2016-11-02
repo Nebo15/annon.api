@@ -60,7 +60,7 @@ defmodule Gateway.Mixfile do
      {:timex, "~> 3.0"},
      {:poison, "~> 2.0"},
      {:joken, "~> 1.3"},
-     {:nex_json_schema, "~> 0.5.1", optional: true},
+     {:nex_json_schema, "~> 0.5.1"},
      {:httpoison, ">= 0.0.0"},
      {:httpoison, ">= 0.0.0"},
      {:ex_statsd, ">= 0.5.1"},

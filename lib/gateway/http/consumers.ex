@@ -8,25 +8,25 @@ defmodule Gateway.HTTP.Consumers do
   get "/" do
     Gateway.DB.Models.Consumer
     |> Gateway.DB.Repo.all
-    |> render_show_response(conn)
+    |> render_response(conn)
   end
 
   get "/:consumer_id" do
     Gateway.DB.Models.Consumer
     |> Gateway.DB.Repo.get(consumer_id)
-    |> render_show_response(conn)
+    |> render_response(conn)
   end
 
   put "/:consumer_id" do
     consumer_id
     |> Gateway.DB.Models.Consumer.update(conn.body_params)
-    |> render_show_response(conn)
+    |> render_response(conn)
   end
 
   post "/" do
     conn.body_params
     |> Gateway.DB.Models.Consumer.create
-    |> render_create_response(conn)
+    |> render_response(conn, 201)
   end
 
   delete "/:consumer_id" do

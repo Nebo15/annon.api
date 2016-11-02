@@ -17,14 +17,14 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
   get "/:external_id/plugins" do
     ConsumerPluginSettings
     |> Repo.all(external_id: external_id)
-    |> render_show_response(conn)
+    |> render_response(conn)
   end
 
   get "/:external_id/plugins/:plugin_name" do
     external_id
     |> plugin_by(plugin_name)
     |> Repo.one()
-    |> render_show_response(conn)
+    |> render_response(conn)
   end
 
   put "/:external_id/plugins/:plugin_name" do
@@ -32,13 +32,13 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
     |> plugin_by(plugin_name)
     |> ConsumerPluginSettings.update(conn.body_params)
     |> normalize_ecto_update_resp()
-    |> render_show_response(conn)
+    |> render_response(conn)
   end
 
   post "/:external_id/plugins" do
     external_id
     |> ConsumerPluginSettings.create(conn.body_params)
-    |> render_create_response(conn)
+    |> render_response(conn, 201)
   end
 
   delete "/:external_id/plugins/:plugin_name" do

@@ -11,13 +11,13 @@ defmodule Gateway.HTTP.Requests do
     conn
     |> get_limit()
     |> Log.get_records()
-    |> render_show_response(conn)
+    |> render_response(conn)
   end
 
   get "/:request_id" do
-    result = Log.get_record_by([id: request_id])
-    result
-    |> render_request(conn)
+    [id: request_id]
+    |> Log.get_record_by()
+    |> render_response(conn)
   end
 
   delete "/:request_id" do
@@ -32,7 +32,4 @@ defmodule Gateway.HTTP.Requests do
     |> to_string
     |> String.to_integer
   end
-
-  def render_request(nil), do: render_not_found_response("Request not found")
-  def render_request(request, conn), do: render_show_response(request, conn)
 end

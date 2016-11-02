@@ -20,7 +20,7 @@ defmodule Gateway.HTTP.API.Plugins do
 
     query
     |> Repo.all(api_id: api_id)
-    |> render_show_response(conn)
+    |> render_response(conn)
   end
 
   # create
@@ -28,7 +28,7 @@ defmodule Gateway.HTTP.API.Plugins do
     APIModel
     |> Repo.get(api_id)
     |> Plugin.create(conn.body_params)
-    |> render_create_response(conn)
+    |> render_response(conn, 201)
   end
 
   # get one
@@ -46,7 +46,7 @@ defmodule Gateway.HTTP.API.Plugins do
   put "/:api_id/plugins/:name" do
     api_id
     |> Plugin.update(name, conn.body_params)
-    |> render_show_response(conn)
+    |> render_response(conn)
   end
 
   delete "/:api_id/plugins/:name" do
@@ -55,7 +55,7 @@ defmodule Gateway.HTTP.API.Plugins do
     |> render_delete_response(conn)
   end
 
-  def render_plugin(%Plugin{} = p, conn), do: render_show_response(p, conn)
-  def render_plugin(nil, conn), do: render_not_found_response(conn)
+  def render_plugin(%Plugin{} = p, conn), do: render_response(p, conn, 200)
+  def render_plugin(nil, conn), do: render_response(nil, conn, 404)
 
 end

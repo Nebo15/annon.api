@@ -2,23 +2,13 @@ defmodule Gateway.HTTPHelpers.Response do
   @moduledoc """
   Gateway HTTP Helpers Response
   """
+  def render_delete_response({:ok, _resource}, conn), do: render_response(%{}, conn, 200)
+  def render_delete_response(_, conn), do: render_response(nil, conn)
 
-  def render_create_response({:ok, resource}, conn), do: render_response(resource, conn, 201)
-  def render_create_response({:error, changeset}, conn), do: render_errors_response(changeset, conn)
-  def render_create_response(nil, conn), do: render_not_found_response(conn)
-
-  def render_show_response({:ok, resource}, conn), do: render_response(resource, conn)
-  def render_show_response({:error, changeset}, conn), do: render_errors_response(changeset, conn)
-  def render_show_response(nil, conn), do: render_not_found_response(conn)
-  def render_show_response(resource, conn), do: render_response(resource, conn)
-
-  def render_delete_response({:ok, _resource}, conn), do: render_response(%{}, conn)
-  def render_delete_response(_, conn), do: render_not_found_response(conn)
-
-  def render_not_found_response(conn), do: Plug.Conn.send_resp(conn, 404, Poison.encode!(%{}))
-  def render_errors_response(changeset, conn), do: Plug.Conn.send_resp(conn, 422, changeset)
-
-  def render_response(resource, conn, status \\ 200) do
+  def render_response({:ok, resource}, conn, status \\ 200), do: render_response(resource, conn, status)
+  def render_response({:error, changeset}, conn, _), do: Plug.Conn.send_resp(conn, 422, changeset)
+  def render_response(nil, conn, _), do: Plug.Conn.send_resp(conn, 404, Poison.encode!(%{}))
+  def render_response(resource, conn, status) do
     conn
     |> Plug.Conn.send_resp(status, get_resp_body(resource))
   end
