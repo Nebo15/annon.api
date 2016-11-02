@@ -45,8 +45,8 @@ defmodule Gateway.Changeset.SettingsValidator do
     %{name: :IPRestriction, settings: %{"ip_whitelist" => w, "ip_blacklist" => b}}} = ch)
     when is_binary(w) and is_binary(b) do
     ch
-    |> validate_ip_list(Poison.decode(w), "ip_whitelist")
-    |> validate_ip_list(Poison.decode(b), "ip_blacklist")
+#    |> validate_ip_list(Poison.decode(w), "ip_whitelist")
+#    |> validate_ip_list(Poison.decode(b), "ip_blacklist")
   end
   def validate_settings(%Changeset{changes: %{name: :IPRestriction}} = ch) do
     add_error(ch, :settings, "IPRestriction.settings required string fields 'ip_whitelist' and 'ip_blacklist'")

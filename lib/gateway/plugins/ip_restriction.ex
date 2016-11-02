@@ -7,6 +7,7 @@ defmodule Gateway.Plugins.IPRestriction do
   import Gateway.Helpers.IP
   alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.API, as: APIModel
+require Logger
 
   def init(opts), do: opts
 
@@ -39,18 +40,21 @@ defmodule Gateway.Plugins.IPRestriction do
   end
 
   defp whitelisted?(%Plugin{settings: %{"ip_whitelist" => list}}, ip) do
-    Enum.any?(list, fn(item) -> compare_ips(item, ip) end)
+    list
+    |> Poison.decode!()
+    |> Enum.any?(fn(item) -> compare_ips(item, ip) end)
   end
   defp whitelisted?(_plugin, _ip), do: nil
 
   defp blacklisted?(%Plugin{settings: %{"ip_blacklist" => list}}, ip) do
-    Enum.any?(list, fn(item) -> compare_ips(item, ip) end)
+    list
+    |> Poison.decode!()
+    |> Enum.any?(fn(item) -> compare_ips(item, ip) end)
   end
   defp blacklisted?(_plugin, _ip), do: nil
 
   defp compare_ips(ip1, ip2) do
     ip2_list = String.split(ip2, ".")
-
     0 < ip1
     |> String.split(".")
     |> Enum.reduce_while(0, fn(item, i) ->
