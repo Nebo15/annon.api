@@ -53,18 +53,23 @@ defmodule Gateway.Changeset.SettingsValidator do
   end
 
   # Proxy
-  def validate_settings(%Changeset{changes: %{name: :Proxy, settings: %{"scope" => s}}} = ch) when is_binary(s) do
+  def validate_settings(%Changeset{changes: %{name: :Proxy, settings: settings}} = ch) do
+   settings = {:embed, settings}
+  IO.inspect settings
+
     ch
-  end
-  def validate_settings(%Changeset{changes: %{name: :Proxy, settings: %{"scope" => _}}} = ch) do
-    add_error(ch, :settings, "ACL.settings field 'scope' must be a string")
-  end
-  def validate_settings(%Changeset{changes: %{name: :Proxy}} = ch) do
-    add_error(ch, :settings, "ACL.settings required field 'scope'")
+#    |> put_embed(:settings, settings)
+    |> cast_embed(:settings, with: &changeset_proxy/2)
   end
 
   # general
   def validate_settings(ch), do: ch
+
+  defp changeset_proxy(ch, params \\ %{}) do
+    ch
+    |> cast(params, [:scheme, :host, :port, :path, :method])
+    |> validate_required([:host])
+  end
 
   # helpers
   defp validate_json_schema({:ok, _}, ch), do: ch
