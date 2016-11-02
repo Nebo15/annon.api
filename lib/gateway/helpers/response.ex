@@ -3,7 +3,7 @@ defmodule Gateway.HTTPHelpers.Response do
   Gateway HTTP Helpers Response
   """
 
-  def render_create_response({:ok, resourse}, conn), do: render_response(resourse, conn, 201)
+  def render_create_response({:ok, resource}, conn), do: render_response(resource, conn, 201)
   def render_create_response({:error, changeset}, conn), do: render_errors_response(changeset, conn)
   def render_create_response(nil, conn), do: render_not_found_response(conn)
 
@@ -26,14 +26,14 @@ defmodule Gateway.HTTPHelpers.Response do
   def get_resp_body(resource) when is_list(resource), do: Poison.encode!(resource)
   def get_resp_body(resource) when is_map(resource), do: resource |> set_type() |> Poison.encode!()
 
-  def set_type(resourse) when resourse != %{} do
-    type = resourse
+  def set_type(resource) when resource != %{} do
+    type = resource
     |> Map.get(:__struct__)
     |> EView.DataRender.extract_object_name
 
-    resourse
+    resource
     |> Map.put(:type, type)
   end
 
-  def set_type(resourse), do: resourse
+  def set_type(resource), do: resource
 end
