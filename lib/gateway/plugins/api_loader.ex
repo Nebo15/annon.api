@@ -18,33 +18,22 @@ defmodule Gateway.Plugins.APILoader do
         host: conn.host,
         method: conn.method,
         port: conn.port,
-        scheme: conn.scheme
+        scheme: normalize_scheme(conn.scheme),
+        path: conn.request_path
       }
     }
 
-    [{_, api}] =
-      :config
-      |> :ets.match_object({:_, match_spec})
-
-    api
+    case :ets.match_object(:config, {:_, match_spec}) do
+      [{_, api}] -> api
+      _ -> nil
+    end
   end
 
-  def equal?(%{request: %{} = r}, c) do
-    equal_host?(r, c) and equal_port?(r, c) and equal_scheme?(r, c) and equal_path?(r, c) and equal_method?(r, c)
+  def normalize_scheme(scheme) when is_atom(scheme) do
+    Atom.to_string(scheme)
   end
 
-  def equal_host?(%{host: host}, conn), do: conn.host == host
-  def equal_method?(%{method: method}, conn), do: conn.method == method
-  def equal_port?(%{port: port}, conn), do: conn.port == port
-  def equal_scheme?(%{scheme: scheme}, %Plug.Conn{scheme: conn_scheme}) when is_atom(conn_scheme) do
-    conn_scheme
-    |> Atom.to_string
-    |> equal_scheme?(scheme)
-  end
-  def equal_scheme?(%{scheme: scheme}, %Plug.Conn{scheme: conn_scheme}) when is_binary(conn_scheme) do
-    equal_scheme?(conn_scheme, scheme)
-  end
-  def equal_scheme?(conn_scheme, scheme) when is_binary(scheme) and is_binary(conn_scheme), do: scheme == conn_scheme
+  def normalize_scheme(scheme), do: scheme
 
   def equal_path?(%{path: path}, conn), do: conn.request_path == path
 end
