@@ -7,6 +7,7 @@ defmodule Gateway.ClusterConfigReloaderTest do
   use Gateway.UnitCase
 
   @tag cluster: true
+  @tag pending: true
   test "correct communication between processes" do
     # spawns two nodes:
     # node1@127.0.0.1 and node2@127.0.0.1
