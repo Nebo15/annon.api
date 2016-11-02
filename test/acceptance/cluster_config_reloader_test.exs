@@ -39,7 +39,7 @@ defmodule Gateway.ClusterConfigReloaderTest do
   end
 
   defp update_api(api_id, field, value) do
-    "http://localhost:5001/apis/#{api_id}"
+    "#{url()}/apis/#{api_id}"
     |> HTTPoison.put!(Poison.encode!(%{field => value}), [{"content-type", "application/json"}])
   end
 
@@ -56,11 +56,15 @@ defmodule Gateway.ClusterConfigReloaderTest do
         }
       }
 
-    "http://localhost:5001/apis"
+    "#{url()}/apis"
     |> HTTPoison.post!(Poison.encode!(map), [{"content-type", "application/json"}])
     |> Map.get(:body)
     |> Poison.decode!
     |> Map.get("data")
     |> Map.get("id")
+  end
+
+  def url do
+    "http://#{get_host(:private)}:#{get_port(:private)}"
   end
 end
