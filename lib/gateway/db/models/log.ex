@@ -10,7 +10,8 @@ defmodule Gateway.DB.Models.Log do
   @primary_key {:id, :string, autogenerate: false}
 
   schema "logs" do
-    field :api, :map
+    embeds_one :api, Gateway.DB.Models.Log.Api
+
     field :consumer, :map
     field :idempotency_key, :string
     field :ip_address, :string
@@ -22,8 +23,7 @@ defmodule Gateway.DB.Models.Log do
     timestamps()
   end
 
-
-  def changeset(api, params \\ %{}) do
+  def changeset_request(api, params \\ %{}) do
     api
     |> cast(params, [:api, :consumer, :idempotency_key, :ip_address, :request, :response, :latencies, :status_code])
     |> validate_required([:ip_address, :request])
@@ -52,22 +52,36 @@ defmodule Gateway.DB.Models.Log do
     |> Repo.delete()
   end
 
-  def get_record_by(selector) do
+  def get_by(selector) do
     Repo.one from Gateway.DB.Models.Log,
     where: ^selector,
     limit: 1
   end
 
   def get_records do
-    query = (from record in Gateway.DB.Models.Log)
-    query
-    |> Repo.all
+    Repo.all(from record in Gateway.DB.Models.Log)
   end
 
   def get_records(limit) when is_integer(limit) do
-    query = from record in Gateway.DB.Models.Log,
-            limit: ^limit
-    query
-    |> Repo.all
+    Repo.all(from record in Gateway.DB.Models.Log, limit: ^limit)
+  end
+end
+
+defmodule Gateway.DB.Models.Log.Api do
+  use Gateway.DB, :model
+  schema "api" do
+    field :id, :string
+    field :name, :string
+    embeds_one :request, Gateway.DB.Models.Log.Api.Request
+  end
+end
+
+defmodule Gateway.DB.Models.Log.Api.Request do
+  use Gateway.DB, :model
+  schema "request" do
+    field :scheme, :string
+    field :host, :string
+    field :port, :integer
+    field :path, :string    
   end
 end
