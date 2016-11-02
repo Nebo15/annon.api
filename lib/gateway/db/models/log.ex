@@ -25,7 +25,7 @@ defmodule Gateway.DB.Models.Log do
       field :external_id, :string
       field :metadata, :map
     end
-    
+
     embeds_one :request, Request, primary_key: false do
       field :method, :string
       field :uri, :string
@@ -52,12 +52,6 @@ defmodule Gateway.DB.Models.Log do
 
     timestamps()
   end
-
-#  def changeset_request(api, params \\ %{}) do
-#    api
-#    |> cast(params, [:api, :consumer, :idempotency_key, :ip_address, :request, :response, :latencies, :status_code])
-#    |> validate_required([:ip_address, :request])
-#  end
 
   def changeset_response(api, params \\ %{}) do
     api
@@ -92,7 +86,7 @@ defmodule Gateway.DB.Models.Log do
   end
 
   def changeset_embeded_api_request(data, params \\ %{}) do
-    params = Map.from_struct(params)    
+    params = Map.from_struct(params)
     data
     |> cast(params, [:scheme, :host, :port, :path])
   end
@@ -100,7 +94,7 @@ defmodule Gateway.DB.Models.Log do
   def changeset_embeded_consumer(data, params \\ %{}) do
     data
     |> cast(params, [:id, :external_id, :metadata])
-  end  
+  end
 
   def create(params \\ %{}) do
     %Gateway.DB.Models.Log{}
