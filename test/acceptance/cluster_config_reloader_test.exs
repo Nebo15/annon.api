@@ -7,7 +7,6 @@ defmodule Gateway.ClusterConfigReloaderTest do
   use Gateway.UnitCase
 
   @tag cluster: true
-  @tag pending: true
   test "correct communication between processes" do
     # spawns two nodes:
     # node1@127.0.0.1 and node2@127.0.0.1
@@ -59,11 +58,8 @@ defmodule Gateway.ClusterConfigReloaderTest do
         }
       }
 
-    :post
-    |> conn("/apis", Poison.encode!(map))
-    |> put_req_header("content-type", "application/json")
-    |> Gateway.PrivateRouter.call([])
-    |> Map.get(:resp_body)
+    HTTPoison.post!("http://localhost:5001/apis", Poison.encode!(map), [{"content-type", "application/json"}])
+    |> Map.get(:body)
     |> Poison.decode!
     |> Map.get("data")
     |> Map.get("id")
