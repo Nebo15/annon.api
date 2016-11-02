@@ -32,8 +32,8 @@ defmodule Gateway.Mixfile do
   end
 
   # Specifies which paths to compile per environment.
-  defp elixirc_paths(:test), do: ["lib", "web", "test/support"]
-  defp elixirc_paths(_),     do: ["lib", "web"]
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_),     do: ["lib"]
 
   # Dependencies can be Hex packages:
   #
@@ -50,12 +50,12 @@ defmodule Gateway.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [{:distillery, "~> 0.10.1"},
-     {:libcluster, github: "gmile/libcluster", branch: "publish-across-cluster"},
-     {:confex, "~> 1.4"},
+     {:libcluster, github: "gmile/libcluster", branch: "master"},
+     {:confex, github: "gmile/confex", branch: "support-atom-as-config-value", override: true},
      {:plug, ">= 0.0.0"},
      {:cowboy, ">= 0.0.0"},
      {:postgrex, ">= 0.0.0", override: true},
-     {:ecto, ">= 2.1.0-rc.2", override: true},
+     {:ecto, ">= 2.1.0-rc.3", override: true},
      {:ecto_enum, git: "https://github.com/gjaldon/ecto_enum", branch: "ecto-2.0", override: true},
      {:timex, "~> 3.0"},
      {:poison, "~> 2.0"},
