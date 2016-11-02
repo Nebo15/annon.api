@@ -6,14 +6,24 @@ defmodule Gateway.MonitoringTest do
 
   test "metrics work properly" do
     make_connection()
-    assert check_statsd("counters", "os.gateway.monitoring_test_request_count")
-    assert check_statsd("counters", "os.gateway.monitoring_test_status_count_200")
-    assert check_statsd("timers", "os.gateway.monitoring_test_latency")
+    assert check_statsd("counters", "os.gateway.apis_request_count")
+    assert check_statsd("counters", "os.gateway.apis_status_count_200")
+    assert check_statsd("timers", "os.gateway.apis_latency")
   end
 
+  @public_url %{
+    scheme: "http",
+    host: "www.example.com",
+    port: 80,
+    path: "/apis",
+  }
+
   defp make_connection do
+    { :ok, api } = create_api_endpoint()
+    create_proxy_plugin(api)
+
     :get
-    |> conn("/monitoring_test")
+    |> conn("/apis")
     |> put_req_header("content-type", "application/json")
     |> Gateway.PublicRouter.call([])
 
@@ -29,5 +39,22 @@ defmodule Gateway.MonitoringTest do
     |> elem(1)
     |> to_string
     |> String.contains?(metric_name)
+  end
+
+  defp create_api_endpoint() do
+    Gateway.DB.Models.API.create(%{
+      name: "Test api",
+      request: Map.put(@public_url, :method, "GET")
+    })
+  end
+
+  defp create_proxy_plugin(api) do
+    Gateway.DB.Models.Plugin.create(api, %{
+      name: "Proxy",
+      is_enabled: true,
+      settings: %{
+        "proxy_to" => Poison.encode!(@public_url)
+      }
+    })
   end
 end
