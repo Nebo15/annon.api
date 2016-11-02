@@ -41,7 +41,7 @@ defmodule Gateway.MonitoringTest do
     |> String.contains?(metric_name)
   end
 
-  defp create_api_endpoint() do
+  defp create_api_endpoint do
     Gateway.DB.Models.API.create(%{
       name: "Test api",
       request: Map.put(@public_url, :method, "GET")
