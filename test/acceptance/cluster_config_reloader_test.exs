@@ -39,10 +39,8 @@ defmodule Gateway.ClusterConfigReloaderTest do
   end
 
   defp update_api(api_id, field, value) do
-    :put
-    |> conn("/apis/#{api_id}", Poison.encode!(%{field => value}))
-    |> put_req_header("content-type", "application/json")
-    |> Gateway.PrivateRouter.call([])
+    "http://localhost:5001/apis/#{api_id}"
+    |> HTTPoison.put!(Poison.encode!(%{field => value}), [{"content-type", "application/json"}])
   end
 
   defp create_api do
