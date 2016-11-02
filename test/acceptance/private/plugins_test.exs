@@ -2,40 +2,54 @@ defmodule Gateway.Acceptance.Private.PluginsTest do
   use Gateway.AcceptanceCase
 
   test "invalid JWT Plugin settings" do
+    "apis"
+    |> post(Poison.encode!(invalid_plugin_data("JWT")), :private)
+    |> assert_status(422)
+
     data = get_api_model_data()
     |> Map.put(:plugins, [
-      %{name: "JWT", is_enabled: false, settings: %{"invalid" => "data"}},
+      %{name: "JWT", is_enabled: false, settings: %{"signature" => 1000}},
     ])
 
     "apis"
     |> post(Poison.encode!(data), :private)
     |> assert_status(422)
+  end
+
+  test "invalid Validator Plugin settings" do
+    "apis"
+    |> post(Poison.encode!(invalid_plugin_data("Validator")), :private)
+    |> assert_status(422)
 
     data = get_api_model_data()
     |> Map.put(:plugins, [
-      %{name: "JWT", is_enabled: false, settings: %{"invalid" => %{"another" => "map"}}},
+      %{name: "Validator", is_enabled: false, settings: %{"schema" => "{invalid: schema: json]"}},
     ])
 
-    IO.inspect "apis"
+    "apis"
     |> post(Poison.encode!(data), :private)
     |> assert_status(422)
   end
 
-  test "valid JWT Plugin settings" do
+  test "invalid ACL Plugin settings" do
+    "apis"
+    |> post(Poison.encode!(invalid_plugin_data("ACL")), :private)
+    |> assert_status(422)
+
     data = get_api_model_data()
     |> Map.put(:plugins, [
-      %{name: "JWT", is_enabled: false, settings: %{"signature" => "string", "invalid" => "data"}},
+      %{name: "ACL", is_enabled: false, settings: %{"scope" => 100}},
     ])
 
-     %HTTPoison.Response{body: body} = "apis"
+    "apis"
     |> post(Poison.encode!(data), :private)
-    |> assert_status(201)
+    |> assert_status(422)
+  end
 
-    IO.inspect Poison.decode!(body)
-
-    assert %{"signature" => "string"} == body
-    |> Poison.decode!()
-    |> get_in(["data", "plugins"])
-    |> elem()
+  defp invalid_plugin_data(plugin_name) when is_binary(plugin_name) do
+    get_api_model_data()
+    |> Map.put(:plugins, [
+      %{name: plugin_name, is_enabled: false, settings: %{"invalid" => "data"}},
+    ])
   end
 end

@@ -4,7 +4,6 @@ defmodule Gateway.DB do
   """
   import Ecto.Changeset
   alias Ecto.Changeset
-require Logger
 
   def model do
     quote do
@@ -14,25 +13,13 @@ require Logger
       import Changeset
       import Ecto.Query
       import Gateway.DB
+      import Gateway.Changeset.SettingsValidator
     end
   end
 
   defmacro __using__(which) when is_atom(which) do
     apply(__MODULE__, which, [])
   end
-
-  def validate_settings(%Changeset{changes: %{name: :JWT, settings: %{"signature" => signature}}} = ch)
-        when is_binary(signature) and byte_size(signature) <= 256 do
-    ch
-    |> put_change(:settings, %{"signature" => signature})
-  end  
-  def validate_settings(%Changeset{changes: %{name: :JWT, settings: %{"signature" => signature}}} = ch) do
-    add_error(ch, :settings, "JWT settings field 'signature' must be a string with binary length <= 256")
-  end
-  def validate_settings(%Changeset{changes: %{name: :JWT}} = ch) do
-    add_error(ch, :settings, "JWT settings required field 'signature'")
-  end
-  def validate_settings(ch), do: ch
 
   def validate_map(%Changeset{} = ch, field) do
     ch
