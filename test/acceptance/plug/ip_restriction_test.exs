@@ -32,16 +32,10 @@ defmodule Gateway.Acceptance.Plug.IPRestrictionTest do
     |> api_ip_restriction_data()
     |> http_api_create()
 
-    response = @request.path
+    @request.path
     |> String.replace_prefix("/", "")
     |> get(:public)
     |> assert_status(404)
-    |> get_body()
-    |> Poison.decode!
-
-    body = Poison.decode! response.body
-
-    assert "blacklisted" !== body["meta"]["description"]
   end
 
   def api_ip_restriction_data(settings) when is_map(settings) do
