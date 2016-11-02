@@ -45,7 +45,7 @@ defmodule Gateway.ClusterConfigReloaderTest do
     |> Gateway.PrivateRouter.call([])
   end
 
-  defp create_api() do
+  defp create_api do
     map =
       %{
         name: "Test api",
@@ -58,7 +58,8 @@ defmodule Gateway.ClusterConfigReloaderTest do
         }
       }
 
-    HTTPoison.post!("http://localhost:5001/apis", Poison.encode!(map), [{"content-type", "application/json"}])
+    "http://localhost:5001/apis"
+    |> HTTPoison.post!(Poison.encode!(map), [{"content-type", "application/json"}])
     |> Map.get(:body)
     |> Poison.decode!
     |> Map.get("data")
