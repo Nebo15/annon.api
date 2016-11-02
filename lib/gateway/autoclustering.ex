@@ -55,10 +55,14 @@ defmodule Gateway.AutoClustering do
   end
 
   def do_reload_config do
-    apis =
-      Gateway.DB.Models.API
-      |> Gateway.DB.Repo.all()
-      |> Enum.map(fn api -> {{:api, api.id}, api} end)
+    import Ecto.Query, only: [from: 2]
+
+    query = from a in Gateway.DB.Models.API,
+            preload: [:plugins]
+
+    apis = query
+    |> Gateway.DB.Repo.all()
+    |> Enum.map(fn api -> {{:api, api.id}, api} end)
 
     :ets.insert(:config, apis)
 

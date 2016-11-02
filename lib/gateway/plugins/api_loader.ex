@@ -13,14 +13,20 @@ defmodule Gateway.Plugins.APILoader do
 
   # TODO: Get data from the cache, not from the DataBase
   def get_config(conn) do
-    query = from a in Gateway.DB.Models.API,
-            preload: [:plugins]
+    match_spec = %{
+      request: %{
+        host: conn.host,
+        method: conn.method,
+        port: conn.port,
+        scheme: conn.scheme
+      }
+    }
 
-    models = query
-    |> Gateway.DB.Repo.all()
+    [{_, api}] =
+      :config
+      |> :ets.match_object({:_, match_spec})
 
-    models
-    |> Enum.find(fn(x) -> equal?(x, conn) end)
+    api
   end
 
   def equal?(%{request: %{} = r}, c) do
