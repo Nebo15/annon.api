@@ -36,14 +36,8 @@ defmodule Gateway.UnitCase do
   def assert_not_halt(%Plug.Conn{halted: false} = plug), do: plug
 
   setup tags do
-    opts =
-      case tags[:cluster] do
-        true -> [sandbox: false]
-        _ -> []
-      end
-
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Repo, opts)
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Logger.Repo, opts)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Logger.Repo)
 
     unless tags[:async] do
       Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Repo, {:shared, self()})
