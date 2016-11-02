@@ -4,7 +4,7 @@ defmodule Gateway.ClusterConfigReloaderTest do
   across cluster after a config change
   """
 
-  use Gateway.UnitCase
+  use Gateway.AcceptanceCase
 
   @tag cluster: true
   test "correct communication between processes" do
