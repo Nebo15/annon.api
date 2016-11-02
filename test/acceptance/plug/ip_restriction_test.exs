@@ -33,26 +33,21 @@ defmodule Gateway.Acceptance.Plug.IPRestrictionTest do
     create_api
     |> create_plugin(%{"ip_blacklist" => ["127.0.0.*"]})
 
-    {:ok, response} = @request.path
+    {:ok, %HTTPoison.Response{status_code: status_code}} = @request.path
     |> String.replace_prefix("/", "")
     |> get(:public)
 
-    body = Poison.decode! response.body
-
-    assert 400 === body["meta"]["code"]
-    assert "blacklisted" === body["meta"]["description"]
+    assert 400 === status_code
   end
 
   test "check blacklist + whitelist" do
     create_api
     |> create_plugin(%{"ip_blacklist" => ["127.0.0.*"], "ip_whitelist" => ["127.0.0.1"]})
 
-    {:ok, response} = @request.path
+    {:ok, %HTTPoison.Response{status_code: status_code}} = @request.path
     |> String.replace_prefix("/", "")
     |> get(:public)
 
-    body = Poison.decode! response.body
-
-    assert "blacklisted" !== body["meta"]["description"]
+    assert 404 === status_code
   end
 end
