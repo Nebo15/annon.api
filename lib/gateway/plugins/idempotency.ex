@@ -27,7 +27,7 @@ defmodule Gateway.Plugins.Idempotency do
   defp execute(_, conn), do: conn
 
   defp load_log_request([key]) when is_binary(key) do
-    Log.get_record_by([idempotency_key: key])
+    Log.get_by([idempotency_key: key])
   end
   defp load_log_request(_), do: nil
 
