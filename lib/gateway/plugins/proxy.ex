@@ -4,6 +4,7 @@ defmodule Gateway.Plugins.Proxy do
   See more https://github.com/jonasschmidt/ex_json_schema
   """
   import Plug.Conn
+  import Gateway.Helpers.IP
   alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.API, as: APIModel
 
@@ -59,8 +60,10 @@ defmodule Gateway.Plugins.Proxy do
   end
 
   defp add_additional_headers(headers, conn) do
-    for {key, value} <- headers, do: put_req_header(conn, key, value)
-    conn
+    headers = headers ++ [%{"x-forwarded-for" => ip_to_string(conn.remote_ip)}]
+    headers
+    |> Enum.map(fn(header) -> with {key, value} <- header |> Enum.at(0), do: put_req_header(conn, key, value) end)
+    |> List.last()
   end
 
   defp get_additional_headers(%Plugin{settings: %{"additional_headers" => headers}}), do: headers
