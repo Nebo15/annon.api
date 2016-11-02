@@ -30,20 +30,20 @@ defmodule Gateway.DB.Models.Log do
       field :method, :string
       field :uri, :string
       field :query, :map
-      field :headers, :map
+      field :headers, {:array, :map}
       field :body, :map
     end
 
     embeds_one :response, Response, primary_key: false do
-      field :status_code, :string
+      field :status_code, :integer
       field :headers, :map
       field :body, :map
     end
 
     embeds_one :latencies, Latencies, primary_key: false do
-      field :gateway, :string
-      field :upstream, :string
-      field :client_request, :string
+      field :gateway, :integer
+      field :upstream, :integer
+      field :client_request, :integer
     end
 
     field :idempotency_key, :string
@@ -92,8 +92,9 @@ defmodule Gateway.DB.Models.Log do
   end
 
   def changeset_embeded_api_request(data, params \\ %{}) do
+    params = Map.from_struct(params)    
     data
-    |> cast(params, [:scheme, :host, :port, :path, :body])
+    |> cast(params, [:scheme, :host, :port, :path])
   end
 
   def changeset_embeded_consumer(data, params \\ %{}) do
