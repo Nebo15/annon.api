@@ -22,11 +22,22 @@ defmodule Gateway.Plugins.APILoader do
         path: conn.request_path
       }
     }
+    |> IO.inspect
 
+    :ets.tab2list(:config)
+    |> IO.inspect
+
+    IO.puts "In DB:"
+    Gateway.DB.Repo.all(Gateway.DB.Models.API)
+    |> IO.inspect
+
+
+    IO.puts "Result:"
     case :ets.match_object(:config, {:_, match_spec}) do
       [{_, api}] -> api
       _ -> nil
     end
+    |> IO.inspect
   end
 
   def normalize_scheme(scheme) when is_atom(scheme) do
