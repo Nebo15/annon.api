@@ -51,7 +51,7 @@ defmodule Gateway.Mixfile do
   defp deps do
     [{:distillery, "~> 0.10.1"},
      {:libcluster, github: "gmile/libcluster", branch: "master"},
-     {:confex, github: "gmile/confex", branch: "support-atom-as-config-value", override: true},
+     {:confex, "~> 1.4.2"},
      {:plug, ">= 0.0.0"},
      {:cowboy, ">= 0.0.0"},
      {:postgrex, ">= 0.0.0", override: true},
