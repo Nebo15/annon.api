@@ -60,8 +60,8 @@ defmodule Gateway.Plugins.Proxy do
   end
 
   def add_additional_headers(headers, conn) do
-    headers = headers ++ [%{"x-forwarded-for" => ip_to_string(conn.remote_ip)}]
     headers
+    |> Kernel.++([%{"x-forwarded-for" => ip_to_string(conn.remote_ip)}])
     |> Enum.reduce(conn, fn(header, conn) -> with {k, v} <- header |> Enum.at(0), do: put_req_header(conn, k, v) end)
   end
 

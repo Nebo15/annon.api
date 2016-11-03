@@ -21,8 +21,7 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
     |> assert_status(201)
     |> get_body()
     |> Poison.decode!
-    |> Map.get("data")
-    |> Map.get("id")
+    |> get_in(["data", "id"])
 
     proxy_plugin = %{ name: "Proxy", is_enabled: true,
                       settings: %{
@@ -79,8 +78,7 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
     |> assert_status(201)
     |> get_body()
     |> Poison.decode!
-    |> Map.get("data")
-    |> Map.get("id")
+    |> get_in(["data", "id"])
 
     @api_url
     |> post(Poison.encode!(get_api_proxy_data("/proxy/test")), :private)
