@@ -2,61 +2,49 @@ defmodule Gateway.Changeset.SettingsValidator do
   @moduledoc """
     Changeset validator for Plugin settings
   """
-  alias Gateway.DB.Models.Request
   alias Ecto.Changeset
   import Ecto.Changeset
 
   # JWT
-  def validate_settings(%Changeset{changes: %{name: :JWT, settings: %{"signature" => s}}} = ch) when is_binary(s) do
-    ch
-  end
-  def validate_settings(%Changeset{changes: %{name: :JWT, settings: %{"signature" => _}}} = ch) do
-    add_error(ch, :settings, "JWT.settings field 'signature' must be a string")
-  end
-  def validate_settings(%Changeset{changes: %{name: :JWT}} = ch) do
-    add_error(ch, :settings, "JWT.settings required field 'signature'")
-  end
-
-  # Validator
-  def validate_settings(%Changeset{changes: %{name: :Validator, settings: %{"schema" => s}}} = ch) when is_binary(s) do
-    s
-    |> Poison.decode()
-    |> validate_json_schema(ch)
-  end
-  def validate_settings(%Changeset{changes: %{name: :Validator, settings: %{"schema" => _}}} = ch) do
-    add_error(ch, :settings, "Validator.settings field 'schema' must be a string")
-  end
-  def validate_settings(%Changeset{changes: %{name: :Validator}} = ch) do
-    add_error(ch, :settings, "Validator.settings field 'schema' is required")
+  def validate_settings(%Changeset{changes: %{name: :JWT, settings: settings}} = ch) do
+    {%{}, %{signature: :string}}
+    |> cast(settings, [:signature])
+    |> validate_required([:signature])
+    |> put_changeset_errors(ch)
   end
 
   # ACL
-  def validate_settings(%Changeset{changes: %{name: :ACL, settings: %{"scope" => s}}} = ch) when is_binary(s) do
-    ch
+  def validate_settings(%Changeset{changes: %{name: :ACL, settings: settings}} = ch) do
+    {%{}, %{scope: :string}}
+    |> cast(settings, [:scope])
+    |> validate_required([:scope])
+    |> put_changeset_errors(ch)
   end
-  def validate_settings(%Changeset{changes: %{name: :ACL, settings: %{"scope" => _}}} = ch) do
-    add_error(ch, :settings, "ACL.settings field 'scope' must be a string")
-  end
-  def validate_settings(%Changeset{changes: %{name: :ACL}} = ch) do
-    add_error(ch, :settings, "ACL.settings required field 'scope'")
+
+  # Validator
+  def validate_settings(%Changeset{changes: %{name: :Validator, settings: settings}} = ch) do
+    {%{}, %{schema: :string}}
+    |> cast(settings, [:schema])
+    |> validate_required([:schema])
+    |> validate_json(:schema)
+    |> put_changeset_errors(ch)
   end
 
   # IPRestriction
-  def validate_settings(%Changeset{changes:
-    %{name: :IPRestriction, settings: %{"ip_whitelist" => w, "ip_blacklist" => b}}} = ch)
-    when is_binary(w) and is_binary(b) do
-    ch
-    |> validate_ip_list(Poison.decode(w), "ip_whitelist")
-    |> validate_ip_list(Poison.decode(b), "ip_blacklist")
-  end
-  def validate_settings(%Changeset{changes: %{name: :IPRestriction}} = ch) do
-    add_error(ch, :settings, "IPRestriction.settings required string fields 'ip_whitelist' and 'ip_blacklist'")
+  def validate_settings(%Changeset{changes: %{name: :IPRestriction, settings: settings}} = ch) do
+    {%{}, %{ip_whitelist: :string, ip_blacklist: :string}}
+    |> cast(settings, [:ip_blacklist, :ip_whitelist])
+    |> validate_ip_list(:ip_whitelist)
+    |> validate_ip_list(:ip_blacklist)
+    |> put_changeset_errors(ch)
   end
 
   # Proxy
   def validate_settings(%Changeset{changes: %{name: :Proxy, settings: settings}} = ch) do
-    %Request{}
-    |> Request.changeset_proxy(settings)
+    {%{}, %{scheme: :string, host: :string, port: :integer, path: :string, method: :string}}
+    |> cast(settings, [:scheme, :host, :port, :path, :method])
+    |> validate_required([:host])
+    |> validate_format(:scheme, ~r/^(http|https)$/)
     |> put_changeset_errors(ch)
   end
 
@@ -64,43 +52,45 @@ defmodule Gateway.Changeset.SettingsValidator do
   def validate_settings(ch), do: ch
 
   # helpers
-  defp put_changeset_errors(%Changeset{valid?: true}, ch), do: ch
-  defp put_changeset_errors(%Changeset{valid?: false, errors: errors}, ch) do
+  defp validate_json(%Changeset{} = ch, field) do
     ch
-    |> Map.merge(%{errors: errors, valid?: false})
+    |> get_field(field, "")
+    |> Poison.decode()
+    |> validate_json(ch)
   end
-
-  defp validate_json_schema({:ok, _}, ch), do: ch
-  defp validate_json_schema({:error, _}, ch) do
+  defp validate_json({:ok, _}, ch), do: ch
+  defp validate_json({:error, _}, ch) do
     add_error(ch, :settings, "Validator.settings: field 'schema' is invalid json", [validation: :json, json: []])
   end
 
-  defp validate_ip_list(ch, {:ok, list}, name) when is_list(list) do
-    list
+  defp validate_ip_list(%Changeset{} = ch, field) do
+    ch
+    |> get_field(field, "")
+    |> String.split(",")
     |> Enum.reduce_while(ch, fn(ip, acc) ->
       ip
       |> ip_valid?()
-      |> put_ip_error(acc, name)
+      |> put_ip_error(acc, field)
      end)
-  end
-  defp validate_ip_list(ch, {:ok, _}, name) do
-    add_error(ch, :settings, "IPRestriction.settings field '#{name}' must be a valid JSON list")
-  end
-  defp validate_ip_list(ch, {:error, _}, name) do
-    add_error(ch, :settings, "IPRestriction.settings field '#{name}' must be a valid JSON list")
-  end
-
-  defp put_ip_error(false, ch, name) do
-    ch = ch
-    |> add_error(:settings, "IPRestriction.settings field '#{name}' must contain valid ip addresses")
-    {:halt, ch}
-  end
-  defp put_ip_error(true, ch, _name) do
-    {:cont, ch}
   end
 
   def ip_valid?(ip) do
     ~r/^(?:(?:\*|25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:\*|25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
     |> Regex.match?(ip)
+  end
+
+  defp put_ip_error(true, ch, _name), do: {:cont, ch}
+  defp put_ip_error(false, ch, name) do
+    {:halt, add_error(ch,
+                      :settings,
+                      "IPRestriction.settings field '#{name}' must contain valid ip addresses",
+                      [validation: :format, format: []]
+                      )}
+  end
+
+  defp put_changeset_errors(%Changeset{valid?: true}, ch), do: ch
+  defp put_changeset_errors(%Changeset{valid?: false, errors: errors}, ch) do
+    ch
+    |> Map.merge(%{errors: errors, valid?: false})
   end
 end

@@ -53,7 +53,7 @@ defmodule Gateway.Acceptance.Private.PluginsTest do
 
     data = get_api_model_data()
     |> Map.put(:plugins, [
-      %{name: "IPRestriction", is_enabled: false, settings: %{"ip_blacklist" => 100, "ip_whitelist" => "[]"}},
+      %{name: "IPRestriction", is_enabled: false, settings: %{"ip_blacklist" => 100, "ip_whitelist" => "127.0.0.1"}},
     ])
     "apis"
     |> post(Poison.encode!(data), :private)
@@ -61,7 +61,7 @@ defmodule Gateway.Acceptance.Private.PluginsTest do
 
     data = get_api_model_data()
     |> Map.put(:plugins, [
-      %{name: "IPRestriction", is_enabled: false, settings: %{"ip_whitelist" => "[]"}},
+      %{name: "IPRestriction", is_enabled: false, settings: %{"ip_whitelist" => "127.0.0.1"}},
     ])
     "apis"
     |> post(Poison.encode!(data), :private)
@@ -79,8 +79,8 @@ defmodule Gateway.Acceptance.Private.PluginsTest do
 
     data = get_api_model_data()
     |> Map.put(:plugins, [
-      %{name: "IPRestriction", is_enabled: false, settings: %{"ip_blacklist" => Poison.encode!(["127.0.0.1"]),
-                                                              "ip_whitelist" => Poison.encode!(["127.0.0.256"])}},
+      %{name: "IPRestriction", is_enabled: false, settings: %{"ip_blacklist" => "127.0.0.1",
+                                                              "ip_whitelist" => "127.0.0.256"}},
     ])
     "apis"
     |> post(Poison.encode!(data), :private)
