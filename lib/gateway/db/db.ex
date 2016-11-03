@@ -1,6 +1,6 @@
 defmodule Gateway.DB do
   @moduledoc """
-  Shortener for models definitions.
+  Shortener for schemas definitions.
   """
   import Ecto.Changeset
   alias Ecto.Changeset
@@ -31,7 +31,7 @@ defmodule Gateway.DB do
   def normalize_ecto_delete({1, _}), do: {:ok, nil}
 
   def normalize_ecto_update({0, _}), do: nil
-  def normalize_ecto_update({1, [schema]}), do: schema
+  def normalize_ecto_update({1, [updated_schema]}), do: updated_schema
   def normalize_ecto_update({:error, ch}), do: {:error, ch}
 
   defp validate_map_size(map, ch, field) when is_map(map) and map_size(map) <= 128, do: {ch, map, field}
