@@ -86,6 +86,8 @@ defmodule Gateway.AcceptanceCase do
         ["logs"]
         |> Enum.map(fn table -> truncate_table Gateway.DB.Logger.Repo, table end)
 
+        :ets.delete_all_objects(:config)
+
         :ok
       end
 
