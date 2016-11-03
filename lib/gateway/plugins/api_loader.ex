@@ -7,15 +7,12 @@ defmodule Gateway.Plugins.APILoader do
 
   def init(opts), do: opts
 
-  def call(conn, _), do: put_private(conn, :api_config, conn |> get_config)
+  def call(conn, _opts), do: put_private(conn, :api_config, conn |> get_config)
 
   # TODO: Get data from the cache, not from the DataBase
   def get_config(conn) do
-    query = from a in Gateway.DB.Schemas.API,
-            preload: [:plugins]
-
-    models = query
-    |> Gateway.DB.Configs.Repo.all()
+    models = Gateway.DB.Configs.Repo.all from a in Gateway.DB.Schemas.API,
+      preload: [:plugins]
 
     models
     |> Enum.find(fn(x) -> equal?(x, conn) end)
@@ -26,8 +23,11 @@ defmodule Gateway.Plugins.APILoader do
   end
 
   def equal_host?(%{host: host}, conn), do: conn.host == host
+
   def equal_method?(%{method: method}, conn), do: conn.method == method
+
   def equal_port?(%{port: port}, conn), do: conn.port == port
+
   def equal_scheme?(%{scheme: scheme}, %Plug.Conn{scheme: conn_scheme}) when is_atom(conn_scheme) do
     conn_scheme
     |> Atom.to_string

@@ -5,6 +5,7 @@ defmodule Gateway.HTTPHelpers.Response do # TODO: rename to Helpers.HTTPResponse
   def render_delete_response({:ok, _resource}, conn), do: render_response(%{}, conn, 200)
   def render_delete_response(_, conn), do: render_response(nil, conn)
 
+  # TODO: rename to render()
   def render_response({:ok, resource}, conn, status \\ 200), do: render_response(resource, conn, status)
   def render_response({:error, changeset}, conn, _) do
     conn
