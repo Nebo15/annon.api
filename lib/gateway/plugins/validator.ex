@@ -3,62 +3,36 @@ defmodule Gateway.Plugins.Validator do
   Plugin which validates request based on ex_json_schema.
   See more https://github.com/nebo15/nex_json_schema
   """
-  import Plug.Conn
+  use Gateway.Helpers.Plugin,
+    plugin_name: :validator
+
+  alias Plug.Conn
+
   alias Gateway.DB.Schemas.Plugin
   alias Gateway.DB.Schemas.API, as: APIModel
-
-  def init(opts), do: opts
+  alias Gateway.HTTPHelpers.Response
+  alias EView.Views.ValidationError, as: ValidationErrorView
 
   def call(%Plug.Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
     plugins
-    |> get_enabled()
-    |> validate(conn)
+    |> find_plugin_settings()
+    |> execute(conn)
   end
   def call(conn, _), do: conn
 
-  defp validate(%Plugin{settings: %{"schema" => schema}}, %Plug.Conn{body_params: %{} = body} = conn) do
+  defp execute(%Plugin{settings: %{"schema" => schema}}, %Plug.Conn{body_params: %{} = body} = conn) do
     schema
     |> Poison.decode!()
     |> NExJsonSchema.Validator.validate(body)
     |> normalize_validation(conn)
   end
-  defp validate(_, conn), do: conn
+  defp execute(_, conn), do: conn
 
   defp normalize_validation(:ok, conn), do: conn
   defp normalize_validation({:error, errors}, conn) do
-    conn
-    |> put_resp_content_type("application/json")
-    |> send_resp(422, create_json_response(errors))
-    |> halt
+    "422.json"
+    |> ValidationErrorView.render(%{schema: errors})
+    |> Response.render_response(conn, 422)
+    |> Conn.halt
   end
-
-  # TODO: Use Gateway.HTTPHelpers.Response and EView
-  defp create_json_response(errors) when is_list(errors) do
-    Poison.encode!(%{
-      meta: %{
-        code: 422,
-        description: "Validation Errors",
-        error: errors |> Enum.map(&map_schema_errors/1)
-      }
-    })
-  end
-
-  defp map_schema_errors({rule, path}) do
-    %{
-      entry_type: "json_data_property",
-      entry: path,
-      rules: [%{rule: get_rule_name(rule)}]
-    }
-  end
-
-  defp get_rule_name("can't be blank"), do: :required
-  defp get_rule_name("is invalid"), do: :invalid
-  defp get_rule_name(msg), do: msg
-
-  defp get_enabled(plugins) when is_list(plugins) do
-    plugins
-    |> Enum.find(&filter_plugin/1)
-  end
-  defp filter_plugin(%Plugin{name: :validator, is_enabled: true}), do: true
-  defp filter_plugin(_), do: false
 end
