@@ -86,9 +86,7 @@ defmodule Gateway.AcceptanceCase do
         ["logs"]
         |> Enum.map(fn table -> truncate_table Gateway.DB.Logger.Repo, table end)
 
-        on_exit(fn ->
-          reset_cache()
-        end)
+        :ets.delete_all_objects(:config)
 
         :ok
       end
@@ -101,10 +99,6 @@ defmodule Gateway.AcceptanceCase do
       defp get_key(key) when is_atom(key), do: key
       defp prepare_params(params) when params == nil, do: %{}
       defp prepare_params(params), do: for {key, val} <- params, into: %{}, do: {get_key(key), val}
-
-      defp reset_cache() do
-        :ets.delete_all_objects(:config)
-      end
     end
   end
 end
