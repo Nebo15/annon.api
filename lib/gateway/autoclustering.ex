@@ -54,9 +54,9 @@ defmodule Gateway.AutoClustering do
     {:noreply, state}
   end
 
-  def do_reload_config do
-    import Ecto.Query, only: [from: 2]
+  import Ecto.Query, only: [from: 2]
 
+  def do_reload_config do
     query = from a in Gateway.DB.Models.API,
             join: Gateway.DB.Models.Plugin,
             preload: [:plugins]
