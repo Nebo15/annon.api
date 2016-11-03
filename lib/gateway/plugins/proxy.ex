@@ -4,6 +4,7 @@ defmodule Gateway.Plugins.Proxy do
   See more https://github.com/jonasschmidt/ex_json_schema
   """
   import Plug.Conn
+  import Gateway.Helpers.IP
   alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.API, as: APIModel
 
@@ -17,9 +18,12 @@ defmodule Gateway.Plugins.Proxy do
   def call(conn, _), do: conn
 
   defp execute(nil, conn), do: conn
-  defp execute(%Plugin{settings: settings}, conn) do
+  defp execute(%Plugin{settings: settings} = plugin, conn) do
+    conn = plugin
+    |> get_additional_headers()
+    |> add_additional_headers(conn)
+
     settings
-    # TODO: maybe add some headers from the settings
     # TODO: check variables
     |> do_proxy(conn)
   end
@@ -53,6 +57,15 @@ defmodule Gateway.Plugins.Proxy do
     |> put_port(proxy)
     |> put_path(proxy, conn)
   end
+
+  def add_additional_headers(headers, conn) do
+    headers
+    |> Kernel.++([%{"x-forwarded-for" => ip_to_string(conn.remote_ip)}])
+    |> Enum.reduce(conn, fn(header, conn) -> with {k, v} <- header |> Enum.at(0), do: put_req_header(conn, k, v) end)
+  end
+
+  defp get_additional_headers(%Plugin{settings: %{"additional_headers" => headers}}), do: headers
+  defp get_additional_headers(_), do: []
 
   defp put_scheme(%{"scheme" => scheme}, _conn), do: scheme <> "://"
   defp put_scheme(_, %Plug.Conn{scheme: scheme}), do: Atom.to_string(scheme) <> "://"
