@@ -16,7 +16,7 @@ defmodule Gateway.HTTP.Requests do
 
   get "/:request_id" do
     [id: request_id]
-    |> Log.get_record_by()
+    |> Log.get_by()
     |> render_response(conn)
   end
 
