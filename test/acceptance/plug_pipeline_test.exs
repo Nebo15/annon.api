@@ -97,7 +97,7 @@ defmodule Gateway.Acceptance.PlugPipelineTest do
     |> assert_resp_body_json()
 
     "pipeline"
-    |> post(~s({"description": "go"}), :public, get_valid_headers())
+    |> post(~s({"name":"smth","description": "go"}), :public, get_valid_headers())
     |> assert_status(409)
     |> assert_resp_body_json()
 

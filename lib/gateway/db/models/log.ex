@@ -36,8 +36,8 @@ defmodule Gateway.DB.Models.Log do
 
     embeds_one :response, Response, primary_key: false do
       field :status_code, :integer
-      field :headers, :map
-      field :body, :map
+      field :headers, {:array, :map}
+      field :body, :string
     end
 
     embeds_one :latencies, Latencies, primary_key: false do
