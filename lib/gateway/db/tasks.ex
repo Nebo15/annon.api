@@ -12,6 +12,7 @@ defmodule :os_gateway_tasks do
 
     Gateway.DB.Repo
     |> start_repo
+    |> Ecto.Migrator.run(migrations_dir, :up, all: true)
 
     Gateway.DB.Logger.Repo
     |> start_repo
