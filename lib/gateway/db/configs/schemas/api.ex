@@ -57,7 +57,9 @@ defmodule Gateway.DB.Schemas.API do
   end
 
   def delete(api_id) do
-    q = from a in APIModel, where: a.id == ^api_id
+    q = from a in APIModel,
+      where: a.id == ^api_id
+
     q
     |> Repo.delete_all
     |> normalize_ecto_delete

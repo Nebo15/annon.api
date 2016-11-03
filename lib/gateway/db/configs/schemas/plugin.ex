@@ -2,18 +2,10 @@ defmodule Gateway.DB.Schemas.Plugin do
   @moduledoc """
   Model for address
   """
-<<<<<<< 2d43e39a055f98e7d922a2065030a13bd97ed4c2:lib/gateway/db/models/plugin.ex
-  use Gateway.DB, :model
-  alias Gateway.DB.Repo
-  alias Gateway.DB.Models.Plugin
-  alias Gateway.DB.Models.API, as: APIModel
-  import Gateway.Changeset.SettingsValidator
-=======
   use Gateway.DB, :schema
   alias Gateway.DB.Configs.Repo
   alias Gateway.DB.Schemas.Plugin
   alias Gateway.DB.Schemas.API, as: APIModel
->>>>>>> Refactored models to schemas (ecto 2.1):lib/gateway/db/configs/schemas/plugin.ex
 
   @derive {Poison.Encoder, except: [:__meta__, :api]}
   schema "plugins" do
