@@ -1,13 +1,14 @@
 defmodule :gateway_tasks do
   @moduledoc """
   Nice way to apply migrations inside a released application.
+
   Example:
-      ./bin/$APP_NAME command "tr_db_tasks" migrate!
+      ./bin/$APP_NAME command "gateway_tasks" migrate!
   """
 
   @otp_app :gateway
   @repos Confex.get(@otp_app, :ecto_repos)
-  @default_migrations_dir Path.join(["priv", "repos", "migrations"]
+  @default_migrations_dir Path.join(["priv", "repos", "migrations"])
 
   def migrate! do
     load_app()
