@@ -125,8 +125,7 @@ defmodule Gateway.Acceptance.PlugPipelineTest do
 
     assert amount == body
     |> Poison.decode!()
-    |> Map.fetch("data")
-    |> elem(1)
+    |> Map.get("data")
     |> Enum.count()
   end
 
