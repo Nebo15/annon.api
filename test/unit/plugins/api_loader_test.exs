@@ -4,7 +4,7 @@ defmodule Gateway.Plugins.APILoaderTest do
   """
 
   use Gateway.UnitCase
-  alias Gateway.DB.Models.API, as: APIModel
+  alias Gateway.DB.Schemas.API, as: APIModel
 
   test "correctly set config into private part" do
 

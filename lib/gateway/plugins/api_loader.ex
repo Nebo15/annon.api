@@ -1,9 +1,7 @@
 defmodule Gateway.Plugins.APILoader do
-
   @moduledoc """
-  Plugin which get all configuration by endpoint
+  Plugin which get all configuration by endpoint.
   """
-
   import Plug.Conn
   import Ecto.Query, only: [from: 2]
 
@@ -13,11 +11,11 @@ defmodule Gateway.Plugins.APILoader do
 
   # TODO: Get data from the cache, not from the DataBase
   def get_config(conn) do
-    query = from a in Gateway.DB.Models.API,
+    query = from a in Gateway.DB.Schemas.API,
             preload: [:plugins]
 
     models = query
-    |> Gateway.DB.Repo.all()
+    |> Gateway.DB.Configs.Repo.all()
 
     models
     |> Enum.find(fn(x) -> equal?(x, conn) end)

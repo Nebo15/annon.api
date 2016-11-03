@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :gateway, Gateway.DB.Repo,
+config :gateway, Gateway.DB.Configs.Repo,
   adapter: Ecto.Adapters.Postgres,
   database: System.get_env("MIX_TEST_DATABASE") || "gateway_test",
   pool: Ecto.Adapters.SQL.Sandbox

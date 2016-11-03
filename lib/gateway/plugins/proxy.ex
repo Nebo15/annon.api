@@ -1,12 +1,11 @@
 defmodule Gateway.Plugins.Proxy do
   @moduledoc """
-  Plugin which validates request based on ex_json_schema
-  See more https://github.com/jonasschmidt/ex_json_schema
+  Plugin that proxies requests to upstream back-ends.
   """
   import Plug.Conn
   import Gateway.Helpers.IP
-  alias Gateway.DB.Models.Plugin
-  alias Gateway.DB.Models.API, as: APIModel
+  alias Gateway.DB.Schemas.Plugin
+  alias Gateway.DB.Schemas.API, as: APIModel
 
   def init(opts), do: opts
 

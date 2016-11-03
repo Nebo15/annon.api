@@ -10,9 +10,9 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
 
   import Ecto.Query, only: [from: 2]
 
-  alias Gateway.DB.Repo
-  alias Gateway.DB.Models.Plugin
-  alias Gateway.DB.Models.ConsumerPluginSettings
+  alias Gateway.DB.Configs.Repo
+  alias Gateway.DB.Schemas.Plugin
+  alias Gateway.DB.Schemas.ConsumerPluginSettings
 
   get "/:external_id/plugins" do
     ConsumerPluginSettings

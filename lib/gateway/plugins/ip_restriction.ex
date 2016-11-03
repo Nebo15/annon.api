@@ -1,11 +1,11 @@
 defmodule Gateway.Plugins.IPRestriction do
   @moduledoc """
-  IP restriction plug
+  IP restriction plug.
   """
   import Gateway.HTTPHelpers.Response
   import Gateway.Helpers.IP
-  alias Gateway.DB.Models.Plugin
-  alias Gateway.DB.Models.API, as: APIModel
+  alias Gateway.DB.Schemas.Plugin
+  alias Gateway.DB.Schemas.API, as: APIModel
 
   def init(opts), do: opts
 

@@ -1,16 +1,16 @@
 defmodule Gateway.Plugins.JWT do
   @moduledoc """
-    Plugin for JWT verifying and decoding
+  Plugin for JWT verifying and decoding.
   """
   import Joken
   import Plug.Conn
   import Ecto.Query, only: [from: 2]
 
   alias Joken.Token
-  alias Gateway.DB.Repo
-  alias Gateway.DB.Models.Plugin
-  alias Gateway.DB.Models.Consumer
-  alias Gateway.DB.Models.API, as: APIModel
+  alias Gateway.DB.Configs.Repo
+  alias Gateway.DB.Schemas.Plugin
+  alias Gateway.DB.Schemas.Consumer
+  alias Gateway.DB.Schemas.API, as: APIModel
 
   def init([]), do: false
 

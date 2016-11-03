@@ -1,4 +1,4 @@
-defmodule Gateway.DB.Repo do
+defmodule Gateway.DB.Configs.Repo do
   @moduledoc """
   Repo for Gateway database.
   """

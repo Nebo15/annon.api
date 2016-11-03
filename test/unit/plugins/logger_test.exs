@@ -2,7 +2,7 @@ defmodule Gateway.LoggerTest do
   use Plug.Test
   use Gateway.AcceptanceCase
 
-  alias Gateway.DB.Models.Log
+  alias Gateway.DB.Schemas.Log
 
   @random_url "random_url"
   @random_data %{"data" => "random"}

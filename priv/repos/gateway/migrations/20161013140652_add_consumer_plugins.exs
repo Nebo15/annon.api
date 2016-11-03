@@ -1,4 +1,4 @@
-defmodule Gateway.DB.Repo.Migrations.AddConsumerPluginSettings do
+defmodule Gateway.DB.Configs.Repo.Migrations.AddConsumerPluginSettings do
   use Ecto.Migration
 
   def change do

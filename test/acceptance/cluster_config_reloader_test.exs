@@ -29,12 +29,12 @@ defmodule Gateway.ClusterConfigReloaderTest do
     assert "New name" == check_api_on_node(api_id, :name, :'node1@127.0.0.1')
     assert "New name" == check_api_on_node(api_id, :name, :'node2@127.0.0.1')
 
-    Gateway.DB.Models.API
-    |> Gateway.DB.Repo.delete_all()
+    Gateway.DB.Schemas.API
+    |> Gateway.DB.Configs.Repo.delete_all()
   end
 
   defp ensure_the_change_is_visible_on(nodename) do
-    :rpc.block_call(nodename, Gateway.DB.Repo, :all, [Gateway.DB.Models.API])
+    :rpc.block_call(nodename, Gateway.DB.Configs.Repo, :all, [Gateway.DB.Schemas.API])
   end
 
   defp check_api_on_node(api_id, field, nodename) do

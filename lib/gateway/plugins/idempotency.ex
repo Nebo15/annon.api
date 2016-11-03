@@ -1,13 +1,13 @@
 defmodule Gateway.Plugins.Idempotency do
   @moduledoc """
-    Plugin for Idempotency
+  Plugin for request idempotency.
   """
   import Plug.Conn
   alias EView.Views.Error, as: ErrorView
 
-  alias Gateway.DB.Models.Log
-  alias Gateway.DB.Models.Plugin
-  alias Gateway.DB.Models.API, as: APIModel
+  alias Gateway.DB.Schemas.Log
+  alias Gateway.DB.Schemas.Plugin
+  alias Gateway.DB.Schemas.API, as: APIModel
 
   def init([]), do: false
 
@@ -32,12 +32,12 @@ defmodule Gateway.Plugins.Idempotency do
   end
   defp load_log_request(_), do: nil
 
-  defp validate_request(%Gateway.DB.Models.Log{request: %{body: body}} = log_request, params) do
+  defp validate_request(%Gateway.DB.Schemas.Log{request: %{body: body}} = log_request, params) do
     {Map.equal?(params, body), log_request}
   end
   defp validate_request(_, _params), do: nil
 
-  defp normalize_resp({true, %Gateway.DB.Models.Log{response: %{headers: headers, body: body},
+  defp normalize_resp({true, %Gateway.DB.Schemas.Log{response: %{headers: headers, body: body},
                                                     status_code: code}}, conn) do
     conn
     |> merge_resp_headers(format_headers(headers))

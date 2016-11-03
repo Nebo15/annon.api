@@ -1,11 +1,10 @@
 defmodule Gateway.Plugins.Logger do
   @moduledoc """
-  Request/response logger plug
+  Request/response logger plug.
   """
-
   import Plug.Conn
-  alias Gateway.DB.Models.Log
-  alias Gateway.DB.Models.API, as: APIModel
+  alias Gateway.DB.Schemas.Log
+  alias Gateway.DB.Schemas.API, as: APIModel
   alias EctoFixtures
 
   def init(opts) do
@@ -43,12 +42,13 @@ defmodule Gateway.Plugins.Logger do
     conn
     |> get_resp_header("x-request-id")
     |> Enum.at(0)
-    |> Log.put_response(%{api: get_api_data(conn),
-                    consumer: get_consumer_data(conn),
-                    response: get_response_data(conn),
-                    latencies: get_latencies_data(conn),
-                    status_code: conn.status
-                    })
+    |> Log.put_response(%{
+      api: get_api_data(conn),
+      consumer: get_consumer_data(conn),
+      response: get_response_data(conn),
+      latencies: get_latencies_data(conn),
+      status_code: conn.status
+    })
   end
 
   defp modify_headers_list([]), do: []

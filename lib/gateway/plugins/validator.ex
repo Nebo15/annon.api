@@ -1,11 +1,11 @@
 defmodule Gateway.Plugins.Validator do
   @moduledoc """
   Plugin which validates request based on ex_json_schema
-  See more https://github.com/jonasschmidt/ex_json_schema
+  See more https://github.com/nebo15/nex_json_schema
   """
   import Plug.Conn
-  alias Gateway.DB.Models.Plugin
-  alias Gateway.DB.Models.API, as: APIModel
+  alias Gateway.DB.Schemas.Plugin
+  alias Gateway.DB.Schemas.API, as: APIModel
 
   def init(opts), do: opts
 

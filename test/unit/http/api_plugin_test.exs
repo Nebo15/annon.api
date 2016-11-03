@@ -3,7 +3,7 @@ defmodule Gateway.HTTP.PluginTest do
   @plugin_url "/"
 
   use Gateway.UnitCase
-  alias Gateway.DB.Models.API, as: APIModel
+  alias Gateway.DB.Schemas.API, as: APIModel
 
   test "GET /apis/:api_id" do
     data = get_api_model_data()

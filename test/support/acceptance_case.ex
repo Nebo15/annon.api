@@ -15,9 +15,9 @@ defmodule Gateway.AcceptanceCase do
       import Ecto.Query, only: [from: 2]
       import Gateway.Fixtures
 
-      alias Gateway.DB.Repo
-      alias Gateway.DB.Models.Plugin
-      alias Gateway.DB.Models.API, as: APIModel
+      alias Gateway.DB.Configs.Repo
+      alias Gateway.DB.Schemas.Plugin
+      alias Gateway.DB.Schemas.API, as: APIModel
 
       @config Confex.get_map(:gateway, :acceptance)
 
@@ -72,16 +72,16 @@ defmodule Gateway.AcceptanceCase do
             _ -> []
           end
 
-        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Repo, opts)
+        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Configs.Repo, opts)
         :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Logger.Repo, opts)
 
         unless tags[:async] do
-          Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Repo, {:shared, self()})
+          Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Configs.Repo, {:shared, self()})
           Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Logger.Repo, {:shared, self()})
         end
 
         ["apis", "plugins", "consumers", "consumer_plugin_settings"]
-        |> Enum.map(fn table -> truncate_table Gateway.DB.Repo, table end)
+        |> Enum.map(fn table -> truncate_table Gateway.DB.Configs.Repo, table end)
 
         ["logs"]
         |> Enum.map(fn table -> truncate_table Gateway.DB.Logger.Repo, table end)

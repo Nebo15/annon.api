@@ -56,8 +56,8 @@ defmodule Gateway.AutoClustering do
 
   def do_reload_config do
     apis =
-      Gateway.DB.Models.API
-      |> Gateway.DB.Repo.all()
+      Gateway.DB.Schemas.API
+      |> Gateway.DB.Configs.Repo.all()
       |> Enum.map(fn api -> {{:api, api.id}, api} end)
 
     :ets.insert(:config, apis)

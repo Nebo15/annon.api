@@ -1,12 +1,12 @@
 defmodule Gateway.Plugins.ACL do
   @moduledoc """
-    Plugin for JWT verifying and decoding
+  Plugin for JWT verifying and decoding.
   """
   import Plug.Conn
 
   alias Joken.Token
-  alias Gateway.DB.Models.Plugin
-  alias Gateway.DB.Models.API, as: APIModel
+  alias Gateway.DB.Schemas.Plugin
+  alias Gateway.DB.Schemas.API, as: APIModel
 
   def init([]), do: false
 

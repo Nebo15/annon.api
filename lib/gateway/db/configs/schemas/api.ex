@@ -1,11 +1,10 @@
-defmodule Gateway.DB.Models.API do
+defmodule Gateway.DB.Schemas.API do
   @moduledoc """
   API DB entity
   """
-
-  use Gateway.DB, :model
-  alias Gateway.DB.Repo
-  alias Gateway.DB.Models.API, as: APIModel
+  use Gateway.DB, :schema
+  alias Gateway.DB.Configs.Repo
+  alias Gateway.DB.Schemas.API, as: APIModel
 
   @required_api_fields [:name]
   @required_request_fields [:scheme, :host, :port, :path, :method]
@@ -22,7 +21,7 @@ defmodule Gateway.DB.Models.API do
       field :method, :string
     end
 
-    has_many :plugins, Gateway.DB.Models.Plugin
+    has_many :plugins, Gateway.DB.Schemas.Plugin
 
     timestamps()
   end
@@ -44,14 +43,14 @@ defmodule Gateway.DB.Models.API do
   def create(params) do
     %APIModel{}
     |> changeset(params)
-    |> Gateway.DB.Repo.insert
+    |> Gateway.DB.Configs.Repo.insert
   end
 
   def update(api_id, params) do
     try do
-      %Gateway.DB.Models.API{id: String.to_integer(api_id)}
+      %Gateway.DB.Schemas.API{id: String.to_integer(api_id)}
       |> changeset(params)
-      |> Gateway.DB.Repo.update()
+      |> Gateway.DB.Configs.Repo.update()
     rescue
       Ecto.StaleEntryError -> nil
     end

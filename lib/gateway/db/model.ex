@@ -5,7 +5,7 @@ defmodule Gateway.DB do
   import Ecto.Changeset
   alias Ecto.Changeset
 
-  def model do
+  def schema do
     quote do
       use Ecto.Schema
 
