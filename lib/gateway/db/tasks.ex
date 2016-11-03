@@ -30,7 +30,7 @@ defmodule :gateway_tasks do
   end
 
   defp get_migrations_path(otp_app, repo) do
-    conf_path = @otp_app
+    conf_path = otp_app
     |> Confex.get(repo)
     |> Keyword.get(:priv)
 
