@@ -3,12 +3,16 @@ defmodule Gateway.PublicRouter do
   Gateway HTTP Router
   """
   use Plug.Router
+  use Plug.ErrorHandler
 
   plug :match
-  plug Plug.Parsers, parsers: [:json],
-                     pass: ["application/json"],
-                     json_decoder: Poison
+
   plug Plug.RequestId
+
+  plug Plug.Parsers, parsers: [:json],
+                     pass:  ["application/json"],
+                     json_decoder: Poison
+
   plug Gateway.Plugins.APILoader
 
   plug Gateway.Plugins.Idempotency # ToDo: set plug after logger plug (and after acl/iprestiction, in others section)
@@ -31,9 +35,10 @@ defmodule Gateway.PublicRouter do
   plug :dispatch
 
   match _ do
-    "404.json"
-    |> EView.Views.Error.render()
-    |> Gateway.HTTPHelpers.Response.render_response(conn, 404)
-    |> Plug.Conn.halt
+    Gateway.Helpers.HTTP.Errors.send_not_found_error(conn)
+  end
+
+  def handle_errors(conn, error) do
+    Gateway.Helpers.HTTP.Errors.send_internal_error(conn, error)
   end
 end

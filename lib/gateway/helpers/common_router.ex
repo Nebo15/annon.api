@@ -5,6 +5,8 @@ defmodule Gateway.Helpers.CommonRouter do
   defmacro __using__(_) do
     quote do
       use Plug.Router
+      use Plug.ErrorHandler
+      import Gateway.HTTPHelpers.Response
 
       plug :match
 
@@ -12,11 +14,11 @@ defmodule Gateway.Helpers.CommonRouter do
                          pass:  ["application/json"],
                          json_decoder: Poison
 
-      plug EView
-
       plug :dispatch
 
-      import Gateway.HTTPHelpers.Response
+      def handle_errors(conn, error) do
+        Gateway.Helpers.HTTP.Errors.send_internal_error(conn, error)
+      end
     end
   end
 end
