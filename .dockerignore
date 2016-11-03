@@ -8,7 +8,7 @@ deps
 cover
 
 # Ignore released binaries
-rel/os_gateway
+rel/gateway
 
 # If the VM crashes, it generates a dump, let's ignore it too.
 erl_crash.dump
