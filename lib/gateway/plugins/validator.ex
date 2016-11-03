@@ -1,6 +1,6 @@
 defmodule Gateway.Plugins.Validator do
   @moduledoc """
-  Plugin which validates request based on ex_json_schema
+  Plugin which validates request based on ex_json_schema.
   See more https://github.com/nebo15/nex_json_schema
   """
   import Plug.Conn
@@ -61,5 +61,4 @@ defmodule Gateway.Plugins.Validator do
   end
   defp filter_plugin(%Plugin{name: :validator, is_enabled: true}), do: true
   defp filter_plugin(_), do: false
-
 end

@@ -92,13 +92,13 @@ defmodule Gateway.Plugins.JWT do
     |> put_private(:api_config, Map.put(api, :plugins, plugins))
   end
 
+  # TODO: Read if from cache
   def get_consumer_settings(external_id) do
-    query = from c in Consumer,
-            where: c.external_id == ^external_id,
-            join: s in assoc(c, :plugins),
-            where: s.is_enabled == true,
-            select: {s.plugin_id, s.settings}
-    Repo.all(query)
+    Repo.all from c in Consumer,
+      where: c.external_id == ^external_id,
+      join: s in assoc(c, :plugins),
+      where: s.is_enabled == true,
+      select: {s.plugin_id, s.settings}
   end
 
   # TODO: Use Gateway.HTTPHelpers.Response
