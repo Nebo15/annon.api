@@ -1,4 +1,4 @@
-defmodule Gateway.HTTPHelpers.Response do
+defmodule Gateway.HTTPHelpers.Response do # TODO: rename to Helpers.HTTPResponse
   @moduledoc """
   Gateway HTTP Helpers Response
   """
