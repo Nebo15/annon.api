@@ -69,7 +69,9 @@ defmodule Gateway.Acceptance.Private.PluginsTest do
 
     data = get_api_model_data()
     |> Map.put(:plugins, [
-      %{name: "IPRestriction", is_enabled: false, settings: %{"ip_blacklist" => "{invalid: json]", "ip_whitelist" => "[]"}},
+      %{name: "IPRestriction",
+        is_enabled: false,
+        settings: %{"ip_blacklist" => "{invalid: json]", "ip_whitelist" => "[]"}},
     ])
     "apis"
     |> post(Poison.encode!(data), :private)

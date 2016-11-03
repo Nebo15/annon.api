@@ -10,7 +10,7 @@ defmodule Gateway.DB.Models.API do
   @required_api_fields [:name]
   @required_request_fields [:scheme, :host, :port, :path, :method]
 
-  @derive {Poison.Encoder, except: [:__meta__]}
+  @derive {Poison.Encoder, except: [:__meta__, :plugins]}
   schema "apis" do
     field :name, :string
 

@@ -13,7 +13,6 @@ defmodule Gateway.DB do
       import Changeset
       import Ecto.Query
       import Gateway.DB
-      import Gateway.Changeset.SettingsValidator
     end
   end
 

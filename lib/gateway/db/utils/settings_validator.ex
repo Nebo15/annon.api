@@ -2,6 +2,7 @@ defmodule Gateway.Changeset.SettingsValidator do
   @moduledoc """
     Changeset validator for Plugin settings
   """
+  alias Gateway.DB.Models.Request
   alias Ecto.Changeset
   import Ecto.Changeset
 
@@ -54,27 +55,24 @@ defmodule Gateway.Changeset.SettingsValidator do
 
   # Proxy
   def validate_settings(%Changeset{changes: %{name: :Proxy, settings: settings}} = ch) do
-   settings = {:embed, settings}
-  IO.inspect settings
-
-    ch
-#    |> put_embed(:settings, settings)
-    |> cast_embed(:settings, with: &changeset_proxy/2)
+    %Request{}
+    |> Request.changeset_proxy(settings)
+    |> put_changeset_errors(ch)
   end
 
   # general
   def validate_settings(ch), do: ch
 
-  defp changeset_proxy(ch, params \\ %{}) do
+  # helpers
+  defp put_changeset_errors(%Changeset{valid?: true}, ch), do: ch
+  defp put_changeset_errors(%Changeset{valid?: false, errors: errors}, ch) do
     ch
-    |> cast(params, [:scheme, :host, :port, :path, :method])
-    |> validate_required([:host])
+    |> Map.merge(%{errors: errors, valid?: false})
   end
 
-  # helpers
   defp validate_json_schema({:ok, _}, ch), do: ch
   defp validate_json_schema({:error, _}, ch) do
-    add_error(ch, :settings, "Validator.settings: field 'schema' is invalid json")
+    add_error(ch, :settings, "Validator.settings: field 'schema' is invalid json", [validation: :json, json: []])
   end
 
   defp validate_ip_list(ch, {:ok, list}, name) when is_list(list) do
@@ -102,6 +100,7 @@ defmodule Gateway.Changeset.SettingsValidator do
   end
 
   def ip_valid?(ip) do
-    Regex.match?(~r/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/, ip)
+    ~r/^(?:(?:\*|25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:\*|25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
+    |> Regex.match?(ip)
   end
 end

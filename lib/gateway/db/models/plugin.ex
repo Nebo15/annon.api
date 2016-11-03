@@ -6,6 +6,7 @@ defmodule Gateway.DB.Models.Plugin do
   alias Gateway.DB.Repo
   alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.API, as: APIModel
+  import Gateway.Changeset.SettingsValidator
 
   @derive {Poison.Encoder, except: [:__meta__, :api]}
 

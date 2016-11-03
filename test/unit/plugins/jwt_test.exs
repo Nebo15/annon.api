@@ -60,14 +60,7 @@ defmodule Gateway.Plugins.JWTTest do
     data = get_api_model_data()
     |> Map.put(:plugins, [%{name: "JWT", is_enabled: true, settings: %{"some" => "value"}}])
 
-    {:ok, %APIModel{request: request} = model} = APIModel.create(data)
-
-    %Plug.Conn{} = conn = :get
-    |> prepare_conn(request)
-    |> Map.put(:private, %{api_config: model})
-    |> Gateway.Plugins.JWT.call(%{})
-
-    assert 501 == conn.status
+    assert {:error, %Ecto.Changeset{valid?: false}} = APIModel.create(data)
   end
 
   test "apis model don't have plugins'" do

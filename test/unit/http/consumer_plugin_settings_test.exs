@@ -114,13 +114,8 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
   end
 
   defp create_plugin(api_id) do
-    params =
-      Gateway.DB.Models.Plugin
-      |> EctoFixtures.ecto_fixtures()
-      |> Map.put(:api_id, api_id)
-
     %Gateway.DB.Models.API{}
-    |> Gateway.DB.Models.Plugin.create(params)
+    |> Gateway.DB.Models.Plugin.create(%{api_id: api_id, name: "ACL", is_enabled: true, settings: %{"scope" => "read"}})
     |> elem(1)
   end
 end
