@@ -65,4 +65,4 @@ RUN $APP_NAME/hooks/pre-run.sh
 #    Interactive: gateway/bin/gateway console
 #    Foreground: gateway/bin/gateway foreground
 #    Daemon: gateway/bin/gateway start
-CMD $APP_NAME/bin/$APP_NAME   foreground
+CMD $APP_NAME/bin/$APP_NAME foreground
