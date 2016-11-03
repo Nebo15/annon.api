@@ -48,18 +48,16 @@ defmodule Gateway.MonitoringTest do
   end
 
   defp create_proxy_plugin(api) do
-    proxy = Poison.encode!(%{
-      mathod: "GET",
-      scheme: "http",
-      host: "localhost",
-      port: 5001,
-      path: "/apis"
-    })
-
     Gateway.DB.Models.Plugin.create(api, %{
       name: "Proxy",
       is_enabled: true,
-      settings: %{ "proxy_to" => proxy }
+      settings: %{
+                   mathod: "GET",
+                   scheme: "http",
+                   host: "localhost",
+                   port: 5001,
+                   path: "/apis"
+                 }
     })
   end
 end
