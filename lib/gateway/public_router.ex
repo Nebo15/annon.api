@@ -10,7 +10,8 @@ defmodule Gateway.PublicRouter do
                      json_decoder: Poison
   plug Plug.RequestId
   plug Gateway.Plugins.APILoader
-  plug Gateway.Plugins.Idempotency # ToDo: set plug after logger plug
+
+  plug Gateway.Plugins.Idempotency # ToDo: set plug after logger plug (and after acl/iprestiction, in others section)
 
   # Monitoring plugins that do not affect on request or response
   plug Gateway.Plugins.Logger
@@ -29,8 +30,10 @@ defmodule Gateway.PublicRouter do
 
   plug :dispatch
 
-  # TODO: Use EView 404.json view
   match _ do
-    send_resp(conn, 404, "{}")
+    "404.json"
+    |> EView.Views.Error.render()
+    |> Gateway.HTTPHelpers.Response.render_response(conn, 404)
+    |> Plug.Conn.halt
   end
 end
