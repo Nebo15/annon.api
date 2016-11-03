@@ -28,6 +28,14 @@ defmodule Gateway.UnitCase do
       Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Logger.Repo, {:shared, self()})
     end
 
+    on_exit(fn ->
+      reset_cache()
+    end)
+
     :ok
+  end
+
+  defp reset_cache() do
+    :ets.delete_all_objects(:config)
   end
 end
