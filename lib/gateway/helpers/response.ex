@@ -12,7 +12,6 @@ defmodule Gateway.HTTPHelpers.Response do
     conn
     |> Plug.Conn.put_resp_content_type("application/json")
     |> Plug.Conn.send_resp(status, get_resp_body(resource))
-    |> Plug.Conn.halt()
   end
 
   def get_resp_body(resource) when is_list(resource), do: Poison.encode!(resource)
