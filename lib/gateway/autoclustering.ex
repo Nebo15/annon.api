@@ -11,7 +11,10 @@ defmodule Gateway.AutoClustering do
 
   def reload_config do
     Gateway.AutoClustering.do_reload_config()
-    Cluster.Events.publish(:reload_config)
+
+    Enum.each(Node.list(), fn(remote_node) ->
+      send({Gateway.AutoClustering, remote_node}, :reload_config)
+    end)
   end
 
   # Server code
@@ -28,7 +31,7 @@ defmodule Gateway.AutoClustering do
         send(s, :load)
     end
 
-    send(self(), :reload_config)
+    do_reload_config()
 
     {:ok, []}
   end
