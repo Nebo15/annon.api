@@ -14,14 +14,16 @@ defmodule Gateway.ClusterConfigReloaderTest do
 
     api_id = create_api()
 
-    Process.sleep(1000)
+    ensure_the_change_is_visible_on(:'node1@127.0.0.1')
+    ensure_the_change_is_visible_on(:'node2@127.0.0.1')
 
     assert "Test api" == check_api_on_node(api_id, :name, :'node1@127.0.0.1')
     assert "Test api" == check_api_on_node(api_id, :name, :'node2@127.0.0.1')
 
     update_api(api_id, "name", "New name")
 
-    Process.sleep(1000)
+    ensure_the_change_is_visible_on(:'node1@127.0.0.1')
+    ensure_the_change_is_visible_on(:'node2@127.0.0.1')
 
     assert "New name" == check_api_on_node(api_id, :name, :'node1@127.0.0.1')
     assert "New name" == check_api_on_node(api_id, :name, :'node2@127.0.0.1')
@@ -30,8 +32,12 @@ defmodule Gateway.ClusterConfigReloaderTest do
     |> Gateway.DB.Repo.delete_all()
   end
 
-  defp check_api_on_node(api_id, field, node) do
-    node
+  defp ensure_the_change_is_visible_on(nodename) do
+    :rpc.block_call(nodename, Gateway.DB.Repo, :all, [Gateway.DB.Models.API])
+  end
+
+  defp check_api_on_node(api_id, field, nodename) do
+    nodename
     |> :rpc.block_call(:ets, :lookup, [:config, {:api, api_id}])
     |> hd()
     |> elem(1)
