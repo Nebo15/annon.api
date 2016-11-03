@@ -53,12 +53,13 @@ defmodule Gateway.Plugins.Proxy do
 
   def make_link(proxy, conn) do
     proxy
-    |> get_scheme(conn)
-    |> get_host(proxy)
-    |> get_port(proxy)
-    |> get_path(proxy, conn)
+    |> put_scheme(conn)
+    |> put_host(proxy)
+    |> put_port(proxy)
+    |> put_path(proxy, conn)
   end
 
+<<<<<<< HEAD
   def add_additional_headers(headers, conn) do
     headers = headers ++ [%{"x-forwarded-for" => ip_to_string(conn.remote_ip)}]
     headers
@@ -70,16 +71,20 @@ defmodule Gateway.Plugins.Proxy do
 
   defp get_scheme(%{"scheme" => scheme}, _conn), do: scheme <> "://"
   defp get_scheme(_, %Plug.Conn{scheme: scheme}), do: Atom.to_string(scheme) <> "://"
+=======
+  defp put_scheme(%{"scheme" => scheme}, _conn), do: scheme <> "://"
+  defp put_scheme(_, %Plug.Conn{scheme: scheme}), do: Atom.to_string(scheme) <> "://"
+>>>>>>> df637f858ade80d1df6b4122066692cfed8f1988
 
-  defp get_host(pr, %{"host" => host}), do: pr <> host
-  defp get_host(pr, %{}), do: pr
+  defp put_host(pr, %{"host" => host}), do: pr <> host
+  defp put_host(pr, %{}), do: pr
 
-  defp get_port(pr, %{"port" => port}) when is_number(port), do: pr |> get_port(%{"port" => Integer.to_string(port)})
-  defp get_port(pr, %{"port" => port}), do: pr <> ":" <> port
-  defp get_port(pr, %{}), do: pr
+  defp put_port(pr, %{"port" => port}) when is_number(port), do: pr |> put_port(%{"port" => Integer.to_string(port)})
+  defp put_port(pr, %{"port" => port}), do: pr <> ":" <> port
+  defp put_port(pr, %{}), do: pr
 
-  defp get_path(pr, %{"path" => path}, _conn), do: pr <> path
-  defp get_path(pr, %{}, %Plug.Conn{request_path: path}), do: pr <> path
+  defp put_path(pr, %{"path" => path}, _conn), do: pr <> path
+  defp put_path(pr, %{}, %Plug.Conn{request_path: path}), do: pr <> path
 
   defp get_proxy_to_settings(%Plugin{settings: %{"proxy_to" => proxy}}), do: %{proxy: Poison.decode!(proxy)}
   defp get_enabled(plugins) when is_list(plugins) do

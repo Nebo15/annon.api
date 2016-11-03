@@ -15,6 +15,7 @@ defmodule Gateway.PrivateRouter do
 
   forward "/apis", to: Gateway.HTTP.API
 
+  # TODO: WTF is this?
   get "/" do
     send_resp(conn, 200, "{result: ok}")
   end

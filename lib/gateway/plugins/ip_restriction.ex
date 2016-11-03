@@ -8,50 +8,6 @@ defmodule Gateway.Plugins.IPRestriction do
   alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.API, as: APIModel
 
-  defp get_enabled(plugins) when is_list(plugins) do
-    plugins
-    |> Enum.find(&filter_plugin/1)
-  end
-
-  defp filter_plugin(%Plugin{name: :IPRestriction, is_enabled: true}), do: true
-  defp filter_plugin(_), do: false
-
-  defp get_settings(nil), do: %{}
-  defp get_settings(plugin), do: Map.get(plugin, :settings, %{})
-
-  defp get_list(%Plugin{} = plugin, key), do: plugin |> get_settings() |> get_list(key)
-  defp get_list(nil, _key), do: []
-  defp get_list(settings, key), do: Map.get(settings, key, [])
-
-  defp blacklisted?(plugin, ip) do
-    plugin
-    |> get_list("ip_blacklist")
-    |> Enum.any?(fn(item) -> compare_ips(item, ip) end)
-  end
-
-  defp whitelisted?(%Plugin{} = plugin, ip), do: plugin |> get_list("ip_whitelist") |> whitelisted?(ip)
-  defp whitelisted?([], _ip), do: nil
-  defp whitelisted?(whitelist, ip), do: Enum.any?(whitelist, fn(item) -> compare_ips(item, ip) end)
-
-  defp compare_ips(ip1, ip2) do
-    ip1_list = String.split(ip1, ".")
-    ip2_list = String.split(ip2, ".")
-    i = Enum.reduce(ip1_list, 0, fn(item, i) ->
-      if i !== -1 do
-        if item !== "*" && item !== Enum.at(ip2_list, i)
-        do i = -1
-        else i = i + 1 end
-      else i = -1 end
-    end)
-    i > 0
-  end
-
-  defp check_ip(plugin, ip) do
-    blacklisted = blacklisted?(plugin, ip)
-    whitelisted = whitelisted?(plugin, ip)
-    whitelisted || (whitelisted === nil && !blacklisted)
-  end
-
   def init(opts), do: opts
 
   def call(%Plug.Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
@@ -62,17 +18,51 @@ defmodule Gateway.Plugins.IPRestriction do
   def call(conn, _), do: conn
 
   defp execute(nil, conn), do: conn
-  defp execute(%Plugin{} = plugin, conn) do
-    register_before_send(conn, fn conn ->
-      if check_ip(plugin, ip_to_string(conn.remote_ip)) do
-        conn
-      else
-        {code, body} = render_response(%{}, 400, "blacklisted")
+  defp execute(%Plugin{} = plugin, %Plug.Conn{remote_ip: remote_ip} = conn) do
+    if check_ip(plugin, ip_to_string(remote_ip)) do
+      conn
+    else
+      render_response(%{}, conn, 400)
+    end
+  end
 
-        conn
-        |> resp(code, body)
-        |> halt()
+  defp check_ip(plugin, ip) do
+    blacklisted = blacklisted?(plugin, ip)
+    whitelisted = whitelisted?(plugin, ip)
+    whitelisted || (whitelisted === nil && !blacklisted)
+  end
+
+  defp whitelisted?(%Plugin{settings: %{"ip_whitelist" => list}}, ip) do
+    list
+    |> Poison.decode!()
+    |> Enum.any?(fn(item) -> compare_ips(item, ip) end)
+  end
+  defp whitelisted?(_plugin, _ip), do: nil
+
+  defp blacklisted?(%Plugin{settings: %{"ip_blacklist" => list}}, ip) do
+    list
+    |> Poison.decode!()
+    |> Enum.any?(fn(item) -> compare_ips(item, ip) end)
+  end
+  defp blacklisted?(_plugin, _ip), do: nil
+
+  defp compare_ips(ip1, ip2) do
+    ip2_list = String.split(ip2, ".")
+    0 < ip1
+    |> String.split(".")
+    |> Enum.reduce_while(0, fn(item, i) ->
+      case item !== "*" && item !== Enum.at(ip2_list, i) do
+        true -> {:halt, -1}
+        _    -> {:cont, i + 1}
       end
     end)
   end
+
+  defp get_enabled(plugins) when is_list(plugins) do
+    plugins
+    |> Enum.find(&filter_plugin/1)
+  end
+
+  defp filter_plugin(%Plugin{name: :IPRestriction, is_enabled: true}), do: true
+  defp filter_plugin(_), do: false
 end

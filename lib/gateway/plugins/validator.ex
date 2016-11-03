@@ -32,6 +32,7 @@ defmodule Gateway.Plugins.Validator do
     |> halt
   end
 
+  # TODO: Use Gateway.HTTPHelpers.Response and EView
   defp create_json_response(errors) when is_list(errors) do
     Poison.encode!(%{
       meta: %{
