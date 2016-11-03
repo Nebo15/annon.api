@@ -2,28 +2,34 @@ defmodule Gateway.Plugins.IPRestriction do
   @moduledoc """
   IP restriction plug.
   """
-  import Gateway.HTTPHelpers.Response
+  use Gateway.Helpers.Plugin,
+    plugin_name: :ip_restriction
+
   import Gateway.Helpers.IP
+  alias Plug.Conn
   alias Gateway.DB.Schemas.Plugin
   alias Gateway.DB.Schemas.API, as: APIModel
-
-  def init(opts), do: opts
+  alias EView.Views.Error, as: ErrorView
+  alias Gateway.HTTPHelpers.Response
 
   def call(%Plug.Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
     plugins
-    |> get_enabled()
+    |> find_plugin_settings()
     |> execute(conn)
   end
   def call(conn, _), do: conn
 
-  defp execute(nil, conn), do: conn
   defp execute(%Plugin{} = plugin, %Plug.Conn{remote_ip: remote_ip} = conn) do
     if check_ip(plugin, ip_to_string(remote_ip)) do
       conn
     else
-      render_response(%{}, conn, 400)
+      "400.json"
+      |> ErrorView.render(%{message: "You has been blocked from accessing this resource."})
+      |> Response.render_response(conn, 400)
+      |> Conn.halt
     end
   end
+  defp execute(_, conn), do: conn
 
   defp check_ip(plugin, ip) do
     blacklisted = blacklisted?(plugin, ip)
@@ -47,6 +53,7 @@ defmodule Gateway.Plugins.IPRestriction do
 
   defp ip_matches?(ip1, ip2) do
     ip2_list = String.split(ip2, ".")
+
     0 < ip1
     |> String.split(".")
     |> Enum.reduce_while(0, fn(item, i) ->
@@ -56,12 +63,4 @@ defmodule Gateway.Plugins.IPRestriction do
       end
     end)
   end
-
-  defp get_enabled(plugins) when is_list(plugins) do
-    plugins
-    |> Enum.find(&filter_plugin/1)
-  end
-
-  defp filter_plugin(%Plugin{name: :ip_restriction, is_enabled: true}), do: true
-  defp filter_plugin(_), do: false
 end

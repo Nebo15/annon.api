@@ -7,6 +7,12 @@ defmodule Gateway.DB.Schemas.Plugin do
   alias Gateway.DB.Schemas.Plugin
   alias Gateway.DB.Schemas.API, as: APIModel
 
+  @type t :: %Plugin{
+    name: atom,
+    is_enabled: boolean,
+    settings: map
+  }
+
   @derive {Poison.Encoder, except: [:__meta__, :api]}
   schema "plugins" do
      field :name, PluginName

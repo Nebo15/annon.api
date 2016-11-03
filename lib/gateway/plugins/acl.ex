@@ -2,22 +2,19 @@ defmodule Gateway.Plugins.ACL do
   @moduledoc """
   Plugin for JWT verifying and decoding.
   """
-  import Gateway.Helpers.Plugin
-  require Logger
+  use Gateway.Helpers.Plugin,
+    plugin_name: :acl
 
+  alias Plug.Conn
   alias Joken.Token
   alias Gateway.DB.Schemas.Plugin
   alias Gateway.DB.Schemas.API, as: APIModel
   alias EView.Views.Error, as: ErrorView
   alias Gateway.HTTPHelpers.Response
 
-  @plugin_name :acl
-
-  def init(opts), do: opts
-
-  def call(%Plug.Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opts) when is_list(plugins) do
+  def call(%Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opts) when is_list(plugins) do
     plugins
-    |> find_plugin_settings(@plugin_name)
+    |> find_plugin_settings()
     |> execute(conn)
     |> send_response(conn)
   end
@@ -25,7 +22,7 @@ defmodule Gateway.Plugins.ACL do
 
   defp execute(nil, _conn), do: :ok
   defp execute(%Plugin{settings: %{"scope" => plugin_scope}},
-               %Plug.Conn{private: %{jwt_token: %Token{claims: %{"scopes" => token_scopes}}}}) do
+               %Conn{private: %{jwt_token: %Token{claims: %{"scopes" => token_scopes}}}}) do
     plugin_scope
     |> validate_scopes(token_scopes)
   end
@@ -44,8 +41,16 @@ defmodule Gateway.Plugins.ACL do
   defp send_response(:ok, conn), do: conn
   defp send_response({:error, :forbidden}, conn) do
     "403.json"
-    |> ErrorView.render(%{message: "Your scopes does not allow to access this resource."})
+    |> ErrorView.render(%{
+      message: "Your scopes does not allow to access this resource.",
+      invalid: [%{
+        entry_type: "header",
+        entry: "Authorization",
+        rules: []
+      }]
+    })
     |> Response.render_response(conn, 403)
+    |> Plug.Conn.halt
   end
   defp send_response({:error, :no_scopes_is_set}, conn) do
     Logger.error("Required field scope in Plugin.settings is not found!")
@@ -53,6 +58,7 @@ defmodule Gateway.Plugins.ACL do
     "501.json"
     |> ErrorView.render()
     |> Response.render_response(conn, 501)
+    |> Conn.halt
   end
   defp send_response({:error, :invalid_scopes_type}, conn) do
     Logger.error("JWT.scopes must be a list!")
@@ -60,5 +66,6 @@ defmodule Gateway.Plugins.ACL do
     "501.json"
     |> ErrorView.render()
     |> Response.render_response(conn, 501)
+    |> Conn.halt
   end
 end
