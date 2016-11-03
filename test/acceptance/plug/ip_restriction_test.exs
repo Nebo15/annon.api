@@ -23,7 +23,6 @@ defmodule Gateway.Acceptance.Plug.IPRestrictionTest do
     |> Poison.decode!
 
     assert 400 === body["meta"]["code"]
-    assert "blacklisted" === body["meta"]["description"]
   end
 
   test "check blacklist + whitelist" do

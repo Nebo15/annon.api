@@ -19,18 +19,12 @@ require Logger
   def call(conn, _), do: conn
 
   defp execute(nil, conn), do: conn
-  defp execute(%Plugin{} = plugin, conn) do
-    register_before_send(conn, fn conn ->
-      if check_ip(plugin, ip_to_string(conn.remote_ip)) do
-        conn
-      else
-        {code, body} = render_response(%{}, 400, "blacklisted")
-
-        conn
-        |> resp(code, body)
-        |> halt()
-      end
-    end)
+  defp execute(%Plugin{} = plugin, %Plug.Conn{remote_ip: remote_ip} = conn) do
+    if check_ip(plugin, ip_to_string(remote_ip)) do
+      conn
+    else
+      render_response(%{}, conn, 400)
+    end
   end
 
   defp check_ip(plugin, ip) do
