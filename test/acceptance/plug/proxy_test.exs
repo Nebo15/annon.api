@@ -76,12 +76,10 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
 
     proxy_plugin = %{ name: "Proxy", is_enabled: true,
                       settings: %{
-                        "proxy_to" => Poison.encode!(%{
-                          host: get_host(:public),
-                          path: "/proxy/test",
-                          port: get_port(:public),
-                          scheme: "http"
-                          })
+                        host: get_host(:public),
+                        path: "/proxy/test",
+                        port: get_port(:public),
+                        scheme: "http"
                       }
                     }
 
