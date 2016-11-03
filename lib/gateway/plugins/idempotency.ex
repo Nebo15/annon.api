@@ -3,6 +3,7 @@ defmodule Gateway.Plugins.Idempotency do
     Plugin for Idempotency
   """
   import Plug.Conn
+  alias EView.ErrorView
 
   alias Gateway.DB.Models.Log
   alias Gateway.DB.Models.Plugin
@@ -46,19 +47,11 @@ defmodule Gateway.Plugins.Idempotency do
   defp normalize_resp({false, _}, conn), do: conn |> send_halt(409, "different POST parameters")
   defp normalize_resp(_, conn), do: conn
 
+  # TODO: Use Gateway.HTTPHelpers.Response
   defp send_halt(conn, code, message) do
     conn
-    |> send_resp(code, create_json_response(code, message))
+    |> send_resp(code, Poison.encode!(ErrorView.render("409.json", %{message: message})))
     |> halt
-  end
-
-  defp create_json_response(code, message) do
-    Poison.encode!(%{
-      meta: %{
-        code: code,
-        error: message
-      }
-    })
   end
 
   defp format_headers([]), do: []

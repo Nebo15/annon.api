@@ -1,6 +1,7 @@
 {
   "skip_files": [
     "test/*",
-    "lib/gateway/db/tasks.ex"
+    "lib/gateway/db/tasks.ex",
+    "lib/gateway/db/enums.ex"
   ]
 }
