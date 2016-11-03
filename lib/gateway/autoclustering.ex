@@ -58,6 +58,7 @@ defmodule Gateway.AutoClustering do
     import Ecto.Query, only: [from: 2]
 
     query = from a in Gateway.DB.Models.API,
+            join: Gateway.DB.Models.Plugin,
             preload: [:plugins]
 
     apis = query
