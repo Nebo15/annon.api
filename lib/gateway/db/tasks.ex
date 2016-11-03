@@ -6,17 +6,18 @@ defmodule :os_gateway_tasks do
   """
 
   def migrate! do
-    migrations_dir = Path.join(["priv", "repos", "migrations"])
 
     load_app()
 
+    gateway_migrations_dir = Path.join(["priv", "repos", "gateway", "migrations"])
     Gateway.DB.Repo
     |> start_repo
-    |> Ecto.Migrator.run(migrations_dir, :up, all: true)
+    |> Ecto.Migrator.run(gateway_migrations_dir, :up, all: true)
 
+    logger_migrations_dir = Path.join(["priv", "repos", "logger", "migrations"])
     Gateway.DB.Logger.Repo
     |> start_repo
-    |> Ecto.Migrator.run(migrations_dir, :up, all: true)
+    |> Ecto.Migrator.run(logger_migrations_dir, :up, all: true)
 
     System.halt(0)
     :init.stop()
