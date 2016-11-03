@@ -79,6 +79,8 @@ defmodule Gateway.Acceptance.Plug.JWTTest do
     ])
     |> http_api_create()
 
+    Gateway.AutoClustering.do_reload_config()
+
     "jwt/default"
     |> get(:public, [{"authorization", "Bearer invalid.credentials.signature"}])
     |> assert_status(401)

@@ -29,6 +29,8 @@ defmodule Gateway.Acceptance.Plug.IPRestrictionTest do
     |> api_ip_restriction_data()
     |> http_api_create()
 
+    Gateway.AutoClustering.do_reload_config()
+
     @request.path
     |> String.replace_prefix("/", "")
     |> get(:public)

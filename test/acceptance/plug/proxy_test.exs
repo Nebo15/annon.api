@@ -36,6 +36,8 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
     |> post(Poison.encode!(proxy_plugin), :private)
     |> assert_status(201)
 
+    Gateway.AutoClustering.do_reload_config()
+
     response = "proxy/test"
     |> get(:public, [{"authorization", "Bearer #{jwt_token(@payload, @token_secret)}"}])
     |> assert_status(200)
@@ -56,6 +58,8 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
     |> get_api_proxy_data()
     |> Map.put(:plugins, [proxy_plugin])
     |> http_api_create()
+
+    Gateway.AutoClustering.do_reload_config()
 
     "apis"
     |> get(:public, [{"authorization", "Bearer #{jwt_token(@payload, @token_secret)}"}])
