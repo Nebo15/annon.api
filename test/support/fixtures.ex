@@ -3,7 +3,6 @@ defmodule Gateway.Fixtures do
     Fixtures fo tests
   """
   use ExUnit.CaseTemplate
-  alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.API, as: APIModel
 
   def get_api_model_data do
