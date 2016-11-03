@@ -2,46 +2,37 @@ defmodule Gateway.Plugins.Logger do
   @moduledoc """
   Request/response logger plug.
   """
-  import Plug.Conn
+  use Gateway.Helpers.Plugin,
+    plugin_name: :logger
+
+  alias Plug.Conn
   alias Gateway.DB.Schemas.Log
   alias Gateway.DB.Schemas.API, as: APIModel
-  alias EctoFixtures
-
-  def init(opts) do
-    opts
-  end
 
   def call(conn, _opts) do
-    log(conn, :request)
-    conn = register_before_send(conn, fn conn ->
-      log(conn, :response)
-      conn
-    end)
     conn
+    |> log_request()
+    |> Conn.register_before_send(fn conn ->
+      conn
+      |> log_response()
+    end)
   end
 
-  defp log(conn, :request) do
-    id = conn
-    |> get_resp_header("x-request-id")
-    |> Enum.at(0)
-
-    idempotency_key = conn
-    |> get_req_header("x-idempotency-key")
-    |> Enum.at(0) || ""
-
+  defp log_request(conn) do
     %{
-      id: id,
-      idempotency_key: idempotency_key,
+      id: get_request_id(conn),
+      idempotency_key: get_idempotency_key(conn) || "",
       ip_address: conn.remote_ip |> Tuple.to_list |> Enum.join("."),
       request: get_request_data(conn)
     }
     |> Log.create
+
+    conn
   end
 
-  defp log(conn, :response) do
+  defp log_response(conn) do
     conn
-    |> get_resp_header("x-request-id")
-    |> Enum.at(0)
+    |> get_request_id()
     |> Log.put_response(%{
       api: get_api_data(conn),
       consumer: get_consumer_data(conn),
@@ -49,6 +40,20 @@ defmodule Gateway.Plugins.Logger do
       latencies: get_latencies_data(conn),
       status_code: conn.status
     })
+
+    conn
+  end
+
+  defp get_request_id(conn) do
+    conn
+    |> Conn.get_resp_header("x-request-id")
+    |> Enum.at(0)
+  end
+
+  defp get_idempotency_key(conn) do
+    conn
+    |> Conn.get_req_header("x-idempotency-key")
+    |> Enum.at(0)
   end
 
   defp modify_headers_list([]), do: []
@@ -96,6 +101,7 @@ defmodule Gateway.Plugins.Logger do
 
   defp get_key(key) when is_binary(key), do: String.to_atom(key)
   defp get_key(key) when is_atom(key), do: key
+
   defp prepare_params(params) when params == nil, do: %{}
   defp prepare_params(params), do: for {key, val} <- params, into: %{}, do: {get_key(key), val}
 end
