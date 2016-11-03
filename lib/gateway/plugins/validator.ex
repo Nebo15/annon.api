@@ -19,7 +19,7 @@ defmodule Gateway.Plugins.Validator do
   defp validate(%Plugin{settings: %{"schema" => schema}}, %Plug.Conn{body_params: %{} = body} = conn) do
     schema
     |> Poison.decode!()
-    |> ExJsonSchema.Validator.validate(body)
+    |> NExJsonSchema.Validator.validate(body)
     |> normalize_validation(conn)
   end
   defp validate(_, conn), do: conn
