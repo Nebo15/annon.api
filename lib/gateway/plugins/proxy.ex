@@ -59,7 +59,6 @@ defmodule Gateway.Plugins.Proxy do
     |> put_path(proxy, conn)
   end
 
-<<<<<<< HEAD
   def add_additional_headers(headers, conn) do
     headers = headers ++ [%{"x-forwarded-for" => ip_to_string(conn.remote_ip)}]
     headers
@@ -69,12 +68,8 @@ defmodule Gateway.Plugins.Proxy do
   defp get_additional_headers(%Plugin{settings: %{"additional_headers" => headers}}), do: headers
   defp get_additional_headers(_), do: []
 
-  defp get_scheme(%{"scheme" => scheme}, _conn), do: scheme <> "://"
-  defp get_scheme(_, %Plug.Conn{scheme: scheme}), do: Atom.to_string(scheme) <> "://"
-=======
   defp put_scheme(%{"scheme" => scheme}, _conn), do: scheme <> "://"
   defp put_scheme(_, %Plug.Conn{scheme: scheme}), do: Atom.to_string(scheme) <> "://"
->>>>>>> df637f858ade80d1df6b4122066692cfed8f1988
 
   defp put_host(pr, %{"host" => host}), do: pr <> host
   defp put_host(pr, %{}), do: pr
