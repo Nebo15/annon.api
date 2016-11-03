@@ -15,7 +15,6 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
     |> http_api_create()
 
     # token without scopes
-
     token_without_scopes = jwt_token(%{"name" => "Alice"}, @jwt_secret)
 
     "acl"
@@ -27,7 +26,6 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
     |> assert_status(403)
 
     # just write
-
     token_w = jwt_token(%{"scopes" => ["acl_create", "asd"]}, @jwt_secret)
     "acl"
     |> post("{}", :public, [{"authorization", "Bearer #{token_w}"}])
@@ -38,7 +36,6 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
     |> assert_status(403)
 
     # just read
-
     token_r = jwt_token(%{"scopes" => ["acl_read"]}, @jwt_secret)
     "acl"
     |> post("{}", :public, [{"authorization", "Bearer #{token_r}"}])
@@ -49,7 +46,6 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
     |> assert_status(404)
 
     # read and write
-
     token_rw = jwt_token(%{"scopes" => ["acl_read", "acl_create"]}, @jwt_secret)
     "acl"
     |> post("{}", :public, [{"authorization", "Bearer #{token_rw}"}])
@@ -63,8 +59,8 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
   test "invalid JWT.scopes type" do
     get_api_model_data()
     |> Map.put(:plugins, [
-      %{name: "JWT", is_enabled: true, settings: %{"signature" => @jwt_secret}},
-      %{name: "ACL", is_enabled: true, settings: %{"scope" => "acl_read"}}])
+      %{name: "jwt", is_enabled: true, settings: %{"signature" => @jwt_secret}},
+      %{name: "acl", is_enabled: true, settings: %{"scope" => "acl_read"}}])
     |> Map.put(:request,
       %{host: get_host(:public), path: "/acl/scopes", port: get_port(:public), scheme: "http", method: "GET"})
     |> http_api_create()
@@ -79,8 +75,8 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
     get_api_model_data()
     |> Map.put(:request, request_data)
     |> Map.put(:plugins, [
-      %{name: "JWT", is_enabled: true, settings: %{"signature" => @jwt_secret}},
-      %{name: "ACL", is_enabled: true, settings: %{"scope" => scope}}
+      %{name: "jwt", is_enabled: true, settings: %{"signature" => @jwt_secret}},
+      %{name: "acl", is_enabled: true, settings: %{"scope" => scope}}
     ])
   end
 end

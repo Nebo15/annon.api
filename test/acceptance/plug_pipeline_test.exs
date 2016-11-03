@@ -144,16 +144,17 @@ defmodule Gateway.Acceptance.PlugPipelineTest do
 
   def get_plugins do
     [
-      %{name: "ACL", is_enabled: true, settings: %{"scope" => "api_create"}},
-      %{name: "JWT", is_enabled: true, settings: %{"signature" => @token_secret}},
-      %{name: "Validator", is_enabled: true, settings: %{"schema" => Poison.encode!(@schema)}},
-      %{name: "Idempotency", is_enabled: true, settings: %{"key" => 100}},
-      %{name: "Proxy", is_enabled: true, settings: %{
-        host: get_host(:private),
-        path: "/apis",
-        port: get_port(:private),
-        scheme: "http"
-      }}
+      %{name: "acl", is_enabled: true, settings: %{"scope" => "api_create"}},
+      %{name: "jwt", is_enabled: true, settings: %{"signature" => @token_secret}},
+      %{name: "validator", is_enabled: true, settings: %{"schema" => Poison.encode!(@schema)}},
+      %{name: "idempotency", is_enabled: true, settings: %{"key" => 100}},
+      %{name: "proxy", is_enabled: true, settings: %{
+          host: get_host(:private),
+          path: "/apis",
+          port: get_port(:private),
+          scheme: "http"
+        }
+      }
     ]
   end
 

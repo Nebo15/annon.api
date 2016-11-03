@@ -3,7 +3,7 @@ defmodule Gateway.Plugins.Idempotency do
     Plugin for Idempotency
   """
   import Plug.Conn
-  alias EView.ErrorView
+  alias EView.Views.Error, as: ErrorView
 
   alias Gateway.DB.Models.Log
   alias Gateway.DB.Models.Plugin
@@ -61,6 +61,6 @@ defmodule Gateway.Plugins.Idempotency do
     plugins
     |> Enum.find(&filter_plugin/1)
   end
-  defp filter_plugin(%Plugin{name: :Idempotency, is_enabled: true}), do: true
+  defp filter_plugin(%Plugin{name: :idempotency, is_enabled: true}), do: true
   defp filter_plugin(_), do: false
 end

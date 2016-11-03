@@ -61,7 +61,7 @@ defmodule Gateway.HTTP.RequestTest do
       |> Gateway.PrivateRouter.call([])
 
     expected_resp = %{
-      meta: EView.MetaRender.render("object", conn),
+      meta: EView.Renders.Meta.render("object", conn),
       data: %{}
     }
 

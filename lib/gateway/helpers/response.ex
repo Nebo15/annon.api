@@ -23,7 +23,7 @@ defmodule Gateway.HTTPHelpers.Response do
   def set_type(resource) when resource != %{} do
     type = resource
     |> Map.get(:__struct__)
-    |> EView.DataRender.extract_object_name
+    |> EView.Renders.Data.extract_object_name
 
     resource
     |> Map.put(:type, type)

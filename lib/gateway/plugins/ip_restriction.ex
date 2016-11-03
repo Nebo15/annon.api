@@ -62,6 +62,6 @@ defmodule Gateway.Plugins.IPRestriction do
     |> Enum.find(&filter_plugin/1)
   end
 
-  defp filter_plugin(%Plugin{name: :IPRestriction, is_enabled: true}), do: true
+  defp filter_plugin(%Plugin{name: :ip_restriction, is_enabled: true}), do: true
   defp filter_plugin(_), do: false
 end

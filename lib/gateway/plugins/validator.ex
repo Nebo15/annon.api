@@ -59,7 +59,7 @@ defmodule Gateway.Plugins.Validator do
     plugins
     |> Enum.find(&filter_plugin/1)
   end
-  defp filter_plugin(%Plugin{name: :Validator, is_enabled: true}), do: true
+  defp filter_plugin(%Plugin{name: :validator, is_enabled: true}), do: true
   defp filter_plugin(_), do: false
 
 end

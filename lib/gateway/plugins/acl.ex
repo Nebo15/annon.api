@@ -37,7 +37,7 @@ defmodule Gateway.Plugins.ACL do
     plugins
     |> Enum.find(&filter_plugin/1)
   end
-  defp filter_plugin(%Plugin{name: :ACL, is_enabled: true}), do: true
+  defp filter_plugin(%Plugin{name: :acl, is_enabled: true}), do: true
   defp filter_plugin(_), do: false
 
   # TODO: use Gateway.HTTPHelpers.Response

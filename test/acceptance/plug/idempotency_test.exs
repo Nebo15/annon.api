@@ -46,12 +46,12 @@ defmodule Gateway.Acceptance.Plug.IdempotencyTest do
   end
 
   def get_plugins(_with_proxy = false) do
-    [%{name: "Idempotency", is_enabled: true, settings: %{"key" => 100}}]
+    [%{name: "idempotency", is_enabled: true, settings: %{"key" => 100}}]
   end
 
   def get_plugins(_with_proxy = true) do
-    [%{name: "Idempotency", is_enabled: true, settings: %{"key" => 100}},
-     %{name: "Proxy", is_enabled: true, settings: %{
+    [%{name: "idempotency", is_enabled: true, settings: %{"key" => 100}},
+     %{name: "proxy", is_enabled: true, settings: %{
         host: get_host(:private),
         path: "/apis",
         port: get_port(:private),
