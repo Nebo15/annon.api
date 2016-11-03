@@ -2,6 +2,7 @@ use Mix.Config
 
 config :gateway, Gateway.DB.Repo,
   adapter: Ecto.Adapters.Postgres,
+  priv: "priv/repos/gateway",
   database: "${DB_NAME}",
   username: "${DB_USER}",
   password: "${DB_PASSWORD}",
@@ -10,6 +11,7 @@ config :gateway, Gateway.DB.Repo,
 
 config :gateway, Gateway.DB.Logger.Repo,
   adapter: Ecto.Adapters.Postgres,
+  priv: "priv/repos/logger",
   database: "${DB_NAME}",
   username: "${DB_USER}",
   password: "${DB_PASSWORD}",
