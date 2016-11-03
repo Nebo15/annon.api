@@ -42,6 +42,7 @@ defmodule Gateway.Plugins.ACL do
   defp filter_plugin(%Plugin{name: :ACL, is_enabled: true}), do: true
   defp filter_plugin(_), do: false
 
+  # TODO: use Gateway.HTTPHelpers.Response
   defp send_halt(conn, code, message) do
     conn
     |> put_resp_content_type("application/json")

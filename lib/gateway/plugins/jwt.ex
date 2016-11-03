@@ -101,6 +101,7 @@ defmodule Gateway.Plugins.JWT do
     Repo.all(query)
   end
 
+  # TODO: Use Gateway.HTTPHelpers.Response
   defp send_halt(conn, code, message) do
     conn
     |> put_resp_content_type("application/json")

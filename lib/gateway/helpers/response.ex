@@ -10,6 +10,7 @@ defmodule Gateway.HTTPHelpers.Response do
   def render_response(nil, conn, _), do: Plug.Conn.send_resp(conn, 404, Poison.encode!(%{}))
   def render_response(resource, conn, status) do
     conn
+    |> Plug.Conn.put_resp_content_type("application/json")
     |> Plug.Conn.send_resp(status, get_resp_body(resource))
   end
 
