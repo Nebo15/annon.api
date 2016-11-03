@@ -52,7 +52,7 @@ defmodule Gateway.MonitoringTest do
       name: "Proxy",
       is_enabled: true,
       settings: %{
-                   mathod: "GET",
+                   method: "GET",
                    scheme: "http",
                    host: "localhost",
                    port: 5001,
