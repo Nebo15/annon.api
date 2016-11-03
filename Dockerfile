@@ -7,7 +7,8 @@ MAINTAINER Nebo#15 support@nebo15.com
 ENV TERM=xterm \
     MIX_ENV=prod \
     APP_NAME=gateway \
-    APP_PORT=4001
+    GATEWAY_PUBLIC_PORT=4000 \
+    GATEWAY_PRIVATE_PORT=4001
 
 WORKDIR ${HOME}
 
@@ -41,6 +42,8 @@ RUN \
     chmod -R 777 /opt/$APP_NAME && \
     chmod -R 777 /var/log
 
+RUN epmd -daemon
+
 # Change user to "default"
 USER default
 
@@ -48,7 +51,7 @@ USER default
 ENV REPLACE_OS_VARS=true
 
 # Exposes this port from the docker container to the host machine
-# EXPOSE ${APP_PORT}
+EXPOSE ${GATEWAY_PUBLIC_PORT} ${GATEWAY_PRIVATE_PORT}
 
 # Change workdir to a released directory
 WORKDIR /opt

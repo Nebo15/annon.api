@@ -12,6 +12,8 @@ defmodule Gateway.Helpers.CommonRouter do
                          pass:  ["application/json"],
                          json_decoder: Poison
 
+      plug EView
+
       plug :dispatch
 
       import Gateway.HTTPHelpers.Response

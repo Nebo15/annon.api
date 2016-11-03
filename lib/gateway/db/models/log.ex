@@ -6,9 +6,7 @@ defmodule Gateway.DB.Models.Log do
   alias Gateway.DB.Logger.Repo
 
   @derive {Poison.Encoder, except: [:__meta__]}
-
   @primary_key {:id, :string, autogenerate: false}
-
   schema "logs" do
     embeds_one :api, API, primary_key: false do
       field :name, :string
@@ -116,15 +114,12 @@ defmodule Gateway.DB.Models.Log do
 
   def get_by(selector) do
     Repo.one from Gateway.DB.Models.Log,
-    where: ^selector,
-    limit: 1
-  end
-
-  def get_records do
-    Repo.all(from record in Gateway.DB.Models.Log)
+      where: ^selector,
+      limit: 1
   end
 
   def get_records(limit) when is_integer(limit) do
-    Repo.all(from record in Gateway.DB.Models.Log, limit: ^limit)
+    Repo.all from record in Gateway.DB.Models.Log,
+      limit: ^limit
   end
 end

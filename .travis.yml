@@ -28,7 +28,6 @@ branches:
 before_install:
   # Expose DB to Docker container
   - sudo /bin/bash ./bin/ci/init-db.sh
-  - sudo /bin/bash ./bin/ci/init-cassandra.sh
   - sudo /bin/bash ./bin/ci/init-statsd.sh
 before_script:
   - epmd -daemon
@@ -39,10 +38,11 @@ script:
   # Install dependencies
   - mix deps.get
   # Run all tests except pending ones
-  - mix test --exclude pending --trace
+  - mix test --exclude pending --trace --exclude cluster
+  - mix test --exclude pending --trace --only cluster
   # Submit code coverage report to Coveralls
   # Add --pro if you using private repo.
-  - mix coveralls.travis --pro
+  - mix coveralls.travis --pro --exclude pending
   # Run static code analysis
   - mix credo
   # Check code style
@@ -56,12 +56,14 @@ script:
   - sleep 5
   - docker ps
   - RUNNING_CONTAINERS=`docker ps | wc -l`;
-  - if [ "${RUNNING_CONTAINERS//[[:space:]]/}" == "1" ]; then echo "[E] Container is not started!" exit 1; fi;
+  - if [ "${RUNNING_CONTAINERS//[[:space:]]/}" = "1" ]; then echo "[E] Container is not started\!"; docker logs gateway --details --since 5h; exit 1; fi;
   # Run acceptance tests on Docker container
-  - " MIX_TEST_DATABASE=gateway MIX_LOGGER_TEST_DATABASE=gateway_logger MIX_TEST_HOST=localhost MIX_TEST_PORT=4000 mix test test/acceptance "
+  - "MIX_TEST_DATABASE=gateway MIX_LOGGER_TEST_DATABASE=gateway_logger MIX_TEST_HOST=localhost MIX_TEST_PORT=4000 mix test --exclude pending test/acceptance"
 after_success:
   # Submit Docker container to Docker Hub and create GitHub Release by pushing tag with changelog
   - ./bin/ci/push.sh
+after_failure:
+  - docker logs gateway --details --since 5h
 notifications:
   slack:
     rooms:

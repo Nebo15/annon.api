@@ -7,8 +7,10 @@ defmodule Gateway.DB.Models.API do
   alias Gateway.DB.Repo
   alias Gateway.DB.Models.API, as: APIModel
 
-  @derive {Poison.Encoder, except: [:__meta__, :plugins]}
+  @required_api_fields [:name]
+  @required_request_fields [:scheme, :host, :port, :path, :method]
 
+  @derive {Poison.Encoder, except: [:__meta__, :plugins]}
   schema "apis" do
     field :name, :string
 
@@ -24,9 +26,6 @@ defmodule Gateway.DB.Models.API do
 
     timestamps()
   end
-
-  @required_api_fields [:name]
-  @required_request_fields [:scheme, :host, :port, :path, :method]
 
   def changeset(api, params \\ %{}) do
     api
