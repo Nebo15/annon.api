@@ -5,10 +5,10 @@ defmodule Gateway.DB.Models.Consumer do
 
   use Gateway.DB, :model
 
+  @required_consumer_fields [:external_id]
+
   @derive {Poison.Encoder, except: [:__meta__, :plugins]}
-
   @primary_key {:external_id, :string, autogenerate: false}
-
   schema "consumers" do
     field :metadata, :map
     has_many :plugins, Gateway.DB.Models.ConsumerPluginSettings, references: :external_id, foreign_key: :external_id
@@ -16,7 +16,6 @@ defmodule Gateway.DB.Models.Consumer do
     timestamps()
   end
 
-  @required_consumer_fields [:external_id]
 
   def changeset(consumer, params \\ %{}) do
     consumer

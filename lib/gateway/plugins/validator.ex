@@ -19,7 +19,7 @@ defmodule Gateway.Plugins.Validator do
   defp validate(%Plugin{settings: %{"schema" => schema}}, %Plug.Conn{body_params: %{} = body} = conn) do
     schema
     |> Poison.decode!()
-    |> ExJsonSchema.Validator.validate(body)
+    |> NExJsonSchema.Validator.validate(body)
     |> normalize_validation(conn)
   end
   defp validate(_, conn), do: conn
@@ -32,6 +32,7 @@ defmodule Gateway.Plugins.Validator do
     |> halt
   end
 
+  # TODO: Use Gateway.HTTPHelpers.Response and EView
   defp create_json_response(errors) when is_list(errors) do
     Poison.encode!(%{
       meta: %{

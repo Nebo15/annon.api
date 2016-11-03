@@ -45,9 +45,9 @@ defmodule Gateway.HTTP.RequestTest do
       |> put_req_header("content-type", "application/json")
       |> Gateway.PrivateRouter.call([])
 
-    assert conn.status === 200
-    body = Poison.decode! conn.resp_body
-    assert body["data"]["id"] === id
+    assert 200 == conn.status
+    body = Poison.decode!(conn.resp_body)
+    assert id == body["data"]["id"]
   end
 
   test "DELETE /requests/:request_id" do
@@ -61,14 +61,11 @@ defmodule Gateway.HTTP.RequestTest do
       |> Gateway.PrivateRouter.call([])
 
     expected_resp = %{
-      meta: %{
-        code: 200,
-        description: "Resource was deleted"
-      },
+      meta: EView.MetaRender.render("object", conn),
       data: %{}
     }
 
-    assert conn.status === 200
-    assert conn.resp_body == Poison.encode!(expected_resp)
+    assert 200 == conn.status
+    assert Poison.encode!(expected_resp) == conn.resp_body
   end
 end

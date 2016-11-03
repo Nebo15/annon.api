@@ -15,14 +15,10 @@ defmodule Gateway.Acceptance.Plug.IPRestrictionTest do
     |> api_ip_restriction_data()
     |> http_api_create()
 
-    body = @request.path
+    @request.path
     |> String.replace_prefix("/", "")
     |> get(:public)
     |> assert_status(400)
-    |> get_body()
-    |> Poison.decode!
-
-    assert 400 === body["meta"]["code"]
   end
 
   test "check blacklist + whitelist" do
