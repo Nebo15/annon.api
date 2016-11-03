@@ -21,7 +21,7 @@ defmodule Gateway.AutoClustering do
 
   # Server code
 
-  def init(_) do
+  def init(_opts) do
     Cluster.Events.subscribe(self())
 
     :ets.new(:config, [:set, :public, :named_table])
