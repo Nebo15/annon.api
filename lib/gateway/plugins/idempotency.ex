@@ -6,10 +6,10 @@ defmodule Gateway.Plugins.Idempotency do
     plugin_name: :idempotency
 
   alias Plug.Conn
-  alias EView.Views.Error, as: ErrorView
-  alias Gateway.DB.Schemas.Log
   alias Gateway.DB.Schemas.Plugin
   alias Gateway.DB.Schemas.API, as: APIModel # TODO: rename APIModel to APISchema
+  alias Gateway.DB.Schemas.Log
+  alias EView.Views.Error, as: ErrorView
   alias Gateway.HTTPHelpers.Response
 
   @idempotent_methods ["POST"]

@@ -2,40 +2,40 @@ defmodule Gateway.Plugins.JWT do
   @moduledoc """
   Plugin for JWT verifying and decoding.
   """
+  use Gateway.Helpers.Plugin,
+    plugin_name: :jwt
+
   import Joken
-  import Plug.Conn
   import Ecto.Query, only: [from: 2]
 
+  alias Plug.Conn
   alias Joken.Token
-  alias Gateway.DB.Configs.Repo
   alias Gateway.DB.Schemas.Plugin
   alias Gateway.DB.Schemas.Consumer
   alias Gateway.DB.Schemas.API, as: APIModel
+  alias Gateway.DB.Configs.Repo
+  alias EView.Views.Error, as: ErrorView
+  alias Gateway.HTTPHelpers.Response
 
-  def init([]), do: false
-
-  def call(%Plug.Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
+  def call(%Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opts) when is_list(plugins) do
     plugins
-    |> get_enabled()
+    |> find_plugin_settings()
     |> execute(conn)
   end
   def call(conn, _), do: conn
 
-  defp get_enabled(plugins) when is_list(plugins) do
-    plugins
-    |> Enum.find(&filter_plugin/1)
-  end
-  defp filter_plugin(%Plugin{name: :jwt, is_enabled: true}), do: true
-  defp filter_plugin(_), do: false
-
   defp execute(nil, conn), do: conn
   defp execute(%Plugin{settings: %{"signature" => signature}}, conn) do
     conn
-    |> parse_auth(get_req_header(conn, "authorization"), signature)
+    |> parse_auth(Conn.get_req_header(conn, "authorization"), signature)
   end
   defp execute(_plugin, conn) do
-    conn
-    |> send_halt(501, "required field signature in Plugin.settings")
+    Logger.error("JWT tokens decryption key is not set!")
+
+    "501.json"
+    |> ErrorView.render()
+    |> Response.render_response(conn, 501)
+    |> Conn.halt
   end
 
   defp parse_auth(conn, ["Bearer " <> incoming_token], signature) do
@@ -45,18 +45,42 @@ defmodule Gateway.Plugins.JWT do
     |> verify()
     |> evaluate(conn)
   end
-  defp parse_auth(conn, _header, _signature), do: send_halt(conn, 401, "unauthorized")
+  defp parse_auth(conn, _header, _signature) do
+    "401.json"
+    |> ErrorView.render(%{
+      message: "There are no JWT token in request or your token is invalid.",
+      invalid: [%{
+        entry_type: "header",
+        entry: "Authorization",
+        rules: []
+      }]
+    })
+    |> Response.render_response(conn, 401)
+    |> Plug.Conn.halt
+  end
 
   defp evaluate(%Token{error: nil} = token, conn) do
     conn
     |> merge_consumer_settings(token)
-    |> put_private(:jwt_token, token)
+    |> Conn.put_private(:jwt_token, token)
   end
-  defp evaluate(%Token{error: message}, conn), do: send_halt(conn, 401, message)
+  defp evaluate(%Token{error: message}, conn) do
+    "401.json"
+    |> ErrorView.render(%{
+      message: "Your scopes does not allow to access this resource.",
+      invalid: [%{
+        entry_type: "header",
+        entry: "Authorization",
+        description: message,
+        rules: []
+      }]
+    })
+    |> Response.render_response(conn, 401)
+    |> Plug.Conn.halt
+  end
 
-  def merge_consumer_settings(
-    %Plug.Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, %Token{claims: %{"id" => id}}) do
-
+  def merge_consumer_settings(%Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn,
+                              %Token{claims: %{"id" => id}}) do
     id
     |> get_consumer_settings()
     |> merge_plugins(plugins)
@@ -64,11 +88,20 @@ defmodule Gateway.Plugins.JWT do
   end
   def merge_consumer_settings(conn, _token), do: conn
 
-  def merge_plugins(consumer, default) when is_list(consumer) and length(consumer) > 0
-                                        and is_list(default) and length(default) > 0 do
+  # TODO: Read if from cache
+  # TODO: Move consumer and api settings merge to a separate plugs to support different auth strategies
+  def get_consumer_settings(external_id) do
+    Repo.all from c in Consumer,
+      where: c.external_id == ^external_id,
+      join: s in assoc(c, :plugins),
+      where: s.is_enabled == true,
+      select: {s.plugin_id, s.settings}
+  end
+
+  def merge_plugins(consumer, default)
+      when is_list(consumer) and length(consumer) > 0 and is_list(default) and length(default) > 0 do
     default
     |> Enum.map_reduce([], fn(d_plugin, acc) ->
-
       mergerd_plugin = consumer
       |> Enum.filter(fn({c_id, _}) -> c_id == d_plugin.id end)
       |> merge_plugin(d_plugin)
@@ -77,7 +110,6 @@ defmodule Gateway.Plugins.JWT do
     end)
     |> elem(1)
   end
-
   def merge_plugins(_consumer, _default), do: nil
 
   def merge_plugin([{_, consumer_settings}], %Plugin{} = plugin) do
@@ -87,34 +119,8 @@ defmodule Gateway.Plugins.JWT do
   def merge_plugin(_, plugin), do: plugin
 
   def put_api_to_conn(nil, conn), do: conn
-  def put_api_to_conn(plugins, %Plug.Conn{private: %{api_config: %APIModel{} = api}} = conn) when is_list(plugins) do
+  def put_api_to_conn(plugins, %Conn{private: %{api_config: %APIModel{} = api}} = conn) when is_list(plugins) do
     conn
-    |> put_private(:api_config, Map.put(api, :plugins, plugins))
-  end
-
-  # TODO: Read if from cache
-  def get_consumer_settings(external_id) do
-    Repo.all from c in Consumer,
-      where: c.external_id == ^external_id,
-      join: s in assoc(c, :plugins),
-      where: s.is_enabled == true,
-      select: {s.plugin_id, s.settings}
-  end
-
-  # TODO: Use Gateway.HTTPHelpers.Response
-  defp send_halt(conn, code, message) do
-    conn
-    |> put_resp_content_type("application/json")
-    |> send_resp(code, create_json_response(code, message))
-    |> halt
-  end
-
-  defp create_json_response(code, message) do
-    Poison.encode!(%{
-      meta: %{
-        code: code,
-        error: message
-      }
-    })
+    |> Conn.put_private(:api_config, Map.put(api, :plugins, plugins))
   end
 end

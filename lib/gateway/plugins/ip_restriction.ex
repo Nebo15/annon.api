@@ -6,6 +6,7 @@ defmodule Gateway.Plugins.IPRestriction do
     plugin_name: :ip_restriction
 
   import Gateway.Helpers.IP
+
   alias Plug.Conn
   alias Gateway.DB.Schemas.Plugin
   alias Gateway.DB.Schemas.API, as: APIModel
