@@ -109,8 +109,6 @@ defmodule Gateway.Acceptance.PlugPipelineTest do
     |> api_data("/test/pipeline/api")
     |> Poison.encode!()
 
-    Gateway.AutoClustering.do_reload_config()
-
     "pipeline"
     |> post(pipeline_data, :public, get_valid_headers())
     |> assert_status(404)
@@ -132,9 +130,14 @@ defmodule Gateway.Acceptance.PlugPipelineTest do
   end
 
   def create_api do
-    "POST"
-    |> api_data("/pipeline")
-    |> http_api_create()
+    result =
+      "POST"
+      |> api_data("/pipeline")
+      |> http_api_create()
+
+    Gateway.AutoClustering.do_reload_config()
+
+    result
   end
 
   def api_data(method, path) do
