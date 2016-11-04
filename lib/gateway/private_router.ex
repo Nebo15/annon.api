@@ -21,10 +21,10 @@ defmodule Gateway.PrivateRouter do
   forward "/requests", to: Gateway.HTTP.Requests
 
   match _ do
-    Gateway.Helpers.HTTP.Errors.send_not_found_error(conn)
+    Gateway.Helpers.Response.send_not_found_error(conn)
   end
 
   def handle_errors(conn, error) do
-    Gateway.Helpers.HTTP.Errors.send_internal_error(conn, error)
+    Gateway.Helpers.Response.send_internal_error(conn, error)
   end
 end

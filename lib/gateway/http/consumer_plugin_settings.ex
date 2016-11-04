@@ -6,7 +6,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettings do
   use Plug.Router
   plug :match
   plug :dispatch
-  import Gateway.HTTPHelpers.Response
+  import Gateway.Helpers.Response
 
   import Ecto.Query, only: [from: 2]
 

@@ -10,7 +10,7 @@ defmodule Gateway.Plugins.Idempotency do
   alias Gateway.DB.Schemas.API, as: APIModel # TODO: rename APIModel to APISchema
   alias Gateway.DB.Schemas.Log
   alias EView.Views.Error, as: ErrorView
-  alias Gateway.HTTPHelpers.Response
+  alias Gateway.Helpers.Response
 
   @idempotent_methods ["POST"]
 
@@ -58,8 +58,7 @@ defmodule Gateway.Plugins.Idempotency do
         rules: [:unique]
       }]
     })
-    |> Response.render_response(conn, 409)
-    |> Conn.halt
+    |> Response.send_and_halt(conn, 409)
   end
   defp normalize_resp(_, conn), do: conn
 

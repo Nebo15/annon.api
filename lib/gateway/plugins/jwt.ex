@@ -15,7 +15,7 @@ defmodule Gateway.Plugins.JWT do
   alias Gateway.DB.Schemas.API, as: APIModel
   alias Gateway.DB.Configs.Repo
   alias EView.Views.Error, as: ErrorView
-  alias Gateway.HTTPHelpers.Response
+  alias Gateway.Helpers.Response
 
   def call(%Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opts) when is_list(plugins) do
     plugins
@@ -30,12 +30,8 @@ defmodule Gateway.Plugins.JWT do
     |> parse_auth(Conn.get_req_header(conn, "authorization"), signature)
   end
   defp execute(_plugin, conn) do
-    Logger.error("JWT tokens decryption key is not set!")
-
-    "501.json"
-    |> ErrorView.render()
-    |> Response.render_response(conn, 501)
-    |> Conn.halt
+    Logger.error("JWT tokens decryption key is not set")
+    Response.send_internal_error(conn)
   end
 
   defp parse_auth(conn, ["Bearer " <> incoming_token], signature) do
@@ -55,8 +51,7 @@ defmodule Gateway.Plugins.JWT do
         rules: []
       }]
     })
-    |> Response.render_response(conn, 401)
-    |> Plug.Conn.halt
+    |> Response.send_and_halt(conn, 401)
   end
 
   defp evaluate(%Token{error: nil} = token, conn) do
@@ -75,8 +70,7 @@ defmodule Gateway.Plugins.JWT do
         rules: []
       }]
     })
-    |> Response.render_response(conn, 401)
-    |> Plug.Conn.halt
+    |> Response.send_and_halt(conn, 401)
   end
 
   def merge_consumer_settings(%Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn,

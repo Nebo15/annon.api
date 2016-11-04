@@ -6,12 +6,10 @@ defmodule Gateway.Plugins.Validator do
   use Gateway.Helpers.Plugin,
     plugin_name: :validator
 
-  alias Plug.Conn
-
   alias Gateway.DB.Schemas.Plugin
   alias Gateway.DB.Schemas.API, as: APIModel
-  alias Gateway.HTTPHelpers.Response
   alias EView.Views.ValidationError, as: ValidationErrorView
+  alias Gateway.Helpers.Response
 
   def call(%Plug.Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
     plugins
@@ -32,7 +30,6 @@ defmodule Gateway.Plugins.Validator do
   defp normalize_validation({:error, errors}, conn) do
     "422.json"
     |> ValidationErrorView.render(%{schema: errors})
-    |> Response.render_response(conn, 422)
-    |> Conn.halt
+    |> Response.send_and_halt(conn, 422)
   end
 end

@@ -10,7 +10,7 @@ defmodule Gateway.Plugins.ACL do
   alias Gateway.DB.Schemas.Plugin
   alias Gateway.DB.Schemas.API, as: APIModel
   alias EView.Views.Error, as: ErrorView
-  alias Gateway.HTTPHelpers.Response
+  alias Gateway.Helpers.Response
 
   def call(%Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opts) when is_list(plugins) do
     plugins
@@ -49,23 +49,14 @@ defmodule Gateway.Plugins.ACL do
         rules: []
       }]
     })
-    |> Response.render_response(conn, 403)
-    |> Plug.Conn.halt
+    |> Response.send_and_halt(conn, 403)
   end
   defp send_response({:error, :no_scopes_is_set}, conn) do
     Logger.error("Required field scope in Plugin.settings is not found!")
-
-    "501.json"
-    |> ErrorView.render()
-    |> Response.render_response(conn, 501)
-    |> Conn.halt
+    Response.send_internal_error(conn)
   end
   defp send_response({:error, :invalid_scopes_type}, conn) do
     Logger.error("JWT.scopes must be a list!")
-
-    "501.json"
-    |> ErrorView.render()
-    |> Response.render_response(conn, 501)
-    |> Conn.halt
+    Response.send_internal_error(conn)
   end
 end

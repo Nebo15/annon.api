@@ -7,11 +7,10 @@ defmodule Gateway.Plugins.IPRestriction do
 
   import Gateway.Helpers.IP
 
-  alias Plug.Conn
   alias Gateway.DB.Schemas.Plugin
   alias Gateway.DB.Schemas.API, as: APIModel
   alias EView.Views.Error, as: ErrorView
-  alias Gateway.HTTPHelpers.Response
+  alias Gateway.Helpers.Response
 
   def call(%Plug.Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
     plugins
@@ -26,8 +25,7 @@ defmodule Gateway.Plugins.IPRestriction do
     else
       "400.json"
       |> ErrorView.render(%{message: "You has been blocked from accessing this resource."})
-      |> Response.render_response(conn, 400)
-      |> Conn.halt
+      |> Response.send_and_halt(conn, 400)
     end
   end
   defp execute(_, conn), do: conn
