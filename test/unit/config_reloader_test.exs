@@ -19,7 +19,7 @@ defmodule Gateway.ConfigReloaderTest do
       |> Gateway.PrivateRouter.call([])
     end
 
-    assert capture_log(update_config) =~ "config cache was warmed up (reloaded)"
+    assert capture_log(update_config) =~ "config cache was warmed up"
 
     [{_, api}] = :ets.lookup(:config, {:api, api_model.id})
 
