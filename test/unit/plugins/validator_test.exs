@@ -16,7 +16,7 @@ defmodule Gateway.Plugins.ValidatorTest do
     }
 
     model = %APIModel{plugins: [
-      %Plugin{is_enabled: true, name: :validator, settings: %{"schema" => Poison.encode!(schema)}}
+      %Plugin{is_enabled: true, name: "validator", settings: %{"schema" => Poison.encode!(schema)}}
     ]}
 
     connect = :get
