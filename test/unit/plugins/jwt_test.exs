@@ -94,5 +94,4 @@ defmodule Gateway.Plugins.JWTTest do
     |> sign(hs256(signature))
     |> get_compact
   end
-
 end

@@ -57,7 +57,7 @@ defmodule Gateway.Helpers.Response do
     |> EView.Views.ValidationError.render(%{changeset: changeset})
     |> render_response(conn, 422)
   end
-  def render_response(nil, conn, status) do
+  def render_response(nil, conn, _status) do
     "404.json"
     |> EView.Views.Error.render()
     |> render_response(conn, 404)

@@ -17,13 +17,15 @@ defmodule Gateway.DB.Schemas.Plugin do
   }
 
   @derive {Poison.Encoder, except: [:__meta__, :api]}
-  schema "plugins" do
-     field :name, PluginName
-     field :is_enabled, :boolean, default: false
-     field :settings, :map
-     belongs_to :api, APIModel
+  @valid_plugin_names ["jwt", "validator", "acl", "proxy", "idempotency", "ip_restriction"]
 
-     timestamps()
+  schema "plugins" do
+    field :name, :string
+    field :is_enabled, :boolean, default: false
+    field :settings, :map
+    belongs_to :api, APIModel
+
+    timestamps()
   end
 
   @doc """
@@ -36,6 +38,7 @@ defmodule Gateway.DB.Schemas.Plugin do
     |> unique_constraint(:api_id_name)
     |> validate_required([:name, :settings])
     |> validate_map(:settings)
+    |> validate_inclusion(:name, @valid_plugin_names)
     |> validate_settings()
   end
 

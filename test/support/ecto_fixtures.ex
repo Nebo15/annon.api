@@ -1,20 +1,8 @@
-defmodule EctoFixtures.EnumMacro do
-  @moduledoc """
-  Module for macro
-  """
-  defmacro enum_value(module) do
-    quote do
-      defp value_to_json({key, unquote(module) = module}, acc), do: {nil, Map.put(acc, key, random_enum(module))}
-    end
-  end
-end
-
 defmodule EctoFixtures do
   @moduledoc """
   Generates :map or JSON fixture from Ecto.Schema
   It's useful for tests
   """
-  import EctoFixtures.EnumMacro
 
   def ecto_json_fixtures(model) do
     model
@@ -53,8 +41,6 @@ defmodule EctoFixtures do
   defp value_to_json({key, {:embed, %Ecto.Embedded{cardinality: :many, related: related}}}, acc) do
     {nil, Map.put(acc, key, [ecto_fixtures(related)])}
   end
-
-  enum_value PluginName
 
   def random_date(format), do: Timex.format!(Timex.now, format, :strftime)
   def random_float, do: Float.ceil(:rand.uniform + :rand.uniform(1000), 5)
