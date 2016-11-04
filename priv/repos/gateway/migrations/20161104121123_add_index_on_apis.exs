@@ -6,7 +6,8 @@ defmodule Gateway.DB.Repo.Migrations.AddIndexOnApis do
       "(request->>'host')",
       "(request->>'port')",
       "(request->>'path')",
-      "(request->>'scheme')"
+      "(request->>'scheme')",
+      "(request->>'method')"
     ]
     create unique_index(:apis, columns, uniq: true, name: "api_unique_request_index")
   end
