@@ -14,6 +14,8 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
     |> api_acl_data("acl_read")
     |> http_api_create()
 
+    Gateway.AutoClustering.do_reload_config()
+
     # token without scopes
 
     token_without_scopes = jwt_token(%{"name" => "Alice"}, @jwt_secret)
@@ -68,6 +70,8 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
     |> Map.put(:request,
       %{host: get_host(:public), path: "/acl/scopes", port: get_port(:public), scheme: "http", method: "GET"})
     |> http_api_create()
+
+    Gateway.AutoClustering.do_reload_config()
 
     token = jwt_token(%{"scopes" => "invalid"}, @jwt_secret)
     "acl/scopes"

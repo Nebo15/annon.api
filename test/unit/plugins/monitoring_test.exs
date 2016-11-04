@@ -15,6 +15,8 @@ defmodule Gateway.MonitoringTest do
     { :ok, api } = create_api_endpoint()
     create_proxy_plugin(api)
 
+    Gateway.AutoClustering.do_reload_config()
+
     :get
     |> conn("/apis")
     |> put_req_header("content-type", "application/json")

@@ -15,6 +15,8 @@ defmodule Gateway.Acceptance.Plug.IPRestrictionTest do
     |> api_ip_restriction_data()
     |> http_api_create()
 
+    Gateway.AutoClustering.do_reload_config
+
     @request.path
     |> String.replace_prefix("/", "")
     |> get(:public)
@@ -26,6 +28,8 @@ defmodule Gateway.Acceptance.Plug.IPRestrictionTest do
     %{"ip_blacklist" => "255.255.255.1,127.0.0.*", "ip_whitelist" => "192.168.0.1,127.0.0.1"}
     |> api_ip_restriction_data()
     |> http_api_create()
+
+    Gateway.AutoClustering.do_reload_config()
 
     @request.path
     |> String.replace_prefix("/", "")

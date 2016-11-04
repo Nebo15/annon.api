@@ -11,6 +11,8 @@ defmodule Gateway.Plugins.APILoaderTest do
     data = get_api_model_data()
     {:ok, %APIModel{request: request} = model} = APIModel.create(data)
 
+    Gateway.AutoClustering.do_reload_config()
+
     %{private: %{api_config: %{} = config}} = :get
     |> conn(request.path, Poison.encode!(%{}))
     |> Map.put(:host, request.host)

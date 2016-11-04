@@ -12,6 +12,8 @@ defmodule Gateway.Acceptance.Plug.IdempotencyTest do
     http_api_create(api_data)
     api_data = Poison.encode!(api_data)
 
+    Gateway.AutoClustering.do_reload_config
+
     "idempotency"
     |> post(api_data, :public, [{"x-idempotency-key", @idempotency_key}])
     |> assert_status(201)
