@@ -1,5 +1,4 @@
 defmodule Gateway.MonitoringTest do
-  use ExUnit.Case
   use Gateway.UnitCase
 
   @apis "apis"
