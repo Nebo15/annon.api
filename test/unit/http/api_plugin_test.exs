@@ -38,7 +38,7 @@ defmodule Gateway.HTTP.PluginTest do
     |> EctoFixtures.ecto_fixtures()
     |> APIModel.create()
 
-    plugin_data = get_plugin_data(api_model.id, "ACL")
+    plugin_data = get_plugin_data(api_model.id, "acl")
 
     conn = "/#{api_model.id}/plugins"
     |> send_data(plugin_data)

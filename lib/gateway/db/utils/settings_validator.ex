@@ -6,7 +6,7 @@ defmodule Gateway.Changeset.SettingsValidator do
   import Ecto.Changeset
 
   # JWT
-  def validate_settings(%Changeset{changes: %{name: :JWT, settings: settings}} = ch) do
+  def validate_settings(%Changeset{changes: %{name: :jwt, settings: settings}} = ch) do
     {%{}, %{signature: :string}}
     |> cast(settings, [:signature])
     |> validate_required([:signature])
@@ -14,7 +14,7 @@ defmodule Gateway.Changeset.SettingsValidator do
   end
 
   # ACL
-  def validate_settings(%Changeset{changes: %{name: :ACL, settings: settings}} = ch) do
+  def validate_settings(%Changeset{changes: %{name: :acl, settings: settings}} = ch) do
     {%{}, %{scope: :string}}
     |> cast(settings, [:scope])
     |> validate_required([:scope])
@@ -22,7 +22,7 @@ defmodule Gateway.Changeset.SettingsValidator do
   end
 
   # Validator
-  def validate_settings(%Changeset{changes: %{name: :Validator, settings: settings}} = ch) do
+  def validate_settings(%Changeset{changes: %{name: :validator, settings: settings}} = ch) do
     {%{}, %{schema: :string}}
     |> cast(settings, [:schema])
     |> validate_required([:schema])
@@ -31,7 +31,7 @@ defmodule Gateway.Changeset.SettingsValidator do
   end
 
   # IPRestriction
-  def validate_settings(%Changeset{changes: %{name: :IPRestriction, settings: settings}} = ch) do
+  def validate_settings(%Changeset{changes: %{name: :ip_restriction, settings: settings}} = ch) do
     {%{}, %{ip_whitelist: :string, ip_blacklist: :string}}
     |> cast(settings, [:ip_blacklist, :ip_whitelist])
     |> validate_ip_list(:ip_whitelist)
@@ -40,7 +40,7 @@ defmodule Gateway.Changeset.SettingsValidator do
   end
 
   # Proxy
-  def validate_settings(%Changeset{changes: %{name: :Proxy, settings: settings}} = ch) do
+  def validate_settings(%Changeset{changes: %{name: :proxy, settings: settings}} = ch) do
     {%{}, %{scheme: :string, host: :string, port: :integer, path: :string, method: :string}}
     |> cast(settings, [:scheme, :host, :port, :path, :method])
     |> validate_required([:host])

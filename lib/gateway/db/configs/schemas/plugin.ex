@@ -3,6 +3,9 @@ defmodule Gateway.DB.Schemas.Plugin do
   Model for address
   """
   use Gateway.DB, :schema
+
+  import Gateway.Changeset.SettingsValidator
+
   alias Gateway.DB.Configs.Repo
   alias Gateway.DB.Schemas.Plugin
   alias Gateway.DB.Schemas.API, as: APIModel
