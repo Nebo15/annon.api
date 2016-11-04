@@ -29,6 +29,8 @@ defmodule Gateway.MonitoringTest do
     {:ok, socket} = :gen_tcp.connect('localhost', 8126, [:list, {:active, false}])
     :ok = :gen_tcp.send(socket, metric_type)
 
+    :timer.sleep(100)
+
     socket
     |> :gen_tcp.recv(0)
     |> elem(1)
