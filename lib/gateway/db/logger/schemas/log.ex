@@ -1,8 +1,8 @@
-defmodule Gateway.DB.Models.Log do
+defmodule Gateway.DB.Schemas.Log do
   @moduledoc """
   Log record DB entity
   """
-  use Gateway.DB, :model
+  use Gateway.DB, :schema
   alias Gateway.DB.Logger.Repo
 
   @derive {Poison.Encoder, except: [:__meta__]}
@@ -95,31 +95,31 @@ defmodule Gateway.DB.Models.Log do
   end
 
   def create(params \\ %{}) do
-    %Gateway.DB.Models.Log{}
+    %Gateway.DB.Schemas.Log{}
     |> cast(params, [:id, :idempotency_key, :ip_address])
     |> cast_embed(:request, with: &changeset_embeded_request/2)
     |> Repo.insert
   end
 
   def put_response(id, params) do
-    %Gateway.DB.Models.Log{id: id}
+    %Gateway.DB.Schemas.Log{id: id}
     |> changeset_response(params)
     |> Repo.update()
   end
 
   def delete(id) do
-    %Gateway.DB.Models.Log{id: id}
+    %Gateway.DB.Schemas.Log{id: id}
     |> Repo.delete()
   end
 
   def get_by(selector) do
-    Repo.one from Gateway.DB.Models.Log,
+    Repo.one from Gateway.DB.Schemas.Log,
       where: ^selector,
       limit: 1
   end
 
   def get_records(limit) when is_integer(limit) do
-    Repo.all from record in Gateway.DB.Models.Log,
+    Repo.all from record in Gateway.DB.Schemas.Log,
       limit: ^limit
   end
 end

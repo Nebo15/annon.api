@@ -6,7 +6,7 @@ defmodule Gateway.ConfigReloaderTest do
   test "reload the config cache if it changes" do
     {:ok, api_model} =
       get_api_model_data()
-      |> Gateway.DB.Models.API.create()
+      |> Gateway.DB.Schemas.API.create()
 
     new_contents = %{
       "name" => "New name"

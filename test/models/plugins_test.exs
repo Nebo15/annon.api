@@ -1,4 +1,4 @@
-defmodule Gateway.Models.PluginTest do
+defmodule Gateway.Schemas.PluginTest do
   use Gateway.API.ModelCase
 
   test "create plugin" do

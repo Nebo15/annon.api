@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :gateway, Gateway.DB.Repo,
+config :gateway, Gateway.DB.Configs.Repo,
   adapter: Ecto.Adapters.Postgres,
   priv: "priv/repos/gateway",
   database: "${DB_NAME}",

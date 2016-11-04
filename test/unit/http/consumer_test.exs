@@ -5,8 +5,8 @@ defmodule Gateway.HTTP.ConsumerTest do
   test "GET /consumers" do
     data =
       [
-        get_consumer_data() |> Gateway.DB.Models.Consumer.create(),
-        get_consumer_data() |> Gateway.DB.Models.Consumer.create()
+        get_consumer_data() |> Gateway.DB.Schemas.Consumer.create(),
+        get_consumer_data() |> Gateway.DB.Schemas.Consumer.create()
       ]
       |> Enum.map(fn({:ok, e}) -> e end)
 
@@ -16,7 +16,7 @@ defmodule Gateway.HTTP.ConsumerTest do
       |> Gateway.PrivateRouter.call([])
 
     expected_resp = %{
-      meta: EView.MetaRender.render("list", conn),
+      meta: EView.Renders.Meta.render("list", conn),
       data: data
     }
 
@@ -27,7 +27,7 @@ defmodule Gateway.HTTP.ConsumerTest do
   test "GET /consumers/:external_id" do
     { :ok, data } =
       get_consumer_data()
-      |> Gateway.DB.Models.Consumer.create()
+      |> Gateway.DB.Schemas.Consumer.create()
 
     conn = :get
       |> conn("consumers/#{data.external_id}")
@@ -35,7 +35,7 @@ defmodule Gateway.HTTP.ConsumerTest do
       |> Gateway.PrivateRouter.call([])
 
     expected_resp = %{
-      meta: EView.MetaRender.render("object", conn),
+      meta: EView.Renders.Meta.render("object", conn),
       data: data
     }
 
@@ -63,7 +63,7 @@ defmodule Gateway.HTTP.ConsumerTest do
   test "PUT /consumers/:external_id" do
     { :ok, data } =
       get_consumer_data()
-      |> Gateway.DB.Models.Consumer.create()
+      |> Gateway.DB.Schemas.Consumer.create()
 
     new_contents = %{
       external_id: Helper.random_string(32),
@@ -90,7 +90,7 @@ defmodule Gateway.HTTP.ConsumerTest do
   test "DELETE /consumers/:external_id" do
     { :ok, data } =
       get_consumer_data()
-      |> Gateway.DB.Models.Consumer.create()
+      |> Gateway.DB.Schemas.Consumer.create()
 
     conn = :delete
       |> conn("/consumers/#{data.external_id}")

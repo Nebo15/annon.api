@@ -8,15 +8,16 @@ defmodule Gateway.HTTP.API.Plugins do
 
   import Ecto.Query, only: [from: 2]
 
-  alias Gateway.DB.Repo
-  alias Gateway.DB.Models.Plugin
-  alias Gateway.DB.Models.API, as: APIModel
+  alias Gateway.DB.Configs.Repo
+  alias Gateway.DB.Schemas.Plugin
+  alias Gateway.DB.Schemas.API, as: APIModel
 
   # list
   get "/:api_id/plugins" do
-    query = from p in Plugin,
-            where: p.api_id == ^api_id,
-            limit: 10
+    query =
+      from p in Plugin,
+      where: p.api_id == ^api_id,
+      limit: 10
 
     query
     |> Repo.all(api_id: api_id)
@@ -57,5 +58,4 @@ defmodule Gateway.HTTP.API.Plugins do
 
   def render_plugin(%Plugin{} = p, conn), do: render_response(p, conn, 200)
   def render_plugin(nil, conn), do: render_response(nil, conn, 404)
-
 end

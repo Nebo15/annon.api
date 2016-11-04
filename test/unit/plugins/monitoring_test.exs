@@ -37,7 +37,7 @@ defmodule Gateway.MonitoringTest do
   end
 
   defp create_api_endpoint do
-    Gateway.DB.Models.API.create(%{
+    Gateway.DB.Schemas.API.create(%{
       name: "Test api",
       request: %{
         method: "GET",
@@ -50,16 +50,16 @@ defmodule Gateway.MonitoringTest do
   end
 
   defp create_proxy_plugin(api) do
-    Gateway.DB.Models.Plugin.create(api, %{
-    name: "proxy",
-    is_enabled: true,
-    settings: %{
-                 "method" => "GET",
-                 "scheme" => "http",
-                 "host" => "localhost",
-                 "port" => 5001,
-                 "path" => "/apis"
-               }
+    Gateway.DB.Schemas.Plugin.create(api, %{
+      name: "proxy",
+      is_enabled: true,
+      settings: %{
+        method: "GET",
+        scheme: "http",
+        host: "localhost",
+        port: 5001,
+        path: "/apis"
+      }
     })
   end
 end

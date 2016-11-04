@@ -154,11 +154,12 @@ defmodule Gateway.Acceptance.PlugPipelineTest do
       %{name: "validator", is_enabled: true, settings: %{"schema" => Poison.encode!(@schema)}},
       %{name: "idempotency", is_enabled: true, settings: %{"key" => 100}},
       %{name: "proxy", is_enabled: true, settings: %{
-        host: get_host(:private),
-        path: "/apis",
-        port: get_port(:private),
-        scheme: "http"
-      }}
+          host: get_host(:private),
+          path: "/apis",
+          port: get_port(:private),
+          scheme: "http"
+        }
+      }
     ]
   end
 

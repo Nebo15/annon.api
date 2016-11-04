@@ -1,14 +1,23 @@
-defmodule Gateway.DB.Models.Plugin do
+defmodule Gateway.DB.Schemas.Plugin do
   @moduledoc """
   Model for address
   """
-  use Gateway.DB, :model
-  alias Gateway.DB.Repo
-  alias Gateway.DB.Models.Plugin
-  alias Gateway.DB.Models.API, as: APIModel
+  use Gateway.DB, :schema
+
   import Gateway.Changeset.SettingsValidator
 
+  alias Gateway.DB.Configs.Repo
+  alias Gateway.DB.Schemas.Plugin
+  alias Gateway.DB.Schemas.API, as: APIModel
+
+  @type t :: %Plugin{
+    name: atom,
+    is_enabled: boolean,
+    settings: map
+  }
+
   @derive {Poison.Encoder, except: [:__meta__, :api]}
+  @valid_plugin_names ["jwt", "validator", "acl", "proxy", "idempotency", "ip_restriction"]
 
   @valid_plugin_names ["jwt", "validator", "acl", "proxy", "idempotency", "ip_restriction"]
 
@@ -52,17 +61,19 @@ defmodule Gateway.DB.Models.Plugin do
 
   defp update_plugin(%Ecto.Changeset{valid?: false} = ch, _api_id, _name), do: {:error, ch}
   defp update_plugin(%Ecto.Changeset{valid?: true, changes: changes}, api_id, name) do
-    q = (from p in Plugin,
+    q = from p in Plugin,
      where: p.api_id == ^api_id,
-     where: p.name == ^name)
+     where: p.name == ^name
+
     q
     |> Repo.update_all([set: Map.to_list(changes)], returning: true)
   end
 
   def delete(api_id, name) do
-    q = (from p in Plugin,
+    q = from p in Plugin,
      where: p.api_id == ^api_id,
-     where: p.name == ^name)
+     where: p.name == ^name
+
     q
     |> Repo.delete_all
     |> normalize_ecto_delete

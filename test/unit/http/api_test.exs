@@ -13,12 +13,11 @@ defmodule Gateway.HTTP.APITest do
     }
 
   test "GET /apis" do
-    data =
-      [
-        Gateway.DB.Models.API.create(@correct_api_data),
-        Gateway.DB.Models.API.create(@correct_api_data)
-      ]
-      |> Enum.map(fn({:ok, e}) -> e end)
+    data = [
+      Gateway.DB.Schemas.API.create(@correct_api_data),
+      Gateway.DB.Schemas.API.create(@correct_api_data)
+    ]
+    |> Enum.map(fn({:ok, e}) -> e end)
 
     conn = :get
     |> conn("/")
@@ -26,7 +25,7 @@ defmodule Gateway.HTTP.APITest do
     |> Gateway.HTTP.API.call([])
 
     expected_resp = %{
-      meta: EView.MetaRender.render("list", conn),
+      meta: EView.Renders.Meta.render("list", conn),
       data: data
     }
 
@@ -35,7 +34,7 @@ defmodule Gateway.HTTP.APITest do
   end
 
   test "GET /apis/:api_id" do
-    { :ok, data } = Gateway.DB.Models.API.create(@correct_api_data)
+    {:ok, data} = Gateway.DB.Schemas.API.create(@correct_api_data)
 
     conn = :get
     |> conn("/#{data.id}")
@@ -43,7 +42,7 @@ defmodule Gateway.HTTP.APITest do
     |> Gateway.HTTP.API.call([])
 
     expected_resp = %{
-      meta: EView.MetaRender.render("object", conn),
+      meta: EView.Renders.Meta.render("object", conn),
       data: data
     }
 
@@ -83,8 +82,7 @@ defmodule Gateway.HTTP.APITest do
   end
 
   test "PUT /apis/:api_id" do
-    { :ok, data } =
-      Gateway.DB.Models.API.create(@correct_api_data)
+    {:ok, data} = Gateway.DB.Schemas.API.create(@correct_api_data)
 
     new_contents = %{
       name: "New name",
@@ -117,8 +115,7 @@ defmodule Gateway.HTTP.APITest do
   end
 
   test "DELETE /apis/:api_id" do
-    { :ok, data } =
-      Gateway.DB.Models.API.create(@correct_api_data)
+    {:ok, data} = Gateway.DB.Schemas.API.create(@correct_api_data)
 
     conn = :delete
     |> conn("/#{data.id}")

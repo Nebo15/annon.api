@@ -1,4 +1,4 @@
-defmodule Gateway.DB.Repo.Migrations.AlterUid2string do
+defmodule Gateway.DB.Configs.Repo.Migrations.AlterUid2string do
   use Ecto.Migration
 
   def change do

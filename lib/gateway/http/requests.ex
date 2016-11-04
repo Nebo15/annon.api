@@ -4,10 +4,10 @@ defmodule Gateway.HTTP.Requests do
   Documentation http://docs.osapigateway.apiary.io/#reference/requests
   """
   use Gateway.Helpers.CommonRouter
-  alias Gateway.DB.Models.Log
+  alias Gateway.DB.Schemas.Log
 
   get "/" do
-    # ToDo: pagination
+    # TODO: pagination
     conn
     |> get_limit()
     |> Log.get_records()

@@ -8,9 +8,9 @@ defmodule Gateway.UnitCase do
     quote do
       use ExUnit.Case, async: true
       use Plug.Test
-      alias Gateway.DB.Models.Plugin
-      alias Gateway.DB.Models.API, as: APIModel
-      alias Gateway.DB.Models.Log
+      alias Gateway.DB.Schemas.Plugin
+      alias Gateway.DB.Schemas.API, as: APIModel
+      alias Gateway.DB.Schemas.Log
       import Gateway.UnitCase
       import Gateway.Fixtures
     end
@@ -20,11 +20,11 @@ defmodule Gateway.UnitCase do
   def assert_not_halt(%Plug.Conn{halted: false} = plug), do: plug
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Configs.Repo)
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Logger.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Configs.Repo, {:shared, self()})
       Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Logger.Repo, {:shared, self()})
     end
 
