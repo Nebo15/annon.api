@@ -1,5 +1,5 @@
 ## Name of the node
--name ${HOSTNAME}@${POD_IP}
+-name <%= release_name %>@${POD_IP}
 
 ## Cookie for distributed erlang
 -setcookie ${ERLANG_COOKIE}
@@ -20,3 +20,5 @@
 
 # Enable SMP automatically based on availability
 -smp auto
+
+-kernel inet_dist_listen_min ${LISTEN_DIST_MIN} inet_dist_listen_max ${LISTEN_DIST_MAX}
