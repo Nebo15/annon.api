@@ -5,13 +5,14 @@ defmodule Gateway.HTTPHelpers.Response do
   def render_delete_response({:ok, _resource}, conn), do: render_response(%{}, conn, 200)
   def render_delete_response(_, conn), do: render_response(nil, conn)
 
-  def render_response({:ok, resource}, conn, status \\ 200), do: render_response(resource, conn, status)
-  def render_response({:error, changeset}, conn, _) do
+  def render_response(resp, conn, status \\ 200), do: _render_response(resp, conn, status)
+  defp _render_response({:ok, resource}, conn, status), do: _render_response(resource, conn, status)
+  defp _render_response({:error, changeset}, conn, _) do
     conn
     |> Plug.Conn.send_resp(422, Poison.encode!(EView.ValidationErrorView.render("422.json", changeset)))
   end
-  def render_response(nil, conn, _), do: Plug.Conn.send_resp(conn, 404, Poison.encode!(%{}))
-  def render_response(resource, conn, status) do
+  defp _render_response(nil, conn, _), do: Plug.Conn.send_resp(conn, 404, Poison.encode!(%{}))
+  defp _render_response(resource, conn, status) do
     conn
     |> Plug.Conn.put_resp_content_type("application/json")
     |> Plug.Conn.send_resp(status, get_resp_body(resource))
