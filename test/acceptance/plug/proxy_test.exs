@@ -74,9 +74,13 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
     |> Poison.decode!
     |> get_in(["data", "id"])
 
+    Gateway.AutoClustering.do_reload_config()
+
     @api_url
     |> post(Poison.encode!(get_api_proxy_data("/proxy/test")), :private)
     |> assert_status(201)
+
+    Gateway.AutoClustering.do_reload_config()
 
     proxy_plugin = %{ name: "proxy", is_enabled: true,
                       settings: %{
@@ -92,7 +96,7 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
     |> post(Poison.encode!(proxy_plugin), :private)
     |> assert_status(201)
 
-    Gateway.AutoClustering.do_reload_config
+    Gateway.AutoClustering.do_reload_config()
 
     "proxy/test_headers"
     |> get(:public)
