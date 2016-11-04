@@ -19,8 +19,6 @@ defmodule Gateway.DB.Schemas.Plugin do
   @derive {Poison.Encoder, except: [:__meta__, :api]}
   @valid_plugin_names ["jwt", "validator", "acl", "proxy", "idempotency", "ip_restriction"]
 
-  @valid_plugin_names ["jwt", "validator", "acl", "proxy", "idempotency", "ip_restriction"]
-
   schema "plugins" do
     field :name, :string
     field :is_enabled, :boolean, default: false

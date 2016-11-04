@@ -5,7 +5,7 @@ defmodule Gateway.DB.Schemas.ConsumerPluginSettings do
   use Gateway.DB, :schema
 
   alias Gateway.DB.Configs.Repo
-  alias Gateway.DB.Consumer
+  alias Gateway.DB.Schemas.Consumer
   alias Gateway.DB.Schemas.Plugin
   alias Gateway.DB.Schemas.ConsumerPluginSettings
 
