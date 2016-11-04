@@ -10,6 +10,8 @@ defmodule Gateway.DB.Models.Plugin do
 
   @derive {Poison.Encoder, except: [:__meta__, :api]}
 
+  @valid_plugin_names ["jwt", "validator", "acl", "proxy", "idempotency", "ip_restriction"]
+
   schema "plugins" do
     field :name, :string
     field :is_enabled, :boolean, default: false
@@ -29,7 +31,7 @@ defmodule Gateway.DB.Models.Plugin do
     |> unique_constraint(:api_id_name)
     |> validate_required([:name, :settings])
     |> validate_map(:settings)
-    |> validate_inclusion(:name, ["jwt", "validator", "acl", "proxy", "idempotency", "ip_restriction"])
+    |> validate_inclusion(:name, @valid_plugin_names)
     |> validate_settings()
   end
 
