@@ -115,7 +115,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
 
   defp create_plugin(api_id) do
     %Gateway.DB.Models.API{}
-    |> Gateway.DB.Models.Plugin.create(%{api_id: api_id, name: "ACL", is_enabled: true, settings: %{"scope" => "read"}})
+    |> Gateway.DB.Models.Plugin.create(%{api_id: api_id, name: "acl", is_enabled: true, settings: %{"scope" => "read"}})
     |> elem(1)
   end
 end

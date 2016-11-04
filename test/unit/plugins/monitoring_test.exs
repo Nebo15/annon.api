@@ -49,7 +49,7 @@ defmodule Gateway.MonitoringTest do
 
   defp create_proxy_plugin(api) do
     Gateway.DB.Models.Plugin.create(api, %{
-    name: "Proxy",
+    name: "proxy",
     is_enabled: true,
     settings: %{
                  "method" => "GET",

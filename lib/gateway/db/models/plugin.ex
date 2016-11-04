@@ -11,12 +11,12 @@ defmodule Gateway.DB.Models.Plugin do
   @derive {Poison.Encoder, except: [:__meta__, :api]}
 
   schema "plugins" do
-     field :name, PluginName
-     field :is_enabled, :boolean, default: false
-     field :settings, :map
-     belongs_to :api, APIModel
+    field :name, :string
+    field :is_enabled, :boolean, default: false
+    field :settings, :map
+    belongs_to :api, APIModel
 
-     timestamps()
+    timestamps()
   end
 
   @doc """
@@ -29,6 +29,7 @@ defmodule Gateway.DB.Models.Plugin do
     |> unique_constraint(:api_id_name)
     |> validate_required([:name, :settings])
     |> validate_map(:settings)
+    |> validate_inclusion(:name, ["jwt", "validator", "acl", "proxy", "idempotency", "ip_restriction"])
     |> validate_settings()
   end
 
@@ -55,7 +56,6 @@ defmodule Gateway.DB.Models.Plugin do
     q
     |> Repo.update_all([set: Map.to_list(changes)], returning: true)
   end
-
 
   def delete(api_id, name) do
     q = (from p in Plugin,

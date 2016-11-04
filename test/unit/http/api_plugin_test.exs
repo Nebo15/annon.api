@@ -38,7 +38,7 @@ defmodule Gateway.HTTP.PluginTest do
     |> EctoFixtures.ecto_fixtures()
     |> APIModel.create()
 
-    plugin_data = get_plugin_data(api_model.id, "ACL")
+    plugin_data = get_plugin_data(api_model.id, "acl")
 
     conn = "/#{api_model.id}/plugins"
     |> send_data(plugin_data)
@@ -54,7 +54,7 @@ defmodule Gateway.HTTP.PluginTest do
     %{plugins: [p1, _]} = data = get_api_model_data()
     {:ok, api_model} = APIModel.create(Map.put(data, :plugins, [p1]))
 
-    plugin_data = %{name: "Validator", settings: %{"schema" => "{}"}}
+    plugin_data = %{name: "validator", settings: %{"schema" => "{}"}}
 
     conn = "/#{api_model.id}/plugins/#{p1.name}"
     |> send_data(plugin_data, :put)
@@ -63,12 +63,12 @@ defmodule Gateway.HTTP.PluginTest do
     resp = Poison.decode!(conn.resp_body)["data"]
     assert resp["name"] == plugin_data.name
 
-    "/#{api_model.id}/plugins/Validator"
+    "/#{api_model.id}/plugins/validator"
     |> send_get()
     |> assert_conn_status()
 
-    plugin_data = %{name: "Validator", settings: %{"schema" => "{}"}}
-    conn = "/#{api_model.id}/plugins/Validator"
+    plugin_data = %{name: "validator", settings: %{"schema" => "{}"}}
+    conn = "/#{api_model.id}/plugins/validator"
     |> send_data(plugin_data, :put)
     |> assert_conn_status()
 

@@ -3,12 +3,12 @@ defmodule Gateway.Acceptance.Private.PluginsTest do
 
   test "invalid JWT Plugin settings" do
     "apis"
-    |> post(Poison.encode!(invalid_plugin_data("JWT")), :private)
+    |> post(Poison.encode!(invalid_plugin_data("jwt")), :private)
     |> assert_status(422)
 
     data = get_api_model_data()
     |> Map.put(:plugins, [
-      %{name: "JWT", is_enabled: false, settings: %{"signature" => 1000}},
+      %{name: "jwt", is_enabled: false, settings: %{"signature" => 1000}},
     ])
 
     "apis"
@@ -18,12 +18,12 @@ defmodule Gateway.Acceptance.Private.PluginsTest do
 
   test "invalid Validator Plugin settings" do
     "apis"
-    |> post(Poison.encode!(invalid_plugin_data("Validator")), :private)
+    |> post(Poison.encode!(invalid_plugin_data("validator")), :private)
     |> assert_status(422)
 
     data = get_api_model_data()
     |> Map.put(:plugins, [
-      %{name: "Validator", is_enabled: false, settings: %{"schema" => "{invalid: schema: json]"}},
+      %{name: "validator", is_enabled: false, settings: %{"schema" => "{invalid: schema: json]"}},
     ])
 
     "apis"
@@ -33,12 +33,12 @@ defmodule Gateway.Acceptance.Private.PluginsTest do
 
   test "invalid ACL Plugin settings" do
     "apis"
-    |> post(Poison.encode!(invalid_plugin_data("ACL")), :private)
+    |> post(Poison.encode!(invalid_plugin_data("acl")), :private)
     |> assert_status(422)
 
     data = get_api_model_data()
     |> Map.put(:plugins, [
-      %{name: "ACL", is_enabled: false, settings: %{"scope" => 100}},
+      %{name: "acl", is_enabled: false, settings: %{"scope" => 100}},
     ])
 
     "apis"
@@ -48,12 +48,12 @@ defmodule Gateway.Acceptance.Private.PluginsTest do
 
   test "invalid IPRestriction Plugin settings" do
     "apis"
-    |> post(Poison.encode!(invalid_plugin_data("IPRestriction")), :private)
+    |> post(Poison.encode!(invalid_plugin_data("ip_restriction")), :private)
     |> assert_status(422)
 
     data = get_api_model_data()
     |> Map.put(:plugins, [
-      %{name: "IPRestriction", is_enabled: false, settings: %{"ip_blacklist" => 100, "ip_whitelist" => "127.0.0.1"}},
+      %{name: "ip_restriction", is_enabled: false, settings: %{"ip_blacklist" => 100, "ip_whitelist" => "127.0.0.1"}},
     ])
     "apis"
     |> post(Poison.encode!(data), :private)
@@ -61,7 +61,7 @@ defmodule Gateway.Acceptance.Private.PluginsTest do
 
     data = get_api_model_data()
     |> Map.put(:plugins, [
-      %{name: "IPRestriction", is_enabled: false, settings: %{"ip_whitelist" => "127.0.0.1"}},
+      %{name: "ip_restriction", is_enabled: false, settings: %{"ip_whitelist" => "127.0.0.1"}},
     ])
     "apis"
     |> post(Poison.encode!(data), :private)
@@ -69,7 +69,7 @@ defmodule Gateway.Acceptance.Private.PluginsTest do
 
     data = get_api_model_data()
     |> Map.put(:plugins, [
-      %{name: "IPRestriction",
+      %{name: "ip_restriction",
         is_enabled: false,
         settings: %{"ip_blacklist" => "{invalid: json]", "ip_whitelist" => "[]"}},
     ])
@@ -79,7 +79,7 @@ defmodule Gateway.Acceptance.Private.PluginsTest do
 
     data = get_api_model_data()
     |> Map.put(:plugins, [
-      %{name: "IPRestriction", is_enabled: false, settings: %{"ip_blacklist" => "127.0.0.1",
+      %{name: "ip_restriction", is_enabled: false, settings: %{"ip_blacklist" => "127.0.0.1",
                                                               "ip_whitelist" => "127.0.0.256"}},
     ])
     "apis"
@@ -89,12 +89,12 @@ defmodule Gateway.Acceptance.Private.PluginsTest do
 
   test "invalid Proxy Plugin settings" do
     "apis"
-    |> post(Poison.encode!(invalid_plugin_data("Proxy")), :private)
+    |> post(Poison.encode!(invalid_plugin_data("proxy")), :private)
     |> assert_status(422)
 
     data = get_api_model_data()
     |> Map.put(:plugins, [
-      %{name: "Proxy", is_enabled: false, settings: %{"path" => 100}},
+      %{name: "proxy", is_enabled: false, settings: %{"path" => 100}},
     ])
 
     "apis"

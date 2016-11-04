@@ -8,7 +8,7 @@ defmodule Gateway.Plugins.JWTTest do
   import Joken
 
   @payload %{ "name" => "John Doe" }
-  @plugin_data [%{name: "JWT", is_enabled: true, settings: %{"signature" => "super_coolHacker"}}]
+  @plugin_data [%{name: "jwt", is_enabled: true, settings: %{"signature" => "super_coolHacker"}}]
 
   test "jwt invalid auth" do
     {:ok, %APIModel{request: request} = model} = create_api()
@@ -44,7 +44,7 @@ defmodule Gateway.Plugins.JWTTest do
 
   test "jwt is disabled" do
     data = get_api_model_data()
-    |> Map.put(:plugins, [%{name: "JWT", is_enabled: false, settings: %{"signature" => "super_coolHacker"}}])
+    |> Map.put(:plugins, [%{name: "jwt", is_enabled: false, settings: %{"signature" => "super_coolHacker"}}])
 
     {:ok, %APIModel{request: request} = model} = APIModel.create(data)
 
@@ -58,7 +58,7 @@ defmodule Gateway.Plugins.JWTTest do
 
   test "jwt required signature in settings" do
     data = get_api_model_data()
-    |> Map.put(:plugins, [%{name: "JWT", is_enabled: true, settings: %{"some" => "value"}}])
+    |> Map.put(:plugins, [%{name: "jwt", is_enabled: true, settings: %{"some" => "value"}}])
 
     assert {:error, %Ecto.Changeset{valid?: false}} = APIModel.create(data)
   end
