@@ -10,15 +10,15 @@ defmodule Gateway.Fixtures do
     |> EctoFixtures.ecto_fixtures()
 
     api_model
-    |> Map.put(:plugins, [get_plugin_data(api_model.id, "JWT"), get_plugin_data(api_model.id, "ACL")])
+    |> Map.put(:plugins, [get_plugin_data(api_model.id, "jwt"), get_plugin_data(api_model.id, "acl")])
   end
 
-  def get_plugin_data(api_id, "JWT") do
-    %{api_id: api_id, name: "JWT", is_enabled: true, settings: %{"signature" => "secret-sign"}}
+  def get_plugin_data(api_id, "jwt") do
+    %{api_id: api_id, name: "jwt", is_enabled: true, settings: %{"signature" => "secret-sign"}}
   end
 
-  def get_plugin_data(api_id, "ACL") do
-    %{api_id: api_id, name: "ACL", is_enabled: true, settings: %{"scope" => "read"}}
+  def get_plugin_data(api_id, "acl") do
+    %{api_id: api_id, name: "acl", is_enabled: true, settings: %{"scope" => "read"}}
   end
 
   def get_consumer_data do

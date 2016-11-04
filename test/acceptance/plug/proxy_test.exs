@@ -23,7 +23,7 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
     |> Poison.decode!
     |> get_in(["data", "id"])
 
-    proxy_plugin = %{ name: "Proxy", is_enabled: true, settings: %{
+    proxy_plugin = %{ name: "proxy", is_enabled: true, settings: %{
                           host: get_host(:private),
                           path: "/apis/#{api_id}",
                           port: get_port(:private),
@@ -51,7 +51,7 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
   end
 
   test "proxy without sheme and path" do
-    proxy_plugin = %{ name: "Proxy", is_enabled: true, settings: %{host: get_host(:private), port: get_port(:private)}}
+    proxy_plugin = %{ name: "proxy", is_enabled: true, settings: %{host: get_host(:private), port: get_port(:private)}}
     "/apis"
     |> get_api_proxy_data()
     |> Map.put(:plugins, [proxy_plugin])
@@ -74,7 +74,7 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
     |> post(Poison.encode!(get_api_proxy_data("/proxy/test")), :private)
     |> assert_status(201)
 
-    proxy_plugin = %{ name: "Proxy", is_enabled: true,
+    proxy_plugin = %{ name: "proxy", is_enabled: true,
                       settings: %{
                         host: get_host(:public),
                         path: "/proxy/test",
@@ -96,7 +96,7 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
       [%{"authorization" => "Bearer #{jwt_token(@payload, @token_secret)}"}])
     proxy_plugin = Map.put(proxy_plugin, :settings, new_settings)
 
-    url = @api_url <> "/#{api_id}/plugins/Proxy"
+    url = @api_url <> "/#{api_id}/plugins/proxy"
     url
     |> delete(:private)
     |> assert_status(200)
@@ -116,7 +116,7 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
     |> Map.put(:request,
       %{host: get_host(:public), path: path, port: get_port(:public), scheme: "http", method: "GET"})
     |> Map.put(:plugins, [
-      %{name: "JWT", is_enabled: enable_jwt, settings: %{"signature" => @token_secret}}])
+      %{name: "jwt", is_enabled: enable_jwt, settings: %{"signature" => @token_secret}}])
   end
 
 end

@@ -84,7 +84,7 @@ defmodule Gateway.Plugins.Proxy do
     plugins
     |> Enum.find(&filter_plugin/1)
   end
-  defp filter_plugin(%Plugin{name: :Proxy, is_enabled: true}), do: true
+  defp filter_plugin(%Plugin{name: "proxy", is_enabled: true}), do: true
   defp filter_plugin(_), do: false
 
 end

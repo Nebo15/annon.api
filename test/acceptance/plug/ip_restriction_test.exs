@@ -37,7 +37,7 @@ defmodule Gateway.Acceptance.Plug.IPRestrictionTest do
     get_api_model_data()
     |> Map.put(:request, @request)
     |> Map.put(:plugins, [
-      %{name: "IPRestriction", is_enabled: true, settings: settings},
+      %{name: "ip_restriction", is_enabled: true, settings: settings},
     ])
   end
 end
