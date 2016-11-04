@@ -3,7 +3,7 @@ defmodule Gateway.Plugins.JWT do
   Plugin for JWT verifying and decoding.
   """
   use Gateway.Helpers.Plugin,
-    plugin_name: :jwt
+    plugin_name: "jwt"
 
   import Joken
   import Ecto.Query, only: [from: 2]

@@ -3,7 +3,7 @@ defmodule Gateway.Plugins.Idempotency do
   Plugin for request idempotency.
   """
   use Gateway.Helpers.Plugin,
-    plugin_name: :idempotency
+    plugin_name: "idempotency"
 
   alias Plug.Conn
   alias Gateway.DB.Schemas.Plugin

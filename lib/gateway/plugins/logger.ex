@@ -3,7 +3,7 @@ defmodule Gateway.Plugins.Logger do
   Request/response logger plug.
   """
   use Gateway.Helpers.Plugin,
-    plugin_name: :logger
+    plugin_name: "logger"
 
   alias Plug.Conn
   alias Gateway.DB.Schemas.Log

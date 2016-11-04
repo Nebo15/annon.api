@@ -3,7 +3,7 @@ defmodule Gateway.Plugins.IPRestriction do
   IP restriction plug.
   """
   use Gateway.Helpers.Plugin,
-    plugin_name: :ip_restriction
+    plugin_name: "ip_restriction"
 
   import Gateway.Helpers.IP
 

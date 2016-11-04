@@ -3,7 +3,7 @@ defmodule Gateway.Plugins.Proxy do
   Plugin that proxies requests to upstream back-ends.
   """
   use Gateway.Helpers.Plugin,
-    plugin_name: :proxy
+    plugin_name: "proxy"
 
   import Gateway.Helpers.IP
 
