@@ -26,7 +26,7 @@ config :gateway, :public_http,
 config :gateway, :private_http,
   port: {:system, :integer, "GATEWAY_PRIVATE_PORT", 5001}
 
-config :logger, level: :info
+config :logger, level: :debug
 
 config :ex_unit, capture_log: true
 
