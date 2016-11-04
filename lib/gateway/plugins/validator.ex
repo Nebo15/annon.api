@@ -4,7 +4,7 @@ defmodule Gateway.Plugins.Validator do
   See more https://github.com/nebo15/nex_json_schema
   """
   use Gateway.Helpers.Plugin,
-    plugin_name: :validator
+    plugin_name: "validator"
 
   alias Gateway.DB.Schemas.Plugin
   alias Gateway.DB.Schemas.API, as: APIModel

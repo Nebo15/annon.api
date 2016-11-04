@@ -3,7 +3,7 @@ defmodule Gateway.Plugins.Monitoring do
   Monitoring data reporting to statsd
   """
   use Gateway.Helpers.Plugin,
-    plugin_name: :monitoring
+    plugin_name: "monitoring"
 
   alias Plug.Conn
 

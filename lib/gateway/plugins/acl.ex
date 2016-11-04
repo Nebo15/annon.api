@@ -3,7 +3,7 @@ defmodule Gateway.Plugins.ACL do
   Plugin for JWT verifying and decoding.
   """
   use Gateway.Helpers.Plugin,
-    plugin_name: :acl
+    plugin_name: "acl"
 
   alias Plug.Conn
   alias Joken.Token
