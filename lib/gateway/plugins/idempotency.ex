@@ -7,14 +7,14 @@ defmodule Gateway.Plugins.Idempotency do
 
   alias Plug.Conn
   alias Gateway.DB.Schemas.Plugin
-  alias Gateway.DB.Schemas.API, as: APIModel # TODO: rename APIModel to APISchema
+  alias Gateway.DB.Schemas.API, as: APISchema
   alias Gateway.DB.Schemas.Log
   alias EView.Views.Error, as: ErrorView
   alias Gateway.Helpers.Response
 
   @idempotent_methods ["POST"]
 
-  def call(%Plug.Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
+  def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
     plugins
     |> find_plugin_settings()
     |> execute(conn)

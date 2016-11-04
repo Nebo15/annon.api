@@ -8,7 +8,7 @@ defmodule Gateway.DB.Schemas.Plugin do
 
   alias Gateway.DB.Configs.Repo
   alias Gateway.DB.Schemas.Plugin
-  alias Gateway.DB.Schemas.API, as: APIModel
+  alias Gateway.DB.Schemas.API, as: APISchema
 
   @type t :: %Plugin{
     name: atom,
@@ -25,7 +25,7 @@ defmodule Gateway.DB.Schemas.Plugin do
     field :name, :string
     field :is_enabled, :boolean, default: false
     field :settings, :map
-    belongs_to :api, APIModel
+    belongs_to :api, APISchema
 
     timestamps()
   end
@@ -45,7 +45,7 @@ defmodule Gateway.DB.Schemas.Plugin do
   end
 
   def create(nil, _params), do: nil
-  def create(%APIModel{} = api, params) when is_map(params) do
+  def create(%APISchema{} = api, params) when is_map(params) do
     api
     |> Ecto.build_assoc(:plugins)
     |> Plugin.changeset(params)

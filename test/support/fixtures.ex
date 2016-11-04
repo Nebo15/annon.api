@@ -3,10 +3,10 @@ defmodule Gateway.Fixtures do
     Fixtures fo tests
   """
   use ExUnit.CaseTemplate
-  alias Gateway.DB.Schemas.API, as: APIModel
+  alias Gateway.DB.Schemas.API, as: APISchema
 
   def get_api_model_data do
-    api_model = APIModel
+    api_model = APISchema
     |> EctoFixtures.ecto_fixtures()
 
     api_model

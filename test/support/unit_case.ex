@@ -9,7 +9,7 @@ defmodule Gateway.UnitCase do
       use ExUnit.Case, async: true
       use Plug.Test
       alias Gateway.DB.Schemas.Plugin
-      alias Gateway.DB.Schemas.API, as: APIModel
+      alias Gateway.DB.Schemas.API, as: APISchema
       alias Gateway.DB.Schemas.Log
       import Gateway.UnitCase
       import Gateway.Fixtures

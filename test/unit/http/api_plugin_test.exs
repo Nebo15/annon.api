@@ -3,11 +3,11 @@ defmodule Gateway.HTTP.PluginTest do
   @plugin_url "/"
 
   use Gateway.UnitCase
-  alias Gateway.DB.Schemas.API, as: APIModel
+  alias Gateway.DB.Schemas.API, as: APISchema
 
   test "GET /apis/:api_id" do
     data = get_api_model_data()
-    {:ok, api_model} = APIModel.create(data)
+    {:ok, api_model} = APISchema.create(data)
 
     conn = "/#{api_model.id}/plugins"
     |> send_get()
@@ -18,7 +18,7 @@ defmodule Gateway.HTTP.PluginTest do
 
   test "GET /apis/:api_id/plugins/:name" do
     %{plugins: [p1, p2]} = data = get_api_model_data()
-    {:ok, api_model} = APIModel.create(data)
+    {:ok, api_model} = APISchema.create(data)
 
     conn = "/#{api_model.id}/plugins/#{p1.name}"
     |> send_get()
@@ -34,9 +34,9 @@ defmodule Gateway.HTTP.PluginTest do
   end
 
   test "POST /apis/:api_id/plugins" do
-    {:ok, api_model} = APIModel
+    {:ok, api_model} = APISchema
     |> EctoFixtures.ecto_fixtures()
-    |> APIModel.create()
+    |> APISchema.create()
 
     plugin_data = get_plugin_data(api_model.id, "acl")
 
@@ -52,7 +52,7 @@ defmodule Gateway.HTTP.PluginTest do
 
   test "PUT /apis/:api_id/plugins/:name" do
     %{plugins: [p1, _]} = data = get_api_model_data()
-    {:ok, api_model} = APIModel.create(Map.put(data, :plugins, [p1]))
+    {:ok, api_model} = APISchema.create(Map.put(data, :plugins, [p1]))
 
     plugin_data = %{name: "validator", settings: %{"schema" => "{}"}}
 
@@ -78,7 +78,7 @@ defmodule Gateway.HTTP.PluginTest do
 
   test "DELETE /apis/:api_id" do
     %{plugins: [p1, p2]} = data = get_api_model_data()
-    {:ok, api_model} = APIModel.create(data)
+    {:ok, api_model} = APISchema.create(data)
 
     "/#{api_model.id}/plugins/#{p1.name}"
     |> send_get()

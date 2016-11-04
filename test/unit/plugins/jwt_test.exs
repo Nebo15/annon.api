@@ -4,14 +4,14 @@ defmodule Gateway.Plugins.JWTTest do
   """
 
   use Gateway.UnitCase
-  alias Gateway.DB.Schemas.API, as: APIModel
+  alias Gateway.DB.Schemas.API, as: APISchema
   import Joken
 
   @payload %{ "name" => "John Doe" }
   @plugin_data [%{name: "jwt", is_enabled: true, settings: %{"signature" => "super_coolHacker"}}]
 
   test "jwt invalid auth" do
-    {:ok, %APIModel{request: request} = model} = create_api()
+    {:ok, %APISchema{request: request} = model} = create_api()
 
     %Plug.Conn{} = conn = :get
     |> prepare_conn(request)
@@ -31,7 +31,7 @@ defmodule Gateway.Plugins.JWTTest do
 
   test "jwt sucessful auth" do
 
-    {:ok, %APIModel{request: request} = model} = create_api()
+    {:ok, %APISchema{request: request} = model} = create_api()
 
     %Plug.Conn{private: %{jwt_token: %Joken.Token{} = jwt_token}} = :get
     |> prepare_conn(request)
@@ -46,7 +46,7 @@ defmodule Gateway.Plugins.JWTTest do
     data = get_api_model_data()
     |> Map.put(:plugins, [%{name: "jwt", is_enabled: false, settings: %{"signature" => "super_coolHacker"}}])
 
-    {:ok, %APIModel{request: request} = model} = APIModel.create(data)
+    {:ok, %APISchema{request: request} = model} = APISchema.create(data)
 
     %Plug.Conn{} = conn = :get
     |> prepare_conn(request)
@@ -60,11 +60,11 @@ defmodule Gateway.Plugins.JWTTest do
     data = get_api_model_data()
     |> Map.put(:plugins, [%{name: "jwt", is_enabled: true, settings: %{"some" => "value"}}])
 
-    assert {:error, %Ecto.Changeset{valid?: false}} = APIModel.create(data)
+    assert {:error, %Ecto.Changeset{valid?: false}} = APISchema.create(data)
   end
 
   test "apis model don't have plugins'" do
-    {:ok, %APIModel{request: request}} = create_api()
+    {:ok, %APISchema{request: request}} = create_api()
 
     %Plug.Conn{} = conn = :get
     |> prepare_conn(request)
@@ -85,7 +85,7 @@ defmodule Gateway.Plugins.JWTTest do
     data = get_api_model_data()
     |> Map.put(:plugins, @plugin_data)
 
-     APIModel.create(data)
+     APISchema.create(data)
   end
 
   defp jwt_token(signature) do

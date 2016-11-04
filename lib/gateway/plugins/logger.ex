@@ -7,7 +7,7 @@ defmodule Gateway.Plugins.Logger do
 
   alias Plug.Conn
   alias Gateway.DB.Schemas.Log
-  alias Gateway.DB.Schemas.API, as: APIModel
+  alias Gateway.DB.Schemas.API, as: APISchema
 
   def call(conn, _opts) do
     conn
@@ -60,7 +60,7 @@ defmodule Gateway.Plugins.Logger do
   defp modify_headers_list([{key, value}|t]), do: [%{key => value}] ++ modify_headers_list(t)
 
   defp get_api_data(%Plug.Conn{private: %{api_config: nil}}), do: %{}
-  defp get_api_data(%Plug.Conn{private: %{api_config: %APIModel{id: id, name: name, request: request}}}) do
+  defp get_api_data(%Plug.Conn{private: %{api_config: %APISchema{id: id, name: name, request: request}}}) do
     %{
       id: id,
       name: name,

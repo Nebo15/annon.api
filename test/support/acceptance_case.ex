@@ -17,7 +17,7 @@ defmodule Gateway.AcceptanceCase do
 
       alias Gateway.DB.Configs.Repo
       alias Gateway.DB.Schemas.Plugin
-      alias Gateway.DB.Schemas.API, as: APIModel
+      alias Gateway.DB.Schemas.API, as: APISchema
 
       @config Confex.get_map(:gateway, :acceptance)
 

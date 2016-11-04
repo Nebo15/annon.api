@@ -15,7 +15,7 @@ defmodule Gateway.Plugins.ValidatorTest do
       "required" => ["bar"]
     }
 
-    model = %APIModel{plugins: [
+    model = %APISchema{plugins: [
       %Plugin{is_enabled: true, name: "validator", settings: %{"schema" => Poison.encode!(schema)}}
     ]}
 

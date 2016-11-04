@@ -10,7 +10,7 @@ defmodule Gateway.HTTP.API.Plugins do
 
   alias Gateway.DB.Configs.Repo
   alias Gateway.DB.Schemas.Plugin
-  alias Gateway.DB.Schemas.API, as: APIModel
+  alias Gateway.DB.Schemas.API, as: APISchema
 
   # list
   get "/:api_id/plugins" do
@@ -26,7 +26,7 @@ defmodule Gateway.HTTP.API.Plugins do
 
   # create
   post "/:api_id/plugins" do
-    APIModel
+    APISchema
     |> Repo.get(api_id)
     |> Plugin.create(conn.body_params)
     |> render_response(conn, 201)

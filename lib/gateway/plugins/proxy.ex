@@ -9,9 +9,9 @@ defmodule Gateway.Plugins.Proxy do
 
   alias Plug.Conn
   alias Gateway.DB.Schemas.Plugin
-  alias Gateway.DB.Schemas.API, as: APIModel
+  alias Gateway.DB.Schemas.API, as: APISchema
 
-  def call(%Plug.Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opts) when is_list(plugins) do
+  def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts) when is_list(plugins) do
     plugins
     |> find_plugin_settings()
     |> execute(conn)

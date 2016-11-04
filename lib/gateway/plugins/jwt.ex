@@ -12,12 +12,12 @@ defmodule Gateway.Plugins.JWT do
   alias Joken.Token
   alias Gateway.DB.Schemas.Plugin
   alias Gateway.DB.Schemas.Consumer
-  alias Gateway.DB.Schemas.API, as: APIModel
+  alias Gateway.DB.Schemas.API, as: APISchema
   alias Gateway.DB.Configs.Repo
   alias EView.Views.Error, as: ErrorView
   alias Gateway.Helpers.Response
 
-  def call(%Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opts) when is_list(plugins) do
+  def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts) when is_list(plugins) do
     plugins
     |> find_plugin_settings()
     |> execute(conn)
@@ -73,7 +73,7 @@ defmodule Gateway.Plugins.JWT do
     |> Response.send_and_halt(conn, 401)
   end
 
-  def merge_consumer_settings(%Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn,
+  def merge_consumer_settings(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn,
                               %Token{claims: %{"id" => id}}) do
     id
     |> get_consumer_settings()
@@ -113,7 +113,7 @@ defmodule Gateway.Plugins.JWT do
   def merge_plugin(_, plugin), do: plugin
 
   def put_api_to_conn(nil, conn), do: conn
-  def put_api_to_conn(plugins, %Conn{private: %{api_config: %APIModel{} = api}} = conn) when is_list(plugins) do
+  def put_api_to_conn(plugins, %Conn{private: %{api_config: %APISchema{} = api}} = conn) when is_list(plugins) do
     conn
     |> Conn.put_private(:api_config, Map.put(api, :plugins, plugins))
   end

@@ -7,11 +7,11 @@ defmodule Gateway.Plugins.Validator do
     plugin_name: "validator"
 
   alias Gateway.DB.Schemas.Plugin
-  alias Gateway.DB.Schemas.API, as: APIModel
+  alias Gateway.DB.Schemas.API, as: APISchema
   alias EView.Views.ValidationError, as: ValidationErrorView
   alias Gateway.Helpers.Response
 
-  def call(%Plug.Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
+  def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
     plugins
     |> find_plugin_settings()
     |> execute(conn)

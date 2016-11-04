@@ -8,11 +8,11 @@ defmodule Gateway.Plugins.ACL do
   alias Plug.Conn
   alias Joken.Token
   alias Gateway.DB.Schemas.Plugin
-  alias Gateway.DB.Schemas.API, as: APIModel
+  alias Gateway.DB.Schemas.API, as: APISchema
   alias EView.Views.Error, as: ErrorView
   alias Gateway.Helpers.Response
 
-  def call(%Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opts) when is_list(plugins) do
+  def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts) when is_list(plugins) do
     plugins
     |> find_plugin_settings()
     |> execute(conn)

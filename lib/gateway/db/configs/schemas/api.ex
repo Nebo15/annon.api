@@ -4,7 +4,7 @@ defmodule Gateway.DB.Schemas.API do
   """
   use Gateway.DB, :schema
   alias Gateway.DB.Configs.Repo
-  alias Gateway.DB.Schemas.API, as: APIModel
+  alias Gateway.DB.Schemas.API, as: APISchema
 
   @required_api_fields [:name]
   @required_request_fields [:scheme, :host, :port, :path, :method]
@@ -41,7 +41,7 @@ defmodule Gateway.DB.Schemas.API do
   end
 
   def create(params) do
-    %APIModel{}
+    %APISchema{}
     |> changeset(params)
     |> Gateway.DB.Configs.Repo.insert
   end
@@ -57,7 +57,7 @@ defmodule Gateway.DB.Schemas.API do
   end
 
   def delete(api_id) do
-    q = from a in APIModel,
+    q = from a in APISchema,
       where: a.id == ^api_id
 
     q
