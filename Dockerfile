@@ -20,7 +20,8 @@ RUN mix do deps.get, deps.compile
 COPY . .
 
 # Compile project for Erlang VM
-RUN mix do compile, release --verbose
+RUN mix compile
+RUN mix release --verbose
 
 # Move release to /opt/$APP_NAME
 RUN \
