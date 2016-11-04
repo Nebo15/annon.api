@@ -6,32 +6,32 @@ defmodule Gateway.HTTP.Consumers do
   use Gateway.Helpers.CommonRouter
 
   get "/" do
-    Gateway.DB.Models.Consumer
-    |> Gateway.DB.Repo.all
+    Gateway.DB.Schemas.Consumer
+    |> Gateway.DB.Configs.Repo.all
     |> render_response(conn)
   end
 
   get "/:consumer_id" do
-    Gateway.DB.Models.Consumer
-    |> Gateway.DB.Repo.get(consumer_id)
+    Gateway.DB.Schemas.Consumer
+    |> Gateway.DB.Configs.Repo.get(consumer_id)
     |> render_response(conn)
   end
 
   put "/:consumer_id" do
     consumer_id
-    |> Gateway.DB.Models.Consumer.update(conn.body_params)
+    |> Gateway.DB.Schemas.Consumer.update(conn.body_params)
     |> render_response(conn)
   end
 
   post "/" do
     conn.body_params
-    |> Gateway.DB.Models.Consumer.create
+    |> Gateway.DB.Schemas.Consumer.create
     |> render_response(conn, 201)
   end
 
   delete "/:consumer_id" do
     consumer_id
-    |> Gateway.DB.Models.Consumer.delete
+    |> Gateway.DB.Schemas.Consumer.delete
     |> render_delete_response(conn)
   end
 

@@ -13,39 +13,32 @@ defmodule Gateway.HTTP.APITest do
     }
 
   test "GET /apis" do
-    data =
-      [
-        Gateway.DB.Models.API.create(@correct_api_data),
-        Gateway.DB.Models.API.create(@correct_api_data)
-      ]
-      |> Enum.map(fn({:ok, e}) -> e end)
+    data = [
+      Gateway.DB.Schemas.API.create(@correct_api_data),
+      Gateway.DB.Schemas.API.create(@correct_api_data)
+    ]
+    |> Enum.map(fn({:ok, e}) -> e end)
 
     conn = :get
     |> conn("/")
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.API.call([])
 
-    expected_resp = %{
-      meta: EView.MetaRender.render("list", conn),
-      data: data
-    }
+    expected_resp = EView.wrap_body(data, conn)
 
     assert 200 == conn.status
     assert Poison.encode!(expected_resp) == conn.resp_body
   end
 
   test "GET /apis/:api_id" do
-    { :ok, data } = Gateway.DB.Models.API.create(@correct_api_data)
+    {:ok, data} = Gateway.DB.Schemas.API.create(@correct_api_data)
 
     conn = :get
     |> conn("/#{data.id}")
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.API.call([])
 
-    expected_resp = %{
-      meta: EView.MetaRender.render("object", conn),
-      data: data
-    }
+    expected_resp = EView.wrap_body(data, conn)
 
     assert 200 == conn.status
     assert Poison.encode!(expected_resp) == Gateway.Test.Helper.remove_type(conn.resp_body)
@@ -83,8 +76,7 @@ defmodule Gateway.HTTP.APITest do
   end
 
   test "PUT /apis/:api_id" do
-    { :ok, data } =
-      Gateway.DB.Models.API.create(@correct_api_data)
+    {:ok, data} = Gateway.DB.Schemas.API.create(@correct_api_data)
 
     new_contents = %{
       name: "New name",
@@ -117,8 +109,7 @@ defmodule Gateway.HTTP.APITest do
   end
 
   test "DELETE /apis/:api_id" do
-    { :ok, data } =
-      Gateway.DB.Models.API.create(@correct_api_data)
+    {:ok, data} = Gateway.DB.Schemas.API.create(@correct_api_data)
 
     conn = :delete
     |> conn("/#{data.id}")

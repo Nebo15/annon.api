@@ -12,7 +12,7 @@ defmodule Gateway.MonitoringTest do
   end
 
   defp make_connection do
-    { :ok, api } = create_api_endpoint()
+    {:ok, api} = create_api_endpoint()
     create_proxy_plugin(api)
 
     Gateway.AutoClustering.do_reload_config()
@@ -29,6 +29,8 @@ defmodule Gateway.MonitoringTest do
     {:ok, socket} = :gen_tcp.connect('localhost', 8126, [:list, {:active, false}])
     :ok = :gen_tcp.send(socket, metric_type)
 
+    :timer.sleep(100)
+
     socket
     |> :gen_tcp.recv(0)
     |> elem(1)
@@ -37,7 +39,7 @@ defmodule Gateway.MonitoringTest do
   end
 
   defp create_api_endpoint do
-    Gateway.DB.Models.API.create(%{
+    Gateway.DB.Schemas.API.create(%{
       name: "Test api",
       request: %{
         method: "GET",
@@ -50,16 +52,16 @@ defmodule Gateway.MonitoringTest do
   end
 
   defp create_proxy_plugin(api) do
-    Gateway.DB.Models.Plugin.create(api, %{
-    name: "proxy",
-    is_enabled: true,
-    settings: %{
-                 "method" => "GET",
-                 "scheme" => "http",
-                 "host" => "localhost",
-                 "port" => 5001,
-                 "path" => "/apis"
-               }
+    Gateway.DB.Schemas.Plugin.create(api, %{
+      name: "proxy",
+      is_enabled: true,
+      settings: %{
+        "method" => "GET",
+        "scheme" => "http",
+        "host" => "localhost",
+        "port" => 5001,
+        "path" => "/apis"
+      }
     })
   end
 end

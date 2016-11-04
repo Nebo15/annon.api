@@ -1,9 +1,8 @@
-defmodule Gateway.DB.Models.Consumer do
+defmodule Gateway.DB.Schemas.Consumer do
   @moduledoc """
   Consumer DB entity
   """
-
-  use Gateway.DB, :model
+  use Gateway.DB, :schema
 
   @required_consumer_fields [:external_id]
 
@@ -11,11 +10,10 @@ defmodule Gateway.DB.Models.Consumer do
   @primary_key {:external_id, :string, autogenerate: false}
   schema "consumers" do
     field :metadata, :map
-    has_many :plugins, Gateway.DB.Models.ConsumerPluginSettings, references: :external_id, foreign_key: :external_id
+    has_many :plugins, Gateway.DB.Schemas.ConsumerPluginSettings, references: :external_id, foreign_key: :external_id
 
     timestamps()
   end
-
 
   def changeset(consumer, params \\ %{}) do
     consumer
@@ -25,19 +23,19 @@ defmodule Gateway.DB.Models.Consumer do
   end
 
   def create(params) do
-    consumer = %Gateway.DB.Models.Consumer{}
+    consumer = %Gateway.DB.Schemas.Consumer{}
     changeset = changeset(consumer, params)
-    Gateway.DB.Repo.insert(changeset)
+    Gateway.DB.Configs.Repo.insert(changeset)
   end
 
   def update(consumer_id, params) do
-    %Gateway.DB.Models.Consumer{external_id: consumer_id}
+    %Gateway.DB.Schemas.Consumer{external_id: consumer_id}
     |> changeset(params)
-    |> Gateway.DB.Repo.update()
+    |> Gateway.DB.Configs.Repo.update()
   end
 
   def delete(consumer_id) do
-    %Gateway.DB.Models.Consumer{external_id: consumer_id}
-    |> Gateway.DB.Repo.delete()
+    %Gateway.DB.Schemas.Consumer{external_id: consumer_id}
+    |> Gateway.DB.Configs.Repo.delete()
   end
 end

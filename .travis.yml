@@ -43,7 +43,7 @@ script:
   # Add --pro if you using private repo.
   - mix coveralls.travis --pro --exclude pending --exclude ciskip
   # Run static code analysis
-  - mix credo
+  - mix credo -a
   # Check code style
   - mix dogma
   # Build Docker container

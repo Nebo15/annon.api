@@ -23,13 +23,16 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
     |> Poison.decode!
     |> get_in(["data", "id"])
 
-    proxy_plugin = %{ name: "proxy", is_enabled: true, settings: %{
-                          host: get_host(:private),
-                          path: "/apis/#{api_id}",
-                          port: get_port(:private),
-                          scheme: "http"
-                      }
-                    }
+    proxy_plugin = %{
+      name: "proxy",
+      is_enabled: true,
+      settings: %{
+        host: get_host(:private),
+        path: "/apis/#{api_id}",
+        port: get_port(:private),
+        scheme: "http"
+      }
+    }
 
     url = @api_url <> "/#{api_id}/plugins"
     url
@@ -54,6 +57,7 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
 
   test "proxy without sheme and path" do
     proxy_plugin = %{ name: "proxy", is_enabled: true, settings: %{host: get_host(:private), port: get_port(:private)}}
+
     "/apis"
     |> get_api_proxy_data()
     |> Map.put(:plugins, [proxy_plugin])
@@ -82,14 +86,16 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
 
     Gateway.AutoClustering.do_reload_config()
 
-    proxy_plugin = %{ name: "proxy", is_enabled: true,
-                      settings: %{
-                        host: get_host(:public),
-                        path: "/proxy/test",
-                        port: get_port(:public),
-                        scheme: "http"
-                      }
-                    }
+    proxy_plugin = %{
+      name: "proxy",
+      is_enabled: true,
+      settings: %{
+        host: get_host(:public),
+        path: "/proxy/test",
+        port: get_port(:public),
+        scheme: "http"
+      }
+    }
 
     url = @api_url <> "/#{api_id}/plugins"
     url
@@ -128,5 +134,4 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
     |> Map.put(:plugins, [
       %{name: "jwt", is_enabled: enable_jwt, settings: %{"signature" => @token_secret}}])
   end
-
 end

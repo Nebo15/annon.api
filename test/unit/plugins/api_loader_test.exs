@@ -4,12 +4,12 @@ defmodule Gateway.Plugins.APILoaderTest do
   """
 
   use Gateway.UnitCase
-  alias Gateway.DB.Models.API, as: APIModel
+  alias Gateway.DB.Schemas.API, as: APISchema
 
   test "correctly set config into private part" do
 
     data = get_api_model_data()
-    {:ok, %APIModel{request: request} = model} = APIModel.create(data)
+    {:ok, %APISchema{request: request} = model} = APISchema.create(data)
 
     Gateway.AutoClustering.do_reload_config()
 

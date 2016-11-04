@@ -1,22 +1,29 @@
-defmodule Gateway.DB.Models.Plugin do
+defmodule Gateway.DB.Schemas.Plugin do
   @moduledoc """
   Model for address
   """
-  use Gateway.DB, :model
-  alias Gateway.DB.Repo
-  alias Gateway.DB.Models.Plugin
-  alias Gateway.DB.Models.API, as: APIModel
+  use Gateway.DB, :schema
+
   import Gateway.Changeset.SettingsValidator
 
-  @derive {Poison.Encoder, except: [:__meta__, :api]}
+  alias Gateway.DB.Configs.Repo
+  alias Gateway.DB.Schemas.Plugin
+  alias Gateway.DB.Schemas.API, as: APISchema
 
+  @type t :: %Plugin{
+    name: atom,
+    is_enabled: boolean,
+    settings: map
+  }
+
+  @derive {Poison.Encoder, except: [:__meta__, :api]}
   @valid_plugin_names ["jwt", "validator", "acl", "proxy", "idempotency", "ip_restriction"]
 
   schema "plugins" do
     field :name, :string
     field :is_enabled, :boolean, default: false
     field :settings, :map
-    belongs_to :api, APIModel
+    belongs_to :api, APISchema
 
     timestamps()
   end
@@ -36,7 +43,7 @@ defmodule Gateway.DB.Models.Plugin do
   end
 
   def create(nil, _params), do: nil
-  def create(%APIModel{} = api, params) when is_map(params) do
+  def create(%APISchema{} = api, params) when is_map(params) do
     api
     |> Ecto.build_assoc(:plugins)
     |> Plugin.changeset(params)
@@ -52,17 +59,19 @@ defmodule Gateway.DB.Models.Plugin do
 
   defp update_plugin(%Ecto.Changeset{valid?: false} = ch, _api_id, _name), do: {:error, ch}
   defp update_plugin(%Ecto.Changeset{valid?: true, changes: changes}, api_id, name) do
-    q = (from p in Plugin,
+    q = from p in Plugin,
      where: p.api_id == ^api_id,
-     where: p.name == ^name)
+     where: p.name == ^name
+
     q
     |> Repo.update_all([set: Map.to_list(changes)], returning: true)
   end
 
   def delete(api_id, name) do
-    q = (from p in Plugin,
+    q = from p in Plugin,
      where: p.api_id == ^api_id,
-     where: p.name == ^name)
+     where: p.name == ^name
+
     q
     |> Repo.delete_all
     |> normalize_ecto_delete

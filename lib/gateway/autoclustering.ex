@@ -21,7 +21,7 @@ defmodule Gateway.AutoClustering do
 
   # Server code
 
-  def init(_) do
+  def init(_opts) do
     Cluster.Events.subscribe(self())
 
     :ets.new(:config, [:set, :public, :named_table])
@@ -57,12 +57,12 @@ defmodule Gateway.AutoClustering do
   import Ecto.Query, only: [from: 2]
 
   def do_reload_config do
-    query = from a in Gateway.DB.Models.API,
-            join: Gateway.DB.Models.Plugin,
+    query = from a in Gateway.DB.Schemas.API,
+            join: Gateway.DB.Schemas.Plugin,
             preload: [:plugins]
 
     apis = query
-    |> Gateway.DB.Repo.all()
+    |> Gateway.DB.Configs.Repo.all()
     |> Enum.map(fn api -> {{:api, api.id}, api} end)
 
     :ets.insert(:config, apis)

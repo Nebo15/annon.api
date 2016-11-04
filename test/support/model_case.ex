@@ -14,8 +14,8 @@ defmodule Gateway.API.ModelCase do
 
   using do
     quote do
-      alias Gateway.DB.Repo
-      alias Gateway.DB.Models.Plugin
+      alias Gateway.DB.Configs.Repo
+      alias Gateway.DB.Schemas.Plugin
 
       import Ecto
       import Ecto.Changeset
@@ -26,11 +26,11 @@ defmodule Gateway.API.ModelCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Configs.Repo)
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Logger.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Configs.Repo, {:shared, self()})
       Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Logger.Repo, {:shared, self()})
     end
 

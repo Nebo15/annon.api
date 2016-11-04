@@ -1,18 +1,19 @@
 defmodule Gateway.Plugins.Proxy do
   @moduledoc """
-  Plugin which validates request based on ex_json_schema
-  See more https://github.com/jonasschmidt/ex_json_schema
+  Plugin that proxies requests to upstream back-ends.
   """
-  import Plug.Conn
+  use Gateway.Helpers.Plugin,
+    plugin_name: "proxy"
+
   import Gateway.Helpers.IP
-  alias Gateway.DB.Models.Plugin
-  alias Gateway.DB.Models.API, as: APIModel
 
-  def init(opts), do: opts
+  alias Plug.Conn
+  alias Gateway.DB.Schemas.Plugin
+  alias Gateway.DB.Schemas.API, as: APISchema
 
-  def call(%Plug.Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
+  def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts) when is_list(plugins) do
     plugins
-    |> get_enabled()
+    |> find_plugin_settings()
     |> execute(conn)
   end
   def call(conn, _), do: conn
@@ -34,7 +35,10 @@ defmodule Gateway.Plugins.Proxy do
     |> do_request(conn, method)
     |> get_response
 
-    conn |> send_resp(response.status_code, response.body) |> halt
+    # TODO: Proxy response headers
+    conn
+    |> Conn.send_resp(response.status_code, response.body)
+    |> Conn.halt
   end
 
   def do_request(link, conn, method) do
@@ -61,7 +65,9 @@ defmodule Gateway.Plugins.Proxy do
   def add_additional_headers(headers, conn) do
     headers
     |> Kernel.++([%{"x-forwarded-for" => ip_to_string(conn.remote_ip)}])
-    |> Enum.reduce(conn, fn(header, conn) -> with {k, v} <- header |> Enum.at(0), do: put_req_header(conn, k, v) end)
+    |> Enum.reduce(conn, fn(header, conn) ->
+      with {k, v} <- header |> Enum.at(0), do: Conn.put_req_header(conn, k, v)
+    end)
   end
 
   defp get_additional_headers(%Plugin{settings: %{"additional_headers" => headers}}), do: headers
@@ -79,12 +85,4 @@ defmodule Gateway.Plugins.Proxy do
 
   defp put_path(pr, %{"path" => path}, _conn), do: pr <> path
   defp put_path(pr, %{}, %Plug.Conn{request_path: path}), do: pr <> path
-
-  defp get_enabled(plugins) when is_list(plugins) do
-    plugins
-    |> Enum.find(&filter_plugin/1)
-  end
-  defp filter_plugin(%Plugin{name: "proxy", is_enabled: true}), do: true
-  defp filter_plugin(_), do: false
-
 end

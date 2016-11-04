@@ -1,13 +1,13 @@
-defmodule Gateway.DB.Models.ConsumerPluginSettings do
+defmodule Gateway.DB.Schemas.ConsumerPluginSettings do
   @moduledoc """
   Model for address
   """
-  use Gateway.DB, :model
+  use Gateway.DB, :schema
 
-  alias Gateway.DB.Repo
-  alias Gateway.DB.Consumer
-  alias Gateway.DB.Models.Plugin
-  alias Gateway.DB.Models.ConsumerPluginSettings
+  alias Gateway.DB.Configs.Repo
+  alias Gateway.DB.Schemas.Consumer
+  alias Gateway.DB.Schemas.Plugin
+  alias Gateway.DB.Schemas.ConsumerPluginSettings
 
   @derive {Poison.Encoder, except: [:__meta__, :consumer, :plugin]}
   schema "consumer_plugin_settings" do

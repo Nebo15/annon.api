@@ -1,4 +1,4 @@
-defmodule Gateway.DB.Repo.Migrations.AddConsumersTable do
+defmodule Gateway.DB.Configs.Repo.Migrations.AddConsumersTable do
   use Ecto.Migration
 
   def change do
