@@ -1,6 +1,8 @@
 defmodule Gateway.ConfigReloaderTest do
   use Gateway.UnitCase
 
+  import ExUnit.CaptureLog
+
   test "reload the config cache if it changes" do
     {:ok, api_model} =
       get_api_model_data()
@@ -10,10 +12,14 @@ defmodule Gateway.ConfigReloaderTest do
       "name" => "New name"
     }
 
-    :put
-    |> conn("/apis/#{api_model.id}", Poison.encode!(new_contents))
-    |> put_req_header("content-type", "application/json")
-    |> Gateway.PrivateRouter.call([])
+    update_config = fn ->
+      :put
+      |> conn("/apis/#{api_model.id}", Poison.encode!(new_contents))
+      |> put_req_header("content-type", "application/json")
+      |> Gateway.PrivateRouter.call([])
+    end
+
+    assert capture_log(update_config) =~ "config cache was warmed up (reloaded)"
 
     [{_, api}] = :ets.lookup(:config, {:api, api_model.id})
 
