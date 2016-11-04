@@ -3,6 +3,8 @@ defmodule Gateway.AutoClustering do
   The module is in charge of reloading the config across the cluster
   """
 
+  import Logger
+
   use GenServer
 
   def start_link do
@@ -59,5 +61,7 @@ defmodule Gateway.AutoClustering do
       |> Enum.map(fn api -> {{:api, api.id}, api} end)
 
     :ets.insert(:config, apis)
+
+    Logger.debug("Node #{node()}: config cache was warmed up.")
   end
 end
