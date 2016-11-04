@@ -10,6 +10,7 @@ defmodule Gateway.Helpers.CommonRouter do
 
       plug :match
 
+      plug Plug.RequestId
       plug Plug.Parsers, parsers: [:json],
                          pass:  ["application/json"],
                          json_decoder: Poison
