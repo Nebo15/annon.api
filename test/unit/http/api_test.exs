@@ -13,11 +13,12 @@ defmodule Gateway.HTTP.APITest do
     }
 
   test "GET /apis" do
-    data = [
-      Gateway.DB.Schemas.API.create(@correct_api_data),
-      Gateway.DB.Schemas.API.create(@correct_api_data)
-    ]
-    |> Enum.map(fn({:ok, e}) -> e end)
+    data =
+      [
+        Gateway.DB.Schemas.API.create(put_in(@correct_api_data, [:request, :port], 3000)),
+        Gateway.DB.Schemas.API.create(put_in(@correct_api_data, [:request, :port], 3001))
+      ]
+      |> Enum.map(fn({:ok, e}) -> e end)
 
     conn = :get
     |> conn("/")
