@@ -60,18 +60,6 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
     |> assert_status(404)
   end
 
-  test "undefined scopes" do
-    get_api_model_data()
-    |> Map.put(:plugins, [%{name: "ACL", is_enabled: true, settings: %{"key" => 123}}])
-    |> Map.put(:request,
-      %{host: get_host(:public), path: "/acl/scopes", port: get_port(:public), scheme: "http", method: "GET"})
-    |> http_api_create()
-
-    "acl/scopes"
-    |> get(:public)
-    |> assert_status(501)
-  end
-
   test "invalid JWT.scopes type" do
     get_api_model_data()
     |> Map.put(:plugins, [

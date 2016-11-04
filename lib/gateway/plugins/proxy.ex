@@ -18,19 +18,18 @@ defmodule Gateway.Plugins.Proxy do
   def call(conn, _), do: conn
 
   defp execute(nil, conn), do: conn
-  defp execute(%Plugin{} = plugin, conn) do
+  defp execute(%Plugin{settings: settings} = plugin, conn) do
     conn = plugin
     |> get_additional_headers()
     |> add_additional_headers(conn)
 
-    plugin
-    |> get_proxy_to_settings()
+    settings
     # TODO: check variables
     |> do_proxy(conn)
   end
 
-  defp do_proxy(%{proxy: proxy}, %Plug.Conn{method: method} = conn) do
-    response = proxy
+  defp do_proxy(settings, %Plug.Conn{method: method} = conn) do
+    response = settings
     |> make_link(conn)
     |> do_request(conn, method)
     |> get_response
@@ -81,7 +80,6 @@ defmodule Gateway.Plugins.Proxy do
   defp put_path(pr, %{"path" => path}, _conn), do: pr <> path
   defp put_path(pr, %{}, %Plug.Conn{request_path: path}), do: pr <> path
 
-  defp get_proxy_to_settings(%Plugin{settings: %{"proxy_to" => proxy}}), do: %{proxy: Poison.decode!(proxy)}
   defp get_enabled(plugins) when is_list(plugins) do
     plugins
     |> Enum.find(&filter_plugin/1)

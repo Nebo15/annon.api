@@ -3,7 +3,6 @@ defmodule Gateway.Fixtures do
     Fixtures fo tests
   """
   use ExUnit.CaseTemplate
-  alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.API, as: APIModel
 
   def get_api_model_data do
@@ -11,14 +10,15 @@ defmodule Gateway.Fixtures do
     |> EctoFixtures.ecto_fixtures()
 
     api_model
-    |> Map.put(:plugins, [get_plugin_data(api_model.id, "JWT"), get_plugin_data(api_model.id, "Validator")])
+    |> Map.put(:plugins, [get_plugin_data(api_model.id, "JWT"), get_plugin_data(api_model.id, "ACL")])
   end
 
-  def get_plugin_data(api_id, name \\ "JWT") do
-    Plugin
-    |> EctoFixtures.ecto_fixtures()
-    |> Map.put(:api_id, api_id)
-    |> Map.put(:name, name)
+  def get_plugin_data(api_id, "JWT") do
+    %{api_id: api_id, name: "JWT", is_enabled: true, settings: %{"signature" => "secret-sign"}}
+  end
+
+  def get_plugin_data(api_id, "ACL") do
+    %{api_id: api_id, name: "ACL", is_enabled: true, settings: %{"scope" => "read"}}
   end
 
   def get_consumer_data do

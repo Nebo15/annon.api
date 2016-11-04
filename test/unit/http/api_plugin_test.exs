@@ -38,7 +38,7 @@ defmodule Gateway.HTTP.PluginTest do
     |> EctoFixtures.ecto_fixtures()
     |> APIModel.create()
 
-    plugin_data = get_plugin_data(api_model.id)
+    plugin_data = get_plugin_data(api_model.id, "ACL")
 
     conn = "/#{api_model.id}/plugins"
     |> send_data(plugin_data)
@@ -54,7 +54,7 @@ defmodule Gateway.HTTP.PluginTest do
     %{plugins: [p1, _]} = data = get_api_model_data()
     {:ok, api_model} = APIModel.create(Map.put(data, :plugins, [p1]))
 
-    plugin_data = %{name: "Validator", settings: p1.settings}
+    plugin_data = %{name: "Validator", settings: %{"schema" => "{}"}}
 
     conn = "/#{api_model.id}/plugins/#{p1.name}"
     |> send_data(plugin_data, :put)
@@ -67,7 +67,7 @@ defmodule Gateway.HTTP.PluginTest do
     |> send_get()
     |> assert_conn_status()
 
-    plugin_data = %{name: "Validator", settings: %{"test" => "updated"}}
+    plugin_data = %{name: "Validator", settings: %{"schema" => "{}"}}
     conn = "/#{api_model.id}/plugins/Validator"
     |> send_data(plugin_data, :put)
     |> assert_conn_status()
@@ -98,7 +98,7 @@ defmodule Gateway.HTTP.PluginTest do
   end
 
   def assert_conn_status(conn, code \\ 200) do
-    assert conn.status == code
+    assert code == conn.status
     conn
   end
 

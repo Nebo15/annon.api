@@ -2,7 +2,6 @@ defmodule Gateway.Plugins.IPRestriction do
   @moduledoc """
   IP restriction plug
   """
-  import Plug.Conn
   import Gateway.HTTPHelpers.Response
   import Gateway.Helpers.IP
   alias Gateway.DB.Models.Plugin
@@ -34,14 +33,14 @@ defmodule Gateway.Plugins.IPRestriction do
 
   defp whitelisted?(%Plugin{settings: %{"ip_whitelist" => list}}, ip) do
     list
-    |> Poison.decode!()
+    |> String.split(",")
     |> Enum.any?(fn(item) -> compare_ips(item, ip) end)
   end
   defp whitelisted?(_plugin, _ip), do: nil
 
   defp blacklisted?(%Plugin{settings: %{"ip_blacklist" => list}}, ip) do
     list
-    |> Poison.decode!()
+    |> String.split(",")
     |> Enum.any?(fn(item) -> compare_ips(item, ip) end)
   end
   defp blacklisted?(_plugin, _ip), do: nil

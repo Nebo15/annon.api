@@ -6,6 +6,7 @@ defmodule Gateway.DB.Models.Plugin do
   alias Gateway.DB.Repo
   alias Gateway.DB.Models.Plugin
   alias Gateway.DB.Models.API, as: APIModel
+  import Gateway.Changeset.SettingsValidator
 
   @derive {Poison.Encoder, except: [:__meta__, :api]}
 
@@ -27,24 +28,8 @@ defmodule Gateway.DB.Models.Plugin do
     |> assoc_constraint(:api)
     |> unique_constraint(:api_id_name)
     |> validate_required([:name, :settings])
-    |> prepare_name
     |> validate_map(:settings)
-  end
-
-  def prepare_name(%Ecto.Changeset{} = changeset) do
-    changeset
-    |> fetch_field(:name)
-    |> capitalize_name
-    |> put_name(changeset)
-  end
-
-  defp capitalize_name({:changes, name}) when is_binary(name), do: String.capitalize(name)
-  defp capitalize_name(_), do: nil
-
-  def put_name(nil, changeset), do: changeset
-  def put_name(name, %Ecto.Changeset{} = changeset) when is_binary(name) do
-    changeset
-    |> put_change(:name, name)
+    |> validate_settings()
   end
 
   def create(nil, _params), do: nil

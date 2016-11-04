@@ -25,8 +25,6 @@ defmodule Gateway.Plugins.ACL do
     |> validate_scopes(token_scopes)
   end
   defp execute(%Plugin{settings: %{"scope" => _}}, _conn), do: {:error, 403, "forbidden"}
-  defp execute(_plugin, _conn), do: {:error, 501, "required field scope in Plugin.settings"}
-
 
   def validate_scopes(scope, scopes) when is_list(scopes), do: Enum.member?(scopes, scope)
   def validate_scopes(_scope, _scopes), do: {:error, 501, "JWT.scopes must be a list"}

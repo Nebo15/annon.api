@@ -23,14 +23,11 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
     |> Poison.decode!
     |> get_in(["data", "id"])
 
-    proxy_plugin = %{ name: "Proxy", is_enabled: true,
-                      settings: %{
-                        "proxy_to" => Poison.encode!(%{
+    proxy_plugin = %{ name: "Proxy", is_enabled: true, settings: %{
                           host: get_host(:private),
                           path: "/apis/#{api_id}",
                           port: get_port(:private),
                           scheme: "http"
-                          })
                       }
                     }
 
@@ -54,14 +51,7 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
   end
 
   test "proxy without sheme and path" do
-    proxy_plugin = %{ name: "Proxy", is_enabled: true,
-                      settings: %{
-                        "proxy_to" => Poison.encode!(%{
-                          host: get_host(:private),
-                          port: get_port(:private),
-                          })
-                      }
-                    }
+    proxy_plugin = %{ name: "Proxy", is_enabled: true, settings: %{host: get_host(:private), port: get_port(:private)}}
     "/apis"
     |> get_api_proxy_data()
     |> Map.put(:plugins, [proxy_plugin])
@@ -86,12 +76,10 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
 
     proxy_plugin = %{ name: "Proxy", is_enabled: true,
                       settings: %{
-                        "proxy_to" => Poison.encode!(%{
-                          host: get_host(:public),
-                          path: "/proxy/test",
-                          port: get_port(:public),
-                          scheme: "http"
-                          })
+                        host: get_host(:public),
+                        path: "/proxy/test",
+                        port: get_port(:public),
+                        scheme: "http"
                       }
                     }
 

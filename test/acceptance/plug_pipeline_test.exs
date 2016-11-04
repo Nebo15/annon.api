@@ -125,8 +125,7 @@ defmodule Gateway.Acceptance.PlugPipelineTest do
 
     assert amount == body
     |> Poison.decode!()
-    |> Map.fetch("data")
-    |> elem(1)
+    |> Map.get("data")
     |> Enum.count()
   end
 
@@ -149,12 +148,11 @@ defmodule Gateway.Acceptance.PlugPipelineTest do
       %{name: "JWT", is_enabled: true, settings: %{"signature" => @token_secret}},
       %{name: "Validator", is_enabled: true, settings: %{"schema" => Poison.encode!(@schema)}},
       %{name: "Idempotency", is_enabled: true, settings: %{"key" => 100}},
-      %{name: "Proxy", is_enabled: true, settings: %{"proxy_to" => Poison.encode!(%{
-          host: get_host(:private),
-          path: "/apis",
-          port: get_port(:private),
-          scheme: "http"
-        })
+      %{name: "Proxy", is_enabled: true, settings: %{
+        host: get_host(:private),
+        path: "/apis",
+        port: get_port(:private),
+        scheme: "http"
       }}
     ]
   end

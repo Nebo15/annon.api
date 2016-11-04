@@ -3,13 +3,14 @@ defmodule Gateway.DB do
   Shortener for models definitions.
   """
   import Ecto.Changeset
+  alias Ecto.Changeset
 
   def model do
     quote do
       use Ecto.Schema
 
       import Ecto
-      import Ecto.Changeset
+      import Changeset
       import Ecto.Query
       import Gateway.DB
     end
@@ -19,7 +20,7 @@ defmodule Gateway.DB do
     apply(__MODULE__, which, [])
   end
 
-  def validate_map(%Ecto.Changeset{} = ch, field) do
+  def validate_map(%Changeset{} = ch, field) do
     ch
     |> get_field(field)
     |> validate_map_size(ch, field)
@@ -39,9 +40,9 @@ defmodule Gateway.DB do
     add_error(ch, field, "amount of the map elements must be <= 128")
   end
 
-  defp validate_map(%Ecto.Changeset{} = ch), do: ch
-  defp validate_map({%Ecto.Changeset{} = ch, nil, _field}), do: ch
-  defp validate_map({%Ecto.Changeset{} = ch, map, field}) when is_map(map) do
+  defp validate_map(%Changeset{} = ch), do: ch
+  defp validate_map({%Changeset{} = ch, nil, _field}), do: ch
+  defp validate_map({%Changeset{} = ch, map, field}) when is_map(map) do
     {_, ch} = Enum.map_reduce(map, ch, fn({key, value}, acc) ->
       acc = acc
       |> validate_map_key(key, field)
