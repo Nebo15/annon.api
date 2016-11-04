@@ -12,6 +12,10 @@ environment :default do
   set include_erts: false
   set include_src: false
   set cookie: cookie
+  set overlay_vars: [
+    inet_dist_listen_min: 9000,
+    inet_dist_listen_max: 9100
+  ]
 end
 
 release :gateway do
