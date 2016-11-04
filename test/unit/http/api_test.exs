@@ -24,10 +24,7 @@ defmodule Gateway.HTTP.APITest do
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.API.call([])
 
-    expected_resp = %{
-      meta: EView.Renders.Meta.render("list", conn),
-      data: data
-    }
+    expected_resp = EView.wrap_body(data, conn)
 
     assert 200 == conn.status
     assert Poison.encode!(expected_resp) == conn.resp_body
@@ -41,10 +38,7 @@ defmodule Gateway.HTTP.APITest do
     |> put_req_header("content-type", "application/json")
     |> Gateway.HTTP.API.call([])
 
-    expected_resp = %{
-      meta: EView.Renders.Meta.render("object", conn),
-      data: data
-    }
+    expected_resp = EView.wrap_body(data, conn)
 
     assert 200 == conn.status
     assert Poison.encode!(expected_resp) == Gateway.Test.Helper.remove_type(conn.resp_body)

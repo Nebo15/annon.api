@@ -12,7 +12,7 @@ defmodule Gateway.MonitoringTest do
   end
 
   defp make_connection do
-    { :ok, api } = create_api_endpoint()
+    {:ok, api} = create_api_endpoint()
     create_proxy_plugin(api)
 
     Gateway.AutoClustering.do_reload_config()
