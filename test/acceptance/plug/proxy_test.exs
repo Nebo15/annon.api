@@ -92,6 +92,8 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
     |> post(Poison.encode!(proxy_plugin), :private)
     |> assert_status(201)
 
+    Gateway.AutoClustering.do_reload_config
+
     "proxy/test_headers"
     |> get(:public)
     |> assert_status(401)
