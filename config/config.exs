@@ -33,7 +33,7 @@ config :gateway, :public_http,
 config :gateway, :private_http,
   port: {:system, :integer, "GATEWAY_PRIVATE_PORT", 4001}
 
-config :libcluster,
-  strategy: {:system, :module, "LIBCLUSTER_STRATEGY", Cluster.Strategy.Epmd}
+config :skycluster,
+  strategy: {:system, :module, "SKYCLUSTER_STRATEGY", Cluster.Strategy.Epmd}
 
 import_config "#{Mix.env}.exs"

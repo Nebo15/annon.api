@@ -26,7 +26,7 @@ defmodule Gateway.AutoClustering do
 
     :ets.new(:config, [:set, :public, :named_table])
 
-    case Confex.get(:libcluster, :strategy) do
+    case Confex.get(:skycluster, :strategy) do
       Cluster.Strategy.Epmd ->
         :net_adm.world_list([:'127.0.0.1'])
       Cluster.Strategy.Kubernetes = s ->

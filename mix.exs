@@ -26,7 +26,7 @@ defmodule Gateway.Mixfile do
   def application do
     [
       applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto, :timex, :joken, :nex_json_schema,
-                     :poison, :httpoison, :ex_statsd, :libcluster, :eview],
+                     :poison, :httpoison, :ex_statsd, :skycluster, :eview],
       mod: {Gateway, []}
     ]
   end
@@ -50,17 +50,16 @@ defmodule Gateway.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [{:distillery, "~> 0.10.1"},
-     {:libcluster, github: "gmile/libcluster", branch: "master"},
-     {:confex, "~> 1.4.2"},
+     {:skycluster, ">= 0.0.0"},
+     {:confex, ">= 0.0.0"},
      {:plug, ">= 0.0.0"},
      {:cowboy, ">= 0.0.0"},
      {:postgrex, ">= 0.0.0", override: true},
      {:ecto, ">= 2.1.0-rc.3", override: true},
      {:timex, "~> 3.0"},
-     {:poison, "~> 2.0"},
+     {:poison, "~> 2.2"},
      {:joken, "~> 1.3"},
      {:nex_json_schema, "~> 0.5.1"},
-     {:httpoison, ">= 0.0.0"},
      {:httpoison, ">= 0.0.0"},
      {:ex_statsd, ">= 0.5.1"},
      {:eview,  ">= 0.0.0"},
