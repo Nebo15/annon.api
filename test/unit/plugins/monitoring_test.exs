@@ -56,11 +56,11 @@ defmodule Gateway.MonitoringTest do
       name: "proxy",
       is_enabled: true,
       settings: %{
-        method: "GET",
-        scheme: "http",
-        host: "localhost",
-        port: 5001,
-        path: "/apis"
+        "method" => "GET",
+        "scheme" => "http",
+        "host" => "localhost",
+        "port" => 5001,
+        "path" => "/apis"
       }
     })
   end
