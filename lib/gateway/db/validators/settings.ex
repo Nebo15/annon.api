@@ -1,9 +1,12 @@
-defmodule Gateway.Changeset.SettingsValidator do
+defmodule Gateway.Changeset.Validator.Settings do
   @moduledoc """
     Changeset validator for Plugin settings
   """
   alias Ecto.Changeset
   import Ecto.Changeset
+  import Gateway.Changeset.Validator.JsonSchema
+
+  @ip_pattern "^(?:(?:\\*|25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:\\*|25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
 
   # JWT
   def validate_settings(%Changeset{changes: %{name: "jwt", settings: settings}} = ch) do
@@ -31,21 +34,56 @@ defmodule Gateway.Changeset.SettingsValidator do
   end
 
   # IPRestriction
-  def validate_settings(%Changeset{changes: %{name: "ip_restriction", settings: settings}} = ch) do
-    {%{}, %{ip_whitelist: :string, ip_blacklist: :string}}
-    |> cast(settings, [:ip_blacklist, :ip_whitelist])
-    |> validate_ip_list(:ip_whitelist)
-    |> validate_ip_list(:ip_blacklist)
-    |> put_changeset_errors(ch)
+  def validate_settings(%Changeset{changes: %{name: "ip_restriction"}} = ch) do
+    ch
+    |> validate_via_json_schema(:settings, %{
+       "type" => "object",
+       "required" => ["ip_whitelist", "ip_blacklist"],
+       "properties" => %{
+         "ip_whitelist" => %{
+           "type" => "array",
+           "items" => %{
+            "type" => "string",
+            "pattern" => @ip_pattern,
+           }
+         },
+         "ip_blacklist" => %{
+           "type" => "array",
+           "items" => %{
+            "type" => "string",
+            "pattern" => @ip_pattern,
+           }
+         },
+       },
+     })
   end
 
   # Proxy
-  def validate_settings(%Changeset{changes: %{name: "proxy", settings: settings}} = ch) do
-    {%{}, %{scheme: :string, host: :string, port: :integer, path: :string, method: :string}}
-    |> cast(settings, [:scheme, :host, :port, :path, :method])
-    |> validate_required([:host])
-    |> validate_format(:scheme, ~r/^(http|https)$/)
-    |> put_changeset_errors(ch)
+  def validate_settings(%Changeset{changes: %{name: "proxy"}} = ch) do
+    ch
+    |> validate_via_json_schema(:settings, %{
+       "type" => "object",
+       "required" => ["host"],
+       "properties" => %{
+         "scheme" => %{
+           "type" => "string",
+           "pattern" => "^(http|https)$"
+         },
+         "host" => %{
+           "type" => "string"
+         },
+         "port" => %{
+           "type" => "integer"
+         },
+         "path" => %{
+           "type" => "string"
+         },
+         "method" => %{
+           "type" => "string",
+           "pattern" => "^(GET|POST|PUT|DELETE|PATCH)$"
+         },
+       },
+     })
   end
 
   # general
@@ -61,31 +99,6 @@ defmodule Gateway.Changeset.SettingsValidator do
   defp validate_json({:ok, _}, ch), do: ch
   defp validate_json({:error, _}, ch) do
     add_error(ch, :settings, "Validator.settings: field 'schema' is invalid json", [validation: :json, json: []])
-  end
-
-  defp validate_ip_list(%Changeset{} = ch, field) do
-    ch
-    |> get_field(field, "")
-    |> String.split(",")
-    |> Enum.reduce_while(ch, fn(ip, acc) ->
-      ip
-      |> ip_valid?()
-      |> put_ip_error(acc, field)
-     end)
-  end
-
-  def ip_valid?(ip) do
-    ~r/^(?:(?:\*|25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:\*|25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
-    |> Regex.match?(ip)
-  end
-
-  defp put_ip_error(true, ch, _name), do: {:cont, ch}
-  defp put_ip_error(false, ch, name) do
-    {:halt, add_error(ch,
-                      :settings,
-                      "IPRestriction.settings field '#{name}' must contain valid ip addresses",
-                      [validation: :format, format: []]
-                      )}
   end
 
   defp put_changeset_errors(%Changeset{valid?: true}, ch), do: ch

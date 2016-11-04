@@ -38,14 +38,12 @@ defmodule Gateway.Plugins.IPRestriction do
 
   defp whitelisted?(%Plugin{settings: %{"ip_whitelist" => list}}, ip) do
     list
-    |> String.split(",")
     |> Enum.any?(fn(item) -> ip_matches?(item, ip) end)
   end
   defp whitelisted?(_plugin, _ip), do: nil
 
   defp blacklisted?(%Plugin{settings: %{"ip_blacklist" => list}}, ip) do
     list
-    |> String.split(",")
     |> Enum.any?(fn(item) -> ip_matches?(item, ip) end)
   end
   defp blacklisted?(_plugin, _ip), do: nil

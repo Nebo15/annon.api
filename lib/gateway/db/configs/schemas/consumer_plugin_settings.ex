@@ -25,7 +25,6 @@ defmodule Gateway.DB.Schemas.ConsumerPluginSettings do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:plugin_id, :external_id, :settings, :is_enabled])
-    |> validate_map(:settings)
     |> assoc_constraint(:consumer)
     |> assoc_constraint(:plugin)
     |> unique_constraint(:external_id_plugin_id)
