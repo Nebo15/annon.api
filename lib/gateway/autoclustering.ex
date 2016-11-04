@@ -3,7 +3,7 @@ defmodule Gateway.AutoClustering do
   The module is in charge of reloading the config across the cluster
   """
 
-  import Logger
+  require Logger
 
   use GenServer
 
