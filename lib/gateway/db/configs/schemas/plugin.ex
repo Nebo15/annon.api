@@ -7,10 +7,9 @@ defmodule Gateway.DB.Schemas.Plugin do
   import Gateway.Changeset.SettingsValidator
 
   alias Gateway.DB.Configs.Repo
-  alias Gateway.DB.Schemas.Plugin
-  alias Gateway.DB.Schemas.API, as: APISchema
+  alias Gateway.DB.Schemas.Plugin, as: PluginSchema
 
-  @type t :: %Plugin{
+  @type t :: %PluginSchema{
     name: atom,
     is_enabled: boolean,
     settings: map
@@ -23,7 +22,7 @@ defmodule Gateway.DB.Schemas.Plugin do
     field :name, :string
     field :is_enabled, :boolean, default: false
     field :settings, :map
-    belongs_to :api, APISchema
+    belongs_to :api, Gateway.DB.Schemas.API
 
     timestamps()
   end
@@ -42,41 +41,25 @@ defmodule Gateway.DB.Schemas.Plugin do
     |> validate_settings()
   end
 
-  def create(nil, _params), do: nil
-  def create(%APISchema{} = api, params) when is_map(params) do
-    api
-    |> Ecto.build_assoc(:plugins)
-    |> Plugin.changeset(params)
-    |> Repo.insert
+  def create(params) when is_map(params) do
+    %PluginSchema{}
+    |> changeset(params)
+    |> Repo.insert()
   end
 
   def update(api_id, name, params) when is_map(params) do
-    params = params
-    |> Map.put_new("name", name)
-
-    %Plugin{}
-    |> Plugin.changeset(params)
-    |> update_plugin(api_id, name)
-    |> normalize_ecto_update
-  end
-
-  defp update_plugin(%Ecto.Changeset{valid?: false} = ch, _api_id, _name), do: {:error, ch}
-  defp update_plugin(%Ecto.Changeset{valid?: true, changes: changes}, api_id, name) do
-    q = from p in Plugin,
-     where: p.api_id == ^api_id,
-     where: p.name == ^name
-
-    q
-    |> Repo.update_all([set: Map.to_list(changes)], returning: true)
+    try do
+      %PluginSchema{api_id: api_id, name: name}
+      |> changeset(params)
+      |> Repo.update()
+    rescue
+      Ecto.StaleEntryError -> nil
+    end
   end
 
   def delete(api_id, name) do
-    q = from p in Plugin,
+    Repo.delete_all from p in PluginSchema,
      where: p.api_id == ^api_id,
      where: p.name == ^name
-
-    q
-    |> Repo.delete_all
-    |> normalize_ecto_delete
   end
 end
