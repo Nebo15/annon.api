@@ -47,7 +47,7 @@ Optionally, you can send `X-Request-ID` header with your own request id, but you
 
 ### Request Logger
 
-By-default, gateway will log all requests and responses by their unique request-id's. You can view find them later in [Request][].
+By-default, gateway will log all requests and responses by their unique request-id's. You can view find them later in [Requests](#reference/requests/collection/get-all-requests).
 
 Also, idempotency plug is relies on this logs to send same result for duplicate requests with same `X-Idempotency-Key` headers.
 
@@ -55,7 +55,7 @@ Also, idempotency plug is relies on this logs to send same result for duplicate 
 
 To monitor services status we will use StatsD integration, that will receive following metrics:
 
-- `request_count` - [API][] hit rate.
+- `request_count` - [API](#reference/apis) hit rate.
 - `request_size` - HTTP request size.
 - `response_size` - HTTP response size.
 - `latency_gateway` - Latency added by API Gateway.
@@ -83,7 +83,7 @@ Subsequent requests will
 
 _TBD v2.0_
 
-Add plugin settings of [API][] to `X-Settings-Cache: json_encode(cache_plugin_setting)` header in all requests to upstream.
+Add plugin settings of [API](#reference/apis) to `X-Settings-Cache: json_encode(cache_plugin_setting)` header in all requests to upstream.
 
 #### Circout Breaker
 
@@ -92,8 +92,8 @@ TBD 2.0
 
 ### Authorization
 
-All authorization plugins work on top of [Consumers][] entity. Plugins can assign access scopes that can be reused in [ACL][] plugin.
-Only one authorization plugin can be enabled at one time, because all of them override [Consumers][] collection logic.
+All authorization plugins work on top of [Consumers](#reference/consumers/get-all-requests) entity. Plugins can assign access scopes that can be reused in [ACL](#reference/plugins/acl/get-all-requests) plugin.
+Only one authorization plugin can be enabled at one time, because all of them override [Consumers](#reference/consumers/get-all-requests) collection logic.
 
 To authorize requests inside private platrom scope we can add `Authroization: Basic base64_token` headers, so services will know that request is sent from API Gateway. _In MVP release we will trust to all requests inside private zone, no API authorization is required._
 
@@ -274,7 +274,7 @@ Proxy allows:
 
 This plugin sends request to an oAuth server that should return scopes that is valid for consumer.
 
-This plugin **DOES NOT** authorize API resources, for this purposes use [ACL plugin][].
+This plugin **DOES NOT** authorize API resources, for this purposes use [ACL](#reference/plugins/acl/get-all-requests) plugin.
 
 But if token is invalid, appropriate error response will be send back to api consumer.
 
@@ -283,7 +283,7 @@ But if token is invalid, appropriate error response will be send back to api con
 ### General Information
 JWT is a authroization plugin that decodes JWT tokens received from api consumer (with a `signature` field that is set in settings) and extacts `scopes` field from it.
 
-This plugin **DOES NOT** authorize API resources, for this purposes use [ACL plugin][].
+This plugin **DOES NOT** authorize API resources, for this purposes use [ACL](#reference/plugins/acl/get-all-requests) plugin.
 
 But if token is invalid, appropriate error response will be send back to api consumer.
 
@@ -759,3 +759,4 @@ This is equal to sending an empty object to `Update Settings` endpoint.
     + gateway
     + upstream
     + client_request
+enc
