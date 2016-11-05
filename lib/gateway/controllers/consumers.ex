@@ -1,4 +1,4 @@
-defmodule Gateway.HTTP.Consumers do
+defmodule Gateway.Controllers.Consumers do
   @moduledoc """
   REST for Consumers
   Documentation http://docs.osapigateway.apiary.io/#reference/consumers
@@ -37,5 +37,5 @@ defmodule Gateway.HTTP.Consumers do
     |> render_delete(conn)
   end
 
-  forward "/", to: Gateway.HTTP.ConsumerPluginSettings
+  forward "/", to: Gateway.Controllers.Consumers.PluginSettings
 end

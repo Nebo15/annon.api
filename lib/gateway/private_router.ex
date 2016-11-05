@@ -16,9 +16,9 @@ defmodule Gateway.PrivateRouter do
 
   plug Gateway.ConfigReloader
 
-  forward "/apis", to: Gateway.HTTP.API
-  forward "/consumers", to: Gateway.HTTP.Consumers
-  forward "/requests", to: Gateway.HTTP.Requests
+  forward "/apis", to: Gateway.Controllers.API
+  forward "/consumers", to: Gateway.Controllers.Consumers
+  forward "/requests", to: Gateway.Controllers.Requests
 
   match _ do
     conn

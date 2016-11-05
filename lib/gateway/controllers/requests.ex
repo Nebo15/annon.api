@@ -1,4 +1,4 @@
-defmodule Gateway.HTTP.Requests do
+defmodule Gateway.Controllers.Requests do
   @moduledoc """
   REST for Requests
   Documentation http://docs.osapigateway.apiary.io/#reference/requests

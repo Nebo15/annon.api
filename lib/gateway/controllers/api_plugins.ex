@@ -1,4 +1,4 @@
-defmodule Gateway.HTTP.API.Plugins do
+defmodule Gateway.Controllers.API.Plugins do
   @moduledoc """
   REST module for Plugins.
   """

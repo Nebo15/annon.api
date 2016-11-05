@@ -1,4 +1,4 @@
-defmodule Gateway.HTTP.ConsumerTest do
+defmodule Gateway.Controllers.ConsumerTest do
   use Gateway.UnitCase
   alias Gateway.Test.Helper
 

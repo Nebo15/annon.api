@@ -1,4 +1,4 @@
-defmodule Gateway.HTTP.API do
+defmodule Gateway.Controllers.API do
   @moduledoc """
   REST for Api
   Documentation http://docs.osapigateway.apiary.io/#reference/apis
@@ -37,5 +37,5 @@ defmodule Gateway.HTTP.API do
     |> render_delete(conn)
   end
 
-  forward "/", to: Gateway.HTTP.API.Plugins
+  forward "/", to: Gateway.Controllers.API.Plugins
 end

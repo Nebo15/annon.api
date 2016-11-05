@@ -1,4 +1,4 @@
-defmodule Gateway.HTTP.ConsumerPluginSettings do
+defmodule Gateway.Controllers.Consumers.PluginSettings do
   @moduledoc """
   REST for ConsumerPluginSettings
   Documentation http://docs.osapigateway.apiary.io/#reference/apis
