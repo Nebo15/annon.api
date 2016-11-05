@@ -31,5 +31,6 @@ defmodule Gateway.Plugins.Validator do
     "422.json"
     |> ValidationErrorView.render(%{schema: errors})
     |> Response.send(conn, 422)
+    |> Response.halt()
   end
 end

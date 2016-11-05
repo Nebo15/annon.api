@@ -33,13 +33,15 @@ defmodule Gateway.Helpers.Response do
 
     conn
     |> Plug.Conn.send_resp(status, body)
-    |> Plug.Conn.halt()
   end
+
+  def halt(conn), do: conn |> Plug.Conn.halt()
 
   defp send_error_template(template, conn, status) do
     template
     |> EView.Views.Error.render()
     |> send(conn, status)
+    |> halt()
   end
 
   defp get_exception_status(:throw, _throw), do: 500

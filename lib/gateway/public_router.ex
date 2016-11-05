@@ -14,7 +14,7 @@ defmodule Gateway.PublicRouter do
 
   plug Gateway.Plugins.APILoader
 
-  plug Gateway.Plugins.Idempotency # ToDo: set plug after logger plug (and after acl/iprestiction, in others section)
+  plug Gateway.Plugins.Idempotency # TODO: set plug after logger plug (and after acl/iprestiction, in others section)
 
   # Monitoring plugins that do not affect on request or response
   plug Gateway.Plugins.Logger

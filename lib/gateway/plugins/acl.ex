@@ -49,6 +49,7 @@ defmodule Gateway.Plugins.ACL do
       }]
     })
     |> Response.send(conn, 403)
+    |> Response.halt()
   end
   defp send_response({:error, :no_scopes_is_set}, conn) do
     Logger.error("Required field scope in Plugin.settings is not found!")

@@ -27,13 +27,6 @@ defmodule Gateway.DB do
     |> validate_map
   end
 
-  def normalize_ecto_delete({0, _}), do: nil
-  def normalize_ecto_delete({1, _}), do: {:ok, nil}
-
-  def normalize_ecto_update({0, _}), do: nil
-  def normalize_ecto_update({1, [updated_schema]}), do: updated_schema
-  def normalize_ecto_update({:error, ch}), do: {:error, ch}
-
   defp validate_map_size(map, ch, field) when is_map(map) and map_size(map) <= 128, do: {ch, map, field}
   defp validate_map_size(nil, ch, field), do: {ch, nil, field}
   defp validate_map_size(_map, ch, field) do

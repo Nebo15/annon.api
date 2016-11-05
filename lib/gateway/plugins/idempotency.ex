@@ -59,6 +59,7 @@ defmodule Gateway.Plugins.Idempotency do
       }]
     })
     |> Response.send(conn, 409)
+    |> Response.halt()
   end
   defp normalize_resp(_, conn), do: conn
 

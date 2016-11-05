@@ -4,13 +4,11 @@ defmodule Gateway.HTTP.API.Plugins do
   """
   use Gateway.Helpers.CommonRouter
 
-  alias Gateway.DB.Configs.Repo
   alias Gateway.DB.Schemas.Plugin, as: PluginSchema
-  alias Gateway.DB.Schemas.API, as: APISchema
 
   get "/:api_id/plugins" do
-    PluginSchema
-    |> Repo.all
+    [api_id: api_id]
+    |> PluginSchema.get_by(50)
     |> render_collection(conn)
   end
 

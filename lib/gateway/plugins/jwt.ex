@@ -56,6 +56,7 @@ defmodule Gateway.Plugins.JWT do
       }]
     })
     |> Response.send(conn, 401)
+    |> Response.halt()
   end
 
   defp evaluate(%Token{error: nil} = token, conn) do
@@ -76,6 +77,7 @@ defmodule Gateway.Plugins.JWT do
       }]
     })
     |> Response.send(conn, 401)
+    |> Response.halt()
   end
 
   def merge_consumer_settings(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn,
