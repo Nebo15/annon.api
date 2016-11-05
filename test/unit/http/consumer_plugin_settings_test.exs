@@ -4,14 +4,13 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
   setup do
     consumer = create_fixture(Gateway.DB.Schemas.Consumer)
     api      = create_fixture(Gateway.DB.Schemas.API)
-    {:ok, plugin} = create_plugin(api.id)
+    {:ok, plugin} = create_plugin(api.id, "acl")
 
     {:ok, %{external_id: consumer.external_id, api: api, plugin: plugin}}
   end
 
-  test "GET /consumers/:external_id/plugins", %{external_id: external_id, api: api} do
-    {:ok, plugin1} = create_plugin(api.id)
-    {:ok, plugin2} = create_plugin(api.id)
+  test "GET /consumers/:external_id/plugins", %{external_id: external_id, api: api, plugin: plugin2} do
+    {:ok, plugin1} = create_plugin(api.id, "idempotency")
 
     Gateway.DB.Schemas.ConsumerPluginSettings.create(external_id, %{plugin_id: plugin1.id})
     Gateway.DB.Schemas.ConsumerPluginSettings.create(external_id, %{plugin_id: plugin2.id})
@@ -113,10 +112,10 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     entity
   end
 
-  defp create_plugin(api_id) do
+  defp create_plugin(api_id, plugin_name) do
     Gateway.DB.Schemas.Plugin.create(api_id, %{
       api_id: api_id,
-      name: "acl",
+      name: plugin_name,
       is_enabled: true,
       settings: %{"scope" => "read"}
     })
