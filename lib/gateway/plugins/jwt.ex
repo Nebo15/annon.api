@@ -42,6 +42,8 @@ defmodule Gateway.Plugins.JWT do
     |> evaluate(conn)
   end
   defp parse_auth(conn, _header, _signature) do
+    # TODO: This plugin should not authorize, only authentificate
+    # so simply return conn
     "401.json"
     |> ErrorView.render(%{
       message: "There are no JWT token in request or your token is invalid.",
@@ -60,6 +62,7 @@ defmodule Gateway.Plugins.JWT do
     |> Conn.put_private(:jwt_token, token)
   end
   defp evaluate(%Token{error: message}, conn) do
+    # TODO: Simply 422 error, because token is invalid
     "401.json"
     |> ErrorView.render(%{
       message: "Your scopes does not allow to access this resource.",
@@ -83,7 +86,7 @@ defmodule Gateway.Plugins.JWT do
   def merge_consumer_settings(conn, _token), do: conn
 
   # TODO: Read if from cache
-  # TODO: Move consumer and api settings merge to a separate plugs to support different auth strategies
+  # TODO: Move consumer and api settings merge to a separate plugin to support different auth strategies
   def get_consumer_settings(external_id) do
     Repo.all from c in Consumer,
       where: c.external_id == ^external_id,
