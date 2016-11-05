@@ -10,7 +10,11 @@ defmodule Gateway.Acceptance.Plug.IdempotencyTest do
     |> api_idempotency_data("/idempotency", true)
 
     http_api_create(api_data)
-    api_data = Poison.encode!(api_data |> put_in([:request, :port], 3001))
+
+    api_data = api_data
+    |> put_in([:request, :port], 3001)
+    |> Map.put("name", "idempotency test api")
+    |> Poison.encode!()
 
     Gateway.AutoClustering.do_reload_config
 

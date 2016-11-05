@@ -15,8 +15,8 @@ defmodule Gateway.HTTP.APITest do
   test "GET /apis" do
     data =
       [
-        Gateway.DB.Schemas.API.create(put_in(@correct_api_data, [:request, :port], 3000)),
-        Gateway.DB.Schemas.API.create(put_in(@correct_api_data, [:request, :port], 3001))
+        Gateway.DB.Schemas.API.create(put_in(%{@correct_api_data | name: "Sample one"}, [:request, :port], 3000)),
+        Gateway.DB.Schemas.API.create(put_in(%{@correct_api_data | name: "Sample two"}, [:request, :port], 3001))
       ]
       |> Enum.map(fn({:ok, e}) -> e end)
 

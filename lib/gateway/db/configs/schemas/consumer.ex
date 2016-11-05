@@ -20,6 +20,7 @@ defmodule Gateway.DB.Schemas.Consumer do
     |> cast(params, @required_consumer_fields ++ [:metadata])
     |> cast_assoc(:plugins)
     |> validate_required(@required_consumer_fields)
+    |> unique_constraint(:external_id)
   end
 
   def create(params) do
