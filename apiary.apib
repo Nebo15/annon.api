@@ -1,20 +1,22 @@
 FORMAT: 1A
 HOST: http://os-dev-gateway.nebo15.com:8080/
 
-# OrangeSky API Gateway
+# Annon API Gateway
 
-Keepex - configurable API gateway that allows to pass requests to upstream back-ends and remove from them typical boilerplate that must be re-done everywhere. Inspired by [Kong](https://getkong.org/).
+Annon - configurable API gateway that allows to pass requests to upstream back-ends and remove from them typical boilerplate that must be re-done everywhere. Inspired by [Kong](https://getkong.org/).
 
-Keepex consist of three main parts:
-- Keepex API Gateway - proxy and mutate requests.
-- Keepex Dashboard - manage API Gateway settings, review and replay requests from history.
-- Keepex - hex package that allows to receive and modify client metadata from Elixir application.
-- Keepex Doc - auto-generated documentation based on request history of your API.
-- Keepex Status Page - auto-generated status pages on API's. (See: [status.gndf.io](http://status.gndf.io/) for example).
+*"Annon" translates from the Sindarin word for 'Great Door or Gate'. Sindarin is one of the many languages spoken by the immortal Elves.*
+
+Annon consist of three main parts:
+- Annon API Gateway.
+- Annon Dashboard - manage API Gateway settings, review and replay requests from history.
+- EView - hex package that allows to receive and modify client responses from Elixir application to match [Nebo #15 API Manifest](http://docs.apimanifest.apiary.io/). So your back-ends will respond in a same way as Annon does.
+- Annon Doc - auto-generated documentation based on request history of your API.
+- Annon Status Page - auto-generated status pages on API's. (See: [status.gndf.io](http://status.gndf.io/) for example).
 
 ## Goals of the Project
 
-- Provide single management/monitoring system for whole OrangeSky IL.
+- Provide single management/monitoring system for medium-to-large scale applications.
 - Reduce amount of work needed in other componens by orchestrating common functionalities.
 - Control response time and get answer "what happened" even in a single request perspective.
 - Improve platform scalability.
@@ -23,7 +25,7 @@ Keepex consist of three main parts:
 
 ### Caching and Perfomance
 
-For perfomance issues Keepex has build-in cache manager, it will load data from DB only once, all futher work will be based on this cached data.
+For perfomance issues Annon has build-in cache manager, it will load data from DB only once, all futher work will be based on this cached data.
 
 Whenever a single node receives request that cache has been changed, it's responsible to notify all other nodes in cluster about change, and they should reload configurations from DB.
 
@@ -33,7 +35,7 @@ This feature is done via [skycluster](https://github.com/Nebo15/skycluster) pack
 
 ### Requests Idempotency
 
-Keepex guarantess that replayed requests with same `X-Idempotency-Key: <key>` and same request will get permanent response. This is useful in a financial application, where you need good protection from duplicate user actions.
+Annon guarantess that replayed requests with same `X-Idempotency-Key: <key>` and same request will get permanent response. This is useful in a financial application, where you need good protection from duplicate user actions.
 
 ### Request ID's
 
