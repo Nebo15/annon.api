@@ -15,10 +15,7 @@ defmodule Gateway.HTTP.ConsumerTest do
       |> put_req_header("content-type", "application/json")
       |> Gateway.PrivateRouter.call([])
 
-    expected_resp = %{
-      meta: EView.Renders.Meta.render("list", conn),
-      data: data
-    }
+    expected_resp = EView.wrap_body(data, conn)
 
     assert 200 == conn.status
     assert Poison.encode!(expected_resp) == conn.resp_body
