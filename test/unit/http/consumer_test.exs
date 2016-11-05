@@ -3,10 +3,13 @@ defmodule Gateway.HTTP.ConsumerTest do
   alias Gateway.Test.Helper
 
   test "GET /consumers" do
+    consumer1 = get_consumer_data() |> Gateway.DB.Schemas.Consumer.create()
+    consumer2 = get_consumer_data() |> Gateway.DB.Schemas.Consumer.create()
+
     data =
       [
-        get_consumer_data() |> Gateway.DB.Schemas.Consumer.create(),
-        get_consumer_data() |> Gateway.DB.Schemas.Consumer.create()
+        consumer1,
+        consumer2
       ]
       |> Enum.map(fn({:ok, e}) -> e end)
 
@@ -22,7 +25,7 @@ defmodule Gateway.HTTP.ConsumerTest do
   end
 
   test "GET /consumers/:external_id" do
-    { :ok, data } =
+    {:ok, data} =
       get_consumer_data()
       |> Gateway.DB.Schemas.Consumer.create()
 
@@ -58,7 +61,7 @@ defmodule Gateway.HTTP.ConsumerTest do
   end
 
   test "PUT /consumers/:external_id" do
-    { :ok, data } =
+    {:ok, data} =
       get_consumer_data()
       |> Gateway.DB.Schemas.Consumer.create()
 
@@ -85,7 +88,7 @@ defmodule Gateway.HTTP.ConsumerTest do
   end
 
   test "DELETE /consumers/:external_id" do
-    { :ok, data } =
+    {:ok, data} =
       get_consumer_data()
       |> Gateway.DB.Schemas.Consumer.create()
 

@@ -31,7 +31,9 @@ defmodule Gateway.Plugins.JWT do
   end
   defp execute(_plugin, conn) do
     Logger.error("JWT tokens decryption key is not set")
-    Response.send_internal_error(conn)
+
+    conn
+    |> Response.send_error(:internal_error)
   end
 
   defp parse_auth(conn, ["Bearer " <> incoming_token], signature) do
@@ -53,7 +55,7 @@ defmodule Gateway.Plugins.JWT do
         rules: []
       }]
     })
-    |> Response.send_and_halt(conn, 401)
+    |> Response.send(conn, 401)
   end
 
   defp evaluate(%Token{error: nil} = token, conn) do
@@ -73,7 +75,7 @@ defmodule Gateway.Plugins.JWT do
         rules: []
       }]
     })
-    |> Response.send_and_halt(conn, 401)
+    |> Response.send(conn, 401)
   end
 
   def merge_consumer_settings(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn,

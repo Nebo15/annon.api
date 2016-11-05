@@ -100,7 +100,13 @@ defmodule Gateway.DB.Schemas.Log do
     |> cast(params, [:id, :external_id, :metadata])
   end
 
-  def get_by(selector, limit \\ 1) do
+  def get_one_by(selector) do
+    Repo.one from LogSchema,
+      where: ^selector,
+      limit: 1
+  end
+
+  def get_by(selector, limit) do
     Repo.all from LogSchema,
       where: ^selector,
       limit: ^limit

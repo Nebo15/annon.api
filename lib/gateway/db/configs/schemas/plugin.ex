@@ -8,6 +8,7 @@ defmodule Gateway.DB.Schemas.Plugin do
 
   alias Gateway.DB.Configs.Repo
   alias Gateway.DB.Schemas.Plugin, as: PluginSchema
+  alias Gateway.DB.Schemas.API, as: APISchema
 
   @type t :: %PluginSchema{
     name: atom,
@@ -41,19 +42,36 @@ defmodule Gateway.DB.Schemas.Plugin do
     |> validate_settings()
   end
 
-  def create(params) when is_map(params) do
-    %PluginSchema{}
-    |> changeset(params)
-    |> Repo.insert()
+  def get_one_by(selector) do
+    Repo.one from PluginSchema,
+      where: ^selector,
+      limit: 1
+  end
+
+  def get_by(selector, limit) do
+    Repo.all from PluginSchema,
+      where: ^selector,
+      limit: ^limit
+  end
+
+  def create(api_id, params) when is_map(params) do
+    case Repo.get(APISchema, api_id) do
+      %APISchema{} = api ->
+        api
+        |> Ecto.build_assoc(:plugins)
+        |> changeset(params)
+        |> Repo.insert()
+      _ -> nil
+    end
   end
 
   def update(api_id, name, params) when is_map(params) do
-    try do
-      %PluginSchema{api_id: api_id, name: name}
-      |> changeset(params)
-      |> Repo.update()
-    rescue
-      Ecto.StaleEntryError -> nil
+    case get_one_by([api_id: api_id, name: name]) do
+      %PluginSchema{} = plugin ->
+        plugin
+        |> changeset(params)
+        |> Repo.update()
+      _ -> nil
     end
   end
 

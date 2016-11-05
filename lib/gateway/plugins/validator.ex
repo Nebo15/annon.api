@@ -30,6 +30,6 @@ defmodule Gateway.Plugins.Validator do
   defp normalize_validation({:error, errors}, conn) do
     "422.json"
     |> ValidationErrorView.render(%{schema: errors})
-    |> Response.send_and_halt(conn, 422)
+    |> Response.send(conn, 422)
   end
 end

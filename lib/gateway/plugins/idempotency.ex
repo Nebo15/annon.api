@@ -31,7 +31,7 @@ defmodule Gateway.Plugins.Idempotency do
   defp execute(_, conn), do: conn
 
   defp load_log_request([key|_]) when is_binary(key) do
-    Log.get_by([idempotency_key: key])
+    Log.get_one_by([idempotency_key: key])
   end
   defp load_log_request(_), do: nil
 
@@ -58,7 +58,7 @@ defmodule Gateway.Plugins.Idempotency do
         rules: [:unique]
       }]
     })
-    |> Response.send_and_halt(conn, 409)
+    |> Response.send(conn, 409)
   end
   defp normalize_resp(_, conn), do: conn
 

@@ -4,35 +4,37 @@ defmodule Gateway.HTTP.Consumers do
   Documentation http://docs.osapigateway.apiary.io/#reference/consumers
   """
   use Gateway.Helpers.CommonRouter
+  alias Gateway.DB.Configs.Repo
+  alias Gateway.DB.Schemas.Consumer, as: ConsumerSchema
 
   get "/" do
-    Gateway.DB.Schemas.Consumer
-    |> Gateway.DB.Configs.Repo.all
-    |> render_response(conn)
+    ConsumerSchema
+    |> Repo.all
+    |> render_collection(conn)
   end
 
   get "/:consumer_id" do
-    Gateway.DB.Schemas.Consumer
-    |> Gateway.DB.Configs.Repo.get(consumer_id)
-    |> render_response(conn)
+    ConsumerSchema
+    |> Repo.get(consumer_id)
+    |> render_schema(conn)
   end
 
   put "/:consumer_id" do
     consumer_id
-    |> Gateway.DB.Schemas.Consumer.update(conn.body_params)
-    |> render_response(conn)
+    |> ConsumerSchema.update(conn.body_params)
+    |> render_change(conn)
   end
 
   post "/" do
     conn.body_params
-    |> Gateway.DB.Schemas.Consumer.create
-    |> render_response(conn, 201)
+    |> ConsumerSchema.create
+    |> render_change(conn, 201)
   end
 
   delete "/:consumer_id" do
     consumer_id
-    |> Gateway.DB.Schemas.Consumer.delete
-    |> render_delete_response(conn)
+    |> ConsumerSchema.delete
+    |> render_delete(conn)
   end
 
   forward "/", to: Gateway.HTTP.ConsumerPluginSettings

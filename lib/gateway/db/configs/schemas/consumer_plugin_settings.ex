@@ -5,6 +5,7 @@ defmodule Gateway.DB.Schemas.ConsumerPluginSettings do
   use Gateway.DB, :schema
 
   alias Gateway.DB.Configs.Repo
+  alias Gateway.DB.Schemas.Plugin, as: PluginSchema
   alias Gateway.DB.Schemas.ConsumerPluginSettings, as: ConsumerPluginSettingsSchema
 
   @derive {Poison.Encoder, except: [:__meta__, :consumer, :plugin]}
@@ -32,7 +33,7 @@ defmodule Gateway.DB.Schemas.ConsumerPluginSettings do
 
   def get_by_name(external_id, plugin_name) do
     Repo.one from c in ConsumerPluginSettingsSchema,
-      join: p in Plugin, on: c.plugin_id == p.id,
+      join: p in PluginSchema, on: c.plugin_id == p.id,
       where: c.external_id == ^external_id,
       where: p.name == ^plugin_name
   end
@@ -40,36 +41,22 @@ defmodule Gateway.DB.Schemas.ConsumerPluginSettings do
   def create(external_id, params) when is_map(params) do
     %ConsumerPluginSettingsSchema{external_id: external_id}
     |> changeset(params)
-    |> Repo.insert
-  end
-
-  def update(consumer_id, params) when is_map(params) do
-    try do
-      %ConsumerPluginSettingsSchema{external_id: consumer_id}
-      |> changeset(params)
-      |> Gateway.DB.Configs.Repo.update()
-    rescue
-      Ecto.StaleEntryError -> nil
-    end
+    |> Repo.insert()
   end
 
   def update(external_id, name, params) when is_map(params) do
     case get_by_name(external_id, name) do
-      nil -> nil
-      schema ->
-        try do
-          schema
-          |> changeset(params)
-          |> Repo.update()
-        rescue
-          Ecto.StaleEntryError -> nil
-        end
+      %ConsumerPluginSettingsSchema{} = schema ->
+        schema
+        |> changeset(params)
+        |> Repo.update()
+      _ -> nil
     end
   end
 
   def delete(external_id, plugin_name) do
     Repo.delete_all from c in ConsumerPluginSettingsSchema,
-      join: p in Plugin, on: c.plugin_id == p.id,
+      join: p in PluginSchema, on: c.plugin_id == p.id,
       where: c.external_id == ^external_id,
       where: p.name == ^plugin_name
   end

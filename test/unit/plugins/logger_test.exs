@@ -19,7 +19,7 @@ defmodule Gateway.LoggerTest do
     |> get_header("x-request-id")
     |> Enum.at(0)
     assert(id !== nil, "Plug RequestId is missing or has invalid position")
-    result = Log.get_by([id: id])
+    result = Log.get_one_by([id: id])
 
     assert(result !== nil, "Logs are missing")
     uri_to_check = result.request
