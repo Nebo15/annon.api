@@ -1,4 +1,7 @@
 defmodule Gateway.Helpers.Render do
+  @moduledoc """
+  Use this helpers when you want to render result in a controllers.
+  """
   import Gateway.Helpers.Response
 
   def render_collection(nil, conn) do
