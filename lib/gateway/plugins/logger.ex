@@ -9,6 +9,7 @@ defmodule Gateway.Plugins.Logger do
   alias Gateway.DB.Schemas.Log
   alias Gateway.DB.Schemas.API, as: APISchema
 
+  # TODO: Make one insert per HTTP request
   def call(conn, _opts) do
     conn
     |> log_request()
