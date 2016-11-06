@@ -106,12 +106,6 @@ defmodule Gateway.DB.Schemas.Log do
       limit: 1
   end
 
-  def get_by(selector, limit) do
-    Repo.all from LogSchema,
-      where: ^selector,
-      limit: ^limit
-  end
-
   def create_request(params) when is_map(params) do
     %LogSchema{}
     |> changeset_request(params)
