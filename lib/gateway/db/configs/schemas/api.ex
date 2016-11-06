@@ -32,6 +32,7 @@ defmodule Gateway.DB.Schemas.API do
     |> validate_required(@required_api_fields)
     |> cast_assoc(:plugins)
     |> cast_embed(:request, with: &request_changeset/2)
+    |> unique_constraint(:name)
   end
 
   def request_changeset(api, params \\ %{}) do

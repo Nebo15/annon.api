@@ -39,7 +39,7 @@ defmodule Gateway.MonitoringTest do
 
   defp create_api_endpoint do
     Gateway.DB.Schemas.API.create(%{
-      name: "Test api",
+      name: "Montoring Test api",
       request: %{
         method: "GET",
         scheme: "http",
