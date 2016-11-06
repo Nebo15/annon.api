@@ -51,6 +51,9 @@ defmodule Gateway.DB.Schemas.Plugin do
   end
 
   def update(api_id, name, params) when is_map(params) do
+    params = params
+    |> Map.put_new("name", name)
+
     %Plugin{}
     |> Plugin.changeset(params)
     |> update_plugin(api_id, name)

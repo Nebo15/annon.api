@@ -67,6 +67,12 @@ defmodule Gateway.HTTP.PluginTest do
     |> send_get()
     |> assert_conn_status()
 
+    # Name can be read from uri params
+    plugin_data = %{settings: %{"schema" => "{}"}}
+    "/#{api_model.id}/plugins/validator"
+    |> send_data(plugin_data, :put)
+    |> assert_conn_status()
+
     plugin_data = %{name: "validator", settings: %{"schema" => "{}"}}
     conn = "/#{api_model.id}/plugins/validator"
     |> send_data(plugin_data, :put)
