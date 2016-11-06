@@ -46,10 +46,10 @@ defmodule Gateway.DB.Schemas.ConsumerPluginSettings do
 
   def update(external_id, name, params) when is_map(params) do
     case get_by_name(external_id, name) do
-      params = params
-      |> Map.put_new("name", name)
-
       %ConsumerPluginSettingsSchema{} = schema ->
+        params = params
+        |> Map.put_new("name", name)
+
         schema
         |> changeset(params)
         |> Repo.update()
