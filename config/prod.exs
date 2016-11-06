@@ -18,7 +18,7 @@ config :gateway, Gateway.DB.Logger.Repo,
   hostname: "${DB_HOST}",
   port: "${DB_PORT}"
 
-config :libcluster,
-  strategy: {:system, :module, "LIBCLUSTER_STRATEGY", Cluster.Strategy.Kubernetes},
-  kubernetes_selector: {:system, "LIBCLUSTER_KUBERNATES_SELECTOR", "app=gateway"},
-  kubernetes_node_basename: {:system, "LIBCLUSTER_KUBERNATES_NODE_BASENAME", "gateway"}
+config :skycluster,
+  strategy: {:system, :module, "SKYCLUSTER_STRATEGY", Cluster.Strategy.Kubernetes},
+  kubernetes_selector: {:system, "SKYCLUSTER_KUBERNATES_SELECTOR", "app=gateway"},
+  kubernetes_node_basename: {:system, "SKYCLUSTER_KUBERNATES_NODE_BASENAME", "gateway"}
