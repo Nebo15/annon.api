@@ -15,6 +15,7 @@ defmodule Gateway.Plugins.ProxyTest do
     assert Proxy.make_link(@proxy_settings_full, conn) == "http://localhost:4000/proxy/test"
     assert Proxy.make_link(@proxy_settings_port, conn) == "http://localhost/proxy/test"
     assert Proxy.make_link(@proxy_settings_scheme, conn) == "https://localhost/proxy/test"
+    assert Proxy.make_link(@proxy_settings_path, conn) == "https://localhost/proxy"
 
     headers = [%{"random_name1" => "random_value1"}, %{"random_name2" => "random_value2"}]
     conn = Proxy.add_additional_headers(headers, conn)
