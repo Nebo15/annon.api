@@ -26,4 +26,47 @@ defmodule Gateway.Plugins.APILoaderTest do
     assert length(config.plugins) == 2
   end
 
+  test "API with strip_request_path on" do
+    {:ok, api} = create_api_endpoint(false)
+    create_proxy_plugin(api)
+
+    Gateway.AutoClustering.do_reload_config()
+
+    assert make_call("/some_path").status == 200
+  end
+
+  defp make_call(path) do
+    :get
+    |> conn(path)
+    |> put_req_header("content-type", "application/json")
+    |> Gateway.PublicRouter.call([])
+  end
+
+  defp create_api_endpoint(strip_request_path) do
+    Gateway.DB.Schemas.API.create(%{
+      name: "Montoring Test api",
+      strip_request_path: strip_request_path,
+      request: %{
+        method: "GET",
+        scheme: "http",
+        host: "www.example.com",
+        port: 80,
+        path: "/some_path",
+      }
+    })
+  end
+
+  defp create_proxy_plugin(api) do
+    Gateway.DB.Schemas.Plugin.create(api.id, %{
+      name: "proxy",
+      is_enabled: true,
+      settings: %{
+        "method" => "GET",
+        "scheme" => "http",
+        "host" => "localhost",
+        "port" => 5001,
+        "path" => "/apis"
+      }
+    })
+  end
 end
