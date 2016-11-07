@@ -26,15 +26,36 @@ defmodule Gateway.Plugins.APILoaderTest do
     assert length(config.plugins) == 2
   end
 
-  test "API with strip_request_path on" do
-    {:ok, api} = create_api_endpoint(false)
-    create_proxy_plugin(api)
+  describe "Matching API by path: strip_request_path is disabled" do
+    setup do
+      {:ok, api} = create_api_endpoint(false)
+      create_proxy_plugin(api)
+      Gateway.AutoClustering.do_reload_config()
 
-    Gateway.AutoClustering.do_reload_config()
+      :ok
+    end
 
-    assert 404 == make_call("/some_path").status
-    assert 200 == make_call("/mockbin").status
-    assert 200 == make_call("/mockbin/path").status
+    test "API fetcher behaves as expected" do
+      assert 404 == make_call("/some_path").status
+      assert 200 == make_call("/mockbin").status
+      assert 200 == make_call("/mockbin/path").status
+    end
+  end
+
+  describe "Matching API by path: strip_request_path is enabled" do
+    setup do
+      {:ok, api} = create_api_endpoint(true)
+      create_proxy_plugin(api)
+      Gateway.AutoClustering.do_reload_config()
+
+      :ok
+    end
+
+    test "API fetcher behaves as expected" do
+      assert 404 == make_call("/some_path").status
+      assert 200 == make_call("/mockbin").status
+      assert 200 == make_call("/mockbin/path").status
+    end
   end
 
   defp make_call(path) do
