@@ -12,7 +12,7 @@ defmodule Gateway.DB.Schemas.API do
   @derive {Poison.Encoder, except: [:__meta__, :plugins]}
   schema "apis" do
     field :name, :string
-    field :strip_request_path, :boolean
+    field :strip_request_path, :boolean, default: false
 
     embeds_one :request, Request, primary_key: false do
       field :scheme, :string
