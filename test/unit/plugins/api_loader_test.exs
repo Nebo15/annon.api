@@ -32,7 +32,9 @@ defmodule Gateway.Plugins.APILoaderTest do
 
     Gateway.AutoClustering.do_reload_config()
 
-    assert make_call("/some_path").status == 200
+    assert make_call("/mockbin").status == 200
+
+
   end
 
   defp make_call(path) do
@@ -51,7 +53,7 @@ defmodule Gateway.Plugins.APILoaderTest do
         scheme: "http",
         host: "www.example.com",
         port: 80,
-        path: "/some_path",
+        path: "/mockbin",
       }
     })
   end
