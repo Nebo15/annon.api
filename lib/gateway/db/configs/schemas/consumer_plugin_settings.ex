@@ -5,16 +5,16 @@ defmodule Gateway.DB.Schemas.ConsumerPluginSettings do
   use Gateway.DB, :schema
 
   alias Gateway.DB.Configs.Repo
-  alias Gateway.DB.Schemas.Consumer
-  alias Gateway.DB.Schemas.Plugin
-  alias Gateway.DB.Schemas.ConsumerPluginSettings
+  alias Gateway.DB.Schemas.Plugin, as: PluginSchema
+  alias Gateway.DB.Schemas.ConsumerPluginSettings, as: ConsumerPluginSettingsSchema
 
   @derive {Poison.Encoder, except: [:__meta__, :consumer, :plugin]}
   schema "consumer_plugin_settings" do
     field :settings, :map
     field :is_enabled, :boolean
-    belongs_to :consumer, Consumer, references: :external_id, foreign_key: :external_id, type: :string
-    belongs_to :plugin, Plugin
+    belongs_to :consumer, Gateway.DB.Schemas.Consumer,
+      references: :external_id, foreign_key: :external_id, type: :string
+    belongs_to :plugin, Gateway.DB.Schemas.Plugin
 
     timestamps()
   end
@@ -28,22 +28,39 @@ defmodule Gateway.DB.Schemas.ConsumerPluginSettings do
     |> validate_map(:settings)
     |> assoc_constraint(:consumer)
     |> assoc_constraint(:plugin)
-    |> unique_constraint(:external_id_plugin_id)
+    |> unique_constraint(:plugin, name: :external_id_plugin_id_index)
   end
 
-  def create(external_id, params) do
-    %ConsumerPluginSettings{external_id: external_id}
+  def get_by_name(external_id, plugin_name) do
+    Repo.one from c in ConsumerPluginSettingsSchema,
+      join: p in PluginSchema, on: c.plugin_id == p.id,
+      where: c.external_id == ^external_id,
+      where: p.name == ^plugin_name
+  end
+
+  def create(external_id, params) when is_map(params) do
+    %ConsumerPluginSettingsSchema{external_id: external_id}
     |> changeset(params)
-    |> Repo.insert
+    |> Repo.insert()
   end
 
-  def update(query, changes) do
-    changes =
-      %ConsumerPluginSettings{}
-      |> changeset(changes)
-      |> Map.get(:changes)
-      |> Map.to_list
+  def update(external_id, name, params) when is_map(params) do
+    case get_by_name(external_id, name) do
+      %ConsumerPluginSettingsSchema{} = schema ->
+        params = params
+        |> Map.put_new("name", name)
 
-    Repo.update_all(query, [set: changes], returning: true)
+        schema
+        |> changeset(params)
+        |> Repo.update()
+      _ -> nil
+    end
+  end
+
+  def delete(external_id, plugin_name) do
+    Repo.delete_all from c in ConsumerPluginSettingsSchema,
+      join: p in PluginSchema, on: c.plugin_id == p.id,
+      where: c.external_id == ^external_id,
+      where: p.name == ^plugin_name
   end
 end

@@ -2,10 +2,11 @@ defmodule Gateway.AutoClustering do
   @moduledoc """
   The module is in charge of reloading the config across the cluster
   """
+  use GenServer
 
   require Logger
 
-  use GenServer
+  import Ecto.Query, only: [from: 2]
 
   def start_link do
     GenServer.start_link(__MODULE__, [], [name: __MODULE__])
@@ -20,7 +21,6 @@ defmodule Gateway.AutoClustering do
   end
 
   # Server code
-
   def init(_opts) do
     Cluster.Events.subscribe(self())
 
@@ -53,8 +53,6 @@ defmodule Gateway.AutoClustering do
   def handle_info({:nodedown, _}, state) do
     {:noreply, state}
   end
-
-  import Ecto.Query, only: [from: 2]
 
   def do_reload_config do
     query = from a in Gateway.DB.Schemas.API,

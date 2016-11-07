@@ -25,7 +25,7 @@ defmodule Gateway.Plugins.IPRestriction do
     else
       "400.json"
       |> ErrorView.render(%{message: "You has been blocked from accessing this resource."})
-      |> Response.send_and_halt(conn, 400)
+      |> Response.send(conn, 400)
     end
   end
   defp execute(_, conn), do: conn

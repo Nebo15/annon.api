@@ -51,7 +51,7 @@ defmodule Gateway.MonitoringTest do
   end
 
   defp create_proxy_plugin(api) do
-    Gateway.DB.Schemas.Plugin.create(api, %{
+    Gateway.DB.Schemas.Plugin.create(api.id, %{
       name: "proxy",
       is_enabled: true,
       settings: %{

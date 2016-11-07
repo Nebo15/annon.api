@@ -3,6 +3,8 @@ defmodule Gateway.DB.Schemas.Consumer do
   Consumer DB entity
   """
   use Gateway.DB, :schema
+  alias Gateway.DB.Configs.Repo
+  alias Gateway.DB.Schemas.Consumer, as: ConsumerSchema
 
   @required_consumer_fields [:external_id]
 
@@ -15,6 +17,12 @@ defmodule Gateway.DB.Schemas.Consumer do
     timestamps()
   end
 
+  def get_one_by(selector) do
+    Repo.one from ConsumerSchema,
+      where: ^selector,
+      limit: 1
+  end
+
   def changeset(consumer, params \\ %{}) do
     consumer
     |> cast(params, @required_consumer_fields ++ [:metadata])
@@ -23,20 +31,24 @@ defmodule Gateway.DB.Schemas.Consumer do
     |> unique_constraint(:external_id)
   end
 
-  def create(params) do
-    consumer = %Gateway.DB.Schemas.Consumer{}
-    changeset = changeset(consumer, params)
-    Gateway.DB.Configs.Repo.insert(changeset)
-  end
-
-  def update(consumer_id, params) do
-    %Gateway.DB.Schemas.Consumer{external_id: consumer_id}
+  def create(params) when is_map(params) do
+    %ConsumerSchema{}
     |> changeset(params)
-    |> Gateway.DB.Configs.Repo.update()
+    |> Repo.insert()
   end
 
-  def delete(consumer_id) do
-    %Gateway.DB.Schemas.Consumer{external_id: consumer_id}
-    |> Gateway.DB.Configs.Repo.delete()
+  def update(consumer_id, params) when is_map(params) do
+    try do
+      %ConsumerSchema{external_id: consumer_id}
+      |> changeset(params)
+      |> Repo.update()
+    rescue
+      Ecto.StaleEntryError -> nil
+    end
+  end
+
+  def delete(external_id) do
+    Repo.delete_all from a in ConsumerSchema,
+      where: a.external_id == ^external_id
   end
 end

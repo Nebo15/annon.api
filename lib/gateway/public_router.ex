@@ -14,7 +14,7 @@ defmodule Gateway.PublicRouter do
 
   plug Gateway.Plugins.APILoader
 
-  plug Gateway.Plugins.Idempotency # ToDo: set plug after logger plug (and after acl/iprestiction, in others section)
+  plug Gateway.Plugins.Idempotency # TODO: set plug after logger plug (and after acl/iprestiction, in others section)
 
   # Monitoring plugins that do not affect on request or response
   plug Gateway.Plugins.Logger
@@ -34,10 +34,12 @@ defmodule Gateway.PublicRouter do
   plug :dispatch
 
   match _ do
-    Gateway.Helpers.Response.send_not_found_error(conn)
+    conn
+    |> Gateway.Helpers.Response.send_error(:not_found)
   end
 
   def handle_errors(conn, error) do
-    Gateway.Helpers.Response.send_internal_error(conn, error)
+    conn
+    |> Gateway.Helpers.Response.send_error(error)
   end
 end

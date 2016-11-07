@@ -1,4 +1,4 @@
-defmodule Gateway.HTTP.PluginTest do
+defmodule Gateway.Controllers.PluginTest do
 
   @plugin_url "/"
 
@@ -129,6 +129,6 @@ defmodule Gateway.HTTP.PluginTest do
   defp prepare_conn(conn) do
     conn
     |> put_req_header("content-type", "application/json")
-    |> Gateway.HTTP.API.Plugins.call([])
+    |> Gateway.Controllers.API.Plugins.call([])
   end
 end

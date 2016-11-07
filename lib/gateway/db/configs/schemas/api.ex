@@ -41,28 +41,24 @@ defmodule Gateway.DB.Schemas.API do
     |> validate_required(@required_request_fields)
   end
 
-  def create(params) do
+  def create(params) when is_map(params) do
     %APISchema{}
     |> changeset(params)
-    |> Gateway.DB.Configs.Repo.insert
+    |> Repo.insert()
   end
 
-  def update(api_id, params) do
+  def update(api_id, params) when is_map(params) do
     try do
-      %Gateway.DB.Schemas.API{id: String.to_integer(api_id)}
+      %APISchema{id: String.to_integer(api_id)}
       |> changeset(params)
-      |> Gateway.DB.Configs.Repo.update()
+      |> Repo.update()
     rescue
       Ecto.StaleEntryError -> nil
     end
   end
 
   def delete(api_id) do
-    q = from a in APISchema,
+    Repo.delete_all from a in APISchema,
       where: a.id == ^api_id
-
-    q
-    |> Repo.delete_all
-    |> normalize_ecto_delete
   end
 end

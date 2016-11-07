@@ -1,17 +1,16 @@
-defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
+defmodule Gateway.Controllers.ConsumerPluginSettingsTest do
   use Gateway.UnitCase
 
   setup do
     consumer = create_fixture(Gateway.DB.Schemas.Consumer)
     api      = create_fixture(Gateway.DB.Schemas.API)
-    plugin   = create_plugin(api.id)
+    {:ok, plugin} = create_plugin(api.id, "acl")
 
     {:ok, %{external_id: consumer.external_id, api: api, plugin: plugin}}
   end
 
-  test "GET /consumers/:external_id/plugins", %{external_id: external_id, api: api} do
-    plugin1 = create_plugin(api.id)
-    plugin2 = create_plugin(api.id)
+  test "GET /consumers/:external_id/plugins", %{external_id: external_id, api: api, plugin: plugin2} do
+    {:ok, plugin1} = create_plugin(api.id, "idempotency")
 
     Gateway.DB.Schemas.ConsumerPluginSettings.create(external_id, %{plugin_id: plugin1.id})
     Gateway.DB.Schemas.ConsumerPluginSettings.create(external_id, %{plugin_id: plugin2.id})
@@ -19,7 +18,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     conn = :get
     |> conn("/#{external_id}/plugins")
     |> put_req_header("content-type", "application/json")
-    |> Gateway.HTTP.Consumers.call([])
+    |> Gateway.Controllers.Consumers.call([])
 
     result = Poison.decode!(conn.resp_body)["data"]
     assert 2 == Enum.count(result)
@@ -31,7 +30,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     conn = :get
     |> conn("/#{external_id}/plugins")
     |> put_req_header("content-type", "application/json")
-    |> Gateway.HTTP.Consumers.call([])
+    |> Gateway.Controllers.Consumers.call([])
 
     [result] = Poison.decode!(conn.resp_body)["data"]
 
@@ -57,7 +56,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     conn = :put
     |> conn("/#{external_id}/plugins/#{plugin.name}", Poison.encode!(contents))
     |> put_req_header("content-type", "application/json")
-    |> Gateway.HTTP.Consumers.call([])
+    |> Gateway.Controllers.Consumers.call([])
 
     result =
       Poison.decode!(conn.resp_body)["data"]
@@ -80,7 +79,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     conn = :post
     |> conn("/#{external_id}/plugins", Poison.encode!(contents))
     |> put_req_header("content-type", "application/json")
-    |> Gateway.HTTP.Consumers.call([])
+    |> Gateway.Controllers.Consumers.call([])
 
     result = Poison.decode!(conn.resp_body)["data"]
 
@@ -99,7 +98,7 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     conn = :delete
     |> conn("/#{external_id}/plugins/#{plugin.name}")
     |> put_req_header("content-type", "application/json")
-    |> Gateway.HTTP.Consumers.call([])
+    |> Gateway.Controllers.Consumers.call([])
 
     assert 200 == conn.status
   end
@@ -113,14 +112,12 @@ defmodule Gateway.HTTP.ConsumerPluginSettingsTest do
     entity
   end
 
-  defp create_plugin(api_id) do
-    %Gateway.DB.Schemas.API{}
-    |> Gateway.DB.Schemas.Plugin.create(%{
+  defp create_plugin(api_id, plugin_name) do
+    Gateway.DB.Schemas.Plugin.create(api_id, %{
       api_id: api_id,
-      name: "acl",
+      name: plugin_name,
       is_enabled: true,
       settings: %{"scope" => "read"}
     })
-    |> elem(1)
   end
 end
