@@ -4,7 +4,7 @@ defmodule Gateway.DB.Schemas.Plugin do
   """
   use Gateway.DB, :schema
 
-  import Gateway.Changeset.SettingsValidator
+  import Gateway.Changeset.Validator.Settings
 
   alias Gateway.DB.Configs.Repo
   alias Gateway.DB.Schemas.Plugin, as: PluginSchema
@@ -37,7 +37,6 @@ defmodule Gateway.DB.Schemas.Plugin do
     |> assoc_constraint(:api)
     |> unique_constraint(:api_id_name)
     |> validate_required([:name, :settings])
-    |> validate_map(:settings)
     |> validate_inclusion(:name, @valid_plugin_names)
     |> validate_settings()
   end
