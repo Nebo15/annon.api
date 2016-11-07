@@ -28,23 +28,23 @@ defmodule Gateway.Plugins.APILoader do
   def normalize_scheme(scheme) when is_atom(scheme), do: Atom.to_string(scheme)
   def normalize_scheme(scheme), do: scheme
 
-  def find_matching_path(apis, path) do
+  def find_matching_path(apis, request_path) do
     apis
     |> Enum.map(&elem(&1, 1))
-    |> Enum.filter(&String.starts_with?(path, &1.request.path))
+    |> Enum.filter(&matching_upstream(request_path, &1))
     |> Enum.sort_by(&String.length(&1.request.path))
     |> Enum.reverse
     |> List.first
   end
 
-  def matching_upstream(upstream, path) do
-    upstream_path =
+  def matching_upstream(request_path, upstream) do
+    path =
       if upstream.strip_request_path do
-        String.trim_leading(upstream.request.path, path)
+        String.trim_leading(request_path, upstream.request.path)
       else
-        upstream.request.path
+        request_path
       end
 
-    String.starts_with?(path, upstream_path)
+    String.starts_with?(path, upstream.request.path)
   end
 end
