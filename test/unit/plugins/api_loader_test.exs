@@ -32,9 +32,9 @@ defmodule Gateway.Plugins.APILoaderTest do
 
     Gateway.AutoClustering.do_reload_config()
 
-    assert make_call("/mockbin").status == 200
-
-
+    assert 404 == make_call("/some_path").status
+    assert 200 == make_call("/mockbin").status
+    assert 200 == make_call("/mockbin/path").status
   end
 
   defp make_call(path) do
