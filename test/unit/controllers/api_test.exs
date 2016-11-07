@@ -1,4 +1,4 @@
-defmodule Gateway.HTTP.APITest do
+defmodule Gateway.Controllers.APITest do
   use Gateway.UnitCase
 
   @correct_api_data %{
@@ -15,15 +15,15 @@ defmodule Gateway.HTTP.APITest do
   test "GET /apis" do
     data =
       [
-        Gateway.DB.Schemas.API.create(put_in(@correct_api_data, [:request, :port], 3000)),
-        Gateway.DB.Schemas.API.create(put_in(@correct_api_data, [:request, :port], 3001))
+        Gateway.DB.Schemas.API.create(put_in(%{@correct_api_data | name: "Sample one"}, [:request, :port], 3000)),
+        Gateway.DB.Schemas.API.create(put_in(%{@correct_api_data | name: "Sample two"}, [:request, :port], 3001))
       ]
       |> Enum.map(fn({:ok, e}) -> e end)
 
     conn = :get
     |> conn("/")
     |> put_req_header("content-type", "application/json")
-    |> Gateway.HTTP.API.call([])
+    |> Gateway.Controllers.API.call([])
 
     expected_resp = EView.wrap_body(data, conn)
 
@@ -37,7 +37,7 @@ defmodule Gateway.HTTP.APITest do
     conn = :get
     |> conn("/#{data.id}")
     |> put_req_header("content-type", "application/json")
-    |> Gateway.HTTP.API.call([])
+    |> Gateway.Controllers.API.call([])
 
     expected_resp = EView.wrap_body(data, conn)
 
@@ -60,7 +60,7 @@ defmodule Gateway.HTTP.APITest do
     conn = :post
     |> conn("/", Poison.encode!(contents))
     |> put_req_header("content-type", "application/json")
-    |> Gateway.HTTP.API.call([])
+    |> Gateway.Controllers.API.call([])
 
     assert conn.status == 201
     resp = Poison.decode!(conn.resp_body)["data"]
@@ -93,7 +93,7 @@ defmodule Gateway.HTTP.APITest do
     conn = :put
     |> conn("/#{data.id}", Poison.encode!(new_contents))
     |> put_req_header("content-type", "application/json")
-    |> Gateway.HTTP.API.call([])
+    |> Gateway.Controllers.API.call([])
 
     assert conn.status == 200
     resp = Poison.decode!(conn.resp_body)["data"]
@@ -115,7 +115,7 @@ defmodule Gateway.HTTP.APITest do
     conn = :delete
     |> conn("/#{data.id}")
     |> put_req_header("content-type", "application/json")
-    |> Gateway.HTTP.API.call([])
+    |> Gateway.Controllers.API.call([])
 
     Poison.decode!(conn.resp_body)
 
@@ -125,7 +125,7 @@ defmodule Gateway.HTTP.APITest do
 #    conn = :delete
 #    |> conn("/#{data.id}")
 #    |> put_req_header("content-type", "application/json")
-#    |> Gateway.HTTP.API.call([])
+#    |> Gateway.Controllers.API.call([])
 #    assert 404 == conn.status
   end
 end

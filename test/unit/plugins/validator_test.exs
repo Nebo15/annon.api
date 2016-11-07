@@ -40,5 +40,4 @@ defmodule Gateway.Plugins.ValidatorTest do
     |> Gateway.Plugins.Validator.call(%{})
     |> assert_halt
   end
-
 end

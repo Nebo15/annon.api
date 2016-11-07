@@ -7,6 +7,7 @@ defmodule Gateway.Helpers.CommonRouter do
       use Plug.Router
       use Plug.ErrorHandler
       import Gateway.Helpers.Response
+      import Gateway.Helpers.Render
 
       plug :match
 
@@ -18,7 +19,8 @@ defmodule Gateway.Helpers.CommonRouter do
       plug :dispatch
 
       def handle_errors(conn, error) do
-        Gateway.Helpers.Response.send_internal_error(conn, error)
+        conn
+        |> send_error(error)
       end
     end
   end

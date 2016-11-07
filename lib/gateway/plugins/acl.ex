@@ -48,14 +48,17 @@ defmodule Gateway.Plugins.ACL do
         rules: []
       }]
     })
-    |> Response.send_and_halt(conn, 403)
+    |> Response.send(conn, 403)
+    |> Response.halt()
   end
   defp send_response({:error, :no_scopes_is_set}, conn) do
     Logger.error("Required field scope in Plugin.settings is not found!")
-    Response.send_internal_error(conn)
+    conn
+    |> Response.send_error(:internal_error)
   end
   defp send_response({:error, :invalid_scopes_type}, conn) do
     Logger.error("JWT.scopes must be a list!")
-    Response.send_internal_error(conn)
+    conn
+    |> Response.send_error(:internal_error)
   end
 end

@@ -9,6 +9,7 @@ defmodule Gateway.Plugins.Logger do
   alias Gateway.DB.Schemas.Log
   alias Gateway.DB.Schemas.API, as: APISchema
 
+  # TODO: Make one insert per HTTP request
   def call(conn, _opts) do
     conn
     |> log_request()
@@ -25,7 +26,7 @@ defmodule Gateway.Plugins.Logger do
       ip_address: conn.remote_ip |> Tuple.to_list |> Enum.join("."),
       request: get_request_data(conn)
     }
-    |> Log.create
+    |> Log.create_request
 
     conn
   end
@@ -64,7 +65,7 @@ defmodule Gateway.Plugins.Logger do
     %{
       id: id,
       name: name,
-      request: request
+      request: prepare_params(request)
     }
   end
 
@@ -99,9 +100,10 @@ defmodule Gateway.Plugins.Logger do
     |> prepare_params
   end
 
-  defp get_key(key) when is_binary(key), do: String.to_atom(key)
-  defp get_key(key) when is_atom(key), do: key
+  defp prepare_params(nil), do: %{}
+  defp prepare_params(%{__struct__: _} = params), do: params |> Map.delete(:__struct__) |> prepare_params()
+  defp prepare_params(params), do: for {key, val} <- params, into: %{}, do: {key_to_atom(key), val}
 
-  defp prepare_params(params) when params == nil, do: %{}
-  defp prepare_params(params), do: for {key, val} <- params, into: %{}, do: {get_key(key), val}
+  defp key_to_atom(key) when is_binary(key), do: String.to_atom(key)
+  defp key_to_atom(key) when is_atom(key), do: key
 end

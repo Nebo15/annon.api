@@ -32,5 +32,4 @@ defmodule Gateway.Acceptance.Plug.ValidatorTest do
     |> post("{}", :public)
     |> assert_status(422)
   end
-
 end

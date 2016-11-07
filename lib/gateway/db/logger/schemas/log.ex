@@ -4,6 +4,7 @@ defmodule Gateway.DB.Schemas.Log do
   """
   use Gateway.DB, :schema
   alias Gateway.DB.Logger.Repo
+  alias Gateway.DB.Schemas.Log, as: LogSchema
 
   @derive {Poison.Encoder, except: [:__meta__]}
   @primary_key {:id, :string, autogenerate: false}
@@ -51,6 +52,12 @@ defmodule Gateway.DB.Schemas.Log do
     timestamps()
   end
 
+  def changeset_request(struct, params \\ %{}) do
+    struct
+    |> cast(params, [:id, :idempotency_key, :ip_address])
+    |> cast_embed(:request, with: &changeset_embeded_request/2)
+  end
+
   def changeset_response(api, params \\ %{}) do
     api
     |> cast(params, [:idempotency_key, :ip_address, :status_code])
@@ -84,7 +91,6 @@ defmodule Gateway.DB.Schemas.Log do
   end
 
   def changeset_embeded_api_request(data, params \\ %{}) do
-    params = Map.from_struct(params)
     data
     |> cast(params, [:scheme, :host, :port, :path])
   end
@@ -94,32 +100,30 @@ defmodule Gateway.DB.Schemas.Log do
     |> cast(params, [:id, :external_id, :metadata])
   end
 
-  def create(params \\ %{}) do
-    %Gateway.DB.Schemas.Log{}
-    |> cast(params, [:id, :idempotency_key, :ip_address])
-    |> cast_embed(:request, with: &changeset_embeded_request/2)
-    |> Repo.insert
-  end
-
-  def put_response(id, params) do
-    %Gateway.DB.Schemas.Log{id: id}
-    |> changeset_response(params)
-    |> Repo.update()
-  end
-
-  def delete(id) do
-    %Gateway.DB.Schemas.Log{id: id}
-    |> Repo.delete()
-  end
-
-  def get_by(selector) do
-    Repo.one from Gateway.DB.Schemas.Log,
+  def get_one_by(selector) do
+    Repo.one from LogSchema,
       where: ^selector,
       limit: 1
   end
 
-  def get_records(limit) when is_integer(limit) do
-    Repo.all from record in Gateway.DB.Schemas.Log,
-      limit: ^limit
+  def create_request(params) when is_map(params) do
+    %LogSchema{}
+    |> changeset_request(params)
+    |> Repo.insert
+  end
+
+  def put_response(request_id, params) when is_map(params) do
+    try do
+      %LogSchema{id: request_id}
+      |> changeset_response(params)
+      |> Repo.update()
+    rescue
+      Ecto.StaleEntryError -> nil
+    end
+  end
+
+  def delete(request_id) do
+    Repo.delete_all from a in LogSchema,
+      where: a.id == ^request_id
   end
 end

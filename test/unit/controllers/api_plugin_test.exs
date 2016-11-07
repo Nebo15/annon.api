@@ -1,4 +1,4 @@
-defmodule Gateway.HTTP.PluginTest do
+defmodule Gateway.Controllers.PluginTest do
 
   @plugin_url "/"
 
@@ -67,6 +67,12 @@ defmodule Gateway.HTTP.PluginTest do
     |> send_get()
     |> assert_conn_status()
 
+    # Name can be read from uri params
+    plugin_data = %{settings: %{"schema" => "{}"}}
+    "/#{api_model.id}/plugins/validator"
+    |> send_data(plugin_data, :put)
+    |> assert_conn_status()
+
     plugin_data = %{name: "validator", settings: %{"schema" => "{}"}}
     conn = "/#{api_model.id}/plugins/validator"
     |> send_data(plugin_data, :put)
@@ -123,6 +129,6 @@ defmodule Gateway.HTTP.PluginTest do
   defp prepare_conn(conn) do
     conn
     |> put_req_header("content-type", "application/json")
-    |> Gateway.HTTP.API.Plugins.call([])
+    |> Gateway.Controllers.API.Plugins.call([])
   end
 end
