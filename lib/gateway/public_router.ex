@@ -37,4 +37,9 @@ defmodule Gateway.PublicRouter do
     conn
     |> Gateway.Helpers.Response.send_error(:not_found)
   end
+
+  def handle_errors(conn, error) do
+    conn
+    |> Gateway.Helpers.Response.send_error(error)
+  end
 end
