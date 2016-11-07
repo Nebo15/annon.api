@@ -36,4 +36,15 @@ defmodule Gateway.Plugins.APILoader do
     |> Enum.reverse
     |> List.first
   end
+
+  def matching_upstream(upstream, path) do
+    upstream_path =
+      if upstream.strip_request_path do
+        String.trim_leading(upstream.request.path, path)
+      else
+        upstream.request.path
+      end
+
+    String.starts_with?(path, upstream_path)
+  end
 end
