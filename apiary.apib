@@ -617,18 +617,36 @@ This is equal to sending an empty object to `Update Settings` endpoint.
 
 ### `Response_Error`
 + meta (Response__Meta, fixed-type)
+    + code: 400 (number)
 + error (Response__Error, fixed-type)
 
 ### `Response__Meta`
 + code: 200 (number) - HTTP response code.
++ url: http://example.com/resource (string) - URL to requested resource.
++ type (enum) - Type of data that is located in `data` attribute.
+    - object (string) - `data` attribute is a JSON object.
+    - list (string) - `data` attribute is a list.
++ code: 200 (number) - HTTP response code.
++ `idempotency_key`: `idemp-ssjssdjoa8308u0us0` (string, optional) - [Idempotency key](http://docs.apimanifest.apiary.io/#introduction/optional-features/idempotent-requests). Send it trough `X-Idempotency-Key` header.
++ `request_id`: `req-adasdoijasdojsda` (string) - [Request ID](http://docs.apimanifest.apiary.io/#introduction/interacting-with-api/request-id). Send it with `X-Request-ID` header.
 
 ### `Response__Error`
 + type: type_atom (string) - Atom that represents error type.
 + message: Error description (string) - Human-readable error message. This is for developers, not end-users.
 
 ### `Response__Error_DuplicateEntity`
-+ type: object_already_exists (string) - Atom that represents error type.
++ type: `object_already_exists` (string) - Atom that represents error type.
 + message: This API already exists (string) - Human-readable error message. This is for developers, not end-users.
+
+### `Response__Error_ValidationFailed`
++ type: validation_failed (string) - type of an error.
++ message: Validation failed. You can find validators description at our API Manifest: http://docs.apimanifest.apiary.io/#introduction/interacting-with-api/errors. (string)
++ invalid (array)
+  + `entry_type`: `json_data_proprty` (string) - Type of error.
+  + entry: $.cvv (string) - JSON Path to an invalid property.
+  + rules (array)
+    + rule: required (string) - String constant that represents validation rule type. List of all types can be found in [API Manifest](http://docs.apimanifest.apiary.io/#introduction/interacting-with-api/errors).
+    + params (array) - Validation Parameters.
 
 ### `Response__Pagination`
 + limit: 20 (number) - A limit on the number of objects to be returned, between 1 and 100. Default: 50.
