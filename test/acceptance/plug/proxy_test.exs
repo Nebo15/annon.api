@@ -70,6 +70,26 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
     |> assert_status(200)
   end
 
+  test "proxy settings scheme validator" do
+    @api_url
+    |> post(Poison.encode!(get_api_data("/proxy/invalid_scheme", "http", "GET")), :private)
+    |> assert_status(201)
+
+    @api_url
+    |> post(Poison.encode!(get_api_data("/proxy/invalid_scheme", "httpa", "GET")), :private)
+    |> assert_status(422)
+  end
+
+  test "proxy settings method validator" do
+    @api_url
+    |> post(Poison.encode!(get_api_data("/proxy/invalid_scheme", "http", "GET")), :private)
+    |> assert_status(201)
+
+    @api_url
+    |> post(Poison.encode!(get_api_data("/proxy/invalid_scheme", "https", "GETS")), :private)
+    |> assert_status(422)
+  end
+
   test "proxy with additional headers" do
     api_id = @api_url
     |> post(Poison.encode!(get_api_proxy_data("/proxy/test_headers", false)), :private)
@@ -133,5 +153,22 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
       %{host: get_host(:public), path: path, port: get_port(:public), scheme: "http", method: "GET"})
     |> Map.put(:plugins, [
       %{name: "jwt", is_enabled: enable_jwt, settings: %{"signature" => @token_secret}}])
+  end
+
+  def get_api_data(path, sheme, method) do
+    path
+    |> get_api_proxy_data()
+    |> Map.put(:plugins, [
+    %{
+      name: "proxy",
+      is_enabled: true,
+      settings: %{
+        host: get_host(:public),
+        path: path,
+        port: get_port(:public),
+        method: method,
+        scheme: sheme
+      }
+    }])
   end
 end

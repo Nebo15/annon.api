@@ -66,8 +66,7 @@ defmodule Gateway.Changeset.Validator.Settings do
        "required" => ["host"],
        "properties" => %{
          "scheme" => %{
-           "type" => "string",
-           "pattern" => "^(http|https)$"
+           "enum" => ["http", "https"]
          },
          "host" => %{
            "type" => "string"
@@ -80,7 +79,7 @@ defmodule Gateway.Changeset.Validator.Settings do
          },
          "method" => %{
            "type" => "string",
-           "pattern" => "^(GET|POST|PUT|DELETE|PATCH)$"
+           "enum" => ["GET", "POST", "PUT", "DELETE", "PATCH"]
          },
        },
      })
