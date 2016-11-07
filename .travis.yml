@@ -38,10 +38,10 @@ script:
   # Install dependencies
   - mix deps.get
   # Run all tests except pending ones
-  - mix test --trace --exclude ciskip
+  - mix test --trace
   # Submit code coverage report to Coveralls
   # Add --pro if you using private repo.
-  - mix coveralls.travis --pro --exclude ciskip
+  - mix coveralls.travis --pro
   # Run static code analysis
   - mix credo -a
   # Check code style
@@ -57,7 +57,7 @@ script:
   - RUNNING_CONTAINERS=`docker ps | wc -l`;
   - if [ "${RUNNING_CONTAINERS//[[:space:]]/}" = "1" ]; then echo "[E] Container is not started\!"; docker logs gateway --details --since 5h; exit 1; fi;
   # Run acceptance tests on Docker container
-  - "MIX_TEST_DATABASE=gateway MIX_LOGGER_TEST_DATABASE=gateway_logger MIX_TEST_HOST=localhost MIX_TEST_PORT=4000 mix test --exclude ciskip test/acceptance"
+  - "MIX_TEST_DATABASE=gateway MIX_LOGGER_TEST_DATABASE=gateway_logger MIX_TEST_HOST=localhost MIX_TEST_PORT=4000 mix test test/acceptance"
 after_success:
   # Submit Docker container to Docker Hub and create GitHub Release by pushing tag with changelog
   - ./bin/ci/push.sh
