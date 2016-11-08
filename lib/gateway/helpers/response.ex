@@ -1,8 +1,14 @@
 defmodule Gateway.Helpers.Response do
   @moduledoc """
   This is a helper module for dispatching requests.
+
+  It's used by `Gateway.Helpers.Render` helpers and places where we want to return an error.
   """
 
+  @doc """
+  Send error by a [EView.ErrorView](https://github.com/Nebo15/eview/blob/master/lib/eview/views/error_view.ex)
+  template to a API consumer and halt connection.
+  """
   def send_error(conn, :not_found) do
     "404.json"
     |> send_error_template(conn, 404)
@@ -13,6 +19,7 @@ defmodule Gateway.Helpers.Response do
     |> send_error_template(conn, 501)
   end
 
+  # This method is used in Plug.ErrorHandler.
   def send_error(conn, %{kind: kind, reason: reason, stack: _stack}) do
     status = get_exception_status(kind, reason)
 
@@ -22,6 +29,12 @@ defmodule Gateway.Helpers.Response do
     |> send_error_template(conn, status)
   end
 
+  @doc """
+  Send request to a API consumer.
+
+  You may need to halt connection after calling it,
+  if you want to stop rest of plugins from processing rests.
+  """
   def send(resource, conn, status) do
     conn = conn
     |> Plug.Conn.put_status(status)
@@ -35,6 +48,11 @@ defmodule Gateway.Helpers.Response do
     |> Plug.Conn.send_resp(status, body)
   end
 
+  @doc """
+  Halt the connection.
+
+  Delegates to a `Plug.Conn.halt/1` function.
+  """
   def halt(conn), do: conn |> Plug.Conn.halt()
 
   defp send_error_template(template, conn, status) do

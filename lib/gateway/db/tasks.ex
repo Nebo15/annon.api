@@ -2,6 +2,8 @@ defmodule :gateway_tasks do
   @moduledoc """
   Nice way to apply migrations inside a released application.
 
+  For a containerized version of Annon you can set `APP_MIGRATE=true` environment variable to run this tasks.
+
   Example:
       ./bin/$APP_NAME command "gateway_tasks" migrate!
   """

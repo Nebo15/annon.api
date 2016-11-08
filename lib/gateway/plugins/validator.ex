@@ -1,7 +1,10 @@
 defmodule Gateway.Plugins.Validator do
   @moduledoc """
-  Plugin which validates request based on ex_json_schema.
-  See more https://github.com/nebo15/nex_json_schema
+  [JSON Schema Validation plugin](http://docs.annon.apiary.io/#reference/plugins/validator) allows you to
+  set validation rules for a path relative to an API.
+
+  It's response structure described in
+  our [API Manifest](http://docs.apimanifest.apiary.io/#introduction/interacting-with-api/errors).
   """
   use Gateway.Helpers.Plugin,
     plugin_name: "validator"
@@ -11,6 +14,7 @@ defmodule Gateway.Plugins.Validator do
   alias EView.Views.ValidationError, as: ValidationErrorView
   alias Gateway.Helpers.Response
 
+  @doc false
   def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
     plugins
     |> find_plugin_settings()

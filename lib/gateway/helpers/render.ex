@@ -4,6 +4,9 @@ defmodule Gateway.Helpers.Render do
   """
   import Gateway.Helpers.Response
 
+  @doc """
+  This render should be used for `Repo.all` results.
+  """
   def render_collection(nil, conn) do
     conn
     |> send_error(:not_found)
@@ -14,6 +17,9 @@ defmodule Gateway.Helpers.Render do
     |> send(conn, 200)
   end
 
+  @doc """
+  This render should be used for `Repo.one` results.
+  """
   def render_schema(nil, conn) do
     conn
     |> send_error(:not_found)
@@ -24,6 +30,9 @@ defmodule Gateway.Helpers.Render do
     |> send(conn, 200)
   end
 
+  @doc """
+  This render should be used for `Repo.create` and `Repo.update` results.
+  """
   def render_change(tuple, conn, status \\ 200)
 
   def render_change(nil, conn, _status) do
@@ -42,6 +51,11 @@ defmodule Gateway.Helpers.Render do
     |> send(conn, status)
   end
 
+  @doc """
+  This render should be used for `Repo.delete_all` results.
+
+  It will throw an error if you tried to delete more than one record in a DB.
+  """
   def render_delete({0, _}, conn) do
     conn
     |> send_error(:not_found)

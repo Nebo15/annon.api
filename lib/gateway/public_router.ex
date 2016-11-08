@@ -1,6 +1,9 @@
 defmodule Gateway.PublicRouter do
   @moduledoc """
-  Gateway HTTP Router
+  Router for a Annons public API.
+
+  It has all available plugins assigned (in a specific order),
+  but witch of them should process request will be resolved in run-time.
   """
   use Plug.Router
   use Plug.ErrorHandler

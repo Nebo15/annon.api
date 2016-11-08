@@ -1,6 +1,8 @@
 defmodule Gateway.ConfigReloader do
   @moduledoc """
-  Plugin which get all configuration by endpoint
+  This plugin
+  [invalidates Annons cache](http://docs.annon.apiary.io/#introduction/general-features/caching-and-perfomance)
+  whenever there was change triggered by a management API.
   """
   alias Gateway.AutoClustering
 

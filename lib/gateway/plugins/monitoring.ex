@@ -1,6 +1,10 @@
 defmodule Gateway.Plugins.Monitoring do
   @moduledoc """
-  Monitoring data reporting to statsd
+  This plugin measures or receives performance metrics from other parts of Annon and sends them to StatsD server.
+
+  It is enabled by default and can not be disabled without rebuilding Annon container.
+
+  It can be used with [DataDog agent](http://datadoghq.com).
   """
   use Gateway.Helpers.Plugin,
     plugin_name: "monitoring"
@@ -9,6 +13,7 @@ defmodule Gateway.Plugins.Monitoring do
 
   @unit :milli_seconds
 
+  @doc false
   def call(%Conn{path_info: path_info} = conn, _opts) do
     request_size_metric_name = path_info
     |> metric_name("request_size")

@@ -1,6 +1,9 @@
 defmodule Gateway.Plugins.JWT do
   @moduledoc """
-  Plugin for JWT verifying and decoding.
+  [JWT Tokens authorization](http://docs.annon.apiary.io/#reference/plugins/jwt-authentification) plugin.
+
+  It's implemented mainly to be used with [Auth0](https://auth0.com/),
+  but it should support any JWT-based authentication providers.
   """
   use Gateway.Helpers.Plugin,
     plugin_name: "jwt"
@@ -17,6 +20,7 @@ defmodule Gateway.Plugins.JWT do
   alias EView.Views.Error, as: ErrorView
   alias Gateway.Helpers.Response
 
+  @doc false
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts) when is_list(plugins) do
     plugins
     |> find_plugin_settings()

@@ -1,7 +1,11 @@
 defmodule Gateway.Controllers.Consumers.PluginSettings do
   @moduledoc """
-  REST for ConsumerPluginSettings
-  Documentation http://docs.osapigateway.apiary.io/#reference/apis
+  REST interface that allows to manage overrides for Consumer plugin settings.
+
+  By overriding them you can define personal rules for processing hes requests.
+
+  You can find full description in
+  [REST API documentation](http://docs.annon.apiary.io/#reference/consumers/consumer-settings-overrides-for-plugins).
   """
   use Gateway.Helpers.CommonRouter
 

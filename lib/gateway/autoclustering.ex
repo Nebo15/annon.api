@@ -1,6 +1,8 @@
 defmodule Gateway.AutoClustering do
   @moduledoc """
-  The module is in charge of reloading the config across the cluster
+  This module implements
+  [Annons cache invalidation](http://docs.annon.apiary.io/#introduction/general-features/caching-and-perfomance)
+  based on different cluster discovery strategies.
   """
   use GenServer
 

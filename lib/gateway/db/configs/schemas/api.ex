@@ -1,6 +1,6 @@
 defmodule Gateway.DB.Schemas.API do
   @moduledoc """
-  API DB entity
+  Schema for API's entity.
   """
   use Gateway.DB.Schema
   alias Gateway.DB.Configs.Repo

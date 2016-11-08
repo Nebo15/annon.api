@@ -1,6 +1,6 @@
 defmodule Gateway.Plugins.Idempotency do
   @moduledoc """
-  Plugin for request idempotency.
+  [Request Idempotency plugin](http://docs.annon.apiary.io/#reference/plugins/idempotency).
   """
   use Gateway.Helpers.Plugin,
     plugin_name: "idempotency"
@@ -14,6 +14,7 @@ defmodule Gateway.Plugins.Idempotency do
 
   @idempotent_methods ["POST"]
 
+  @doc false
   def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
     plugins
     |> find_plugin_settings()
