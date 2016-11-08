@@ -2,7 +2,7 @@ defmodule Gateway.DB.Schemas.ConsumerPluginSettings do
   @moduledoc """
   Model for address
   """
-  use Gateway.DB, :schema
+  use Gateway.DB.Schema
 
   alias Gateway.DB.Configs.Repo
   alias Gateway.DB.Schemas.Plugin, as: PluginSchema

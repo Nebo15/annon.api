@@ -2,7 +2,7 @@ defmodule Gateway.DB.Schemas.Consumer do
   @moduledoc """
   Consumer DB entity
   """
-  use Gateway.DB, :schema
+  use Gateway.DB.Schema
   alias Gateway.DB.Configs.Repo
   alias Gateway.DB.Schemas.Consumer, as: ConsumerSchema
 

@@ -19,10 +19,9 @@ defmodule Gateway.Plugins.APILoader do
       }
     }
 
-    matching_apis =
-      :config
-      |> :ets.match_object({:_, match_spec})
-      |> find_matching_path(conn.request_path)
+    :config
+    |> :ets.match_object({:_, match_spec})
+    |> find_matching_path(conn.request_path)
   end
 
   def normalize_scheme(scheme) when is_atom(scheme), do: Atom.to_string(scheme)

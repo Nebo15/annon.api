@@ -2,7 +2,7 @@ defmodule Gateway.DB.Schemas.Log do
   @moduledoc """
   Log record DB entity
   """
-  use Gateway.DB, :schema
+  use Gateway.DB.Schema
   alias Gateway.DB.Logger.Repo
   alias Gateway.DB.Schemas.Log, as: LogSchema
 
