@@ -19,31 +19,21 @@ defmodule Gateway.Plugins.APILoader do
       }
     }
 
-    :config
-    |> :ets.match_object({:_, match_spec})
-    |> find_matching_path(conn.request_path)
+    matching_apis =
+      :config
+      |> :ets.match_object({:_, match_spec})
+      |> find_matching_path(conn.request_path)
   end
 
   def normalize_scheme(scheme) when is_atom(scheme), do: Atom.to_string(scheme)
   def normalize_scheme(scheme), do: scheme
 
-  def find_matching_path(apis, request_path) do
+  def find_matching_path(apis, path) do
     apis
     |> Enum.map(&elem(&1, 1))
-    |> Enum.filter(&matching_upstream(request_path, &1))
+    |> Enum.filter(&String.starts_with?(path, &1.request.path))
     |> Enum.sort_by(&String.length(&1.request.path))
     |> Enum.reverse
     |> List.first
-  end
-
-  def matching_upstream(request_path, upstream) do
-    path =
-      if upstream.strip_request_path do
-        String.trim_leading(request_path, upstream.request.path)
-      else
-        request_path
-      end
-
-    String.starts_with?(path, upstream.request.path)
   end
 end
