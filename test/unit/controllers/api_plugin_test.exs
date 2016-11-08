@@ -1,21 +1,24 @@
 defmodule Gateway.Controllers.PluginTest do
   use Gateway.UnitCase
-  alias Gateway.DB.Schemas.API, as: APISchema
 
   @plugin_url "/"
 
   test "GET /apis/:api_id" do
-    api_model = Gateway.Factory.insert(:api_with_default_plugins)
+    api_model = Gateway.Factory.insert(:api)
+    Gateway.Factory.insert(:acl_plugin, api: api_model)
+    Gateway.Factory.insert(:jwt_plugin, api: api_model)
 
     conn = "/#{api_model.id}/plugins"
     |> send_get()
     |> assert_conn_status()
 
-    assert Enum.count(Poison.decode!(conn.resp_body)["data"]) == Enum.count(api_model.plugins)
+    assert 2 = Enum.count(Poison.decode!(conn.resp_body)["data"])
   end
 
   test "GET /apis/:api_id/plugins/:name" do
-    %{plugins: [p1, p2]} = api_model = Gateway.Factory.insert(:api_with_default_plugins)
+    api_model = Gateway.Factory.insert(:api)
+    p1 = Gateway.Factory.insert(:acl_plugin, api: api_model)
+    p2 = Gateway.Factory.insert(:jwt_plugin, api: api_model)
 
     conn = "/#{api_model.id}/plugins/#{p1.name}"
     |> send_get()
@@ -45,8 +48,8 @@ defmodule Gateway.Controllers.PluginTest do
   end
 
   test "PUT /apis/:api_id/plugins/:name" do
-    p1 = Gateway.Factory.build(:jwt_plugin)
-    api_model = Gateway.Factory.insert(:api, plugins: [p1])
+    api_model = Gateway.Factory.insert(:api)
+    p1 = Gateway.Factory.insert(:jwt_plugin, api: api_model)
 
     plugin_data = %{name: "validator", settings: %{"schema" => "{}"}}
 
@@ -77,7 +80,9 @@ defmodule Gateway.Controllers.PluginTest do
   end
 
   test "DELETE /apis/:api_id" do
-    %{plugins: [p1, p2]} = api_model = Gateway.Factory.insert(:api_with_default_plugins)
+    api_model = Gateway.Factory.insert(:api)
+    p1 = Gateway.Factory.insert(:acl_plugin, api: api_model)
+    p2 = Gateway.Factory.insert(:jwt_plugin, api: api_model)
 
     "/#{api_model.id}/plugins/#{p1.name}"
     |> send_get()
