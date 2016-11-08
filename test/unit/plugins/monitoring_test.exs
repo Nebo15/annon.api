@@ -1,6 +1,8 @@
 defmodule Gateway.MonitoringTest do
   use Gateway.UnitCase
 
+  import Gateway.Factory
+
   @apis "apis"
 
   test "metrics work properly" do
@@ -11,7 +13,7 @@ defmodule Gateway.MonitoringTest do
   end
 
   defp make_connection do
-    {:ok, api} = create_api_endpoint()
+    api = create_api_endpoint()
     create_proxy_plugin(api)
 
     Gateway.AutoClustering.do_reload_config()
@@ -38,7 +40,7 @@ defmodule Gateway.MonitoringTest do
   end
 
   defp create_api_endpoint do
-    Gateway.DB.Schemas.API.create(%{
+    Gateway.Factory.insert(:api, %{
       name: "Montoring Test api",
       request: %{
         method: "GET",
@@ -51,9 +53,10 @@ defmodule Gateway.MonitoringTest do
   end
 
   defp create_proxy_plugin(api) do
-    Gateway.DB.Schemas.Plugin.create(api.id, %{
+    Gateway.Factory.insert(:plugin, %{
       name: "proxy",
       is_enabled: true,
+      api: api,
       settings: %{
         "method" => "GET",
         "scheme" => "http",
