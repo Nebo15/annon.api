@@ -48,7 +48,7 @@ defmodule Gateway.Acceptance.Plug.IdempotencyTest do
     get_api_model_data()
     |> Map.put(:request,
       %{host: get_host(:public), path: path, port: get_port(:public), scheme: "http", method: method})
-    |> Map.put(:plugins, get_plugins(with_proxy))
+    |> Map.put(:plugins, get_plugins())
   end
 
   def get_plugins() do
