@@ -11,7 +11,7 @@ defmodule Gateway.Plugins.JWTTest do
   @plugin_data [%{name: "jwt", is_enabled: true, settings: %{"signature" => "super_coolHacker"}}]
 
   test "jwt invalid auth" do
-    {:ok, %APISchema{request: request} = model} = create_api()
+    %APISchema{request: request} = model = Gateway.Factory.insert(:api_with_default_plugins)
 
     %Plug.Conn{} = conn = :get
     |> prepare_conn(request)
