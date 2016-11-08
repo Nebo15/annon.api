@@ -1,9 +1,8 @@
 defmodule Gateway.Controllers.PluginTest do
-
-  @plugin_url "/"
-
   use Gateway.UnitCase
   alias Gateway.DB.Schemas.API, as: APISchema
+
+  @plugin_url "/"
 
   test "GET /apis/:api_id" do
     data = get_api_model_data()
