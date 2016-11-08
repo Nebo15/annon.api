@@ -83,14 +83,13 @@ defmodule Gateway.Plugins.Proxy do
   defp put_port(pr, %{"port" => port}), do: pr <> ":" <> port
   defp put_port(pr, %{}), do: pr
 
-  defp put_path(pr, %{"path" => path}, _conn), do: pr <> path
-  defp put_path(pr, %{}, %Plug.Conn{request_path: path, private: private}) do
-    api_config = private.api_config
-
-    if api_config.strip_request_path do
-      pr <> String.trim_leading(path, api_config.request.path)
+  defp put_path(pr, %{"path" => path, "strip_request_path" => strip_request_path}, conn) do
+    if strip_request_path do
+      pr <> String.trim_leading(conn.request_path, path)
     else
       pr <> path
     end
   end
+
+  defp put_path(pr, %{}, %Plug.Conn{request_path: path}), do: pr <> path
 end

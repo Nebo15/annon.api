@@ -28,37 +28,35 @@ defmodule Gateway.Plugins.ProxyTest do
   end
 
   test "proxying path 1" do
-    conn = make_conn("/mockbin", false)
-    assert Proxy.make_link(@proxy_settings_just_host, conn) == "https://localhost/mockbin"
+    incoming_request = make_conn("/mockbin")
+    proxy_params = %{"host" => "localhost", "path" => "/mockbin", "strip_request_path" => false}
+    assert "https://localhost/mockbin" == Proxy.make_link(proxy_params, incoming_request)
   end
 
   test "proxying path 2" do
-    conn = make_conn("/mockbin/some/path", false)
-    assert Proxy.make_link(@proxy_settings_just_host, conn) == "https://localhost/mockbin/some/path"
+    incoming_request = make_conn("/mockbin/some/path")
+    proxy_params = %{"host" => "localhost", "path" => "/mockbin/some/path", "strip_request_path" => false}
+    assert "https://localhost/mockbin/some/path" == Proxy.make_link(proxy_params, incoming_request)
   end
 
   test "proxying path 3" do
-    conn = make_conn("/mockbin", true)
-    assert Proxy.make_link(@proxy_settings_just_host, conn) == "https://localhost"
+    incoming_request = make_conn("/mockbin")
+    proxy_params = %{"host" => "localhost", "path" => "/mockbin", "strip_request_path" => true}
+    assert "https://localhost" == Proxy.make_link(proxy_params, incoming_request)
   end
 
   test "proxying path 4" do
-    conn = make_conn("/mockbin/some/path", true)
-    assert Proxy.make_link(@proxy_settings_just_host, conn) == "https://localhost/some/path"
+    incoming_request = make_conn("/mockbin/some/path")
+    proxy_params = %{"host" => "localhost", "path" => "/mockbin", "strip_request_path" => true}
+    assert "https://localhost/some/path" == Proxy.make_link(proxy_params, incoming_request)
   end
 
-  defp make_conn(request_path, strip_request_path) do
+  defp make_conn(request_path) do
     %Plug.Conn{
       scheme: :https,
       port: 6000,
       request_path: request_path,
-      remote_ip: {127, 0, 0, 1},
-      private: %{
-        api_config: %{
-          strip_request_path: strip_request_path,
-          request: %{ path: "/mockbin" }
-        }
-      }
+      remote_ip: {127, 0, 0, 1}
     }
   end
 end
