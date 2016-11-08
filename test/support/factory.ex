@@ -58,6 +58,14 @@ defmodule Gateway.Factory do
     }
   end
 
+  def idempotency_plugin_factory do
+    %Gateway.DB.Schemas.Plugin{
+      name: "idempotency",
+      is_enabled: true,
+      settings: %{}
+    }
+  end
+
   # Consumers
 
   def consumer_factory do

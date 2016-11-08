@@ -6,17 +6,17 @@ defmodule Gateway.Controllers.ConsumerPluginSettingsTest do
     api = Gateway.Factory.insert(:api)
     plugin = Gateway.Factory.insert(:acl_plugin, api: api)
 
-    {:ok, %{external_id: consumer.external_id, api: api, plugin: plugin}}
+    {:ok, %{consumer: consumer, api: api, plugin: plugin}}
   end
 
-  test "GET /consumers/:external_id/plugins", %{external_id: external_id, api: api, plugin: plugin2} do
-    {:ok, plugin1} = create_plugin(api.id, "idempotency")
+  test "GET /consumers/:external_id/plugins", %{consumer: consumer, api: api, plugin: plugin2} do
+    plugin1 = Gateway.Factory.insert(:idempotency_plugin, api: api)
 
-    Gateway.DB.Schemas.ConsumerPluginSettings.create(external_id, %{plugin_id: plugin1.id})
-    Gateway.DB.Schemas.ConsumerPluginSettings.create(external_id, %{plugin_id: plugin2.id})
+    Gateway.Factory.insert(:consumer_plugin_settings, consumer: consumer, plugin: plugin1)
+    Gateway.Factory.insert(:consumer_plugin_settings, consumer: consumer, plugin: plugin2)
 
     conn = :get
-    |> conn("/#{external_id}/plugins")
+    |> conn("/#{consumer.external_id}/plugins")
     |> put_req_header("content-type", "application/json")
     |> Gateway.Controllers.Consumers.call([])
 
@@ -101,23 +101,5 @@ defmodule Gateway.Controllers.ConsumerPluginSettingsTest do
     |> Gateway.Controllers.Consumers.call([])
 
     assert 200 == conn.status
-  end
-
-  defp create_fixture(module) do
-    {:ok, entity} =
-      module
-      |> EctoFixtures.ecto_fixtures()
-      |> module.create
-
-    entity
-  end
-
-  defp create_plugin(api_id, plugin_name) do
-    Gateway.DB.Schemas.Plugin.create(api_id, %{
-      api_id: api_id,
-      name: plugin_name,
-      is_enabled: true,
-      settings: %{"scope" => "read"}
-    })
   end
 end
