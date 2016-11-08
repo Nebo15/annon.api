@@ -12,6 +12,16 @@ defmodule Gateway.Controllers.APITest do
       }
     }
 
+  test "GET /apis with empty list" do
+    conn = :get
+    |> conn("/")
+    |> put_req_header("content-type", "application/json")
+    |> Gateway.Controllers.API.call([])
+
+    assert 200 == conn.status
+    assert %{"data" => []} = Poison.decode!(conn.resp_body)
+  end
+
   test "GET /apis" do
     data =
       [
