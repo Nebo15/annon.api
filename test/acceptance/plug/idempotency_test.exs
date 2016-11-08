@@ -7,7 +7,7 @@ defmodule Gateway.Acceptance.Plug.IdempotencyTest do
   test "test idempotency POST request" do
 
     api_data = "POST"
-    |> api_idempotency_data("/idempotency", true)
+    |> api_idempotency_data("/idempotency")
 
     http_api_create(api_data)
 
@@ -44,18 +44,14 @@ defmodule Gateway.Acceptance.Plug.IdempotencyTest do
     |> Enum.count()
   end
 
-  def api_idempotency_data(method, path, with_proxy \\ false) do
+  def api_idempotency_data(method, path) do
     get_api_model_data()
     |> Map.put(:request,
       %{host: get_host(:public), path: path, port: get_port(:public), scheme: "http", method: method})
     |> Map.put(:plugins, get_plugins(with_proxy))
   end
 
-  def get_plugins(_with_proxy = false) do
-    [%{name: "idempotency", is_enabled: true, settings: %{"key" => 100}}]
-  end
-
-  def get_plugins(_with_proxy = true) do
+  def get_plugins() do
     [%{name: "idempotency", is_enabled: true, settings: %{"key" => 100}},
      %{name: "proxy", is_enabled: true, settings: %{
         host: get_host(:private),
