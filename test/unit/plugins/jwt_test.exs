@@ -8,21 +8,21 @@ defmodule Gateway.Plugins.JWTTest do
   import Joken
 
   @payload %{ "name" => "John Doe" }
-  @plugin_data [%{name: "jwt", is_enabled: true, settings: %{"signature" => "super_coolHacker"}}]
 
   test "jwt invalid auth" do
-    %APISchema{request: request} = model = Gateway.Factory.insert(:api_with_default_plugins)
+    jwt_plugin = Gateway.Factory.build(:jwt_plugin)
+    model = jwt_plugin.api
 
     %Plug.Conn{} = conn = :get
-    |> prepare_conn(request)
-    |> Map.put(:private, %{api_config: model})
+    |> prepare_conn(model.request)
+    |> Map.put(:private, %{api_config: %{model | plugins: [jwt_plugin]}})
     |> Gateway.Plugins.JWT.call(%{})
 
     assert 401 == conn.status
 
     %Plug.Conn{} = conn = :get
-    |> prepare_conn(request)
-    |> Map.put(:private, %{api_config: model})
+    |> prepare_conn(model.request)
+    |> Map.put(:private, %{api_config: %{model | plugins: [jwt_plugin]}})
     |> Map.put(:req_headers, [ {"authorization", "Bearer #{jwt_token("super_coolHacker")}bad"}])
     |> Gateway.Plugins.JWT.call(%{})
 
@@ -60,10 +60,10 @@ defmodule Gateway.Plugins.JWTTest do
   end
 
   test "apis model don't have plugins'" do
-    {:ok, %APISchema{request: request}} = create_api()
+    api = Gateway.Factory.build(:api)
 
     %Plug.Conn{} = conn = :get
-    |> prepare_conn(request)
+    |> prepare_conn(api.request)
     |> Gateway.Plugins.JWT.call(%{})
 
     assert nil == conn.status
@@ -75,13 +75,6 @@ defmodule Gateway.Plugins.JWTTest do
     |> Map.put(:host, request.host)
     |> Map.put(:port, request.port)
     |> Map.put(:scheme, String.to_atom(request.scheme))
-  end
-
-  defp create_api do
-    data = get_api_model_data()
-    |> Map.put(:plugins, @plugin_data)
-
-     APISchema.create(data)
   end
 
   defp jwt_token(signature) do
