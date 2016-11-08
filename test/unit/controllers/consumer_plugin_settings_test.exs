@@ -2,9 +2,9 @@ defmodule Gateway.Controllers.ConsumerPluginSettingsTest do
   use Gateway.UnitCase
 
   setup do
-    consumer = create_fixture(Gateway.DB.Schemas.Consumer)
-    api      = create_fixture(Gateway.DB.Schemas.API)
-    {:ok, plugin} = create_plugin(api.id, "acl")
+    consumer = Gateway.Factory.insert(:consumer)
+    api = Gateway.Factory.insert(:api)
+    plugin = Gateway.Factory.insert(:acl_plugin, api: api)
 
     {:ok, %{external_id: consumer.external_id, api: api, plugin: plugin}}
   end

@@ -57,4 +57,24 @@ defmodule Gateway.Factory do
       settings: %{"scope" => "read"}
     }
   end
+
+  # Consumers
+
+  def consumer_factory do
+    %Gateway.DB.Schemas.Consumer{
+      external_id: "18f2de7e-a5c3-11e6-80f5-76304dec7eb7",
+      metadata: %{}
+    }
+  end
+
+  # Consumer plugin settings
+
+  def consumer_plugin_settings_factory do
+    %Gateway.DB.Schemas.ConsumerPluginSettings{
+      is_enabled: true,
+      settings: %{},
+      consumer: build(:consumer),
+      plugin: build(:plugin)
+    }
+  end
 end
