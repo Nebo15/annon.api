@@ -60,7 +60,7 @@ defmodule Gateway.Plugins.JWTTest do
     params = %{name: "jwt", settings: %{"some" => "value"}}
     changeset = Gateway.DB.Schemas.Plugin.changeset(%Gateway.DB.Schemas.Plugin{}, params)
 
-    assert %Ecto.Changeset{valid?: false} = changeset
+    assert %Ecto.Changeset{valid?: false, errors: [signature: {"can't be blank", _}]} = changeset
   end
 
   test "apis model don't have plugins'" do
