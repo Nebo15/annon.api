@@ -278,7 +278,7 @@ This plugin **DOES NOT** authorize API resources, for this purposes use [ACL](#r
 
 But if token is invalid, appropriate error response will be send back to api consumer.
 
-## JWT Authentification [/apis/{api_id}/plugins/jwt]
+## JWT Authrozation [/apis/{api_id}/plugins/jwt]
 
 ### General Information
 JWT is a authroization plugin that decodes JWT tokens received from api consumer (with a `signature` field that is set in settings) and extacts `scopes` field from it.
@@ -324,7 +324,7 @@ Consumer should send `Authorization: Bearer <token>` header with his requests.
 
 ACL allows to protect your API's (or proxy `upstreams`) by a scope-based authorization.
 
-Once enabled it will read `scopes` from any authentification plugin (eg. `JWT`). If there are no scopes, it will send responses with `unathorized` status.
+Once enabled it will read `scopes` from any authorization plugin (eg. `JWT`). If there are no scopes, it will send responses with `unathorized` status.
 
 If path is not defined (gateway can not extract list of scopes needed for path), unathorized response is sent.
 
@@ -653,7 +653,8 @@ This is equal to sending an empty object to `Update Settings` endpoint.
 + cursors (object)
     + `starting_after`: 56c31536a60ad644060041af (string) - A cursor for use in pagination. An object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with `obj_foo`, your subsequent call can include `starting_after=obj_foo` in order to fetch the next page of the list.
     + `ending_before`: 56c31536a60ad644060041aa (string) - A cursor for use in pagination. An object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with `obj_bar`, your subsequent call can include `ending_before=obj_bar` in order to fetch the previous page of the list.
-+ has_more: false
++ size: 1000 (number) - Total number of objects in collection.
++ has_more: false (boolean) - Is this collection have more data to load in the same style as last request loaded it.
 
 ## API
 + id: 56c31536a60ad644060041af (string) - Unique ID for API.
@@ -678,11 +679,10 @@ This is equal to sending an empty object to `Update Settings` endpoint.
 
 ### `Plugin_Proxy__Settings`
 + upstream (Plugin_Proxy__Settings__Upstream, fixed-type)
-+ preserve_host: false (boolean, optional) - Keep HTTP HOST host header when proxying request to an upstream.
-+ preserve_path: false (boolean, optional) - Keep API prefix from path when sending request to upstream. 
++ `strip_host`: false (boolean, optional) - Keep HTTP HOST host header when proxying request to an upstream.
++ `strip_request_path`: false (boolean, optional) - Strip API part of path when sending request to upstream. 
 
 ### `Plugin_Proxy__Settings__Upstream`
-+ method: GET (string)
 + scheme: https (string) - HTTP request scheme. May be: `http`, `https`, `amqp`, `ws`.
 + host: binlist.net (string) - DNS address of your upstream or its IP.
 + port: 443 (number) - Port on which your upstream recieves requests.
