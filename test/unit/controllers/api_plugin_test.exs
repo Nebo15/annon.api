@@ -5,19 +5,17 @@ defmodule Gateway.Controllers.PluginTest do
   @plugin_url "/"
 
   test "GET /apis/:api_id" do
-    data = get_api_model_data()
-    {:ok, api_model} = APISchema.create(data)
+    api_model = Gateway.Factory.insert(:api_with_default_plugins)
 
     conn = "/#{api_model.id}/plugins"
     |> send_get()
     |> assert_conn_status()
 
-    assert Enum.count(Poison.decode!(conn.resp_body)["data"]) == Enum.count(data.plugins)
+    assert Enum.count(Poison.decode!(conn.resp_body)["data"]) == Enum.count(api_model.plugins)
   end
 
   test "GET /apis/:api_id/plugins/:name" do
-    %{plugins: [p1, p2]} = data = get_api_model_data()
-    {:ok, api_model} = APISchema.create(data)
+    %{plugins: [p1, p2]} = api_model = Gateway.Factory.insert(:api_with_default_plugins)
 
     conn = "/#{api_model.id}/plugins/#{p1.name}"
     |> send_get()
@@ -33,11 +31,8 @@ defmodule Gateway.Controllers.PluginTest do
   end
 
   test "POST /apis/:api_id/plugins" do
-    {:ok, api_model} = APISchema
-    |> EctoFixtures.ecto_fixtures()
-    |> APISchema.create()
-
-    plugin_data = get_plugin_data(api_model.id, "acl")
+    api_model = Gateway.Factory.insert(:api)
+    plugin_data = Gateway.Factory.build(:acl_plugin, api: api_model)
 
     conn = "/#{api_model.id}/plugins"
     |> send_data(plugin_data)
