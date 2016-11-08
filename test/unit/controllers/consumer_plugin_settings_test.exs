@@ -28,11 +28,11 @@ defmodule Gateway.Controllers.ConsumerPluginSettingsTest do
     {:ok, cust_plugin1} = Gateway.DB.Schemas.ConsumerPluginSettings.create(external_id, %{plugin_id: plugin.id})
 
     conn = :get
-    |> conn("/#{external_id}/plugins")
+    |> conn("/#{external_id}/plugins/#{plugin.name}")
     |> put_req_header("content-type", "application/json")
     |> Gateway.Controllers.Consumers.call([])
 
-    [result] = Poison.decode!(conn.resp_body)["data"]
+    result = Poison.decode!(conn.resp_body)["data"]
 
     assert cust_plugin1.id == result["id"]
     assert cust_plugin1.external_id == result["external_id"]
