@@ -1,17 +1,6 @@
 defmodule Gateway.Controllers.APITest do
   use Gateway.UnitCase
 
-  @correct_api_data %{
-    name: "Sample",
-    request: %{
-      path: "/",
-      port: 3000,
-      scheme: "https",
-      host: "sample.com",
-      method: "GET"
-      }
-    }
-
   test "GET /apis with empty list" do
     conn = :get
     |> conn("/")
@@ -23,12 +12,7 @@ defmodule Gateway.Controllers.APITest do
   end
 
   test "GET /apis" do
-    data =
-      [
-        Gateway.DB.Schemas.API.create(put_in(%{@correct_api_data | name: "Sample one"}, [:request, :port], 3000)),
-        Gateway.DB.Schemas.API.create(put_in(%{@correct_api_data | name: "Sample two"}, [:request, :port], 3001))
-      ]
-      |> Enum.map(fn({:ok, e}) -> e end)
+    data = Gateway.Factory.insert_pair(:api)
 
     conn = :get
     |> conn("/")
@@ -42,7 +26,7 @@ defmodule Gateway.Controllers.APITest do
   end
 
   test "GET /apis/:api_id" do
-    {:ok, data} = Gateway.DB.Schemas.API.create(@correct_api_data)
+    data = Gateway.Factory.insert(:api)
 
     conn = :get
     |> conn("/#{data.id}")
@@ -87,7 +71,7 @@ defmodule Gateway.Controllers.APITest do
   end
 
   test "PUT /apis/:api_id" do
-    {:ok, data} = Gateway.DB.Schemas.API.create(@correct_api_data)
+    data = Gateway.Factory.insert(:api)
 
     new_contents = %{
       name: "New name",
@@ -120,7 +104,7 @@ defmodule Gateway.Controllers.APITest do
   end
 
   test "DELETE /apis/:api_id" do
-    {:ok, data} = Gateway.DB.Schemas.API.create(@correct_api_data)
+    data = Gateway.Factory.insert(:api)
 
     conn = :delete
     |> conn("/#{data.id}")
