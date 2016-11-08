@@ -42,9 +42,6 @@ defmodule Gateway.Factory do
     }
   end
 
-  def proxy_plugin_factory do
-  end
-
   def jwt_plugin_factory do
     %Gateway.DB.Schemas.Plugin{
       name: "jwt",
