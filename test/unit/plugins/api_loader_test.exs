@@ -35,8 +35,15 @@ defmodule Gateway.Plugins.APILoaderTest do
     assert 200 == make_call("/mockbin").status
     assert 200 == make_call("/mockbin/path").status
 
-    assert "http://localhost:5001/apis" == make_call("/mockbin").resp_body |> Poison.decode!() |> get_in(["meta", "url"])
-    assert "http://localhost:5001/apis" == make_call("/mockbin/path").resp_body |> Poison.decode!() |> get_in(["meta", "url"])
+    assert "http://localhost:5001/apis" == make_call("/mockbin") |> get_from_body(["meta", "url"])
+    assert "http://localhost:5001/apis" == make_call("/mockbin/path") |> get_from_body(["meta", "url"])
+  end
+
+  defp get_from_body(response, what_to_get) do
+    response
+    |> Map.get(:resp_body)
+    |> Poison.decode!()
+    |> get_in(what_to_get)
   end
 
   defp make_call(path) do
