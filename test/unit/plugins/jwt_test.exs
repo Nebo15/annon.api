@@ -30,12 +30,12 @@ defmodule Gateway.Plugins.JWTTest do
   end
 
   test "jwt sucessful auth" do
-
-    {:ok, %APISchema{request: request} = model} = create_api()
+    model = Gateway.Factory.insert(:api)
+    jwt_plugin = Gateway.Factory.build(:jwt_plugin, api: model, settings: %{"signature" => "super_coolHacker"})
 
     %Plug.Conn{private: %{jwt_token: %Joken.Token{} = jwt_token}} = :get
-    |> prepare_conn(request)
-    |> Map.put(:private, %{api_config: model})
+    |> prepare_conn(model.request)
+    |> Map.put(:private, %{api_config: %{ model | plugins: [jwt_plugin]}})
     |> Map.put(:req_headers, [ {"authorization", "Bearer #{jwt_token("super_coolHacker")}"}])
     |> Gateway.Plugins.JWT.call(%{})
 

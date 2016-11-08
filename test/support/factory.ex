@@ -46,7 +46,8 @@ defmodule Gateway.Factory do
     %Gateway.DB.Schemas.Plugin{
       name: "jwt",
       is_enabled: true,
-      settings: %{"signature" => "secret-sign"}
+      settings: %{"signature" => "secret-sign"},
+      api: build(:api)
     }
   end
 
