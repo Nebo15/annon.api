@@ -2,7 +2,7 @@ defmodule Gateway.DB.Schemas.Plugin do
   @moduledoc """
   Model for address
   """
-  use Gateway.DB, :schema
+  use Gateway.DB.Schema
 
   import Gateway.Changeset.Validator.Settings
 
