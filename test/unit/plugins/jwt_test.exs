@@ -30,12 +30,11 @@ defmodule Gateway.Plugins.JWTTest do
   end
 
   test "jwt sucessful auth" do
-    model = Gateway.Factory.insert(:api)
-    jwt_plugin = Gateway.Factory.build(:jwt_plugin, api: model, settings: %{"signature" => "super_coolHacker"})
+    jwt_plugin = Gateway.Factory.build(:jwt_plugin, settings: %{"signature" => "super_coolHacker"})
 
     %Plug.Conn{private: %{jwt_token: %Joken.Token{} = jwt_token}} = :get
-    |> prepare_conn(model.request)
-    |> Map.put(:private, %{api_config: %{ model | plugins: [jwt_plugin]}})
+    |> prepare_conn(jwt_plugin.api.request)
+    |> Map.put(:private, %{api_config: %{ jwt_plugin.api | plugins: [jwt_plugin]}})
     |> Map.put(:req_headers, [ {"authorization", "Bearer #{jwt_token("super_coolHacker")}"}])
     |> Gateway.Plugins.JWT.call(%{})
 
@@ -43,14 +42,11 @@ defmodule Gateway.Plugins.JWTTest do
   end
 
   test "jwt is disabled" do
-    data = get_api_model_data()
-    |> Map.put(:plugins, [%{name: "jwt", is_enabled: false, settings: %{"signature" => "super_coolHacker"}}])
-
-    {:ok, %APISchema{request: request} = model} = APISchema.create(data)
+    jwt_plugin = Gateway.Factory.build(:jwt_plugin, is_enabled: false, settings: %{"signature" => "super_coolHacker"})
 
     %Plug.Conn{} = conn = :get
-    |> prepare_conn(request)
-    |> Map.put(:private, %{api_config: model})
+    |> prepare_conn(jwt_plugin.api.request)
+    |> Map.put(:private, %{api_config: jwt_plugin.api})
     |> Gateway.Plugins.JWT.call(%{})
 
     assert nil == conn.status
