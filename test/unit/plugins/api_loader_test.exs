@@ -26,36 +26,17 @@ defmodule Gateway.Plugins.APILoaderTest do
     assert length(config.plugins) == 2
   end
 
-  describe "Matching API by path: strip_request_path is disabled" do
-    setup do
-      {:ok, api} = create_api_endpoint(false)
-      create_proxy_plugin(api)
-      Gateway.AutoClustering.do_reload_config()
+  test "matching API by path" do
+    {:ok, api} = create_api_endpoint(false)
+    create_proxy_plugin(api)
+    Gateway.AutoClustering.do_reload_config()
 
-      :ok
-    end
+    assert 404 == make_call("/some_path").status
+    assert 200 == make_call("/mockbin").status
+    assert 200 == make_call("/mockbin/path").status
 
-    test "API fetcher behaves as expected" do
-      assert 404 == make_call("/some_path").status
-      assert 200 == make_call("/mockbin").status
-      assert 200 == make_call("/mockbin/path").status
-    end
-  end
-
-  describe "Matching API by path: strip_request_path is enabled" do
-    setup do
-      {:ok, api} = create_api_endpoint(true)
-      create_proxy_plugin(api)
-      Gateway.AutoClustering.do_reload_config()
-
-      :ok
-    end
-
-    test "API fetcher behaves as expected" do
-      assert 404 == make_call("/some_path").status
-      assert 200 == make_call("/mockbin").status
-      assert 200 == make_call("/mockbin/path").status
-    end
+    assert "http://localhost:5001/apis" == make_call("/mockbin").resp_body |> Poison.decode!() |> get_in(["meta", "url"])
+    assert "http://localhost:5001/apis" == make_call("/mockbin/path").resp_body |> Poison.decode!() |> get_in(["meta", "url"])
   end
 
   defp make_call(path) do
