@@ -45,8 +45,8 @@ defmodule Gateway.Controllers.PluginTest do
   end
 
   test "PUT /apis/:api_id/plugins/:name" do
-    %{plugins: [p1, _]} = data = get_api_model_data()
-    {:ok, api_model} = APISchema.create(Map.put(data, :plugins, [p1]))
+    p1 = Gateway.Factory.build(:jwt_plugin)
+    api_model = Gateway.Factory.insert(:api, plugins: [p1])
 
     plugin_data = %{name: "validator", settings: %{"schema" => "{}"}}
 
@@ -77,8 +77,7 @@ defmodule Gateway.Controllers.PluginTest do
   end
 
   test "DELETE /apis/:api_id" do
-    %{plugins: [p1, p2]} = data = get_api_model_data()
-    {:ok, api_model} = APISchema.create(data)
+    %{plugins: [p1, p2]} = api_model = Gateway.Factory.insert(:api_with_default_plugins)
 
     "/#{api_model.id}/plugins/#{p1.name}"
     |> send_get()
