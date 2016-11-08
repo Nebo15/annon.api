@@ -1,8 +1,6 @@
 defmodule Gateway.MonitoringTest do
   use Gateway.UnitCase
 
-  import Gateway.Factory
-
   @apis "apis"
 
   test "metrics work properly" do

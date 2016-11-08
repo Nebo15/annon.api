@@ -10,17 +10,6 @@ defmodule Gateway.Factory do
     }
   end
 
-  def api_with_default_plugins_factory do
-    %Gateway.DB.Schemas.API{
-      name: sequence(:api_name, &"An API ##{&1}"),
-      request: build(:request),
-      plugins: [
-        build(:jwt_plugin),
-        build(:acl_plugin)
-      ]
-    }
-  end
-
   def request_factory do
     %Gateway.DB.Schemas.API.Request{
       method: "GET",
