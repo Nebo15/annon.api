@@ -35,8 +35,8 @@ defmodule Gateway.Plugins.APILoaderTest do
     assert 200 == make_call("/mockbin").status
     assert 200 == make_call("/mockbin/path").status
 
-    assert "http://localhost:5001/apis" == make_call("/mockbin") |> get_from_body(["meta", "url"])
-    assert "http://localhost:5001/apis" == make_call("/mockbin/path") |> get_from_body(["meta", "url"])
+    assert "http://localhost:5001/apis" == get_from_body(make_call("/mockbin"), ["meta", "url"])
+    assert "http://localhost:5001/apis" == get_from_body(make_call("/mockbin/path"), ["meta", "url"])
   end
 
   defp get_from_body(response, what_to_get) do
