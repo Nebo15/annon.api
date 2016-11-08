@@ -25,7 +25,7 @@ defmodule Gateway.Factory do
     %Gateway.DB.Schemas.API.Request{
       method: "GET",
       scheme: "http",
-      host: "www.example.com",
+      host: sequence(:host, &"www.example#{&1}.com"),
       port: 80,
       path: "/apis"
     }
