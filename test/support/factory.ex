@@ -35,8 +35,7 @@ defmodule Gateway.Factory do
     %Gateway.DB.Schemas.Plugin{
       name: "jwt",
       is_enabled: true,
-      settings: %{"signature" => "secret-sign"},
-      api: build(:api)
+      settings: %{"signature" => "secret-sign"}
     }
   end
 
@@ -49,6 +48,14 @@ defmodule Gateway.Factory do
   end
 
   def idempotency_plugin_factory do
+    %Gateway.DB.Schemas.Plugin{
+      name: "idempotency",
+      is_enabled: true,
+      settings: %{}
+    }
+  end
+
+  def ip_restriction_plugin_factory do
     %Gateway.DB.Schemas.Plugin{
       name: "idempotency",
       is_enabled: true,
