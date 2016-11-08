@@ -1,6 +1,6 @@
 defmodule Gateway do
   @moduledoc """
-  This is an entry point of Gateway application.
+  This is an entry point of Annons application.
   """
   use Application
 

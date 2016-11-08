@@ -1,6 +1,6 @@
 defmodule Gateway.DB.Schemas.Plugin do
   @moduledoc """
-  Model for address
+  Schema for Plugins settings.
   """
   use Gateway.DB.Schema
 

@@ -1,12 +1,14 @@
 defmodule Gateway.Plugins.APILoader do
   @moduledoc """
-  Plugin which get all configuration by endpoint.
+  This plugin should be first in plugs pipeline,
+  because it's used to fetch all settings and decide which ones should be applied for current consumer request.
   """
   use Gateway.Helpers.Plugin,
     plugin_name: "api_loader"
 
   import Plug.Conn
 
+  @doc false
   def call(conn, _opts), do: put_private(conn, :api_config, conn |> get_config)
 
   def get_config(conn) do
@@ -24,8 +26,8 @@ defmodule Gateway.Plugins.APILoader do
     |> find_matching_path(conn.request_path)
   end
 
-  def normalize_scheme(scheme) when is_atom(scheme), do: Atom.to_string(scheme)
-  def normalize_scheme(scheme), do: scheme
+  defp normalize_scheme(scheme) when is_atom(scheme), do: Atom.to_string(scheme)
+  defp normalize_scheme(scheme), do: scheme
 
   def find_matching_path(apis, path) do
     apis

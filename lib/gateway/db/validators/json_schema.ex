@@ -1,6 +1,8 @@
 defmodule Gateway.Changeset.Validator.JsonSchema do
   @moduledoc """
-    This module provides Changeset validation via json schema.
+  This module provides [JSON Schema](http://json-schema.org/) validator for a plugin settings.
+
+  All rules is stored in `Gateway.Changeset.Validator.Settings`.
   """
 
   import Ecto.Changeset, only: [get_change: 3]

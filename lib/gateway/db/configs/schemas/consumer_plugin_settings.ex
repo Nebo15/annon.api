@@ -1,6 +1,6 @@
 defmodule Gateway.DB.Schemas.ConsumerPluginSettings do
   @moduledoc """
-  Model for address
+  Schema for Consumer's overrides for plugin settings.
   """
   use Gateway.DB.Schema
 

@@ -1,6 +1,7 @@
 defmodule Gateway.Plugins.Proxy do
   @moduledoc """
-  Plugin that proxies requests to upstream back-ends.
+  [Proxy](http://docs.annon.apiary.io/#reference/plugins/proxy) - is a core plugin that
+  sends incoming request to an upstream back-ends.
   """
   use Gateway.Helpers.Plugin,
     plugin_name: "proxy"
@@ -11,6 +12,7 @@ defmodule Gateway.Plugins.Proxy do
   alias Gateway.DB.Schemas.Plugin
   alias Gateway.DB.Schemas.API, as: APISchema
 
+  @doc false
   def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts) when is_list(plugins) do
     plugins
     |> find_plugin_settings()

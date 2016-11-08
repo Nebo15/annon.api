@@ -1,11 +1,12 @@
 defmodule Gateway.Changeset.Validator.Settings do
   @moduledoc """
-    Changeset validator for Plugin settings
+  This module provides helpers to validate individual plugin settings via JSON Schema that is stored inside methods.
   """
   alias Ecto.Changeset
   import Ecto.Changeset
   import Gateway.Changeset.Validator.JsonSchema
 
+  # TODO: JSON Schema has IP type and internal validator for it
   @ip_pattern "^(?:(?:\\*|25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:\\*|25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
 
   # JWT

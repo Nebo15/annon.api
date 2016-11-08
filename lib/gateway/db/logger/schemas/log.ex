@@ -1,6 +1,6 @@
 defmodule Gateway.DB.Schemas.Log do
   @moduledoc """
-  Log record DB entity
+  Schema for saved requests and responses.
   """
   use Gateway.DB.Schema
   alias Gateway.DB.Logger.Repo

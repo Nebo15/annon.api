@@ -1,6 +1,6 @@
 defmodule Gateway.PrivateRouter do
   @moduledoc """
-  Gateway HTTP Router
+  Router for a [Annons Management API](http://docs.annon.apiary.io/#reference/apis).
   """
   use Plug.Router
   use Plug.ErrorHandler

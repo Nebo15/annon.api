@@ -1,6 +1,10 @@
 defmodule Gateway.Plugins.IPRestriction do
   @moduledoc """
-  IP restriction plug.
+  [IP Restriction plugin](http://docs.annon.apiary.io/#reference/plugins/ip-restriction).
+
+  It allows to white/black-list consumers by a IP addresses.
+  Also you can use it in Consumer plugin settings overrides to limit IP's from which specific consumer
+  can request your API.
   """
   use Gateway.Helpers.Plugin,
     plugin_name: "ip_restriction"
@@ -12,6 +16,7 @@ defmodule Gateway.Plugins.IPRestriction do
   alias EView.Views.Error, as: ErrorView
   alias Gateway.Helpers.Response
 
+  @doc false
   def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
     plugins
     |> find_plugin_settings()

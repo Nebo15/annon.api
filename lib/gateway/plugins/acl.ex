@@ -1,6 +1,8 @@
 defmodule Gateway.Plugins.ACL do
   @moduledoc """
-  Plugin for JWT verifying and decoding.
+  [Access Control Layer (ACL) plugin](http://docs.annon.apiary.io/#reference/plugins/acl).
+
+  It allows to set list of scopes that is required for path relative to an API.
   """
   use Gateway.Helpers.Plugin,
     plugin_name: "acl"
@@ -12,6 +14,7 @@ defmodule Gateway.Plugins.ACL do
   alias EView.Views.Error, as: ErrorView
   alias Gateway.Helpers.Response
 
+  @doc false
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts) when is_list(plugins) do
     plugins
     |> find_plugin_settings()

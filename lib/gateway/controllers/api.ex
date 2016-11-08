@@ -1,7 +1,11 @@
 defmodule Gateway.Controllers.API do
   @moduledoc """
-  REST for Api
-  Documentation http://docs.osapigateway.apiary.io/#reference/apis
+  REST interface that allows to manage API's and their settings.
+
+  API is a core entity that tells what host, port, path Annon should listen.
+  After creating API you can assign plugins to it.
+
+  You can find full description in [REST API documentation](http://docs.annon.apiary.io/#reference/apis).
   """
   use Gateway.Helpers.CommonRouter
   alias Gateway.DB.Schemas.API, as: APISchema

@@ -1,6 +1,11 @@
 defmodule Gateway.Controllers.API.Plugins do
   @moduledoc """
-  REST module for Plugins.
+  REST interface that allows to manage Plugins and their settings.
+
+  API plugins allow you to perform certain operations on a request,
+  most common of them is Proxy that send incoming requests to a upstream back-end.
+
+  You can find full description in [REST API documentation](http://docs.annon.apiary.io/#reference/apis/plugins).
   """
   use Gateway.Helpers.CommonRouter
 

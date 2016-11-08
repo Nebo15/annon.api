@@ -1,6 +1,6 @@
 defmodule Gateway.Helpers.CommonRouter do
   @moduledoc """
-  Gateway Helpers Common Router
+  This router is used in controllers of Annons private API.
   """
   defmacro __using__(_) do
     quote do
