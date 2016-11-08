@@ -3,21 +3,25 @@ defmodule Gateway.Factory do
 
   def api_factory do
     %Gateway.DB.Schemas.API{
-      name: "Jane Smith",
-      request: %Gateway.DB.Schemas.API.Request{
-        scheme: "http",
-        host: "localhost",
-        port: 3000,
-        path: "/omg/lol",
-        method: "GET"
-      }
+      name: sequence(:api_name, &"An API ##{&1}"),
+      request: build(:request)
+    }
+  end
+
+  def request_factory() do
+    %Gateway.DB.Schemas.API.Request{
+      method: "GET",
+      scheme: "http",
+      host: "www.example.com",
+      port: 80,
+      path: "/apis"
     }
   end
 
   def plugin_factory do
     %Gateway.DB.Schemas.Plugin{
       name: "Jane Smith",
-      is_enabled: false,
+      is_enabled: true,
       settings: %{},
       api: build(:api)
     }
