@@ -2,21 +2,21 @@ defmodule Gateway.Controllers.ConsumerPluginSettingsTest do
   use Gateway.UnitCase
 
   setup do
-    consumer = create_fixture(Gateway.DB.Schemas.Consumer)
-    api      = create_fixture(Gateway.DB.Schemas.API)
-    {:ok, plugin} = create_plugin(api.id, "acl")
+    consumer = Gateway.Factory.insert(:consumer)
+    api = Gateway.Factory.insert(:api)
+    plugin = Gateway.Factory.insert(:acl_plugin, api: api)
 
-    {:ok, %{external_id: consumer.external_id, api: api, plugin: plugin}}
+    {:ok, %{consumer: consumer, api: api, plugin: plugin}}
   end
 
-  test "GET /consumers/:external_id/plugins", %{external_id: external_id, api: api, plugin: plugin2} do
-    {:ok, plugin1} = create_plugin(api.id, "idempotency")
+  test "GET /consumers/:external_id/plugins", %{consumer: consumer, api: api, plugin: plugin2} do
+    plugin1 = Gateway.Factory.insert(:idempotency_plugin, api: api)
 
-    Gateway.DB.Schemas.ConsumerPluginSettings.create(external_id, %{plugin_id: plugin1.id})
-    Gateway.DB.Schemas.ConsumerPluginSettings.create(external_id, %{plugin_id: plugin2.id})
+    Gateway.Factory.insert(:consumer_plugin_settings, consumer: consumer, plugin: plugin1)
+    Gateway.Factory.insert(:consumer_plugin_settings, consumer: consumer, plugin: plugin2)
 
     conn = :get
-    |> conn("/#{external_id}/plugins")
+    |> conn("/#{consumer.external_id}/plugins")
     |> put_req_header("content-type", "application/json")
     |> Gateway.Controllers.Consumers.call([])
 
@@ -24,11 +24,11 @@ defmodule Gateway.Controllers.ConsumerPluginSettingsTest do
     assert 2 == Enum.count(result)
   end
 
-  test "GET /consumers/:external_id/plugins/:name", %{external_id: external_id, plugin: plugin} do
-    {:ok, cust_plugin1} = Gateway.DB.Schemas.ConsumerPluginSettings.create(external_id, %{plugin_id: plugin.id})
+  test "GET /consumers/:external_id/plugins/:name", %{consumer: consumer, plugin: plugin} do
+    cust_plugin1 = Gateway.Factory.insert(:consumer_plugin_settings, consumer: consumer, plugin: plugin)
 
     conn = :get
-    |> conn("/#{external_id}/plugins/#{plugin.name}")
+    |> conn("/#{consumer.external_id}/plugins/#{plugin.name}")
     |> put_req_header("content-type", "application/json")
     |> Gateway.Controllers.Consumers.call([])
 
@@ -42,9 +42,9 @@ defmodule Gateway.Controllers.ConsumerPluginSettingsTest do
     assert result["updated_at"]
   end
 
-  test "PUT /consumers/:external_id/plugins/:name", %{external_id: external_id, plugin: plugin} do
-    params = %{plugin_id: plugin.id, settings: %{ "a" => 10, "b" => 20}}
-    { :ok, cust_plugin1 } = Gateway.DB.Schemas.ConsumerPluginSettings.create(external_id, params)
+  test "PUT /consumers/:external_id/plugins/:name", %{consumer: consumer, plugin: plugin} do
+    params = %{consumer: consumer, plugin: plugin, settings: %{ "a" => 10, "b" => 20}}
+    cust_plugin1 = Gateway.Factory.insert(:consumer_plugin_settings, params)
 
     contents = %{
       settings: %{
@@ -54,7 +54,7 @@ defmodule Gateway.Controllers.ConsumerPluginSettingsTest do
     }
 
     conn = :put
-    |> conn("/#{external_id}/plugins/#{plugin.name}", Poison.encode!(contents))
+    |> conn("/#{consumer.external_id}/plugins/#{plugin.name}", Poison.encode!(contents))
     |> put_req_header("content-type", "application/json")
     |> Gateway.Controllers.Consumers.call([])
 
@@ -67,7 +67,7 @@ defmodule Gateway.Controllers.ConsumerPluginSettingsTest do
     assert contents[:settings] == result["settings"]
   end
 
-  test "POST /consumers/:external_id/plugins", %{external_id: external_id, plugin: plugin} do
+  test "POST /consumers/:external_id/plugins", %{consumer: consumer, plugin: plugin} do
     contents = %{
       plugin_id: plugin.id,
       settings: %{
@@ -77,47 +77,28 @@ defmodule Gateway.Controllers.ConsumerPluginSettingsTest do
     }
 
     conn = :post
-    |> conn("/#{external_id}/plugins", Poison.encode!(contents))
+    |> conn("/#{consumer.external_id}/plugins", Poison.encode!(contents))
     |> put_req_header("content-type", "application/json")
     |> Gateway.Controllers.Consumers.call([])
 
     result = Poison.decode!(conn.resp_body)["data"]
 
     assert result["id"]
-    assert external_id == result["external_id"]
+    assert consumer.external_id == result["external_id"]
     assert plugin.id == result["plugin_id"]
     assert contents[:settings] == result["settings"]
     assert result["inserted_at"]
     assert result["updated_at"]
   end
 
-  test "DELETE /consumers/:external_id/plugins/:name", %{external_id: external_id, plugin: plugin} do
-    params = %{plugin_id: plugin.id, settings: %{ "a" => 10, "b" => 20}}
-    Gateway.DB.Schemas.ConsumerPluginSettings.create(external_id, params)
+  test "DELETE /consumers/:external_id/plugins/:name", %{consumer: consumer, plugin: plugin} do
+    Gateway.Factory.insert(:consumer_plugin_settings, plugin: plugin, consumer: consumer)
 
     conn = :delete
-    |> conn("/#{external_id}/plugins/#{plugin.name}")
+    |> conn("/#{consumer.external_id}/plugins/#{plugin.name}")
     |> put_req_header("content-type", "application/json")
     |> Gateway.Controllers.Consumers.call([])
 
     assert 200 == conn.status
-  end
-
-  defp create_fixture(module) do
-    {:ok, entity} =
-      module
-      |> EctoFixtures.ecto_fixtures()
-      |> module.create
-
-    entity
-  end
-
-  defp create_plugin(api_id, plugin_name) do
-    Gateway.DB.Schemas.Plugin.create(api_id, %{
-      api_id: api_id,
-      name: plugin_name,
-      is_enabled: true,
-      settings: %{"scope" => "read"}
-    })
   end
 end

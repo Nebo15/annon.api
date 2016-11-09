@@ -10,12 +10,16 @@ defmodule Gateway.Acceptance.Plug.IPRestrictionTest do
   }
 
   test "check blacklist" do
+    api = Gateway.Factory.insert(:api, request: @request)
+    Gateway.Factory.insert(:ip_restriction_plugin, %{
+      api: api,
+      settings: %{
+        "ip_blacklist" => ["127.0.0.*"],
+        "ip_whitelist" => ["128.30.50.245"]
+      }
+    })
 
-    %{"ip_blacklist" => ["127.0.0.*"], "ip_whitelist" => ["128.30.50.245"]}
-    |> api_ip_restriction_data()
-    |> http_api_create()
-
-    Gateway.AutoClustering.do_reload_config
+    Gateway.AutoClustering.do_reload_config()
 
     @request.path
     |> String.replace_prefix("/", "")
