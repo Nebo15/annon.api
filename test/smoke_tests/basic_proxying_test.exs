@@ -30,7 +30,7 @@ defmodule Gateway.SmokeTests.BasicProxy do
     :ok
   end
 
-  test "User is proxied to an upstream url" do
+  test "A request from user reaches upstream" do
     api_endpoint = "#{get_host(:public)}:#{get_port(:public)}"
 
     response =
