@@ -51,7 +51,7 @@ defmodule Gateway.Acceptance.Plug.IdempotencyTest do
     |> Map.put(:plugins, get_plugins())
   end
 
-  def get_plugins() do
+  def get_plugins do
     [%{name: "idempotency", is_enabled: true, settings: %{"key" => 100}},
      %{name: "proxy", is_enabled: true, settings: %{
         host: get_host(:private),
