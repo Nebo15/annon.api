@@ -4,7 +4,6 @@ defmodule Gateway.Plugins.JWTTest do
   """
 
   use Gateway.UnitCase
-  alias Gateway.DB.Schemas.API, as: APISchema
   import Joken
 
   @payload %{ "name" => "John Doe" }
