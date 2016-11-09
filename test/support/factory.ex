@@ -1,4 +1,9 @@
 defmodule Gateway.Factory do
+  @moduledoc """
+  This module lists factories, a mean suitable
+  for tests that involve preparation of DB data
+  """
+
   use ExMachina.Ecto, repo: Gateway.DB.Configs.Repo
 
   # APIs
