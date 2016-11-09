@@ -58,6 +58,8 @@ defmodule Gateway.SmokeTests.BasicProxy do
     assert "There are no JWT token in request or your token is invalid." == response["error"]["message"]
     assert "access_denied" == response["error"]["type"]
     assert 401 == response["meta"]["code"]
+
+    assert_logs_are_written(response)
   end
 
   test "A request with incorrect auth header is forbidden to access upstream" do
@@ -72,6 +74,8 @@ defmodule Gateway.SmokeTests.BasicProxy do
     assert "There are no JWT token in request or your token is invalid." == response["error"]["message"]
     assert "access_denied" == response["error"]["type"]
     assert 401 == response["meta"]["code"]
+
+    assert_logs_are_written(response)
   end
 
   test "A request with good auth header is allowed to access upstream" do
@@ -86,5 +90,14 @@ defmodule Gateway.SmokeTests.BasicProxy do
       |> Poison.decode!
 
     assert "my_value" == response["args"]["my_param"]
+
+    assert_logs_are_written(response)
+  end
+
+  defp assert_logs_are_written(response) do
+    log_entry = Gateway.DB.Logger.Repo.one(Gateway.DB.Schemas.Log)
+		logged_response = Poison.decode!(log_entry.response.body)
+
+		assert logged_response == response
   end
 end
