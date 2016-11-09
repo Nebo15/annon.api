@@ -10,17 +10,14 @@ defmodule Gateway.Acceptance.Plug.ValidatorTest do
           }
 
   test "post hook with empty data" do
-    request_data = %{host: get_host(:public), path: "/test", port: get_port(:public), scheme: "http", method: "POST"}
-
-    data = get_api_model_data()
-    |> Map.put(:request, request_data)
-    |> Map.put(:plugins, [
-      %{name: "validator", is_enabled: true, settings: %{"schema" => Poison.encode!(@schema)}}
-    ])
-
-    "apis"
-    |> post(Poison.encode!(data), :private)
-    |> assert_status(201)
+    api = Gateway.Factory.insert(:api, request: %{
+      path: "/test",
+      host: get_host(:public),
+      port: get_port(:public),
+      scheme: "http",
+      method: "POST"
+    })
+    Gateway.Factory.insert(:validator_plugin, api: api, settings: %{"schema" => Poison.encode!(@schema)})
 
     "test"
     |> get(:public)
