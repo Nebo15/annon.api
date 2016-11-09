@@ -29,7 +29,7 @@ defmodule Gateway.Plugins.ProxyTest do
   end
 
   test "proxying includes query string" do
-    conn = %Plug.Conn{scheme: :https, port: 6000, request_path: "/some/path", query_string: "key=value", remote_ip: {127, 0, 0, 1}}
+    conn = %Plug.Conn{request_path: "/some/path", query_string: "key=value"}
 
     assert Proxy.make_link(@proxy_settings_full, conn) == "http://localhost:4000/proxy/test?key=value"
   end
