@@ -4,9 +4,15 @@ defmodule Gateway.SmokeTests.Scenario1 do
   test "Smoke test: scenario #1" do
     setup_backend()
 
-    response = HTTPoison.get("http://#{get_host(:public)}:#{get_port(:public)}/httpbin")
-    |> IO.inspect
+    api_url = "#{get_host(:public)}:#{get_port(:public)}"
 
+    response =
+      "http://#{api_url}/httpbin?my_param=my_value"
+      |> HTTPoison.get!
+      |> Map.get(:body)
+      |> Poison.decode!
+
+    assert "my_value" == response["args"]["my_param"]
   end
 
   defp setup_backend() do
@@ -33,8 +39,6 @@ defmodule Gateway.SmokeTests.Scenario1 do
       }
     })
 
-    Gateway.AutoClustering.do_reload_config()
-
     # Gateway.DB.Schemas.Plugin.create(api.id, %{
     #   name: "proxy",
     #   is_enabled: true,
@@ -46,6 +50,7 @@ defmodule Gateway.SmokeTests.Scenario1 do
     #     "path" => "/"
     #   }
     # })
+
+    Gateway.AutoClustering.do_reload_config()
   end
 end
-
