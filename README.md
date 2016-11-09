@@ -5,3 +5,5 @@
 API Gateway allows to pass requests to upstream back-ends and remove from them typical boilerplate that must be re-done everywhere.
 
 You can find full documentation on official [Apiary](http://docs.osapigateway.apiary.io/) page.
+
+Also there are auto-generated code documentation [available here](https://nebo15.github.io/os.gateway/api-reference.html#content).
