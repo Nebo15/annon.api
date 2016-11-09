@@ -1,7 +1,7 @@
-defmodule Gateway.SmokeTests.Scenario1 do
+defmodule Gateway.SmokeTests.BasicProxy do
   use Gateway.AcceptanceCase
 
-  test "Smoke test: scenario #1" do
+  test "User is proxied to an upstream url" do
     setup_backend()
 
     api_url = "#{get_host(:public)}:#{get_port(:public)}"
@@ -38,18 +38,6 @@ defmodule Gateway.SmokeTests.Scenario1 do
         "path" => "/get"
       }
     })
-
-    # Gateway.DB.Schemas.Plugin.create(api.id, %{
-    #   name: "proxy",
-    #   is_enabled: true,
-    #   settings: %{
-    #     "method" => "POST",
-    #     "scheme" => "http",
-    #     "host" => "httpbin.org",
-    #     "port" => 80,
-    #     "path" => "/"
-    #   }
-    # })
 
     Gateway.AutoClustering.do_reload_config()
   end
