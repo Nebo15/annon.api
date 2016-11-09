@@ -1,21 +1,7 @@
 defmodule Gateway.SmokeTests.BasicProxy do
   use Gateway.AcceptanceCase
 
-  test "User is proxied to an upstream url" do
-    setup_backend()
-
-    api_url = "#{get_host(:public)}:#{get_port(:public)}"
-
-    response =
-      "http://#{api_url}/httpbin?my_param=my_value"
-      |> HTTPoison.get!
-      |> Map.get(:body)
-      |> Poison.decode!
-
-    assert "my_value" == response["args"]["my_param"]
-  end
-
-  defp setup_backend() do
+  setup do
     {:ok, api} = Gateway.DB.Schemas.API.create(%{
       name: "An HTTPBin service endpoint",
       request: %{
@@ -40,5 +26,19 @@ defmodule Gateway.SmokeTests.BasicProxy do
     })
 
     Gateway.AutoClustering.do_reload_config()
+
+    :ok
+  end
+
+  test "User is proxied to an upstream url" do
+    api_endpoint = "#{get_host(:public)}:#{get_port(:public)}"
+
+    response =
+      "http://#{api_endpoint}/httpbin?my_param=my_value"
+      |> HTTPoison.get!
+      |> Map.get(:body)
+      |> Poison.decode!
+
+    assert "my_value" == response["args"]["my_param"]
   end
 end
