@@ -20,7 +20,7 @@ defmodule Gateway.Acceptance.Plug.IPRestrictionTest do
     })
 |> IO.inspect
 
-    Gateway.AutoClustering.do_reload_config
+    Gateway.AutoClustering.do_reload_config()
 
     @request.path
     |> String.replace_prefix("/", "")

@@ -19,6 +19,11 @@ defmodule Gateway.Acceptance.Plug.ValidatorTest do
     })
     Gateway.Factory.insert(:validator_plugin, api: api, settings: %{"schema" => Poison.encode!(@schema)})
 
+<<<<<<< HEAD
+=======
+    Gateway.AutoClustering.do_reload_config()
+
+>>>>>>> Moving on
     "test"
     |> get(:public)
     |> assert_status(404)

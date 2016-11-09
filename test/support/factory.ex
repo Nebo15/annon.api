@@ -57,7 +57,15 @@ defmodule Gateway.Factory do
 
   def ip_restriction_plugin_factory do
     %Gateway.DB.Schemas.Plugin{
-      name: "idempotency",
+      name: "ip_restriction",
+      is_enabled: true,
+      settings: %{}
+    }
+  end
+
+  def validator_plugin_factory do
+    %Gateway.DB.Schemas.Plugin{
+      name: "validator",
       is_enabled: true,
       settings: %{}
     }
