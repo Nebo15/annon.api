@@ -55,15 +55,13 @@ defmodule Gateway.SmokeTests.BasicProxy do
       |> Map.get(:body)
       |> Poison.decode!
 
-    assert "Your scopes does not allow to access this resource." == response["error"]["message"]
-    assert "forbidden" == response["error"]["type"]
-    assert 403 == response["meta"]["code"]
+    assert "There are no JWT token in request or your token is invalid." == response["error"]["message"]
+    assert "access_denied" == response["error"]["type"]
+    assert 401 == response["meta"]["code"]
   end
 
   test "A request with incorrect auth header is forbidden to access upstream" do
     api_endpoint = "#{get_host(:public)}:#{get_port(:public)}"
-
-    auth_token = jwt_token(%{"scopes" => ["httpbin:wrong"]}, "a_wrong_secret_signature")
 
     response =
       "http://#{api_endpoint}/httpbin?my_param=my_value"
