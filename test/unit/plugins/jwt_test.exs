@@ -46,7 +46,8 @@ defmodule Gateway.Plugins.JWTTest do
   end
 
   test "jwt is disabled", %{api: api} do
-    jwt_plugin = Gateway.Factory.insert(:jwt_plugin, api: api, is_enabled: false, settings: %{"signature" => "super_coolHacker"})
+    plugin_settings = [api: api, is_enabled: false, settings: %{"signature" => "super_coolHacker"}]
+    jwt_plugin = Gateway.Factory.insert(:jwt_plugin, plugin_settings)
 
     %Plug.Conn{} = conn = :get
     |> prepare_conn(jwt_plugin.api.request)
