@@ -6,8 +6,6 @@ defmodule Gateway.Fixtures do
   alias Gateway.DB.Schemas.API, as: APISchema
 
   def get_api_model_data do
-    Gateway.Factory.build(:api)
-
     api_model = APISchema
     |> EctoFixtures.ecto_fixtures()
 
