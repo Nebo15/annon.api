@@ -37,6 +37,7 @@ Gateway.DB.Schemas.Log.Latencies.html
 Gateway.DB.Schemas.Log.Request.html
 Gateway.DB.Schemas.Log.Response.html
 Gateway.DB.Schemas.Plugin.html
+Gateway.Factory.html
 Gateway.Fixtures.html
 Gateway.Helpers.CommonRouter.html
 Gateway.Helpers.IP.html
