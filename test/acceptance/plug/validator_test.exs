@@ -1,7 +1,6 @@
 defmodule Gateway.Acceptance.Plug.ValidatorTest do
   use Gateway.AcceptanceCase
 
-  @api_url "apis"
   @schema %{"type" => "object",
             "properties" => %{
               "foo" => %{ "type" => "number"},
@@ -16,7 +15,6 @@ defmodule Gateway.Acceptance.Plug.ValidatorTest do
     data = get_api_model_data()
     |> Map.put(:request, request_data)
     |> Map.put(:plugins, [
-      %{name: "jwt", is_enabled: false, settings: %{"signature" => "secret"}},
       %{name: "validator", is_enabled: true, settings: %{"schema" => Poison.encode!(@schema)}}
     ])
 
