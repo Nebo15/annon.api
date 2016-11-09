@@ -9,28 +9,33 @@ defmodule Gateway.Plugins.JWTTest do
 
   @payload %{ "name" => "John Doe" }
 
-  test "jwt invalid auth" do
-    jwt_plugin = Gateway.Factory.build(:jwt_plugin)
-    model = jwt_plugin.api
+  setup do
+    api = Gateway.Factory.insert(:api)
+
+    {:ok, api: api}
+  end
+
+  test "jwt invalid auth", %{api: api} do
+    jwt_plugin = Gateway.Factory.insert(:jwt_plugin, api: api)
 
     %Plug.Conn{} = conn = :get
-    |> prepare_conn(model.request)
-    |> Map.put(:private, %{api_config: %{model | plugins: [jwt_plugin]}})
+    |> prepare_conn(api.request)
+    |> Map.put(:private, %{api_config: %{api | plugins: [jwt_plugin]}})
     |> Gateway.Plugins.JWT.call(%{})
 
     assert 401 == conn.status
 
     %Plug.Conn{} = conn = :get
-    |> prepare_conn(model.request)
-    |> Map.put(:private, %{api_config: %{model | plugins: [jwt_plugin]}})
+    |> prepare_conn(api.request)
+    |> Map.put(:private, %{api_config: %{api | plugins: [jwt_plugin]}})
     |> Map.put(:req_headers, [ {"authorization", "Bearer #{jwt_token("super_coolHacker")}bad"}])
     |> Gateway.Plugins.JWT.call(%{})
 
     assert 401 == conn.status
   end
 
-  test "jwt sucessful auth" do
-    jwt_plugin = Gateway.Factory.build(:jwt_plugin, settings: %{"signature" => "super_coolHacker"})
+  test "jwt sucessful auth", %{api: api} do
+    jwt_plugin = Gateway.Factory.build(:jwt_plugin, api: api, settings: %{"signature" => "super_coolHacker"})
 
     %Plug.Conn{private: %{jwt_token: %Joken.Token{} = jwt_token}} = :get
     |> prepare_conn(jwt_plugin.api.request)
@@ -41,8 +46,8 @@ defmodule Gateway.Plugins.JWTTest do
     assert @payload == jwt_token.claims
   end
 
-  test "jwt is disabled" do
-    jwt_plugin = Gateway.Factory.build(:jwt_plugin, is_enabled: false, settings: %{"signature" => "super_coolHacker"})
+  test "jwt is disabled", %{api: api} do
+    jwt_plugin = Gateway.Factory.insert(:jwt_plugin, api: api, is_enabled: false, settings: %{"signature" => "super_coolHacker"})
 
     %Plug.Conn{} = conn = :get
     |> prepare_conn(jwt_plugin.api.request)
