@@ -57,10 +57,10 @@ defmodule Gateway.Plugins.JWTTest do
   end
 
   test "jwt required signature in settings" do
-    data = get_api_model_data()
-    |> Map.put(:plugins, [%{name: "jwt", is_enabled: true, settings: %{"some" => "value"}}])
+    params = %{name: "jwt", settings: %{"some" => "value"}}
+    changeset = Gateway.DB.Schemas.Plugin.changeset(%Gateway.DB.Schemas.Plugin{}, params)
 
-    assert {:error, %Ecto.Changeset{valid?: false}} = APISchema.create(data)
+    assert %Ecto.Changeset{valid?: false, errors: [signature: {"can't be blank", _}]} = changeset
   end
 
   test "apis model don't have plugins'" do
