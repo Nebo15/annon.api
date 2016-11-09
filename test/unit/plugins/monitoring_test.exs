@@ -45,7 +45,7 @@ defmodule Gateway.MonitoringTest do
   end
 
   defp create_proxy_plugin(api) do
-    Gateway.Factory.insert(:plugin, %{
+    Gateway.Factory.insert(:proxy_plugin, %{
       name: "proxy",
       is_enabled: true,
       api: api,

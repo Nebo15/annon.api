@@ -22,12 +22,11 @@ defmodule Gateway.Factory do
 
   # Plugin
 
-  def plugin_factory do
+  def proxy_plugin_factory do
     %Gateway.DB.Schemas.Plugin{
-      name: "Jane Smith",
+      name: "proxy",
       is_enabled: true,
-      settings: %{},
-      api: build(:api)
+      settings: %{}
     }
   end
 
@@ -87,7 +86,6 @@ defmodule Gateway.Factory do
       is_enabled: true,
       settings: %{},
       consumer: build(:consumer),
-      plugin: build(:plugin)
     }
   end
 end
