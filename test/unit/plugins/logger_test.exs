@@ -12,8 +12,8 @@ defmodule Gateway.LoggerTest do
   end
 
   test "check logger plug" do
-    {:ok, response} = @random_url
-    |> post(Poison.encode!(@random_data), :public)
+    url = @random_url <> "?key=value"
+    {:ok, response} = post(url, Poison.encode!(@random_data), :public)
 
     id = response
     |> get_header("x-request-id")
@@ -26,6 +26,8 @@ defmodule Gateway.LoggerTest do
     |> Map.from_struct
     |> Map.get(:uri)
     assert(uri_to_check === "/" <> @random_url, "Invalid uri has been logged")
+
+    assert result.request.query == %{"key"=>"value"}
 
     body_to_check = result.request
     |> Map.from_struct

@@ -79,7 +79,7 @@ defmodule Gateway.Plugins.Logger do
     %{
       method: conn.method,
       uri: conn.request_path,
-      query: conn.query_string,
+      query: Plug.Conn.Query.decode(conn.query_string),
       headers: modify_headers_list(conn.req_headers),
       body: conn.body_params
     }
