@@ -40,7 +40,7 @@ defmodule Gateway.MonitoringTest do
   defp create_api_endpoint do
     Gateway.Factory.insert(:api, %{
       name: "Montoring Test api",
-      request: Gateway.Factory.build(:request, %{path: "/apis"})
+      request: Gateway.Factory.build(:request, %{host: "www.example.com", path: "/apis"})
     })
   end
 
