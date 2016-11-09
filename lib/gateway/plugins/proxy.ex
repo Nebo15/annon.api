@@ -62,6 +62,7 @@ defmodule Gateway.Plugins.Proxy do
     |> put_host(proxy)
     |> put_port(proxy)
     |> put_path(proxy, conn)
+    |> put_query(proxy, conn)
   end
 
   def add_additional_headers(headers, conn) do
@@ -90,4 +91,7 @@ defmodule Gateway.Plugins.Proxy do
   end
   defp put_path(pr, %{"path" => path}, _conn), do: pr <> path
   defp put_path(pr, %{}, %Plug.Conn{request_path: path}), do: pr <> path
+
+  defp put_query(pr, _, %Plug.Conn{query_string: ""}), do: pr
+  defp put_query(pr, _, %Plug.Conn{query_string: query_string}), do: pr <> "?" <> query_string
 end
