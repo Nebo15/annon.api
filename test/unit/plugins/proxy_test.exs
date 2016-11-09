@@ -28,6 +28,12 @@ defmodule Gateway.Plugins.ProxyTest do
     assert [ip_to_string(conn.remote_ip)] == x_forwarded_for_value
   end
 
+  test "proxying includes query string" do
+    conn = %Plug.Conn{request_path: "/some/path", query_string: "key=value"}
+
+    assert Proxy.make_link(@proxy_settings_full, conn) == "http://localhost:4000/proxy/test?key=value"
+  end
+
   test "proxying path 1" do
     incoming_request = make_conn("/mockbin")
     proxy_params = %{"host" => "localhost", "path" => "/mockbin", "strip_request_path" => false}
