@@ -97,9 +97,4 @@ defmodule Gateway.AcceptanceCase do
       end
     end
   end
-
-  def random_string(length) do
-    data = :crypto.strong_rand_bytes(length)
-    data |> Base.url_encode64 |> binary_part(0, length)
-  end
 end

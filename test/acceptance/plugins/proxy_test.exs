@@ -4,7 +4,7 @@ defmodule Gateway.Acceptance.Plugin.ProxyTest do
 
   @api_url "apis"
 
-  @consumer_id random_string(32)
+  @consumer_id Ecto.UUID.generate()
 
   @consumer %{
     external_id: @consumer_id,

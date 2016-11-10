@@ -2,7 +2,7 @@ defmodule Gateway.Acceptance.Plugin.IdempotencyTest do
   @moduledoc false
   use Gateway.AcceptanceCase
 
-  @idempotency_key random_string(32)
+  @idempotency_key Ecto.UUID.generate()
 
   test "test idempotency POST request" do
 

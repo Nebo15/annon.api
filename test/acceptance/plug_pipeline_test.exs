@@ -2,8 +2,8 @@ defmodule Gateway.Acceptance.PluginPipelineTest do
   @moduledoc false
   use Gateway.AcceptanceCase
 
-  @consumer_id random_string(32)
-  @idempotency_key random_string(32)
+  @consumer_id Ecto.UUID.generate()
+  @idempotency_key Ecto.UUID.generate()
 
   @payload %{"id" => @consumer_id, "name" => "John Doe", "scopes" => ["api_read", "api_create", "api_delete"]}
   @token_secret "pipeline_secret"
