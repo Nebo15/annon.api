@@ -3,12 +3,10 @@ defmodule Gateway.Plugins.JWTTest do
   use Gateway.UnitCase
   import Joken
 
-  @payload %{ "name" => "John Doe" }
+  @payload %{"name" => "John Doe"}
 
   setup do
-    api = Gateway.Factory.insert(:api)
-
-    {:ok, api: api}
+    {:ok, api: Gateway.Factory.insert(:api)}
   end
 
   test "jwt invalid auth", %{api: api} do
@@ -61,7 +59,7 @@ defmodule Gateway.Plugins.JWTTest do
     assert %Ecto.Changeset{valid?: false, errors: [signature: {"can't be blank", _}]} = changeset
   end
 
-  test "apis model don't have plugins'" do
+  test "apis model don't have plugins" do
     api = Gateway.Factory.build(:api)
 
     %Plug.Conn{} = conn = :get
