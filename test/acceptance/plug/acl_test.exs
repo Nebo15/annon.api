@@ -4,13 +4,13 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
   @jwt_secret "secret"
 
   test "ACL for GET and POST method" do
-    request_data = %{host: get_host(:public), path: "/acl", port: get_port(:public), scheme: "http", method: "POST"}
+    request_data = %{host: get_host(:public), path: "/acl", port: get_port(:public), scheme: "http", method: ["POST"]}
     request_data
     |> api_acl_data("acl_create")
     |> http_api_create()
 
     request_data
-    |> Map.put(:method, "GET")
+    |> Map.put(:method, ["GET"])
     |> api_acl_data("acl_read")
     |> http_api_create()
 
@@ -64,7 +64,7 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
       %{name: "jwt", is_enabled: true, settings: %{"signature" => @jwt_secret}},
       %{name: "acl", is_enabled: true, settings: %{"scope" => "acl_read"}}])
     |> Map.put(:request,
-      %{host: get_host(:public), path: "/acl/scopes", port: get_port(:public), scheme: "http", method: "GET"})
+      %{host: get_host(:public), path: "/acl/scopes", port: get_port(:public), scheme: "http", method: ["GET"]})
     |> http_api_create()
 
     Gateway.AutoClustering.do_reload_config()
