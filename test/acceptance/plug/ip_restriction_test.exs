@@ -3,7 +3,7 @@ defmodule Gateway.Acceptance.Plug.IPRestrictionTest do
 
   @request %{
     host: "localhost",
-    method: "GET",
+    method: ["GET"],
     path: "/random_path",
     port: 5000,
     scheme: "http"

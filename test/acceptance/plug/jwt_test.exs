@@ -36,7 +36,7 @@ defmodule Gateway.Acceptance.Plug.JWTTest do
 
     data = get_api_model_data()
     |> Map.put(:request,
-      %{host: get_host(:public), path: "/jwt/test", port: get_port(:public), scheme: "http", method: "POST"})
+      %{host: get_host(:public), path: "/jwt/test", port: get_port(:public), scheme: "http", method: ["POST"]})
     |> Map.put(:plugins, [
       %{name: "jwt", is_enabled: true, settings: %{"signature" => "jwt_test_secret"}},
       %{name: "validator", is_enabled: false, settings: %{"schema" => Poison.encode!(@schema)}}
@@ -73,7 +73,7 @@ defmodule Gateway.Acceptance.Plug.JWTTest do
   test "jwt default plugins settings" do
     get_api_model_data()
     |> Map.put(:request,
-      %{host: get_host(:public), path: "/jwt/default", port: get_port(:public), scheme: "http", method: "GET"})
+      %{host: get_host(:public), path: "/jwt/default", port: get_port(:public), scheme: "http", method: ["GET"]})
     |> Map.put(:plugins, [
       %{name: "jwt", is_enabled: true, settings: %{"signature" => "jwt_default_secret"}},
     ])

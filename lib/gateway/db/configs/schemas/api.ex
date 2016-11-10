@@ -18,7 +18,7 @@ defmodule Gateway.DB.Schemas.API do
       field :host, :string
       field :port, :integer
       field :path, :string
-      field :method, :string
+      field :method, {:array, :string}
     end
 
     has_many :plugins, Gateway.DB.Schemas.Plugin

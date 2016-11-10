@@ -17,7 +17,7 @@ defmodule Gateway.Plugins.APILoaderTest do
     |> conn(request.path, Poison.encode!(%{}))
     |> Map.put(:host, request.host)
     |> Map.put(:port, request.port)
-    |> Map.put(:method, request.method)
+    |> Map.put(:method, request.method |> hd())
     |> Map.put(:scheme, request.scheme)
     |> Gateway.Plugins.APILoader.call(%{})
 
@@ -58,7 +58,7 @@ defmodule Gateway.Plugins.APILoaderTest do
       name: "Montoring Test api",
       strip_request_path: strip_request_path,
       request: %{
-        method: "GET",
+        method: ["GET"],
         scheme: "http",
         host: "www.example.com",
         port: 80,
