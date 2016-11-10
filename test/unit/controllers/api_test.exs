@@ -80,7 +80,7 @@ defmodule Gateway.Controllers.APITest do
         port: 4000,
         path: "/new/path/",
         scheme: "https",
-        method: "POST"
+        method: ["POST"]
       }
     }
 
@@ -100,7 +100,7 @@ defmodule Gateway.Controllers.APITest do
     assert 4000 == resp["request"]["port"]
     assert "/new/path/" == resp["request"]["path"]
     assert "https" == resp["request"]["scheme"]
-    assert "POST" == resp["request"]["method"]
+    assert ["POST"] == resp["request"]["method"]
   end
 
   test "DELETE /apis/:api_id" do
