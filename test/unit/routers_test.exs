@@ -1,6 +1,6 @@
 defmodule Gateway.RoutersTest do
   @moduledoc false
-  use Gateway.UnitCase
+  use Gateway.UnitCase, async: true
   use Plug.Test
 
   describe "default match works" do
