@@ -1,11 +1,10 @@
 defmodule Gateway.Controllers.APITest do
   @moduledoc false
-  use Gateway.ControllerUnitCase,
-    controller: Gateway.Controllers.API
+  use Gateway.UnitCase, async: true
 
   describe "/apis" do
     test "GET empty list" do
-      conn = "/"
+      conn = "/apis"
       |> send_get()
       |> assert_conn_status()
 
@@ -15,7 +14,7 @@ defmodule Gateway.Controllers.APITest do
     test "GET" do
       apis = Gateway.Factory.insert_pair(:api)
 
-      conn = "/"
+      conn = "/apis"
       |> send_get()
       |> assert_conn_status()
 
@@ -26,7 +25,7 @@ defmodule Gateway.Controllers.APITest do
     test "POST" do
       api = Gateway.Factory.build(:api)
 
-      conn = "/"
+      conn = "/apis"
       |> send_post(api)
       |> assert_conn_status(201)
 
@@ -55,7 +54,7 @@ defmodule Gateway.Controllers.APITest do
 
   describe "/apis/:api_id" do
     test "GET 404" do
-      "/0"
+      "/apis/0"
       |> send_get()
       |> assert_conn_status(404)
     end
@@ -63,7 +62,7 @@ defmodule Gateway.Controllers.APITest do
     test "GET" do
       api = Gateway.Factory.insert(:api)
 
-      "/#{api.id}"
+      "/apis/#{api.id}"
       |> send_get()
       |> assert_conn_status()
       |> assert_response_body(api)
@@ -73,7 +72,7 @@ defmodule Gateway.Controllers.APITest do
       api = Gateway.Factory.insert(:api)
       api_update = Gateway.Factory.build(:api)
 
-      conn = "/#{api.id}"
+      conn = "/apis/#{api.id}"
       |> send_put(api_update)
       |> assert_conn_status()
 
@@ -102,11 +101,11 @@ defmodule Gateway.Controllers.APITest do
     test "DELETE" do
       data = Gateway.Factory.insert(:api)
 
-      "/#{data.id}"
+      "/apis/#{data.id}"
       |> send_delete()
       |> assert_conn_status()
 
-      "/#{data.id}"
+      "/apis/#{data.id}"
       |> send_delete()
       |> assert_conn_status(404)
     end

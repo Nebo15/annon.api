@@ -1,6 +1,6 @@
 defmodule Gateway.MonitoringTest do
   @moduledoc false
-  use Gateway.UnitCase
+  use Gateway.UnitCase, async: true
 
   @apis "apis"
 
@@ -32,12 +32,8 @@ defmodule Gateway.MonitoringTest do
 
     Gateway.AutoClustering.do_reload_config()
 
-    :get
-    |> conn("/apis")
-    |> put_req_header("content-type", "application/json")
-    |> Gateway.PublicRouter.call([])
-
-    :timer.sleep(50)
+    "/apis"
+    |> send_public_get()
   end
 
   defp check_statsd(metric_type, metric_name) do

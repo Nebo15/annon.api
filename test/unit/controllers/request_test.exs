@@ -1,7 +1,6 @@
 defmodule Gateway.Controllers.RequestTest do
   @moduledoc false
-  use Gateway.ControllerUnitCase,
-    controller: Gateway.Controllers.Request
+  use Gateway.UnitCase, async: true
 
   @random_url "random_url"
   @random_data %{"data" => "random"}
@@ -21,7 +20,7 @@ defmodule Gateway.Controllers.RequestTest do
 
   describe "/requests" do
     test "GET empty list" do
-      conn = "/"
+      conn = "/requests"
       |> send_get()
       |> assert_conn_status()
 
@@ -34,7 +33,7 @@ defmodule Gateway.Controllers.RequestTest do
     test "GET" do
       create_requests(3)
 
-      conn = "/"
+      conn = "/requests"
       |> send_get()
       |> assert_conn_status()
 
@@ -47,7 +46,7 @@ defmodule Gateway.Controllers.RequestTest do
 
   describe "/requests/:request_id" do
     test "GET 404" do
-      "/not_exists"
+      "/requests/not_exists"
       |> send_get()
       |> assert_conn_status(404)
     end
@@ -57,7 +56,7 @@ defmodule Gateway.Controllers.RequestTest do
       |> get_resp_header("x-request-id")
       |> Enum.at(0) || ""
 
-      conn = "/#{id}"
+      conn = "/requests/#{id}"
       |> send_get()
       |> assert_conn_status()
 
@@ -69,14 +68,14 @@ defmodule Gateway.Controllers.RequestTest do
       |> get_resp_header("x-request-id")
       |> Enum.at(0) || ""
 
-      conn = "/#{id}"
+      conn = "/requests/#{id}"
       |> send_delete()
       |> assert_conn_status()
 
       expected_resp = EView.wrap_body(%{}, conn)
       assert Poison.encode!(expected_resp) == conn.resp_body
 
-      "/#{id}"
+      "/requests/#{id}"
       |> send_get()
       |> assert_conn_status(404)
     end

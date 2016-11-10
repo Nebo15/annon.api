@@ -1,13 +1,12 @@
 defmodule Gateway.Controllers.API.PluginTest do
   @moduledoc false
-  use Gateway.ControllerUnitCase,
-    controller: Gateway.Controllers.API.Plugin
+  use Gateway.UnitCase, async: true
 
   describe "/apis/:api_id/plugins" do
     test "GET empty list" do
       api_model = Gateway.Factory.insert(:api)
 
-      conn = "/#{api_model.id}/plugins"
+      conn = "/apis/#{api_model.id}/plugins"
       |> send_get()
       |> assert_conn_status()
 
@@ -19,7 +18,7 @@ defmodule Gateway.Controllers.API.PluginTest do
       Gateway.Factory.insert(:acl_plugin, api: api_model)
       Gateway.Factory.insert(:jwt_plugin, api: api_model)
 
-      conn = "/#{api_model.id}/plugins"
+      conn = "/apis/#{api_model.id}/plugins"
       |> send_get()
       |> assert_conn_status()
 
@@ -30,7 +29,7 @@ defmodule Gateway.Controllers.API.PluginTest do
       api_model = Gateway.Factory.insert(:api)
       plugin_data = Gateway.Factory.build(:acl_plugin, api: api_model)
 
-      conn = "/#{api_model.id}/plugins"
+      conn = "/apis/#{api_model.id}/plugins"
       |> send_post(plugin_data)
       |> assert_conn_status(201)
 
@@ -46,7 +45,7 @@ defmodule Gateway.Controllers.API.PluginTest do
       api_model = Gateway.Factory.insert(:api)
       Gateway.Factory.insert(:acl_plugin, api: api_model)
 
-      "/#{api_model.id}/plugins/unknown_plugin"
+      "/apis/#{api_model.id}/plugins/unknown_plugin"
       |> send_get()
       |> assert_conn_status(404)
     end
@@ -56,13 +55,13 @@ defmodule Gateway.Controllers.API.PluginTest do
       p1 = Gateway.Factory.insert(:acl_plugin, api: api_model)
       p2 = Gateway.Factory.insert(:jwt_plugin, api: api_model)
 
-      conn = "/#{api_model.id}/plugins/#{p1.name}"
+      conn = "/apis/#{api_model.id}/plugins/#{p1.name}"
       |> send_get()
       |> assert_conn_status()
 
       assert Poison.decode!(conn.resp_body)["data"]["settings"] == p1.settings
 
-      conn = "/#{api_model.id}/plugins/#{p2.name}"
+      conn = "/apis/#{api_model.id}/plugins/#{p2.name}"
       |> send_get()
       |> assert_conn_status()
 
@@ -75,25 +74,25 @@ defmodule Gateway.Controllers.API.PluginTest do
 
       plugin_data = %{name: "validator", settings: %{"schema" => "{}"}}
 
-      conn = "/#{api_model.id}/plugins/#{p1.name}"
+      conn = "/apis/#{api_model.id}/plugins/#{p1.name}"
       |> send_put(plugin_data)
       |> assert_conn_status()
 
       resp = Poison.decode!(conn.resp_body)["data"]
       assert resp["name"] == plugin_data.name
 
-      "/#{api_model.id}/plugins/validator"
+      "/apis/#{api_model.id}/plugins/validator"
       |> send_get()
       |> assert_conn_status()
 
       # Name can be read from uri params
       plugin_data = %{settings: %{"schema" => "{}"}}
-      "/#{api_model.id}/plugins/validator"
+      "/apis/#{api_model.id}/plugins/validator"
       |> send_put(plugin_data)
       |> assert_conn_status()
 
       plugin_data = %{name: "validator", settings: %{"schema" => "{}"}}
-      conn = "/#{api_model.id}/plugins/validator"
+      conn = "/apis/#{api_model.id}/plugins/validator"
       |> send_put(plugin_data)
       |> assert_conn_status()
 
@@ -106,19 +105,19 @@ defmodule Gateway.Controllers.API.PluginTest do
       acl_plugin = Gateway.Factory.insert(:acl_plugin, api: api_model)
       jwt_plugin = Gateway.Factory.insert(:jwt_plugin, api: api_model)
 
-      "/#{api_model.id}/plugins/#{acl_plugin.name}"
+      "/apis/#{api_model.id}/plugins/#{acl_plugin.name}"
       |> send_get()
       |> assert_conn_status()
 
-      "/#{api_model.id}/plugins/#{acl_plugin.name}"
+      "/apis/#{api_model.id}/plugins/#{acl_plugin.name}"
       |> send_delete()
       |> assert_conn_status()
 
-      "/#{api_model.id}/plugins/#{acl_plugin.name}"
+      "/apis/#{api_model.id}/plugins/#{acl_plugin.name}"
       |> send_get()
       |> assert_conn_status(404)
 
-      "/#{api_model.id}/plugins/#{jwt_plugin.name}"
+      "/apis/#{api_model.id}/plugins/#{jwt_plugin.name}"
       |> send_get()
       |> assert_conn_status()
     end

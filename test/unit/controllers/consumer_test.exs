@@ -1,13 +1,12 @@
 defmodule Gateway.Controllers.ConsumerTest do
   @moduledoc false
-  use Gateway.ControllerUnitCase,
-    controller: Gateway.Controllers.Consumer
+  use Gateway.UnitCase, async: true
 
   describe "/consumers" do
     test "GET" do
       consumer_data = Gateway.Factory.insert_pair(:consumer)
 
-      conn = "/"
+      conn = "/consumers"
       |> send_get()
       |> assert_conn_status()
 
@@ -20,7 +19,7 @@ defmodule Gateway.Controllers.ConsumerTest do
       external_id = consumer_data.external_id
       metadata = consumer_data.metadata
 
-      conn = "/"
+      conn = "/consumers"
       |> send_post(consumer_data)
       |> assert_conn_status(201)
 
@@ -43,7 +42,7 @@ defmodule Gateway.Controllers.ConsumerTest do
     test "GET" do
       consumer = Gateway.Factory.insert(:consumer)
 
-      consumer.external_id
+      "/consumers/#{consumer.external_id}"
       |> send_get()
       |> assert_conn_status()
       |> assert_response_body(consumer)
@@ -53,7 +52,7 @@ defmodule Gateway.Controllers.ConsumerTest do
       consumer = Gateway.Factory.insert(:consumer)
       consumer_update = Gateway.Factory.build(:consumer, %{metadata: %{foo: "bar"}})
 
-      conn = consumer.external_id
+      conn = "/consumers/#{consumer.external_id}"
       |> send_put(consumer_update)
       |> assert_conn_status()
 
@@ -70,11 +69,11 @@ defmodule Gateway.Controllers.ConsumerTest do
     test "DELETE" do
       consumer = Gateway.Factory.insert(:consumer)
 
-      consumer.external_id
+      "/consumers/#{consumer.external_id}"
       |> send_delete()
       |> assert_conn_status()
 
-      consumer.external_id
+      "/consumers/#{consumer.external_id}"
       |> send_get()
       |> assert_conn_status(404)
     end

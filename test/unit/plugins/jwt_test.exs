@@ -1,6 +1,6 @@
 defmodule Gateway.Plugins.JWTTest do
   @moduledoc false
-  use Gateway.UnitCase
+  use Gateway.UnitCase, async: true
   import Joken
 
   @payload %{"name" => "John Doe"}

@@ -1,7 +1,6 @@
 defmodule Gateway.Controllers.Consumer.PluginSettingsTest do
   @moduledoc false
-  use Gateway.ControllerUnitCase,
-    controller: Gateway.Controllers.Consumer.PluginSettings
+  use Gateway.UnitCase, async: true
 
   setup do
     consumer = Gateway.Factory.insert(:consumer)
@@ -18,7 +17,7 @@ defmodule Gateway.Controllers.Consumer.PluginSettingsTest do
       Gateway.Factory.insert(:consumer_plugin_settings, consumer: consumer, plugin: plugin1)
       Gateway.Factory.insert(:consumer_plugin_settings, consumer: consumer, plugin: plugin2)
 
-      conn = "/#{consumer.external_id}/plugins"
+      conn = "/consumers/#{consumer.external_id}/plugins"
       |> send_get()
       |> assert_conn_status()
 
@@ -34,7 +33,7 @@ defmodule Gateway.Controllers.Consumer.PluginSettingsTest do
         }
       }
 
-      conn = "/#{consumer.external_id}/plugins"
+      conn = "/consumers/#{consumer.external_id}/plugins"
       |> send_post(overrides)
       |> assert_conn_status(201)
 
@@ -56,7 +55,7 @@ defmodule Gateway.Controllers.Consumer.PluginSettingsTest do
     test "GET /consumers/:external_id/plugins/:name", %{consumer: consumer, plugin: plugin} do
       cust_plugin1 = Gateway.Factory.insert(:consumer_plugin_settings, consumer: consumer, plugin: plugin)
 
-      conn = "/#{consumer.external_id}/plugins/#{plugin.name}"
+      conn = "/consumers/#{consumer.external_id}/plugins/#{plugin.name}"
       |> send_get()
       |> assert_conn_status()
 
@@ -89,7 +88,7 @@ defmodule Gateway.Controllers.Consumer.PluginSettingsTest do
         }
       }
 
-      conn = "/#{consumer.external_id}/plugins/#{plugin.name}"
+      conn = "/consumers/#{consumer.external_id}/plugins/#{plugin.name}"
       |> send_put(overrides)
       |> assert_conn_status()
 
@@ -111,11 +110,11 @@ defmodule Gateway.Controllers.Consumer.PluginSettingsTest do
     test "DELETE", %{consumer: consumer, plugin: plugin} do
       Gateway.Factory.insert(:consumer_plugin_settings, plugin: plugin, consumer: consumer)
 
-      "/#{consumer.external_id}/plugins/#{plugin.name}"
+      "/consumers/#{consumer.external_id}/plugins/#{plugin.name}"
       |> send_delete()
       |> assert_conn_status()
 
-      "/#{consumer.external_id}/plugins/#{plugin.name}"
+      "/consumers/#{consumer.external_id}/plugins/#{plugin.name}"
       |> send_get()
       |> assert_conn_status(404)
     end

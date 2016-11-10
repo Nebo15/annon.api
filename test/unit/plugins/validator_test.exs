@@ -1,6 +1,8 @@
 defmodule Gateway.Plugins.ValidatorTest do
   @moduledoc false
-  use Gateway.UnitCase
+  use Gateway.UnitCase, async: true
+  alias Gateway.DB.Schemas.API, as: APISchema
+  alias Gateway.DB.Schemas.Plugin, as: PluginSchema
 
   test "validator plugin" do
     schema = %{
@@ -17,7 +19,7 @@ defmodule Gateway.Plugins.ValidatorTest do
     }
 
     model = %APISchema{plugins: [
-      %Plugin{is_enabled: true, name: "validator", settings: %{"schema" => Poison.encode!(schema)}}
+      %PluginSchema{is_enabled: true, name: "validator", settings: %{"schema" => Poison.encode!(schema)}}
     ]}
 
     connect = :get
