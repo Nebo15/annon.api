@@ -1,4 +1,4 @@
-defmodule Gateway.Acceptance.Plug.ACLTest do
+defmodule Gateway.Acceptance.Plugin.ACLTest do
   @moduledoc false
   use Gateway.AcceptanceCase
 

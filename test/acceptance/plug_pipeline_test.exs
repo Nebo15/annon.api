@@ -1,4 +1,4 @@
-defmodule Gateway.Acceptance.PlugPipelineTest do
+defmodule Gateway.Acceptance.PluginPipelineTest do
   @moduledoc false
   use Gateway.AcceptanceCase
 

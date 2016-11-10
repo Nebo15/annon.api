@@ -1,4 +1,4 @@
-defmodule Gateway.Acceptance.Plug.IPRestrictionTest do
+defmodule Gateway.Acceptance.Plugin.IPRestrictionTest do
   @moduledoc false
   use Gateway.AcceptanceCase
 

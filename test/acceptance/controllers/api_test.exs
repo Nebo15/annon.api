@@ -1,4 +1,4 @@
-defmodule Gateway.Acceptance.Management.APITest do
+defmodule Gateway.Acceptance.Controllers.APITest do
   @moduledoc false
   use Gateway.AcceptanceCase
 
