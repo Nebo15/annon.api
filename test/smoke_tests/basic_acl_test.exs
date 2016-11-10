@@ -1,4 +1,4 @@
-defmodule Gateway.SmokeTests.BasicProxy do
+defmodule Gateway.SmokeTests.BasicAclTest do
   use Gateway.AcceptanceCase
 
   setup do
