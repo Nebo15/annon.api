@@ -6,12 +6,10 @@ defmodule Gateway.Controllers.ConsumerTest do
     test "GET" do
       consumer_data = Gateway.Factory.insert_pair(:consumer)
 
-      conn = "/consumers"
+      "/consumers"
       |> send_get()
       |> assert_conn_status()
-
-      expected_resp = EView.wrap_body(consumer_data, conn)
-      assert Poison.encode!(expected_resp) == conn.resp_body
+      |> assert_response_body(consumer_data)
     end
 
     test "POST /consumers" do

@@ -12,14 +12,12 @@ defmodule Gateway.Controllers.APITest do
     end
 
     test "GET" do
-      apis = Gateway.Factory.insert_pair(:api)
+      api = Gateway.Factory.insert_pair(:api)
 
-      conn = "/apis"
+      "/apis"
       |> send_get()
       |> assert_conn_status()
-
-      expected_resp = EView.wrap_body(apis, conn)
-      assert Poison.encode!(expected_resp) == conn.resp_body
+      |> assert_response_body(api)
     end
 
     test "POST" do

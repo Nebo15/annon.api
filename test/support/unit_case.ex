@@ -57,23 +57,36 @@ defmodule Gateway.UnitCase do
     |> router.call([])
   end
 
+  def assert_response_body(conn, expected_list) when is_list(expected_list) do
+    conn.resp_body
+    |> assert_body(expected_list, conn)
+  end
+
   def assert_response_body(conn, expected_struct) do
-    resp_body = conn.resp_body
-    |> Poison.decode!()
+    conn.resp_body
+    |> drop_data_type()
+    |> assert_body(expected_struct, conn)
+  end
 
-    resp_data = resp_body
-    |> Map.get("data")
-    |> Map.delete("type")
-
-    resp_body = resp_body
-    |> Map.put("data", resp_data)
-    |> Poison.encode!()
-
+  defp assert_body(resp_body, expected_struct, conn) do
     expected_body = expected_struct
     |> EView.wrap_body(conn)
     |> Poison.encode!
 
     assert expected_body == resp_body
+  end
+
+  defp drop_data_type(binary_json) when is_binary(binary_json) do
+    binary_json = binary_json
+    |> Poison.decode!()
+
+    resp_data = binary_json
+    |> Map.get("data")
+    |> Map.delete("type")
+
+    binary_json
+    |> Map.put("data", resp_data)
+    |> Poison.encode!()
   end
 
   setup tags do
