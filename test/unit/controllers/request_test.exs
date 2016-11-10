@@ -1,71 +1,87 @@
 defmodule Gateway.Controllers.RequestTest do
-  use Gateway.UnitCase
+  use Gateway.ControllerUnitCase,
+    controller: Gateway.Controllers.Request
 
   @random_url "random_url"
   @random_data %{"data" => "random"}
 
-  defp random_post do
+  defp create_request do
     :post
-      |> conn(@random_url, Poison.encode!(@random_data))
-      |> put_req_header("content-type", "application/json")
-      |> Gateway.PublicRouter.call([])
+    |> conn(@random_url, Poison.encode!(@random_data))
+    |> put_req_header("content-type", "application/json")
+    |> Gateway.PublicRouter.call([])
   end
 
-  defp repeat_random_post(1) do
-    random_post()
-  end
-  defp repeat_random_post(count) do
-    random_post()
-    repeat_random_post(count - 1)
+  defp create_requests(1), do: create_request()
+  defp create_requests(count) do
+    create_request()
+    create_requests(count - 1)
   end
 
-  test "GET /requests/" do
-    repeat_random_post(3)
+  describe "/requests" do
+    test "GET empty list" do
+      conn = "/"
+      |> send_get()
+      |> assert_conn_status()
 
-    conn = :get
-      |> conn("/requests?limit=3")
-      |> put_req_header("content-type", "application/json")
-      |> Gateway.PrivateRouter.call([])
+      assert 0 == conn.resp_body
+      |> Poison.decode!()
+      |> Map.fetch!("data")
+      |> length()
+    end
 
-    assert 200 == conn.status
+    test "GET" do
+      create_requests(3)
 
-    assert 3 == conn.resp_body
-    |> Poison.decode!()
-    |> Map.fetch!("data")
-    |> length()
+      conn = "/"
+      |> send_get()
+      |> assert_conn_status()
+
+      assert 3 == conn.resp_body
+      |> Poison.decode!()
+      |> Map.fetch!("data")
+      |> length()
+    end
   end
 
-  test "GET /requests/:request_id" do
-    id = random_post()
-    |> get_resp_header("x-request-id")
-    |> Enum.at(0) || ""
+  describe "/requests/:request_id" do
+    test "GET 404" do
+      "/not_exists"
+      |> send_get()
+      |> assert_conn_status(404)
+    end
 
-    conn = :get
-      |> conn("/requests/" <> id)
-      |> put_req_header("content-type", "application/json")
-      |> Gateway.PrivateRouter.call([])
+    test "GET" do
+      id = create_request()
+      |> get_resp_header("x-request-id")
+      |> Enum.at(0) || ""
 
-    assert 200 == conn.status
-    body = Poison.decode!(conn.resp_body)
-    assert id == body["data"]["id"]
-  end
+      path = "/" <> id
 
-  test "DELETE /requests/:request_id" do
-    id = random_post()
-    |> get_resp_header("x-request-id")
-    |> Enum.at(0) || ""
+      conn = path
+      |> send_get()
+      |> assert_conn_status()
 
-    conn = :delete
-      |> conn("/requests/" <> id)
-      |> put_req_header("content-type", "application/json")
-      |> Gateway.PrivateRouter.call([])
+      assert %{"data" => %{"id" => ^id}} = Poison.decode!(conn.resp_body)
+    end
 
-    expected_resp = %{
-      meta: EView.Renders.Meta.render("object", conn),
-      data: %{}
-    }
+    test "DELETE" do
+      id = create_request()
+      |> get_resp_header("x-request-id")
+      |> Enum.at(0) || ""
 
-    assert 200 == conn.status
-    assert Poison.encode!(expected_resp) == conn.resp_body
+      path = "/" <> id
+
+      conn = path
+      |> send_delete()
+      |> assert_conn_status()
+
+      expected_resp = EView.wrap_body(%{}, conn)
+      assert Poison.encode!(expected_resp) == conn.resp_body
+
+      path
+      |> send_get()
+      |> assert_conn_status(404)
+    end
   end
 end

@@ -48,7 +48,7 @@ defmodule Gateway.ControllerUnitCase do
       defp prepare_conn(conn) do
         conn
         |> put_req_header("content-type", "application/json")
-        |> Gateway.Controllers.API.call([])
+        |> @controller.call([])
       end
     end
   end
