@@ -10,7 +10,8 @@
     "has_many",
     "embeds_one",
     "embeds_many",
-    "schema"
+    "schema",
+    "send"
   ],
   "treat_no_relevant_lines_as_covered": true
 }
