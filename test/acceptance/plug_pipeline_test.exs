@@ -144,14 +144,14 @@ defmodule Gateway.Acceptance.PlugPipelineTest do
     get_api_model_data()
     |> Map.put(:request,
       %{host: get_host(:public), path: path, port: get_port(:public), scheme: "http", method: [method]})
-    |> Map.put(:plugins, get_plugins())
+    |> Map.put(:plugins, get_plugins([method]))
   end
 
-  def get_plugins do
+  def get_plugins(methods) do
     [
       %{name: "acl", is_enabled: true, settings: %{
         "rules" => [
-          %{"methods" => ["GET"], "path" => "*", "scopes" => ["api_create"]}
+          %{"methods" => methods, "path" => "*", "scopes" => ["api_create"]}
         ]
       }},
       %{name: "jwt", is_enabled: true, settings: %{"signature" => @token_secret}},
