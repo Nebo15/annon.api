@@ -56,7 +56,14 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
   end
 
   test "proxy without sheme and path" do
-    proxy_plugin = %{ name: "proxy", is_enabled: true, settings: %{host: get_host(:management), port: get_port(:management)}}
+    proxy_plugin = %{
+      name: "proxy",
+      is_enabled: true,
+      settings: %{
+        host: get_host(:management),
+        port: get_port(:management)
+      }
+    }
 
     "/apis"
     |> get_api_proxy_data()
