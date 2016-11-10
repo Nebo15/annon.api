@@ -79,7 +79,7 @@ defmodule Gateway.Factory do
 
   def consumer_factory do
     %Gateway.DB.Schemas.Consumer{
-      external_id: "18f2de7e-a5c3-11e6-80f5-76304dec7eb7",
+      external_id: Ecto.UUID.generate(),
       metadata: %{}
     }
   end

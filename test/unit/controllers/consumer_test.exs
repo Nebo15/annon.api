@@ -1,102 +1,83 @@
 defmodule Gateway.Controllers.ConsumerTest do
-  use Gateway.UnitCase
-  alias Gateway.Test.Helper
+  use Gateway.ControllerUnitCase,
+    controller: Gateway.Controllers.Consumer
 
-  test "GET /consumers" do
-    consumer1 = get_consumer_data() |> Gateway.DB.Schemas.Consumer.create()
-    consumer2 = get_consumer_data() |> Gateway.DB.Schemas.Consumer.create()
+  describe "/consumers" do
+    test "GET" do
+      consumer_data = Gateway.Factory.insert_pair(:consumer)
 
-    data =
-      [
-        consumer1,
-        consumer2
-      ]
-      |> Enum.map(fn({:ok, e}) -> e end)
+      conn = "/"
+      |> send_get()
+      |> assert_conn_status()
 
-    conn = :get
-      |> conn("/consumers")
-      |> put_req_header("content-type", "application/json")
-      |> Gateway.PrivateRouter.call([])
+      expected_resp = EView.wrap_body(consumer_data, conn)
+      assert Poison.encode!(expected_resp) == conn.resp_body
+    end
 
-    expected_resp = EView.wrap_body(data, conn)
+    test "POST /consumers" do
+      consumer_data = Gateway.Factory.build(:consumer)
+      external_id = consumer_data.external_id
+      metadata = consumer_data.metadata
 
-    assert 200 == conn.status
-    assert Poison.encode!(expected_resp) == conn.resp_body
+      conn = "/"
+      |> send_post(consumer_data)
+      |> assert_conn_status(201)
+
+      assert %{
+        "external_id" => ^external_id,
+        "metadata" => ^metadata,
+        "updated_at" => _,
+        "inserted_at" => _
+      } = Poison.decode!(conn.resp_body)["data"]
+    end
   end
 
-  test "GET /consumers/:external_id" do
-    {:ok, data} =
-      get_consumer_data()
-      |> Gateway.DB.Schemas.Consumer.create()
+  describe "/consumers/:external_id" do
+    test "GET 404" do
+      "not_exist"
+      |> send_get()
+      |> assert_conn_status(404)
+    end
 
-    conn = :get
-      |> conn("consumers/#{data.external_id}")
-      |> put_req_header("content-type", "application/json")
-      |> Gateway.PrivateRouter.call([])
+    test "GET" do
+      consumer = Gateway.Factory.insert(:consumer)
 
-    expected_resp = %{
-      meta: EView.Renders.Meta.render("object", conn),
-      data: data
-    }
+      conn = "#{consumer.external_id}"
+      |> send_get()
+      |> assert_conn_status()
 
-    assert 200 == conn.status
-    assert Poison.encode!(expected_resp) == Gateway.Test.Helper.remove_type(conn.resp_body)
-  end
+      expected_resp = EView.wrap_body(consumer, conn)
+      assert Poison.encode!(expected_resp) == Gateway.Test.Helper.remove_type(conn.resp_body)
+    end
 
-  test "POST /consumers" do
-    contents = get_consumer_data()
+    test "PUT" do
+      consumer = Gateway.Factory.insert(:consumer)
+      consumer_update = Gateway.Factory.build(:consumer, %{metadata: %{foo: "bar"}})
 
-    conn = :post
-      |> conn("/consumers", Poison.encode!(contents))
-      |> put_req_header("content-type", "application/json")
-      |> Gateway.PrivateRouter.call([])
+      conn = "#{consumer.external_id}"
+      |> send_put(consumer_update)
+      |> assert_conn_status()
 
-    assert conn.status == 201
-    resp = Poison.decode!(conn.resp_body)["data"]
+      assert %{
+        "inserted_at" => _,
+        "updated_at" => _,
+        "external_id" => external_id,
+        "metadata" => %{"foo" => "bar"}
+      } = Poison.decode!(conn.resp_body)["data"]
 
-    assert resp["external_id"] == contents[:external_id]
-    assert resp["updated_at"]
-    assert resp["inserted_at"]
-    assert resp["metadata"] == contents[:metadata]
-  end
+      assert external_id == consumer_update.external_id
+    end
 
-  test "PUT /consumers/:external_id" do
-    {:ok, data} =
-      get_consumer_data()
-      |> Gateway.DB.Schemas.Consumer.create()
+    test "DELETE" do
+      consumer = Gateway.Factory.insert(:consumer)
 
-    new_contents = %{
-      external_id: Helper.random_string(32),
-      metadata: %{
-        existing_key: "new_value",
-        new_key: "another_value"
-      }
-    }
+      "#{consumer.external_id}"
+      |> send_delete()
+      |> assert_conn_status()
 
-    conn = :put
-      |> conn("/consumers/#{data.external_id}", Poison.encode!(new_contents))
-      |> put_req_header("content-type", "application/json")
-      |> Gateway.PrivateRouter.call([])
-
-    assert conn.status == 200
-    resp = Poison.decode!(conn.resp_body)["data"]
-
-    assert resp["updated_at"]
-    assert new_contents[:external_id] == resp["external_id"]
-    assert "another_value" == resp["metadata"]["new_key"]
-    assert "new_value" == resp["metadata"]["existing_key"]
-  end
-
-  test "DELETE /consumers/:external_id" do
-    {:ok, data} =
-      get_consumer_data()
-      |> Gateway.DB.Schemas.Consumer.create()
-
-    conn = :delete
-      |> conn("/consumers/#{data.external_id}")
-      |> put_req_header("content-type", "application/json")
-      |> Gateway.PrivateRouter.call([])
-
-    assert 200 == conn.status
+      "#{consumer.external_id}"
+      |> send_get()
+      |> assert_conn_status(404)
+    end
   end
 end
