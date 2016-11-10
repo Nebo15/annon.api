@@ -64,7 +64,7 @@ defmodule Gateway.Plugins.Logger do
   defp modify_headers_list([]), do: []
   defp modify_headers_list([{key, value}|t]), do: [%{key => value}] ++ modify_headers_list(t)
 
-  defp get_api_data(%Plug.Conn{private: %{api_config: nil}}), do: %{}
+  defp get_api_data(%Plug.Conn{private: %{api_config: nil}}), do: nil
   defp get_api_data(%Plug.Conn{private: %{api_config: %APISchema{id: id, name: name, request: request}}}) do
     %{
       id: id,
