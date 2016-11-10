@@ -18,7 +18,11 @@ defmodule Gateway.Fixtures do
   end
 
   def get_plugin_data(api_id, "acl") do
-    %{api_id: api_id, name: "acl", is_enabled: true, settings: %{"scope" => "read"}}
+    %{api_id: api_id, name: "acl", is_enabled: true, settings: %{
+      "rules" => [
+        %{"methods" => ["GET"], "path" => "*", "scopes" => ["some_resource:read"]}
+      ]
+    }}
   end
 
   def get_consumer_data do
