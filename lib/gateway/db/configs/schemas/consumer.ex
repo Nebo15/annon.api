@@ -17,12 +17,6 @@ defmodule Gateway.DB.Schemas.Consumer do
     timestamps()
   end
 
-  def get_one_by(selector) do
-    Repo.one from ConsumerSchema,
-      where: ^selector,
-      limit: 1
-  end
-
   def changeset(consumer, params \\ %{}) do
     consumer
     |> cast(params, @required_consumer_fields ++ [:metadata])
