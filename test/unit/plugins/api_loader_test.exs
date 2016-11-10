@@ -58,7 +58,7 @@ defmodule Gateway.Plugins.APILoaderTest do
       name: "Montoring Test api",
       strip_request_path: strip_request_path,
       request: %{
-        method: "GET",
+        method: ["GET"],
         scheme: "http",
         host: "www.example.com",
         port: 80,
