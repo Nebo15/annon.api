@@ -1,5 +1,6 @@
 defmodule Gateway.Controllers.APITest do
-  use Gateway.UnitCase
+  use Gateway.ControllerUnitCase,
+    controller: Gateway.Controllers.API
 
   describe "/apis" do
     test "GET empty list" do
@@ -34,7 +35,7 @@ defmodule Gateway.Controllers.APITest do
       }
 
       conn = "/"
-      |> send_data(api)
+      |> send_post(api)
       |> assert_conn_status(201)
 
       assert %{
@@ -87,7 +88,7 @@ defmodule Gateway.Controllers.APITest do
       }
 
       conn = "/#{api.id}"
-      |> send_data(api_description, :put)
+      |> send_put(api_description)
       |> assert_conn_status()
 
       assert %{
@@ -116,34 +117,5 @@ defmodule Gateway.Controllers.APITest do
       |> send_delete()
       |> assert_conn_status(404)
     end
-  end
-
-  def assert_conn_status(conn, code \\ 200) do
-    assert code == conn.status
-    conn
-  end
-
-  def send_get(path) do
-    :get
-    |> conn(path)
-    |> prepare_conn
-  end
-
-  def send_delete(path) do
-    :delete
-    |> conn(path)
-    |> prepare_conn
-  end
-
-  def send_data(path, data, method \\ :post) do
-    method
-    |> conn(path, Poison.encode!(data))
-    |> prepare_conn
-  end
-
-  defp prepare_conn(conn) do
-    conn
-    |> put_req_header("content-type", "application/json")
-    |> Gateway.Controllers.API.call([])
   end
 end
