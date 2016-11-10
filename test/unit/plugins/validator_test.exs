@@ -2,7 +2,7 @@ defmodule Gateway.Plugins.ValidatorTest do
   @moduledoc false
   use Gateway.UnitCase
 
-  test "validator correct" do
+  test "validator plugin" do
     schema = %{
       "type" => "object",
       "properties" => %{
