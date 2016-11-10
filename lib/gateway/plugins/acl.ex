@@ -32,11 +32,6 @@ defmodule Gateway.Plugins.ACL do
   defp execute(_plugin, _conn), do: {:error, :no_scopes_is_set}
 
   defp validate_scopes(server_scopes, client_scopes, conn) when is_list(client_scopes) do
-    IO.puts "-------------"
-    IO.puts "server: #{inspect server_scopes}"
-    IO.puts "client: #{inspect client_scopes}"
-    IO.inspect conn
-    IO.puts "-------------"
     matching_fun = fn server_scope ->
       method_matches? = conn.method in server_scope["methods"]
       path_matches? = server_scope["path"] == "*" || String.starts_with?(conn.request_path, server_scope["path"])
