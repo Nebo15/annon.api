@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.3">
-    <title>API Reference – gateway v0.1.51</title>
+    <title>API Reference – gateway v0.1.52</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -26,7 +26,7 @@
         gateway
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.1.51
+        v0.1.52
       </h2>
     </div>
     
@@ -57,7 +57,7 @@
     <div id="content" class="content-inner">
 
   <h1>
-    <small class="visible-xs">gateway v0.1.51</small>
+    <small class="visible-xs">gateway v0.1.52</small>
     API Reference
   </h1>
 
@@ -77,20 +77,6 @@ It’s useful for tests</p>
   <div class="summary-signature"><a href="Gateway.html">Gateway</a></div>
   
     <div class="summary-synopsis"><p>This is an entry point of Annons application</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Gateway.API.ModelCase.html">Gateway.API.ModelCase</a></div>
-  
-    <div class="summary-synopsis"><p>This module defines the test case to be used by
-model tests.
-You may define functions here to be used as helpers in
-your model tests. See <a href="#errors_on/2"><code class="inline">errors_on/2</code></a>’s definition as reference.
-Finally, if the test case interacts with the database,
-it cannot be async. For this reason, every test runs
-inside a transaction which is reset at the beginning
-of the test unless the test case is marked as async</p>
 </div>
   
 </div>
@@ -127,14 +113,6 @@ based on different cluster discovery strategies</p>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="Gateway.Cluster.html">Gateway.Cluster</a></div>
-  
-    <div class="summary-synopsis"><p>Holds a single public function spawn/0, that spawns a cluster
-of two nodes: ‘node1@127.0.0.1’, ‘node2@127.0.0.1’</p>
-</div>
-  
-</div>
-<div class="summary-row">
   <div class="summary-signature"><a href="Gateway.ConfigReloader.html">Gateway.ConfigReloader</a></div>
   
     <div class="summary-synopsis"><p>This plugin
@@ -151,28 +129,28 @@ whenever there was change triggered by a management API</p>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="Gateway.Controllers.API.Plugins.html">Gateway.Controllers.API.Plugins</a></div>
+  <div class="summary-signature"><a href="Gateway.Controllers.API.Plugin.html">Gateway.Controllers.API.Plugin</a></div>
   
     <div class="summary-synopsis"><p>REST interface that allows to manage Plugins and their settings</p>
 </div>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="Gateway.Controllers.Consumers.html">Gateway.Controllers.Consumers</a></div>
+  <div class="summary-signature"><a href="Gateway.Controllers.Consumer.html">Gateway.Controllers.Consumer</a></div>
   
     <div class="summary-synopsis"><p>REST interface that allows to manage Consumers and their settings overrides</p>
 </div>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="Gateway.Controllers.Consumers.PluginSettings.html">Gateway.Controllers.Consumers.PluginSettings</a></div>
+  <div class="summary-signature"><a href="Gateway.Controllers.Consumer.PluginSettings.html">Gateway.Controllers.Consumer.PluginSettings</a></div>
   
     <div class="summary-synopsis"><p>REST interface that allows to manage overrides for Consumer plugin settings</p>
 </div>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="Gateway.Controllers.Requests.html">Gateway.Controllers.Requests</a></div>
+  <div class="summary-signature"><a href="Gateway.Controllers.Request.html">Gateway.Controllers.Request</a></div>
   
     <div class="summary-synopsis"><p>REST interface that allows to fetch and delete stored requests</p>
 </div>
@@ -390,13 +368,6 @@ set validation rules for a path relative to an API</p>
   <div class="summary-signature"><a href="Gateway.PublicRouter.html">Gateway.PublicRouter</a></div>
   
     <div class="summary-synopsis"><p>Router for a Annons public API</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Gateway.Test.Helper.html">Gateway.Test.Helper</a></div>
-  
-    <div class="summary-synopsis"><p>This module provides helper functions to be used in tests</p>
 </div>
   
 </div>

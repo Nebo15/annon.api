@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.3">
-    <title>Gateway.UnitCase – gateway v0.1.51</title>
+    <title>Gateway.UnitCase – gateway v0.1.52</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -26,7 +26,7 @@
         gateway
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.1.51
+        v0.1.52
       </h2>
     </div>
     
@@ -58,7 +58,7 @@
 
 
       <h1>
-        <small class="visible-xs">gateway v0.1.51</small>
+        <small class="visible-xs">gateway v0.1.52</small>
         Gateway.UnitCase
         
         
@@ -88,6 +88,12 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
+    <a href="#assert_conn_status/2">assert_conn_status(conn, code \\ 200)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#assert_halt/1">assert_halt(plug)</a>
   </div>
   
@@ -95,6 +101,48 @@
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#assert_not_halt/1">assert_not_halt(plug)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#assert_response_body/2">assert_response_body(conn, expected_list)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#assert_response_body/3">assert_response_body(conn, expected_struct, dropped_keys \\ [&quot;type&quot;])</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#send_delete/1">send_delete(path)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#send_get/1">send_get(path)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#send_post/2">send_post(path, data)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#send_public_get/1">send_public_get(path)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#send_put/2">send_put(path, data)</a>
   </div>
   
 </div>
@@ -119,7 +167,24 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="assert_halt/1">
+          <div class="detail" id="assert_conn_status/2">
+  
+    <span id="assert_conn_status/1" />
+  
+  <div class="detail-header">
+    <a href="#assert_conn_status/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">assert_conn_status(conn, code \\ 200)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="assert_halt/1">
   
   <div class="detail-header">
     <a href="#assert_halt/1" class="detail-link" title="Link to this function">
@@ -141,6 +206,113 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">assert_not_halt(plug)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="assert_response_body/2">
+  
+  <div class="detail-header">
+    <a href="#assert_response_body/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">assert_response_body(conn, expected_list)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="assert_response_body/3">
+  
+    <span id="assert_response_body/2" />
+  
+  <div class="detail-header">
+    <a href="#assert_response_body/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">assert_response_body(conn, expected_struct, dropped_keys \\ [&quot;type&quot;])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="send_delete/1">
+  
+  <div class="detail-header">
+    <a href="#send_delete/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">send_delete(path)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="send_get/1">
+  
+  <div class="detail-header">
+    <a href="#send_get/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">send_get(path)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="send_post/2">
+  
+  <div class="detail-header">
+    <a href="#send_post/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">send_post(path, data)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="send_public_get/1">
+  
+  <div class="detail-header">
+    <a href="#send_public_get/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">send_public_get(path)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="send_put/2">
+  
+  <div class="detail-header">
+    <a href="#send_put/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">send_put(path, data)</span>
     
     
     

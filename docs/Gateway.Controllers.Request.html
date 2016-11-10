@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.3">
-    <title>Gateway.API.ModelCase – gateway v0.1.51</title>
+    <title>Gateway.Controllers.Request – gateway v0.1.52</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -26,7 +26,7 @@
         gateway
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.1.51
+        v0.1.52
       </h2>
     </div>
     
@@ -58,22 +58,19 @@
 
 
       <h1>
-        <small class="visible-xs">gateway v0.1.51</small>
-        Gateway.API.ModelCase
+        <small class="visible-xs">gateway v0.1.52</small>
+        Gateway.Controllers.Request
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>This module defines the test case to be used by
-model tests.
-You may define functions here to be used as helpers in
-your model tests. See <a href="#errors_on/2"><code class="inline">errors_on/2</code></a>’s definition as reference.
-Finally, if the test case interacts with the database,
-it cannot be async. For this reason, every test runs
-inside a transaction which is reset at the beginning
-of the test unless the test case is marked as async.</p>
+          <p>REST interface that allows to fetch and delete stored requests.</p>
+<p>By-default, Annon will store all request and response structure in a persistent storage,
+and it’s completely up to you how do you manage data retention in it.</p>
+<p>This data is used by Idempotency plug and by dashboard that shows near-realtime metrics on Annons perfomance.</p>
+<p>You can find full description in <a href="http://docs.annon.apiary.io/#reference/requests">REST API documentation</a>.</p>
 
         </section>
       
@@ -95,17 +92,19 @@ of the test unless the test case is marked as async.</p>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#errors_on/2">errors_on(struct, data)</a>
+    <a href="#call/2">call(conn, opts)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Helper for returning list of errors in a struct when given certain data.</p>
-<h2>Examples</h2>
-<p>Given a User schema that lists <code class="inline">:name</code> as a required field and validates
-<code class="inline">:password</code> to be safe, it would return:</p>
-<pre><code class="iex elixir">iex&gt; errors_on(%User{}, %{password: &quot;password&quot;})
-[password: &quot;is unsafe&quot;, name: &quot;is blank&quot;]</code></pre>
-<p>You could then write your assertion like:</p>
-<pre><code class="elixir">assert {:password, &quot;is unsafe&quot;} in errors_on(%User{}, %{password: &quot;password&quot;})</code></pre>
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/plug/1.2.2/Plug.html#c:call/2"><code class="inline">Plug.call/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#init/1">init(opts)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/plug/1.2.2/Plug.html#c:init/1"><code class="inline">Plug.init/1</code></a></p>
 </div>
   
 </div>
@@ -130,30 +129,35 @@ of the test unless the test case is marked as async.</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="errors_on/2">
+          <div class="detail" id="call/2">
   
   <div class="detail-header">
-    <a href="#errors_on/2" class="detail-link" title="Link to this function">
+    <a href="#call/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">errors_on(struct, data)</span>
+    <span class="signature">call(conn, opts)</span>
     
     
     
   </div>
   <section class="docstring">
-    <p>Helper for returning list of errors in a struct when given certain data.</p>
-<h2 id="errors_on/2-examples" class="section-heading">
-  <a href="#errors_on/2-examples" class="hover-link"><i class="icon-link"></i></a>
-  Examples
-</h2>
+    <p>Callback implementation for <a href="https://hexdocs.pm/plug/1.2.2/Plug.html#c:call/2"><code class="inline">Plug.call/2</code></a>.</p>
 
-<p>Given a User schema that lists <code class="inline">:name</code> as a required field and validates
-<code class="inline">:password</code> to be safe, it would return:</p>
-<pre><code class="iex elixir">iex&gt; errors_on(%User{}, %{password: &quot;password&quot;})
-[password: &quot;is unsafe&quot;, name: &quot;is blank&quot;]</code></pre>
-<p>You could then write your assertion like:</p>
-<pre><code class="elixir">assert {:password, &quot;is unsafe&quot;} in errors_on(%User{}, %{password: &quot;password&quot;})</code></pre>
+  </section>
+</div>
+<div class="detail" id="init/1">
+  
+  <div class="detail-header">
+    <a href="#init/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">init(opts)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/plug/1.2.2/Plug.html#c:init/1"><code class="inline">Plug.init/1</code></a>.</p>
 
   </section>
 </div>

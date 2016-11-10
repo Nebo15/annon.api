@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.3">
-    <title>Gateway.Cluster – gateway v0.1.51</title>
+    <title>Gateway.Controllers.Consumer – gateway v0.1.52</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -26,7 +26,7 @@
         gateway
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.1.51
+        v0.1.52
       </h2>
     </div>
     
@@ -58,16 +58,19 @@
 
 
       <h1>
-        <small class="visible-xs">gateway v0.1.51</small>
-        Gateway.Cluster
+        <small class="visible-xs">gateway v0.1.52</small>
+        Gateway.Controllers.Consumer
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>Holds a single public function spawn/0, that spawns a cluster
-of two nodes: ‘node1@127.0.0.1’, ‘node2@127.0.0.1’</p>
+          <p>REST interface that allows to manage Consumers and their settings overrides.</p>
+<p>Consumer is a authorization entity that can be accessed any unique external it.
+It stores scopes and metadata. Scopes can be used by authorization plugins.</p>
+<p>By overriding plugin settings for a consumer you can define personal rules for processing hes requests.</p>
+<p>You can find full description in <a href="http://docs.annon.apiary.io/#reference/consumers">REST API documentation</a>.</p>
 
         </section>
       
@@ -89,8 +92,20 @@ of two nodes: ‘node1@127.0.0.1’, ‘node2@127.0.0.1’</p>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#spawn/0">spawn()</a>
+    <a href="#call/2">call(conn, opts)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/plug/1.2.2/Plug.html#c:call/2"><code class="inline">Plug.call/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#init/1">init(opts)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/plug/1.2.2/Plug.html#c:init/1"><code class="inline">Plug.init/1</code></a></p>
+</div>
   
 </div>
 
@@ -114,19 +129,36 @@ of two nodes: ‘node1@127.0.0.1’, ‘node2@127.0.0.1’</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="spawn/0">
+          <div class="detail" id="call/2">
   
   <div class="detail-header">
-    <a href="#spawn/0" class="detail-link" title="Link to this function">
+    <a href="#call/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">spawn()</span>
+    <span class="signature">call(conn, opts)</span>
     
     
     
   </div>
   <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/plug/1.2.2/Plug.html#c:call/2"><code class="inline">Plug.call/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="init/1">
+  
+  <div class="detail-header">
+    <a href="#init/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">init(opts)</span>
     
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/plug/1.2.2/Plug.html#c:init/1"><code class="inline">Plug.init/1</code></a>.</p>
+
   </section>
 </div>
 
