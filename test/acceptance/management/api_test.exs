@@ -1,4 +1,4 @@
-defmodule Gateway.Acceptance.Private.APITest do
+defmodule Gateway.Acceptance.Management.APITest do
   @moduledoc false
   use Gateway.AcceptanceCase
 
@@ -11,11 +11,11 @@ defmodule Gateway.Acceptance.Private.APITest do
     |> get_in(["data", "id"])
 
     "apis/#{id}"
-    |> put(~s({"name": "updated-name"}), :private)
+    |> put(~s({"name": "updated-name"}), :management)
     |> assert_status(200)
 
     %HTTPoison.Response{body: body} = "apis/#{id}"
-    |> get(:private)
+    |> get(:management)
     |> assert_status(200)
 
     assert "updated-name" == body
@@ -25,7 +25,7 @@ defmodule Gateway.Acceptance.Private.APITest do
 
   test "update non-existent model API" do
     "apis/1000"
-    |> put(~s({"name": "new"}), :private)
+    |> put(~s({"name": "new"}), :management)
     |> assert_status(404)
   end
 
@@ -38,17 +38,17 @@ defmodule Gateway.Acceptance.Private.APITest do
     |> get_in(["data", "id"])
 
     "apis/#{id}"
-    |> delete(:private)
+    |> delete(:management)
     |> assert_status(200)
 
     "apis/#{id}"
-    |> get(:private)
+    |> get(:management)
     |> assert_status(404)
   end
 
   test "delete non-existent model API" do
     "apis/1000"
-    |> delete(:private)
+    |> delete(:management)
     |> assert_status(404)
   end
 end

@@ -58,12 +58,12 @@ defmodule Gateway.Cluster do
         :'node1@127.0.0.1' ->
           [
             {:public_http, [port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 6000}]},
-            {:private_http, [port: {:system, :integer, "GATEWAY_PRIVATE_PORT", 6001}]}
+            {:management_http, [port: {:system, :integer, "GATEWAY_MANAGEMENT_PORT", 6001}]}
           ]
         :'node2@127.0.0.1' ->
           [
             {:public_http, [port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 6002}]},
-            {:private_http, [port: {:system, :integer, "GATEWAY_PRIVATE_PORT", 6003}]}
+            {:management_http, [port: {:system, :integer, "GATEWAY_MANAGEMENT_PORT", 6003}]}
           ]
       end
 

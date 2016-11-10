@@ -1,4 +1,4 @@
-defmodule Gateway.PrivateRouter do
+defmodule Gateway.ManagementRouter do
   @moduledoc """
   Router for a [Annons Management API](http://docs.annon.apiary.io/#reference/apis).
   """

@@ -51,7 +51,7 @@ defmodule Gateway.UnitCase do
     |> prepare_conn
   end
 
-  defp prepare_conn(conn, router \\ Gateway.PrivateRouter) do
+  defp prepare_conn(conn, router \\ Gateway.ManagementRouter) do
     conn
     |> put_req_header("content-type", "application/json")
     |> router.call([])

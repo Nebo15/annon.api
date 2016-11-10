@@ -70,6 +70,6 @@ defmodule Gateway.ClusterConfigReloaderTest do
   end
 
   def url do
-    "http://#{get_host(:private)}:#{get_port(:private)}"
+    "http://#{get_host(:management)}:#{get_port(:management)}"
   end
 end

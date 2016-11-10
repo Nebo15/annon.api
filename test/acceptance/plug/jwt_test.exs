@@ -15,8 +15,8 @@ defmodule Gateway.Acceptance.Plug.JWTTest do
 
   @consumer_schema %{"type" => "object",
                      "properties" => %{
-                       "foo" => %{ "type" => "string"},
-                       "bar" => %{ "type" => "number"}
+                       "foo" => %{"type" => "string"},
+                       "bar" => %{"type" => "number"}
                      },
                      "required" => ["foo"]
                    }
@@ -43,16 +43,16 @@ defmodule Gateway.Acceptance.Plug.JWTTest do
     ])
 
     @api_url
-    |> post(Poison.encode!(data), :private)
+    |> post(Poison.encode!(data), :management)
     |> assert_status(201)
 
     @consumer_url
-    |> post(Poison.encode!(@consumer), :private)
+    |> post(Poison.encode!(@consumer), :management)
     |> assert_status(201)
 
     url = @consumer_url <> "/#{@consumer_id}/plugins"
     url
-    |> post(Poison.encode!(@consumer_plugin), :private)
+    |> post(Poison.encode!(@consumer_plugin), :management)
     |> assert_status(201)
 
     token = jwt_token(@payload, "jwt_test_secret")
