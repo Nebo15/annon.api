@@ -43,7 +43,7 @@ defmodule Gateway.Controllers.ConsumerTest do
     test "GET" do
       consumer = Gateway.Factory.insert(:consumer)
 
-      conn = "#{consumer.external_id}"
+      conn = consumer.external_id
       |> send_get()
       |> assert_conn_status()
 
@@ -55,7 +55,7 @@ defmodule Gateway.Controllers.ConsumerTest do
       consumer = Gateway.Factory.insert(:consumer)
       consumer_update = Gateway.Factory.build(:consumer, %{metadata: %{foo: "bar"}})
 
-      conn = "#{consumer.external_id}"
+      conn = consumer.external_id
       |> send_put(consumer_update)
       |> assert_conn_status()
 
@@ -72,11 +72,11 @@ defmodule Gateway.Controllers.ConsumerTest do
     test "DELETE" do
       consumer = Gateway.Factory.insert(:consumer)
 
-      "#{consumer.external_id}"
+      consumer.external_id
       |> send_delete()
       |> assert_conn_status()
 
-      "#{consumer.external_id}"
+      consumer.external_id
       |> send_get()
       |> assert_conn_status(404)
     end
