@@ -47,7 +47,11 @@ defmodule Gateway.Factory do
     %Gateway.DB.Schemas.Plugin{
       name: "acl",
       is_enabled: true,
-      settings: %{"scope" => "read"}
+      settings: %{
+        "rules" => [
+          %{"methods" => ["GET"], "path" => "*", "scopes" => ["some_resource:read"]}
+        ]
+      }
     }
   end
 
