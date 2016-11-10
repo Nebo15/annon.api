@@ -150,7 +150,7 @@ defmodule Gateway.Acceptance.Plug.ProxyTest do
   def get_api_proxy_data(path, enable_jwt \\ true) do
     get_api_model_data()
     |> Map.put(:request,
-      %{host: get_host(:public), path: path, port: get_port(:public), scheme: "http", method: "GET"})
+      %{host: get_host(:public), path: path, port: get_port(:public), scheme: "http", method: ["GET"]})
     |> Map.put(:plugins, [
       %{name: "jwt", is_enabled: enable_jwt, settings: %{"signature" => @token_secret}}])
   end
