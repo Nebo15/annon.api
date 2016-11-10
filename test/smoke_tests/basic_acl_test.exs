@@ -96,8 +96,8 @@ defmodule Gateway.SmokeTests.BasicAclTest do
 
   defp assert_logs_are_written(response) do
     log_entry = Gateway.DB.Logger.Repo.one(Gateway.DB.Schemas.Log)
-		logged_response = Poison.decode!(log_entry.response.body)
+    logged_response = Poison.decode!(log_entry.response.body)
 
-		assert logged_response == response
+    assert logged_response == response
   end
 end
