@@ -47,7 +47,7 @@ defmodule Gateway.Controllers.APITest do
         port: 4000,
         path: "/a/b/c",
         scheme: "http",
-        method: "POST"
+        method: ["POST"]
       }
     }
 
