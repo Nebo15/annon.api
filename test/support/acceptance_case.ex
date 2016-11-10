@@ -14,6 +14,7 @@ defmodule Gateway.AcceptanceCase do
       import Ecto.Changeset
       import Ecto.Query, only: [from: 2]
       import Gateway.Fixtures
+      import Gateway.AcceptanceCase
 
       alias Gateway.DB.Configs.Repo
       alias Gateway.DB.Schemas.Plugin
@@ -94,7 +95,11 @@ defmodule Gateway.AcceptanceCase do
       defp truncate_table(repo, table) do
         Ecto.Adapters.SQL.query(repo, "TRUNCATE #{table} RESTART IDENTITY")
       end
-
     end
+  end
+
+  def random_string(length) do
+    data = :crypto.strong_rand_bytes(length)
+    data |> Base.url_encode64 |> binary_part(0, length)
   end
 end

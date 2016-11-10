@@ -41,5 +41,5 @@ defmodule Gateway.Controllers.API do
     |> render_delete(conn)
   end
 
-  forward "/", to: Gateway.Controllers.API.Plugins
+  forward "/", to: Gateway.Controllers.API.Plugin
 end

@@ -1,5 +1,6 @@
 defmodule Gateway.RoutersTest do
-  use Gateway.UnitCase
+  @moduledoc false
+  use Gateway.UnitCase, async: true
   use Plug.Test
 
   describe "default match works" do
@@ -23,10 +24,6 @@ defmodule Gateway.RoutersTest do
   end
 
   describe "error match works" do
-    test "on public router" do
-      # TODO
-    end
-
     test "on private router" do
       conn = :get
       |> conn("/apis/binary_id")

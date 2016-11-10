@@ -1,4 +1,5 @@
 defmodule Gateway.Acceptance.Private.APITest do
+  @moduledoc false
   use Gateway.AcceptanceCase
 
   test "update model API" do

@@ -1,40 +1,36 @@
 defmodule Gateway.Plugins.JWTTest do
-  @moduledoc """
-  Testing Gateway.Plugins.APILoader
-  """
-
-  use Gateway.UnitCase
+  @moduledoc false
+  use Gateway.UnitCase, async: true
   import Joken
 
-  @payload %{ "name" => "John Doe" }
+  @payload %{"name" => "John Doe"}
 
   setup do
-    api = Gateway.Factory.insert(:api)
-
-    {:ok, api: api}
+    {:ok, api: Gateway.Factory.insert(:api)}
   end
 
   test "jwt invalid auth", %{api: api} do
     jwt_plugin = Gateway.Factory.insert(:jwt_plugin, api: api)
 
-    %Plug.Conn{} = conn = :get
+    :get
     |> prepare_conn(api.request)
     |> Map.put(:private, %{api_config: %{api | plugins: [jwt_plugin]}})
     |> Gateway.Plugins.JWT.call(%{})
+    |> assert_conn_status(401)
 
-    assert 401 == conn.status
-
-    %Plug.Conn{} = conn = :get
+    :get
     |> prepare_conn(api.request)
     |> Map.put(:private, %{api_config: %{api | plugins: [jwt_plugin]}})
-    |> Map.put(:req_headers, [ {"authorization", "Bearer #{jwt_token("super_coolHacker")}bad"}])
+    |> Map.put(:req_headers, [{"authorization", "Bearer #{jwt_token("super_coolHacker")}bad"}])
     |> Gateway.Plugins.JWT.call(%{})
-
-    assert 401 == conn.status
+    |> assert_conn_status(401)
   end
 
   test "jwt sucessful auth", %{api: api} do
-    jwt_plugin = Gateway.Factory.build(:jwt_plugin, api: api, settings: %{"signature" => "super_coolHacker"})
+    jwt_plugin = Gateway.Factory.build(:jwt_plugin, %{
+      api: api,
+      settings: %{"signature" => "super_coolHacker"}
+    })
 
     %Plug.Conn{private: %{jwt_token: %Joken.Token{} = jwt_token}} = :get
     |> prepare_conn(jwt_plugin.api.request)
@@ -46,15 +42,17 @@ defmodule Gateway.Plugins.JWTTest do
   end
 
   test "jwt is disabled", %{api: api} do
-    plugin_settings = [api: api, is_enabled: false, settings: %{"signature" => "super_coolHacker"}]
-    jwt_plugin = Gateway.Factory.insert(:jwt_plugin, plugin_settings)
+    jwt_plugin = Gateway.Factory.insert(:jwt_plugin, %{
+      api: api,
+      is_enabled: false,
+      settings: %{"signature" => "super_coolHacker"}
+    })
 
-    %Plug.Conn{} = conn = :get
+    :get
     |> prepare_conn(jwt_plugin.api.request)
     |> Map.put(:private, %{api_config: jwt_plugin.api})
     |> Gateway.Plugins.JWT.call(%{})
-
-    assert nil == conn.status
+    |> assert_conn_status(nil)
   end
 
   test "jwt required signature in settings" do
@@ -64,14 +62,13 @@ defmodule Gateway.Plugins.JWTTest do
     assert %Ecto.Changeset{valid?: false, errors: [signature: {"can't be blank", _}]} = changeset
   end
 
-  test "apis model don't have plugins'" do
+  test "apis model don't have plugins" do
     api = Gateway.Factory.build(:api)
 
-    %Plug.Conn{} = conn = :get
+    :get
     |> prepare_conn(api.request)
     |> Gateway.Plugins.JWT.call(%{})
-
-    assert nil == conn.status
+    |> assert_conn_status(nil)
   end
 
   defp prepare_conn(method, request) do

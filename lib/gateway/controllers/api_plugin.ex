@@ -1,4 +1,4 @@
-defmodule Gateway.Controllers.API.Plugins do
+defmodule Gateway.Controllers.API.Plugin do
   @moduledoc """
   REST interface that allows to manage Plugins and their settings.
 

@@ -1,4 +1,5 @@
 defmodule Gateway.MonitoringTest do
+  @moduledoc false
   use Gateway.UnitCase
 
   @apis "apis"
@@ -11,17 +12,28 @@ defmodule Gateway.MonitoringTest do
   end
 
   defp make_connection do
-    api = create_api_endpoint()
-    create_proxy_plugin(api)
+    api = Gateway.Factory.insert(:api, %{
+      name: "Montoring Test api",
+      request: Gateway.Factory.build(:request, %{host: "www.example.com", path: "/apis"})
+    })
+
+    Gateway.Factory.insert(:proxy_plugin, %{
+      name: "proxy",
+      is_enabled: true,
+      api: api,
+      settings: %{
+        method: "GET",
+        scheme: "http",
+        host: "localhost",
+        port: 5001,
+        path: "/apis"
+      }
+    })
 
     Gateway.AutoClustering.do_reload_config()
 
-    :get
-    |> conn("/apis")
-    |> put_req_header("content-type", "application/json")
-    |> Gateway.PublicRouter.call([])
-
-    :timer.sleep(50)
+    "/apis"
+    |> send_public_get()
   end
 
   defp check_statsd(metric_type, metric_name) do
@@ -35,27 +47,5 @@ defmodule Gateway.MonitoringTest do
     |> elem(1)
     |> to_string
     |> String.contains?(metric_name)
-  end
-
-  defp create_api_endpoint do
-    Gateway.Factory.insert(:api, %{
-      name: "Montoring Test api",
-      request: Gateway.Factory.build(:request, %{host: "www.example.com", path: "/apis"})
-    })
-  end
-
-  defp create_proxy_plugin(api) do
-    Gateway.Factory.insert(:proxy_plugin, %{
-      name: "proxy",
-      is_enabled: true,
-      api: api,
-      settings: %{
-        "method" => "GET",
-        "scheme" => "http",
-        "host" => "localhost",
-        "port" => 5001,
-        "path" => "/apis"
-      }
-    })
   end
 end

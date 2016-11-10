@@ -1,10 +1,10 @@
 defmodule Gateway.Acceptance.Plug.ProxyTest do
+  @moduledoc false
   use Gateway.AcceptanceCase
-  alias Gateway.Test.Helper
 
   @api_url "apis"
 
-  @consumer_id Helper.random_string(32)
+  @consumer_id random_string(32)
 
   @consumer %{
     external_id: @consumer_id,
