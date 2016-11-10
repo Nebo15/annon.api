@@ -60,12 +60,16 @@ defmodule Gateway.UnitCase do
   def assert_response_body(conn, expected_list) when is_list(expected_list) do
     conn.resp_body
     |> assert_body(expected_list, conn)
+
+    conn
   end
 
-  def assert_response_body(conn, expected_struct) do
-    conn.resp_body
-    |> drop_data_type()
+  def assert_response_body(conn, expected_struct, dropped_keys \\ ["type"]) do
+    dropped_keys
+    |> List.foldr(conn.resp_body, &delete_data_field/2)
     |> assert_body(expected_struct, conn)
+
+    conn
   end
 
   defp assert_body(resp_body, expected_struct, conn) do
@@ -76,13 +80,13 @@ defmodule Gateway.UnitCase do
     assert expected_body == resp_body
   end
 
-  defp drop_data_type(binary_json) when is_binary(binary_json) do
+  defp delete_data_field(field, binary_json) when is_binary(binary_json) do
     binary_json = binary_json
     |> Poison.decode!()
 
     resp_data = binary_json
     |> Map.get("data")
-    |> Map.delete("type")
+    |> Map.delete(field)
 
     binary_json
     |> Map.put("data", resp_data)
