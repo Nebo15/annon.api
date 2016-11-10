@@ -1,0 +1,218 @@
+    <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.14.3">
+    <title>Gateway.Helpers.Response – gateway v0.1.47</title>
+    <link rel="stylesheet" href="dist/app-091c05798a.css" />
+    
+    <script src="dist/sidebar_items.js"></script>
+  </head>
+  <body data-type="modules">
+    <script>if(localStorage.getItem('night-mode')) document.body.className += ' night-mode';</script>
+
+    <div class="main">
+<button class="sidebar-toggle">
+  <i class="icon-menu"></i>
+</button>
+<section class="sidebar">
+
+  
+  <a href="readme.html" class="sidebar-projectLink">
+    <div class="sidebar-projectDetails">
+      <h1 class="sidebar-projectName">
+        gateway
+      </h1>
+      <h2 class="sidebar-projectVersion">
+        v0.1.47
+      </h2>
+    </div>
+    
+  </a>
+
+  <div class="sidebar-search">
+    <i class="icon-search"></i>
+    <input type="text" class="sidebar-searchInput" placeholder="search" autocomplete="off" />
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+    
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
+    
+
+    
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+
+      <h1>
+        <small class="visible-xs">gateway v0.1.47</small>
+        Gateway.Helpers.Response
+        
+        
+      </h1>
+
+      
+        <section id="moduledoc">
+          <p>This is a helper module for dispatching requests.</p>
+<p>It’s used by <a href="Gateway.Helpers.Render.html"><code class="inline">Gateway.Helpers.Render</code></a> helpers and places where we want to return an error.</p>
+
+        </section>
+      
+
+      
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <i class="icon-link"></i>
+            </a>
+            Summary
+          </h1>
+          
+
+          
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#halt/1">halt(conn)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Halt the connection</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#send/3">send(resource, conn, status)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Send request to a API consumer</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#send_error/2">send_error(conn, arg2)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Send error by a <a href="https://github.com/Nebo15/eview/blob/master/lib/eview/views/error_view.ex">EView.ErrorView</a>
+template to a API consumer and halt connection</p>
+</div>
+  
+</div>
+
+  </div>
+
+
+          
+
+          
+
+        </section>
+      
+
+      
+
+      
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <i class="icon-link"></i>
+            </a>
+            Functions
+          </h1>
+          <div class="detail" id="halt/1">
+  
+  <div class="detail-header">
+    <a href="#halt/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">halt(conn)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Halt the connection.</p>
+<p>Delegates to a <a href="https://hexdocs.pm/plug/1.2.2/Plug.Conn.html#halt/1"><code class="inline">Plug.Conn.halt/1</code></a> function.</p>
+
+  </section>
+</div>
+<div class="detail" id="send/3">
+  
+  <div class="detail-header">
+    <a href="#send/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">send(resource, conn, status)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Send request to a API consumer.</p>
+<p>You may need to halt connection after calling it,
+if you want to stop rest of plugins from processing rests.</p>
+
+  </section>
+</div>
+<div class="detail" id="send_error/2">
+  
+  <div class="detail-header">
+    <a href="#send_error/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">send_error(conn, arg2)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Send error by a <a href="https://github.com/Nebo15/eview/blob/master/lib/eview/views/error_view.ex">EView.ErrorView</a>
+template to a API consumer and halt connection.</p>
+
+  </section>
+</div>
+
+        </section>
+      
+
+      
+
+      
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.14.3),
+          </span>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+  <script src="dist/app-574613960f.js"></script>
+  </body>
+</html>
+

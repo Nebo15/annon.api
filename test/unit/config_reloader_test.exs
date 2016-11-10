@@ -4,9 +4,8 @@ defmodule Gateway.ConfigReloaderTest do
   import ExUnit.CaptureLog
 
   test "reload the config cache if it changes" do
-    {:ok, api_model} =
-      get_api_model_data()
-      |> Gateway.DB.Schemas.API.create()
+    api_model = Gateway.Factory.insert(:api)
+    Gateway.Factory.insert(:acl_plugin, api: api_model)
 
     new_contents = %{
       "name" => "New name"

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.14.3">
+    <title>API Reference – gateway v0.1.47</title>
+    <link rel="stylesheet" href="dist/app-091c05798a.css" />
+    
+    <script src="dist/sidebar_items.js"></script>
+  </head>
+  <body data-type="extras">
+    <script>if(localStorage.getItem('night-mode')) document.body.className += ' night-mode';</script>
+
+<div class="main">
+<button class="sidebar-toggle">
+  <i class="icon-menu"></i>
+</button>
+<section class="sidebar">
+
+  
+  <a href="readme.html" class="sidebar-projectLink">
+    <div class="sidebar-projectDetails">
+      <h1 class="sidebar-projectName">
+        gateway
+      </h1>
+      <h2 class="sidebar-projectVersion">
+        v0.1.47
+      </h2>
+    </div>
+    
+  </a>
+
+  <div class="sidebar-search">
+    <i class="icon-search"></i>
+    <input type="text" class="sidebar-searchInput" placeholder="search" autocomplete="off" />
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+    
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
+    
+
+    
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+  <h1>
+    <small class="visible-xs">gateway v0.1.47</small>
+    API Reference
+  </h1>
+
+  
+    <section id="modules" class="details-list">
+      <h1 class="section-heading">Modules</h1>
+      <div class="summary">
+        <div class="summary-row">
+  <div class="summary-signature"><a href="EctoFixtures.html">EctoFixtures</a></div>
+  
+    <div class="summary-synopsis"><p>Generates :map or JSON fixture from Ecto.Schema
+It’s useful for tests</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.html">Gateway</a></div>
+  
+    <div class="summary-synopsis"><p>This is an entry point of Annons application</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.API.ModelCase.html">Gateway.API.ModelCase</a></div>
+  
+    <div class="summary-synopsis"><p>This module defines the test case to be used by
+model tests.
+You may define functions here to be used as helpers in
+your model tests. See <a href="#errors_on/2"><code class="inline">errors_on/2</code></a>’s definition as reference.
+Finally, if the test case interacts with the database,
+it cannot be async. For this reason, every test runs
+inside a transaction which is reset at the beginning
+of the test unless the test case is marked as async</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.AcceptanceCase.html">Gateway.AcceptanceCase</a></div>
+  
+    <div class="summary-synopsis"><p>This module defines the test case to be used by
+acceptance tests. It can allow run tests in async when each SQL.Sandbox connection will be
+binded to a specific test</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.AutoClustering.html">Gateway.AutoClustering</a></div>
+  
+    <div class="summary-synopsis"><p>This module implements
+<a href="http://docs.annon.apiary.io/#introduction/general-features/caching-and-perfomance">Annons cache invalidation</a>
+based on different cluster discovery strategies</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Changeset.Validator.JsonSchema.html">Gateway.Changeset.Validator.JsonSchema</a></div>
+  
+    <div class="summary-synopsis"><p>This module provides <a href="http://json-schema.org/">JSON Schema</a> validator for a plugin settings</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Changeset.Validator.Settings.html">Gateway.Changeset.Validator.Settings</a></div>
+  
+    <div class="summary-synopsis"><p>This module provides helpers to validate individual plugin settings via JSON Schema that is stored inside methods</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Cluster.html">Gateway.Cluster</a></div>
+  
+    <div class="summary-synopsis"><p>Holds a single public function spawn/0, that spawns a cluster
+of two nodes: ‘node1@127.0.0.1’, ‘node2@127.0.0.1’</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.ConfigReloader.html">Gateway.ConfigReloader</a></div>
+  
+    <div class="summary-synopsis"><p>This plugin
+<a href="http://docs.annon.apiary.io/#introduction/general-features/caching-and-perfomance">invalidates Annons cache</a>
+whenever there was change triggered by a management API</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Controllers.API.html">Gateway.Controllers.API</a></div>
+  
+    <div class="summary-synopsis"><p>REST interface that allows to manage API’s and their settings</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Controllers.API.Plugins.html">Gateway.Controllers.API.Plugins</a></div>
+  
+    <div class="summary-synopsis"><p>REST interface that allows to manage Plugins and their settings</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Controllers.Consumers.html">Gateway.Controllers.Consumers</a></div>
+  
+    <div class="summary-synopsis"><p>REST interface that allows to manage Consumers and their settings overrides</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Controllers.Consumers.PluginSettings.html">Gateway.Controllers.Consumers.PluginSettings</a></div>
+  
+    <div class="summary-synopsis"><p>REST interface that allows to manage overrides for Consumer plugin settings</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Controllers.Requests.html">Gateway.Controllers.Requests</a></div>
+  
+    <div class="summary-synopsis"><p>REST interface that allows to fetch and delete stored requests</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.DB.Configs.Repo.html">Gateway.DB.Configs.Repo</a></div>
+  
+    <div class="summary-synopsis"><p>Main repository for DB that stores configuration</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.DB.Logger.Repo.html">Gateway.DB.Logger.Repo</a></div>
+  
+    <div class="summary-synopsis"><p>This repo is used to store request and responses</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.DB.Schema.html">Gateway.DB.Schema</a></div>
+  
+    <div class="summary-synopsis"><p>Shortener for Schemas definitions</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.DB.Schemas.API.html">Gateway.DB.Schemas.API</a></div>
+  
+    <div class="summary-synopsis"><p>Schema for API’s entity</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.DB.Schemas.API.Request.html">Gateway.DB.Schemas.API.Request</a></div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.DB.Schemas.Consumer.html">Gateway.DB.Schemas.Consumer</a></div>
+  
+    <div class="summary-synopsis"><p>Schema for Consumers entity</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.DB.Schemas.ConsumerPluginSettings.html">Gateway.DB.Schemas.ConsumerPluginSettings</a></div>
+  
+    <div class="summary-synopsis"><p>Schema for Consumer’s overrides for plugin settings</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.DB.Schemas.Log.html">Gateway.DB.Schemas.Log</a></div>
+  
+    <div class="summary-synopsis"><p>Schema for saved requests and responses</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.DB.Schemas.Log.API.html">Gateway.DB.Schemas.Log.API</a></div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.DB.Schemas.Log.API.Request.html">Gateway.DB.Schemas.Log.API.Request</a></div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.DB.Schemas.Log.Consumer.html">Gateway.DB.Schemas.Log.Consumer</a></div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.DB.Schemas.Log.Latencies.html">Gateway.DB.Schemas.Log.Latencies</a></div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.DB.Schemas.Log.Request.html">Gateway.DB.Schemas.Log.Request</a></div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.DB.Schemas.Log.Response.html">Gateway.DB.Schemas.Log.Response</a></div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.DB.Schemas.Plugin.html">Gateway.DB.Schemas.Plugin</a></div>
+  
+    <div class="summary-synopsis"><p>Schema for Plugins settings</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Factory.html">Gateway.Factory</a></div>
+  
+    <div class="summary-synopsis"><p>This module lists factories, a mean suitable
+for tests that involve preparation of DB data</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Fixtures.html">Gateway.Fixtures</a></div>
+  
+    <div class="summary-synopsis"><p>Fixtures fo tests</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Helpers.CommonRouter.html">Gateway.Helpers.CommonRouter</a></div>
+  
+    <div class="summary-synopsis"><p>This router is used in controllers of Annons private API</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Helpers.IP.html">Gateway.Helpers.IP</a></div>
+  
+    <div class="summary-synopsis"><p>Helpers for working with IP addresses</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Helpers.Plugin.html">Gateway.Helpers.Plugin</a></div>
+  
+    <div class="summary-synopsis"><p>This helper provides abstract interface to define plugin</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Helpers.Render.html">Gateway.Helpers.Render</a></div>
+  
+    <div class="summary-synopsis"><p>Use this helpers when you want to render result in a controllers</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Helpers.Response.html">Gateway.Helpers.Response</a></div>
+  
+    <div class="summary-synopsis"><p>This is a helper module for dispatching requests</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Plugins.ACL.html">Gateway.Plugins.ACL</a></div>
+  
+    <div class="summary-synopsis"><p><a href="http://docs.annon.apiary.io/#reference/plugins/acl">Access Control Layer (ACL) plugin</a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Plugins.APILoader.html">Gateway.Plugins.APILoader</a></div>
+  
+    <div class="summary-synopsis"><p>This plugin should be first in plugs pipeline,
+because it’s used to fetch all settings and decide which ones should be applied for current consumer request</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Plugins.IPRestriction.html">Gateway.Plugins.IPRestriction</a></div>
+  
+    <div class="summary-synopsis"><p><a href="http://docs.annon.apiary.io/#reference/plugins/ip-restriction">IP Restriction plugin</a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Plugins.Idempotency.html">Gateway.Plugins.Idempotency</a></div>
+  
+    <div class="summary-synopsis"><p><a href="http://docs.annon.apiary.io/#reference/plugins/idempotency">Request Idempotency plugin</a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Plugins.JWT.html">Gateway.Plugins.JWT</a></div>
+  
+    <div class="summary-synopsis"><p><a href="http://docs.annon.apiary.io/#reference/plugins/jwt-authentification">JWT Tokens authorization</a> plugin</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Plugins.Logger.html">Gateway.Plugins.Logger</a></div>
+  
+    <div class="summary-synopsis"><p>This plugin stores reqests and responses in <a href="http://elixir-lang.org/docs/stable/logger/Logger.html"><code class="inline">Logger</code></a> database.
+It is enabled by default and can not be disabled without rebuilding Annon container</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Plugins.Monitoring.html">Gateway.Plugins.Monitoring</a></div>
+  
+    <div class="summary-synopsis"><p>This plugin measures or receives performance metrics from other parts of Annon and sends them to StatsD server</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Plugins.Proxy.html">Gateway.Plugins.Proxy</a></div>
+  
+    <div class="summary-synopsis"><p><a href="http://docs.annon.apiary.io/#reference/plugins/proxy">Proxy</a> - is a core plugin that
+sends incoming request to an upstream back-ends</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Plugins.Validator.html">Gateway.Plugins.Validator</a></div>
+  
+    <div class="summary-synopsis"><p><a href="http://docs.annon.apiary.io/#reference/plugins/validator">JSON Schema Validation plugin</a> allows you to
+set validation rules for a path relative to an API</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.PrivateRouter.html">Gateway.PrivateRouter</a></div>
+  
+    <div class="summary-synopsis"><p>Router for a <a href="http://docs.annon.apiary.io/#reference/apis">Annons Management API</a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.PublicRouter.html">Gateway.PublicRouter</a></div>
+  
+    <div class="summary-synopsis"><p>Router for a Annons public API</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Test.Helper.html">Gateway.Test.Helper</a></div>
+  
+    <div class="summary-synopsis"><p>This module provides helper functions to be used in tests</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.UnitCase.html">Gateway.UnitCase</a></div>
+  
+    <div class="summary-synopsis"><p>Gateway HTTP Test Helper</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="gateway_tasks.html">gateway_tasks</a></div>
+  
+    <div class="summary-synopsis"><p>Nice way to apply migrations inside a released application</p>
+</div>
+  
+</div>
+
+      </div>
+    </section>
+  
+
+  
+
+  
+      <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.14.3),
+          </span>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+  <script src="dist/app-574613960f.js"></script>
+  </body>
+</html>
+

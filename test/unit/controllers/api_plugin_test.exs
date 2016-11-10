@@ -1,23 +1,24 @@
 defmodule Gateway.Controllers.PluginTest do
   use Gateway.UnitCase
-  alias Gateway.DB.Schemas.API, as: APISchema
 
   @plugin_url "/"
 
   test "GET /apis/:api_id" do
-    data = get_api_model_data()
-    {:ok, api_model} = APISchema.create(data)
+    api_model = Gateway.Factory.insert(:api)
+    Gateway.Factory.insert(:acl_plugin, api: api_model)
+    Gateway.Factory.insert(:jwt_plugin, api: api_model)
 
     conn = "/#{api_model.id}/plugins"
     |> send_get()
     |> assert_conn_status()
 
-    assert Enum.count(Poison.decode!(conn.resp_body)["data"]) == Enum.count(data.plugins)
+    assert 2 = Enum.count(Poison.decode!(conn.resp_body)["data"])
   end
 
   test "GET /apis/:api_id/plugins/:name" do
-    %{plugins: [p1, p2]} = data = get_api_model_data()
-    {:ok, api_model} = APISchema.create(data)
+    api_model = Gateway.Factory.insert(:api)
+    p1 = Gateway.Factory.insert(:acl_plugin, api: api_model)
+    p2 = Gateway.Factory.insert(:jwt_plugin, api: api_model)
 
     conn = "/#{api_model.id}/plugins/#{p1.name}"
     |> send_get()
@@ -33,11 +34,8 @@ defmodule Gateway.Controllers.PluginTest do
   end
 
   test "POST /apis/:api_id/plugins" do
-    {:ok, api_model} = APISchema
-    |> EctoFixtures.ecto_fixtures()
-    |> APISchema.create()
-
-    plugin_data = get_plugin_data(api_model.id, "acl")
+    api_model = Gateway.Factory.insert(:api)
+    plugin_data = Gateway.Factory.build(:acl_plugin, api: api_model)
 
     conn = "/#{api_model.id}/plugins"
     |> send_data(plugin_data)
@@ -50,8 +48,8 @@ defmodule Gateway.Controllers.PluginTest do
   end
 
   test "PUT /apis/:api_id/plugins/:name" do
-    %{plugins: [p1, _]} = data = get_api_model_data()
-    {:ok, api_model} = APISchema.create(Map.put(data, :plugins, [p1]))
+    api_model = Gateway.Factory.insert(:api)
+    p1 = Gateway.Factory.insert(:jwt_plugin, api: api_model)
 
     plugin_data = %{name: "validator", settings: %{"schema" => "{}"}}
 
@@ -82,8 +80,9 @@ defmodule Gateway.Controllers.PluginTest do
   end
 
   test "DELETE /apis/:api_id" do
-    %{plugins: [p1, p2]} = data = get_api_model_data()
-    {:ok, api_model} = APISchema.create(data)
+    api_model = Gateway.Factory.insert(:api)
+    p1 = Gateway.Factory.insert(:acl_plugin, api: api_model)
+    p2 = Gateway.Factory.insert(:jwt_plugin, api: api_model)
 
     "/#{api_model.id}/plugins/#{p1.name}"
     |> send_get()

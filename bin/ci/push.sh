@@ -17,7 +17,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
 
   if [[ "$MAIN_BRANCHES" =~ "$TRAVIS_BRANCH" ]]; then
     echo "Done. Commiting changes back to repo.";
-    git add mix.exs;
+    git add mix.exs docs;
     git commit -m "Increment version [ci skip]";
     git push origin HEAD:$TRAVIS_BRANCH;
     git push origin HEAD:$TRAVIS_BRANCH --tags;
