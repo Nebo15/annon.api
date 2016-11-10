@@ -22,11 +22,11 @@ defmodule Gateway.MonitoringTest do
       is_enabled: true,
       api: api,
       settings: %{
-        "method" => "GET",
-        "scheme" => "http",
-        "host" => "localhost",
-        "port" => 5001,
-        "path" => "/apis"
+        method: "GET",
+        scheme: "http",
+        host: "localhost",
+        port: 5001,
+        path: "/apis"
       }
     })
 
