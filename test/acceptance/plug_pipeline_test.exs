@@ -149,7 +149,11 @@ defmodule Gateway.Acceptance.PlugPipelineTest do
 
   def get_plugins do
     [
-      %{name: "acl", is_enabled: true, settings: %{"scope" => "api_create"}},
+      %{name: "acl", is_enabled: true, settings: %{
+        "rules" => [
+          %{"methods" => ["GET"], "path" => "*", "scopes" => ["api_create"]}
+        ]
+      }},
       %{name: "jwt", is_enabled: true, settings: %{"signature" => @token_secret}},
       %{name: "validator", is_enabled: true, settings: %{"schema" => Poison.encode!(@schema)}},
       %{name: "idempotency", is_enabled: true, settings: %{"key" => 100}},
