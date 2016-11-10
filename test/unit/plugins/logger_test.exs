@@ -1,4 +1,5 @@
 defmodule Gateway.LoggerTest do
+  @moduledoc false
   use Plug.Test
   use Gateway.AcceptanceCase
 

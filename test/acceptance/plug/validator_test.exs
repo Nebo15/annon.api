@@ -1,4 +1,5 @@
 defmodule Gateway.Acceptance.Plug.ValidatorTest do
+  @moduledoc false
   use Gateway.AcceptanceCase
 
   @schema %{"type" => "object",

@@ -1,4 +1,5 @@
 defmodule Gateway.Acceptance.Plug.ACLTest do
+  @moduledoc false
   use Gateway.AcceptanceCase
 
   @jwt_secret "secret"

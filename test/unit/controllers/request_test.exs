@@ -1,4 +1,5 @@
 defmodule Gateway.Controllers.RequestTest do
+  @moduledoc false
   use Gateway.ControllerUnitCase,
     controller: Gateway.Controllers.Request
 

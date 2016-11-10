@@ -1,8 +1,5 @@
 defmodule Gateway.Plugins.APILoaderTest do
-  @moduledoc """
-  Testing Gateway.Plugins.APILoader
-  """
-
+  @moduledoc false
   use Gateway.UnitCase
   alias Gateway.DB.Schemas.API, as: APISchema
 

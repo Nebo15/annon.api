@@ -1,4 +1,5 @@
 defmodule Gateway.Acceptance.Plug.JWTTest do
+  @moduledoc false
   use Gateway.AcceptanceCase
   alias Gateway.Test.Helper
 

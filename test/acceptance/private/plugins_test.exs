@@ -1,4 +1,5 @@
 defmodule Gateway.Acceptance.Private.PluginsTest do
+  @moduledoc false
   use Gateway.AcceptanceCase
 
   test "invalid JWT Plugin settings" do

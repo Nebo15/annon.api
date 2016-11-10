@@ -1,4 +1,5 @@
 defmodule Gateway.Controllers.ConsumerTest do
+  @moduledoc false
   use Gateway.ControllerUnitCase,
     controller: Gateway.Controllers.Consumer
 

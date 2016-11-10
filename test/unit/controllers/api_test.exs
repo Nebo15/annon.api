@@ -1,4 +1,5 @@
 defmodule Gateway.Controllers.APITest do
+  @moduledoc false
   use Gateway.ControllerUnitCase,
     controller: Gateway.Controllers.API
 

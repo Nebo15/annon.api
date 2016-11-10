@@ -1,4 +1,5 @@
 defmodule Gateway.ConfigReloaderTest do
+  @moduledoc false
   use Gateway.UnitCase
 
   import ExUnit.CaptureLog

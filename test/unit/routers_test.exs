@@ -1,4 +1,5 @@
 defmodule Gateway.RoutersTest do
+  @moduledoc false
   use Gateway.UnitCase
   use Plug.Test
 

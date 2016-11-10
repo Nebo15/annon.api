@@ -1,4 +1,5 @@
 defmodule Gateway.Plugins.ProxyTest do
+  @moduledoc false
   use Gateway.UnitCase
   alias Gateway.Plugins.Proxy
   import Gateway.Helpers.IP

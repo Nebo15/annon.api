@@ -1,4 +1,5 @@
 defmodule Gateway.Plugins.ValidatorTest do
+  @moduledoc false
   use Gateway.UnitCase
 
   test "validator correct" do

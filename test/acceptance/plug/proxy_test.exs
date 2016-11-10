@@ -1,4 +1,5 @@
 defmodule Gateway.Acceptance.Plug.ProxyTest do
+  @moduledoc false
   use Gateway.AcceptanceCase
   alias Gateway.Test.Helper
 

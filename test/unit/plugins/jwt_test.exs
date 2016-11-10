@@ -1,8 +1,5 @@
 defmodule Gateway.Plugins.JWTTest do
-  @moduledoc """
-  Testing Gateway.Plugins.APILoader
-  """
-
+  @moduledoc false
   use Gateway.UnitCase
   import Joken
 

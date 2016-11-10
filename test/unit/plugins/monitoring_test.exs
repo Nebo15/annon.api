@@ -1,4 +1,5 @@
 defmodule Gateway.MonitoringTest do
+  @moduledoc false
   use Gateway.UnitCase
 
   @apis "apis"
