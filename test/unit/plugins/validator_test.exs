@@ -22,22 +22,22 @@ defmodule Gateway.Plugins.ValidatorTest do
       %PluginSchema{is_enabled: true, name: "validator", settings: %{"schema" => Poison.encode!(schema)}}
     ]}
 
-    connect = :get
+    conn = :get
     |> conn("/", Poison.encode!(%{}))
 
-    connect
+    conn
     |> Map.put(:body_params, %{"foo" =>  "100500", "bar" => "a"})
     |> put_private(:api_config, model)
     |> Gateway.Plugins.Validator.call(%{})
     |> assert_halt
 
-    connect
+    conn
     |> Map.put(:body_params, %{"foo" =>  100500, "bar" => "a"})
     |> put_private(:api_config, model)
     |> Gateway.Plugins.Validator.call(%{})
     |> assert_not_halt
 
-    connect
+    conn
     |> Map.put(:body_params, %{"foo" =>  100500})
     |> put_private(:api_config, model)
     |> Gateway.Plugins.Validator.call(%{})
