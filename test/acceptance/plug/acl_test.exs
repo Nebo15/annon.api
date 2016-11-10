@@ -63,7 +63,13 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
     get_api_model_data()
     |> Map.put(:plugins, [
       %{name: "jwt", is_enabled: true, settings: %{"signature" => @jwt_secret}},
-      %{name: "acl", is_enabled: true, settings: %{"scope" => "acl_read"}}])
+      %{name: "acl", is_enabled: true, settings: %{
+        "rules" => [
+          %{"methods" => ["GET"], "path" => "*", "scopes" => ["acl_read"]}
+        ]
+      }}
+    ])
+
     |> Map.put(:request,
       %{host: get_host(:public), path: "/acl/scopes", port: get_port(:public), scheme: "http", method: ["GET"]})
     |> http_api_create()

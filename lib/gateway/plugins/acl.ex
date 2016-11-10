@@ -45,7 +45,7 @@ defmodule Gateway.Plugins.ACL do
       false -> {:error, :forbidden}
     end
   end
-  defp validate_scopes(_scope, _scopes), do: {:error, :invalid_scopes_type}
+  defp validate_scopes(_scope, _scopes, _conn_data), do: {:error, :invalid_scopes_type}
 
   defp send_response(:ok, conn), do: conn
   defp send_response({:error, :forbidden}, conn) do
