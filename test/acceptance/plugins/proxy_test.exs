@@ -48,7 +48,7 @@ defmodule Gateway.Acceptance.Plugin.ProxyTest do
     |> Poison.decode!
     |> Map.get("data")
 
-    assert response["id"] == 1
+    assert response["id"] == api_id
     assert response["request"]["host"] == get_host(:public)
     assert response["request"]["path"] == "/proxy/test"
     assert response["request"]["port"] == get_port(:public)

@@ -81,19 +81,9 @@ defmodule Gateway.AcceptanceCase do
           Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Logger.Repo, {:shared, self()})
         end
 
-        ["apis", "plugins", "consumers", "consumer_plugin_settings"]
-        |> Enum.map(fn table -> truncate_table Gateway.DB.Configs.Repo, table end)
-
-        ["logs"]
-        |> Enum.map(fn table -> truncate_table Gateway.DB.Logger.Repo, table end)
-
         :ets.delete_all_objects(:config)
 
         :ok
-      end
-
-      defp truncate_table(repo, table) do
-        Ecto.Adapters.SQL.query(repo, "TRUNCATE #{table} RESTART IDENTITY")
       end
     end
   end
