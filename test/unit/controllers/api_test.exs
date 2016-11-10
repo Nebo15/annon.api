@@ -1,125 +1,149 @@
 defmodule Gateway.Controllers.APITest do
   use Gateway.UnitCase
 
-  test "GET /apis with empty list" do
-    conn = :get
-    |> conn("/")
-    |> put_req_header("content-type", "application/json")
-    |> Gateway.Controllers.API.call([])
+  describe "/apis" do
+    test "GET empty list" do
+      conn = "/"
+      |> send_get()
+      |> assert_conn_status()
 
-    assert 200 == conn.status
-    assert %{"data" => []} = Poison.decode!(conn.resp_body)
-  end
+      assert 0 = Enum.count(Poison.decode!(conn.resp_body)["data"])
+    end
 
-  test "GET /apis" do
-    data = Gateway.Factory.insert_pair(:api)
+    test "GET" do
+      data = Gateway.Factory.insert_pair(:api)
 
-    conn = :get
-    |> conn("/")
-    |> put_req_header("content-type", "application/json")
-    |> Gateway.Controllers.API.call([])
+      conn = "/"
+      |> send_get()
+      |> assert_conn_status()
 
-    expected_resp = EView.wrap_body(data, conn)
+      expected_resp = EView.wrap_body(data, conn)
+      assert Poison.encode!(expected_resp) == conn.resp_body
+    end
 
-    assert 200 == conn.status
-    assert Poison.encode!(expected_resp) == conn.resp_body
-  end
-
-  test "GET /apis/:api_id" do
-    data = Gateway.Factory.insert(:api)
-
-    conn = :get
-    |> conn("/#{data.id}")
-    |> put_req_header("content-type", "application/json")
-    |> Gateway.Controllers.API.call([])
-
-    expected_resp = EView.wrap_body(data, conn)
-
-    assert 200 == conn.status
-    assert Poison.encode!(expected_resp) == Gateway.Test.Helper.remove_type(conn.resp_body)
-  end
-
-  test "POST /apis" do
-    contents = %{
-      name: "Sample",
-      request: %{
-        host: "example.com",
-        port: 4000,
-        path: "/a/b/c",
-        scheme: "http",
-        method: ["POST"]
+    test "POST" do
+      api = %{
+        name: "Sample",
+        request: %{
+          host: "example.com",
+          port: 4000,
+          path: "/a/b/c",
+          scheme: "http",
+          method: ["POST"]
+        }
       }
-    }
 
-    conn = :post
-    |> conn("/", Poison.encode!(contents))
-    |> put_req_header("content-type", "application/json")
-    |> Gateway.Controllers.API.call([])
+      conn = "/"
+      |> send_data(api)
+      |> assert_conn_status(201)
 
-    assert conn.status == 201
-    resp = Poison.decode!(conn.resp_body)["data"]
-
-    assert resp["id"]
-    assert resp["updated_at"]
-    assert resp["inserted_at"]
-
-    assert "Sample" == resp["name"]
-    assert "example.com" == resp["request"]["host"]
-    assert 4000 == resp["request"]["port"]
-    assert "/a/b/c" == resp["request"]["path"]
-    assert "http" == resp["request"]["scheme"]
+      assert %{
+        "id" => _,
+        "updated_at" => _,
+        "inserted_at" => _,
+        "name" => "Sample",
+        "request" => %{
+          "host" => "example.com",
+          "port" => 4000,
+          "path" => "/a/b/c",
+          "scheme" => "http",
+          "method" => ["POST"]
+        }
+      } = Poison.decode!(conn.resp_body)["data"]
+    end
   end
 
-  test "PUT /apis/:api_id" do
-    data = Gateway.Factory.insert(:api)
+  describe "/apis/:api_id" do
+    test "GET 404" do
+      "/0"
+      |> send_get()
+      |> assert_conn_status(404)
+    end
 
-    new_contents = %{
-      name: "New name",
-      request: %{
-        host: "newhost.com",
-        port: 4000,
-        path: "/new/path/",
-        scheme: "https",
-        method: ["POST"]
+    test "GET" do
+      api = Gateway.Factory.insert(:api)
+
+      conn = "/#{api.id}"
+      |> send_get()
+      |> assert_conn_status()
+
+      expected_resp = EView.wrap_body(api, conn)
+
+      assert Poison.encode!(expected_resp) == Gateway.Test.Helper.remove_type(conn.resp_body)
+    end
+
+    test "PUT" do
+      api = Gateway.Factory.insert(:api)
+
+      api_description = %{
+        name: "New name",
+        request: %{
+          host: "newhost.com",
+          port: 4000,
+          path: "/new/path/",
+          scheme: "https",
+          method: ["POST"]
+        }
       }
-    }
 
-    conn = :put
-    |> conn("/#{data.id}", Poison.encode!(new_contents))
-    |> put_req_header("content-type", "application/json")
-    |> Gateway.Controllers.API.call([])
+      conn = "/#{api.id}"
+      |> send_data(api_description, :put)
+      |> assert_conn_status()
 
-    assert conn.status == 200
-    resp = Poison.decode!(conn.resp_body)["data"]
+      assert %{
+        "id" => _,
+        "updated_at" => _,
+        "inserted_at" => _,
+        "name" => "New name",
+        "request" => %{
+          "host" => "newhost.com",
+          "port" => 4000,
+          "path" => "/new/path/",
+          "scheme" => "https",
+          "method" => ["POST"]
+        }
+      } = Poison.decode!(conn.resp_body)["data"]
+    end
 
-    assert resp["id"]
-    assert resp["updated_at"]
+    test "DELETE" do
+      data = Gateway.Factory.insert(:api)
 
-    assert "New name" == resp["name"]
-    assert "newhost.com" == resp["request"]["host"]
-    assert 4000 == resp["request"]["port"]
-    assert "/new/path/" == resp["request"]["path"]
-    assert "https" == resp["request"]["scheme"]
-    assert ["POST"] == resp["request"]["method"]
+      "/#{data.id}"
+      |> send_delete()
+      |> assert_conn_status()
+
+      "/#{data.id}"
+      |> send_delete()
+      |> assert_conn_status(404)
+    end
   end
 
-  test "DELETE /apis/:api_id" do
-    data = Gateway.Factory.insert(:api)
+  def assert_conn_status(conn, code \\ 200) do
+    assert code == conn.status
+    conn
+  end
 
-    conn = :delete
-    |> conn("/#{data.id}")
+  def send_get(path) do
+    :get
+    |> conn(path)
+    |> prepare_conn
+  end
+
+  def send_delete(path) do
+    :delete
+    |> conn(path)
+    |> prepare_conn
+  end
+
+  def send_data(path, data, method \\ :post) do
+    method
+    |> conn(path, Poison.encode!(data))
+    |> prepare_conn
+  end
+
+  defp prepare_conn(conn) do
+    conn
     |> put_req_header("content-type", "application/json")
     |> Gateway.Controllers.API.call([])
-
-    Poison.decode!(conn.resp_body)
-
-    assert 200 == conn.status
-
-    # ToDo: bug https://finstar.atlassian.net/browse/OSL-502
-#    conn = :delete
-#    |> conn("/#{data.id}")
-#    |> put_req_header("content-type", "application/json")
-#    |> Gateway.Controllers.API.call([])
-#    assert 404 == conn.status
   end
 end
