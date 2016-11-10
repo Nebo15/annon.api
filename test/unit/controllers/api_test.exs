@@ -12,27 +12,18 @@ defmodule Gateway.Controllers.APITest do
     end
 
     test "GET" do
-      data = Gateway.Factory.insert_pair(:api)
+      apis = Gateway.Factory.insert_pair(:api)
 
       conn = "/"
       |> send_get()
       |> assert_conn_status()
 
-      expected_resp = EView.wrap_body(data, conn)
+      expected_resp = EView.wrap_body(apis, conn)
       assert Poison.encode!(expected_resp) == conn.resp_body
     end
 
     test "POST" do
-      api = %{
-        name: "Sample",
-        request: %{
-          host: "example.com",
-          port: 4000,
-          path: "/a/b/c",
-          scheme: "http",
-          method: ["POST"]
-        }
-      }
+      api = Gateway.Factory.build(:api)
 
       conn = "/"
       |> send_post(api)
@@ -42,15 +33,22 @@ defmodule Gateway.Controllers.APITest do
         "id" => _,
         "updated_at" => _,
         "inserted_at" => _,
-        "name" => "Sample",
+        "name" => api_name,
         "request" => %{
-          "host" => "example.com",
-          "port" => 4000,
-          "path" => "/a/b/c",
-          "scheme" => "http",
-          "method" => ["POST"]
+          "host" => api_request_host,
+          "port" => api_request_port,
+          "path" => api_request_path,
+          "scheme" => api_request_scheme,
+          "method" => api_request_methods
         }
       } = Poison.decode!(conn.resp_body)["data"]
+
+      assert api_name == api.name
+      assert api_request_host == api.request.host
+      assert api_request_port == api.request.port
+      assert api_request_path == api.request.path
+      assert api_request_scheme == api.request.scheme
+      assert api_request_methods == api.request.method # TODO: rename method to methods?
     end
   end
 
@@ -75,35 +73,32 @@ defmodule Gateway.Controllers.APITest do
 
     test "PUT" do
       api = Gateway.Factory.insert(:api)
-
-      api_description = %{
-        name: "New name",
-        request: %{
-          host: "newhost.com",
-          port: 4000,
-          path: "/new/path/",
-          scheme: "https",
-          method: ["POST"]
-        }
-      }
+      api_update = Gateway.Factory.build(:api)
 
       conn = "/#{api.id}"
-      |> send_put(api_description)
+      |> send_put(api_update)
       |> assert_conn_status()
 
       assert %{
         "id" => _,
         "updated_at" => _,
         "inserted_at" => _,
-        "name" => "New name",
+        "name" => api_name,
         "request" => %{
-          "host" => "newhost.com",
-          "port" => 4000,
-          "path" => "/new/path/",
-          "scheme" => "https",
-          "method" => ["POST"]
+          "host" => api_request_host,
+          "port" => api_request_port,
+          "path" => api_request_path,
+          "scheme" => api_request_scheme,
+          "method" => api_request_methods
         }
       } = Poison.decode!(conn.resp_body)["data"]
+
+      assert api_name == api_update.name
+      assert api_request_host == api_update.request.host
+      assert api_request_port == api_update.request.port
+      assert api_request_path == api_update.request.path
+      assert api_request_scheme == api_update.request.scheme
+      assert api_request_methods == api_update.request.method
     end
 
     test "DELETE" do
