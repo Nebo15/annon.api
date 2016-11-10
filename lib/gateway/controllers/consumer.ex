@@ -1,4 +1,4 @@
-defmodule Gateway.Controllers.Consumers do
+defmodule Gateway.Controllers.Consumer do
   @moduledoc """
   REST interface that allows to manage Consumers and their settings overrides.
 
@@ -43,5 +43,5 @@ defmodule Gateway.Controllers.Consumers do
     |> render_delete(conn)
   end
 
-  forward "/", to: Gateway.Controllers.Consumers.PluginSettings
+  forward "/", to: Gateway.Controllers.Consumer.PluginSettings
 end

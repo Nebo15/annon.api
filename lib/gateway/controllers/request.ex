@@ -1,4 +1,4 @@
-defmodule Gateway.Controllers.Requests do
+defmodule Gateway.Controllers.Request do
   @moduledoc """
   REST interface that allows to fetch and delete stored requests.
 

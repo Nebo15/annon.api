@@ -18,7 +18,7 @@ defmodule Gateway.Controllers.ConsumerPluginSettingsTest do
     conn = :get
     |> conn("/#{consumer.external_id}/plugins")
     |> put_req_header("content-type", "application/json")
-    |> Gateway.Controllers.Consumers.call([])
+    |> Gateway.Controllers.Consumer.call([])
 
     result = Poison.decode!(conn.resp_body)["data"]
     assert 2 == Enum.count(result)
@@ -30,7 +30,7 @@ defmodule Gateway.Controllers.ConsumerPluginSettingsTest do
     conn = :get
     |> conn("/#{consumer.external_id}/plugins/#{plugin.name}")
     |> put_req_header("content-type", "application/json")
-    |> Gateway.Controllers.Consumers.call([])
+    |> Gateway.Controllers.Consumer.call([])
 
     result = Poison.decode!(conn.resp_body)["data"]
 
@@ -56,7 +56,7 @@ defmodule Gateway.Controllers.ConsumerPluginSettingsTest do
     conn = :put
     |> conn("/#{consumer.external_id}/plugins/#{plugin.name}", Poison.encode!(contents))
     |> put_req_header("content-type", "application/json")
-    |> Gateway.Controllers.Consumers.call([])
+    |> Gateway.Controllers.Consumer.call([])
 
     result =
       Poison.decode!(conn.resp_body)["data"]
@@ -79,7 +79,7 @@ defmodule Gateway.Controllers.ConsumerPluginSettingsTest do
     conn = :post
     |> conn("/#{consumer.external_id}/plugins", Poison.encode!(contents))
     |> put_req_header("content-type", "application/json")
-    |> Gateway.Controllers.Consumers.call([])
+    |> Gateway.Controllers.Consumer.call([])
 
     result = Poison.decode!(conn.resp_body)["data"]
 
@@ -97,7 +97,7 @@ defmodule Gateway.Controllers.ConsumerPluginSettingsTest do
     conn = :delete
     |> conn("/#{consumer.external_id}/plugins/#{plugin.name}")
     |> put_req_header("content-type", "application/json")
-    |> Gateway.Controllers.Consumers.call([])
+    |> Gateway.Controllers.Consumer.call([])
 
     assert 200 == conn.status
   end

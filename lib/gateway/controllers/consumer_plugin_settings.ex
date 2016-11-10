@@ -1,4 +1,4 @@
-defmodule Gateway.Controllers.Consumers.PluginSettings do
+defmodule Gateway.Controllers.Consumer.PluginSettings do
   @moduledoc """
   REST interface that allows to manage overrides for Consumer plugin settings.
 
