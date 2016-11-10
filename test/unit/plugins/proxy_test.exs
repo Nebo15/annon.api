@@ -12,7 +12,7 @@ defmodule Gateway.Plugins.ProxyTest do
 
   describe "proxy link builder" do
     setup do
-      %{conn: %Plug.Conn{scheme: :https, port: 6000, request_path: "/some/path", remote_ip: {127, 0, 0, 1}}}
+      %{conn: make_conn("/some/path")}
     end
 
     test "supports port", %{conn: conn} do
