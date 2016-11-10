@@ -5,7 +5,7 @@ defmodule Gateway.SmokeTests.BasicAclTest do
     {:ok, api} = Gateway.DB.Schemas.API.create(%{
       name: "An HTTPBin service endpoint",
       request: %{
-        method: "GET",
+        method: ["GET"],
         scheme: "http",
         host: "localhost",
         port: get_port(:public),

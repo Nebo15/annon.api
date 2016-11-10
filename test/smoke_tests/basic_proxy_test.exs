@@ -1,11 +1,11 @@
-defmodule Gateway.SmokeTests.BasicProxy do
+defmodule Gateway.SmokeTests.BasicProxyTest do
   use Gateway.AcceptanceCase
 
   setup do
     {:ok, api} = Gateway.DB.Schemas.API.create(%{
       name: "An HTTPBin service endpoint",
       request: %{
-        method: "GET",
+        method: ["GET"],
         scheme: "http",
         host: "localhost",
         port: get_port(:public),
