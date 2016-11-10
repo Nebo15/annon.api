@@ -43,12 +43,10 @@ defmodule Gateway.Controllers.ConsumerTest do
     test "GET" do
       consumer = Gateway.Factory.insert(:consumer)
 
-      conn = consumer.external_id
+      consumer.external_id
       |> send_get()
       |> assert_conn_status()
-
-      expected_resp = EView.wrap_body(consumer, conn)
-      assert Poison.encode!(expected_resp) == Gateway.Test.Helper.remove_type(conn.resp_body)
+      |> assert_response_body(consumer)
     end
 
     test "PUT" do

@@ -57,9 +57,7 @@ defmodule Gateway.Controllers.RequestTest do
       |> get_resp_header("x-request-id")
       |> Enum.at(0) || ""
 
-      path = "/" <> id
-
-      conn = path
+      conn = "/#{id}"
       |> send_get()
       |> assert_conn_status()
 
@@ -71,16 +69,14 @@ defmodule Gateway.Controllers.RequestTest do
       |> get_resp_header("x-request-id")
       |> Enum.at(0) || ""
 
-      path = "/" <> id
-
-      conn = path
+      conn = "/#{id}"
       |> send_delete()
       |> assert_conn_status()
 
       expected_resp = EView.wrap_body(%{}, conn)
       assert Poison.encode!(expected_resp) == conn.resp_body
 
-      path
+      "/#{id}"
       |> send_get()
       |> assert_conn_status(404)
     end

@@ -50,6 +50,25 @@ defmodule Gateway.ControllerUnitCase do
         |> put_req_header("content-type", "application/json")
         |> @controller.call([])
       end
+
+      def assert_response_body(conn, expected_struct) do
+        resp_body = conn.resp_body
+        |> Poison.decode!()
+
+        resp_data = resp_body
+        |> Map.get("data")
+        |> Map.delete("type")
+
+        resp_body = resp_body
+        |> Map.put("data", resp_data)
+        |> Poison.encode!()
+
+        expected_body = expected_struct
+        |> EView.wrap_body(conn)
+        |> Poison.encode!
+
+        assert expected_body == resp_body
+      end
     end
   end
 

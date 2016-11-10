@@ -63,13 +63,10 @@ defmodule Gateway.Controllers.APITest do
     test "GET" do
       api = Gateway.Factory.insert(:api)
 
-      conn = "/#{api.id}"
+      "/#{api.id}"
       |> send_get()
       |> assert_conn_status()
-
-      expected_resp = EView.wrap_body(api, conn)
-
-      assert Poison.encode!(expected_resp) == Gateway.Test.Helper.remove_type(conn.resp_body)
+      |> assert_response_body(api)
     end
 
     test "PUT" do
