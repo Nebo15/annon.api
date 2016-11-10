@@ -56,7 +56,7 @@ defmodule Gateway.AcceptanceCase do
 
       def http_api_create(data) do
         "apis"
-        |> post(Poison.encode!(data), :private)
+        |> post(Poison.encode!(data), :management)
         |> assert_status(201)
         |> assert_resp_body_json()
       end

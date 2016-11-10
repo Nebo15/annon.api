@@ -20,7 +20,7 @@ defmodule Gateway.Acceptance.Plug.ValidatorTest do
     ])
 
     "apis"
-    |> post(Poison.encode!(data), :private)
+    |> post(Poison.encode!(data), :management)
     |> assert_status(201)
 
     "test"

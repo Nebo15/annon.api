@@ -11,8 +11,8 @@ config :gateway, Gateway.DB.Logger.Repo,
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :gateway, :acceptance,
-  private: [
-    port: {:system, :integer, "MIX_TEST_PRIVATE_PORT", 5001},
+  management: [
+    port: {:system, :integer, "MIX_TEST_MANAGEMENT_PORT", 5001},
     host: {:system, "MIX_TEST_HOST", "localhost"}
   ],
   public: [
@@ -23,8 +23,8 @@ config :gateway, :acceptance,
 config :gateway, :public_http,
   port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 5000}
 
-config :gateway, :private_http,
-  port: {:system, :integer, "GATEWAY_PRIVATE_PORT", 5001}
+config :gateway, :management_http,
+  port: {:system, :integer, "GATEWAY_MANAGEMENT_PORT", 5001}
 
 config :logger, level: :debug
 

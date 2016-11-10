@@ -35,7 +35,7 @@ defmodule Gateway.Acceptance.Plug.IdempotencyTest do
     |> assert_status(409)
 
     %HTTPoison.Response{body: body} = "apis"
-    |> get(:private)
+    |> get(:management)
     |> assert_status(200)
 
     assert 2 == body
@@ -54,9 +54,9 @@ defmodule Gateway.Acceptance.Plug.IdempotencyTest do
   def get_plugins do
     [%{name: "idempotency", is_enabled: true, settings: %{"key" => 100}},
      %{name: "proxy", is_enabled: true, settings: %{
-        host: get_host(:private),
+        host: get_host(:management),
         path: "/apis",
-        port: get_port(:private),
+        port: get_port(:management),
         scheme: "http"
      }}
     ]

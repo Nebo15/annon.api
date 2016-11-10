@@ -8,7 +8,7 @@ ENV TERM=xterm \
     MIX_ENV=prod \
     APP_NAME=gateway \
     GATEWAY_PUBLIC_PORT=4000 \
-    GATEWAY_PRIVATE_PORT=4001
+    GATEWAY_MANAGEMENT_PORT=4001
 
 WORKDIR ${HOME}
 
@@ -52,7 +52,7 @@ USER default
 ENV REPLACE_OS_VARS=true
 
 # Exposes this port from the docker container to the host machine
-EXPOSE ${GATEWAY_PUBLIC_PORT} ${GATEWAY_PRIVATE_PORT}
+EXPOSE ${GATEWAY_PUBLIC_PORT} ${GATEWAY_MANAGEMENT_PORT}
 
 # Change workdir to a released directory
 WORKDIR /opt

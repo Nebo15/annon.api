@@ -16,7 +16,7 @@ defmodule Gateway.ConfigReloaderTest do
       :put
       |> conn("/apis/#{api_model.id}", Poison.encode!(new_contents))
       |> put_req_header("content-type", "application/json")
-      |> Gateway.PrivateRouter.call([])
+      |> Gateway.ManagementRouter.call([])
     end
 
     assert capture_log(update_config) =~ "config cache was warmed up"

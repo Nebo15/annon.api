@@ -119,7 +119,7 @@ defmodule Gateway.Acceptance.PlugPipelineTest do
 
   defp assert_apis_amount(amount) do
     %HTTPoison.Response{body: body} = "apis"
-    |> get(:private)
+    |> get(:management)
     |> assert_status(200)
     |> assert_resp_body_json()
 
@@ -154,9 +154,9 @@ defmodule Gateway.Acceptance.PlugPipelineTest do
       %{name: "validator", is_enabled: true, settings: %{"schema" => Poison.encode!(@schema)}},
       %{name: "idempotency", is_enabled: true, settings: %{"key" => 100}},
       %{name: "proxy", is_enabled: true, settings: %{
-          host: get_host(:private),
+          host: get_host(:management),
           path: "/apis",
-          port: get_port(:private),
+          port: get_port(:management),
           scheme: "http"
         }
       }

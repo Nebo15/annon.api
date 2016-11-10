@@ -17,7 +17,7 @@ defmodule Gateway.RoutersTest do
       conn = :get
       |> conn("/foo")
       |> put_req_header("content-type", "application/json")
-      |> Gateway.PrivateRouter.call([])
+      |> Gateway.ManagementRouter.call([])
 
       assert 404 == conn.status
     end
@@ -30,7 +30,7 @@ defmodule Gateway.RoutersTest do
       |> put_req_header("content-type", "application/bson")
 
       assert_raise Ecto.Query.CastError, fn ->
-        Gateway.PrivateRouter.call(conn, [])
+        Gateway.ManagementRouter.call(conn, [])
       end
 
       assert {500, _headers, _body} = sent_resp(conn)

@@ -30,8 +30,8 @@ config :logger, level: :debug
 config :gateway, :public_http,
   port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 4000}
 
-config :gateway, :private_http,
-  port: {:system, :integer, "GATEWAY_PRIVATE_PORT", 4001}
+config :gateway, :management_http,
+  port: {:system, :integer, "GATEWAY_MANAGEMENT_PORT", 4001}
 
 config :skycluster,
   strategy: {:system, :module, "SKYCLUSTER_STRATEGY", Cluster.Strategy.Epmd}
