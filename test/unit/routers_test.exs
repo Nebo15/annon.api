@@ -23,10 +23,6 @@ defmodule Gateway.RoutersTest do
   end
 
   describe "error match works" do
-    test "on public router" do
-      # TODO
-    end
-
     test "on private router" do
       conn = :get
       |> conn("/apis/binary_id")
