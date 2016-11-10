@@ -37,7 +37,7 @@ defmodule Gateway.Plugins.ACL do
       path_matches? = server_scope["path"] == "*" || String.starts_with?(conn.request_path, server_scope["path"])
       acl_rule_matches? = Enum.any?(client_scopes, fn(s) -> s in server_scope["scopes"] end)
 
-      method_matches? || acl_rule_matches? || path_matches?
+      method_matches? && acl_rule_matches? && path_matches?
     end
 
     case Enum.any?(server_scopes, matching_fun) do
