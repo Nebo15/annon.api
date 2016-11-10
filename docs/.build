@@ -42,6 +42,7 @@ Gateway.Helpers.IP.html
 Gateway.Helpers.Plugin.html
 Gateway.Helpers.Render.html
 Gateway.Helpers.Response.html
+Gateway.ManagementRouter.html
 Gateway.Plugins.ACL.html
 Gateway.Plugins.APILoader.html
 Gateway.Plugins.IPRestriction.html
@@ -51,7 +52,6 @@ Gateway.Plugins.Logger.html
 Gateway.Plugins.Monitoring.html
 Gateway.Plugins.Proxy.html
 Gateway.Plugins.Validator.html
-Gateway.PrivateRouter.html
 Gateway.PublicRouter.html
 Gateway.UnitCase.html
 gateway_tasks.html
