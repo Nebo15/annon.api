@@ -9,7 +9,7 @@ defmodule Gateway.ClusterConfigReloaderTest do
     # node1@127.0.0.1 and node2@127.0.0.1
     Gateway.Cluster.spawn()
 
-    api_id = create_api()
+    api_id = create_api() |> get_body() |> get_in(["data", "id"])
 
     on_exit(fn ->
       Gateway.DB.Schemas.API
@@ -44,32 +44,9 @@ defmodule Gateway.ClusterConfigReloaderTest do
   end
 
   defp update_api(api_id, field, value) do
-    "#{url()}/apis/#{api_id}"
-    |> HTTPoison.put!(Poison.encode!(%{field => value}), [{"content-type", "application/json"}])
-  end
-
-  defp create_api do
-    map =
-      %{
-        name: "Test api",
-        request: %{
-          scheme: "HTTP",
-          host: "example.com",
-          port: "80",
-          path: "/",
-          method: "GET"
-        }
-      }
-
-    "#{url()}/apis"
-    |> HTTPoison.post!(Poison.encode!(map), [{"content-type", "application/json"}])
-    |> Map.get(:body)
-    |> Poison.decode!
-    |> Map.get("data")
-    |> Map.get("id")
-  end
-
-  def url do
-    "http://#{get_host(:management)}:#{get_port(:management)}"
+    "apis/#{api_id}"
+    |> put_management_url()
+    |> post!(%{field => value})
+    |> assert_status(200)
   end
 end
