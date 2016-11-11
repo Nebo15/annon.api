@@ -141,7 +141,9 @@ defmodule Gateway.Acceptance.PluginPipelineTest do
   end
 
   def api_data(method, path) do
-    get_api_model_data()
+    :api
+    |> build_factory_params()
+    |> Map.drop([:__struct__, :__meta__])
     |> Map.put(:request,
       %{host: get_host(:public), path: path, port: get_port(:public), scheme: "http", method: [method]})
     |> Map.put(:plugins, get_plugins([method]))

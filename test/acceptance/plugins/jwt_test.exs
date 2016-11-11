@@ -30,13 +30,15 @@ defmodule Gateway.Acceptance.Plugin.JWTTest do
   @payload %{"id" => @consumer_id, "name" => "John Doe"}
 
   test "jwt consumer plugins settings rewrite" do
+
     validator_settings = %{
       "rules" => [
         %{"methods" => ["POST"], "path" => ".*", "schema" => @schema}
       ]
     }
 
-    data = get_api_model_data()
+    data = :api
+    |> build_factory_params()
     |> Map.put(:request,
       %{host: get_host(:public), path: "/jwt/test", port: get_port(:public), scheme: "http", method: ["POST"]})
     |> Map.put(:plugins, [
@@ -62,7 +64,7 @@ defmodule Gateway.Acceptance.Plugin.JWTTest do
     |> post(Poison.encode!(%{bar: "string"}), :public, [{"authorization", "Bearer invalid.credentials.signature"}])
     |> assert_status(401)
 
-    # TODO: FIXME I AM BROKEN
+    # TODO: FIX ME I AM BROKEN
     # "jwt/test"
     # |> post(Poison.encode!(%{bar: "string"}), :public, [{"authorization", "Bearer #{token}"}])
     # |> assert_status(422)
@@ -73,7 +75,8 @@ defmodule Gateway.Acceptance.Plugin.JWTTest do
   end
 
   test "jwt default plugins settings" do
-    get_api_model_data()
+    :api
+    |> build_factory_params()
     |> Map.put(:request,
       %{host: get_host(:public), path: "/jwt/default", port: get_port(:public), scheme: "http", method: ["GET"]})
     |> Map.put(:plugins, [

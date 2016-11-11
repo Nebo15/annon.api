@@ -5,7 +5,6 @@ defmodule Gateway.Acceptance.Plugin.IdempotencyTest do
   @idempotency_key Ecto.UUID.generate()
 
   test "test idempotency POST request" do
-
     api_data = "POST"
     |> api_idempotency_data("/idempotency")
 
@@ -45,7 +44,8 @@ defmodule Gateway.Acceptance.Plugin.IdempotencyTest do
   end
 
   def api_idempotency_data(method, path) do
-    get_api_model_data()
+    :api
+    |> build_factory_params()
     |> Map.put(:request,
       %{host: get_host(:public), path: path, port: get_port(:public), scheme: "http", method: [method]})
     |> Map.put(:plugins, get_plugins())

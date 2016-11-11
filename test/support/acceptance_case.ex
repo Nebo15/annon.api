@@ -13,7 +13,6 @@ defmodule Gateway.AcceptanceCase do
       import Ecto
       import Ecto.Changeset
       import Ecto.Query, only: [from: 2]
-      import Gateway.Fixtures
       import Gateway.AcceptanceCase
 
       alias Gateway.DB.Configs.Repo
@@ -64,6 +63,28 @@ defmodule Gateway.AcceptanceCase do
       def assert_resp_body_json(%HTTPoison.Response{body: body} = resp) do
         assert {:ok, _} = Poison.decode(body)
         resp
+      end
+
+      def build_factory_params(factory, overrides \\ []) do
+        factory
+        |> Gateway.Factory.build(overrides)
+        |> schema_to_map()
+      end
+
+      defp schema_to_map(schema) do
+        schema
+        |> Map.drop([:__struct__, :__meta__])
+        |> Enum.reduce(%{}, fn
+          {key, %Ecto.Association.NotLoaded{}}, acc ->
+            acc
+            |> Map.put(key, %{})
+          {key, %{__struct__: _} = map}, acc ->
+            acc
+            |> Map.put(key, schema_to_map(map))
+          {key, val}, acc ->
+            acc
+            |> Map.put(key, val)
+        end)
       end
 
       setup tags do

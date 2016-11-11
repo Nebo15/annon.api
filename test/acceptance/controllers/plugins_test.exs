@@ -7,7 +7,8 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
     |> post(Poison.encode!(invalid_plugin_data("jwt")), :management)
     |> assert_status(422)
 
-    data = get_api_model_data()
+    data = :api
+    |> build_factory_params()
     |> Map.put(:plugins, [
       %{name: "jwt", is_enabled: false, settings: %{"signature" => 1000}},
     ])
@@ -22,7 +23,8 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
     |> post(Poison.encode!(invalid_plugin_data("validator")), :management)
     |> assert_status(422)
 
-    data = get_api_model_data()
+    data = :api
+    |> build_factory_params()
     |> Map.put(:plugins, [
       %{name: "validator", is_enabled: false, settings: %{"schema" => "{invalid: schema: json]"}},
     ])
@@ -37,7 +39,8 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
     |> post(Poison.encode!(invalid_plugin_data("acl")), :management)
     |> assert_status(422)
 
-    data = get_api_model_data()
+    data = :api
+    |> build_factory_params()
     |> Map.put(:plugins, [
       %{name: "acl", is_enabled: false, settings: %{"scope" => 100}},
     ])
@@ -52,7 +55,8 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
     |> post(Poison.encode!(invalid_plugin_data("ip_restriction")), :management)
     |> assert_status(422)
 
-    data = get_api_model_data()
+    data = :api
+    |> build_factory_params()
     |> Map.put(:plugins, [
       %{name: "ip_restriction", is_enabled: false, settings: %{"ip_blacklist" => 100, "ip_whitelist" => ["127.0.0.1"]}},
     ])
@@ -60,7 +64,8 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
     |> post(Poison.encode!(data), :management)
     |> assert_status(422)
 
-    data = get_api_model_data()
+    data = :api
+    |> build_factory_params()
     |> Map.put(:plugins, [
       %{name: "ip_restriction", is_enabled: false, settings: %{"ip_whitelist" => ["127.0.0.1"]}},
     ])
@@ -68,7 +73,8 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
     |> post(Poison.encode!(data), :management)
     |> assert_status(422)
 
-    data = get_api_model_data()
+    data = :api
+    |> build_factory_params()
     |> Map.put(:plugins, [
       %{name: "ip_restriction",
         is_enabled: false,
@@ -78,10 +84,13 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
     |> post(Poison.encode!(data), :management)
     |> assert_status(422)
 
-    data = get_api_model_data()
+    data = :api
+    |> build_factory_params()
     |> Map.put(:plugins, [
-      %{name: "ip_restriction", is_enabled: false, settings: %{"ip_blacklist" => ["127.0.0.1"],
-                                                              "ip_whitelist" => ["127.0.0.256"]}},
+      %{name: "ip_restriction", is_enabled: false, settings: %{
+        "ip_blacklist" => ["127.0.0.1"],
+        "ip_whitelist" => ["127.0.0.256"]
+      }},
     ])
     "apis"
     |> post(Poison.encode!(data), :management)
@@ -93,7 +102,8 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
     |> post(Poison.encode!(invalid_plugin_data("proxy")), :management)
     |> assert_status(422)
 
-    data = get_api_model_data()
+    data = :api
+    |> build_factory_params()
     |> Map.put(:plugins, [
       %{name: "proxy", is_enabled: false, settings: %{"path" => 100}},
     ])
@@ -104,7 +114,8 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
   end
 
   defp invalid_plugin_data(plugin_name) when is_binary(plugin_name) do
-    get_api_model_data()
+    :api
+    |> build_factory_params()
     |> Map.put(:plugins, [
       %{name: plugin_name, is_enabled: false, settings: %{"invalid" => "data"}},
     ])

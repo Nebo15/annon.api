@@ -3,7 +3,8 @@ defmodule Gateway.Acceptance.Controllers.APITest do
   use Gateway.AcceptanceCase
 
   test "update model API" do
-    %HTTPoison.Response{body: body} = get_api_model_data()
+    %HTTPoison.Response{body: body} = :api
+    |> build_factory_params()
     |> http_api_create()
 
     id = body
@@ -30,7 +31,8 @@ defmodule Gateway.Acceptance.Controllers.APITest do
   end
 
   test "delete model API" do
-    %HTTPoison.Response{body: body} = get_api_model_data()
+    %HTTPoison.Response{body: body} = :api
+    |> build_factory_params()
     |> http_api_create()
 
     id = body

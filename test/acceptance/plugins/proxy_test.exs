@@ -155,7 +155,8 @@ defmodule Gateway.Acceptance.Plugin.ProxyTest do
   end
 
   def get_api_proxy_data(path, enable_jwt \\ true) do
-    get_api_model_data()
+    :api
+    |> build_factory_params()
     |> Map.put(:request,
       %{host: get_host(:public), path: path, port: get_port(:public), scheme: "http", method: ["GET"]})
     |> Map.put(:plugins, [

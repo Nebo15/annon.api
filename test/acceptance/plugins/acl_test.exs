@@ -66,7 +66,8 @@ defmodule Gateway.Acceptance.Plugin.ACLTest do
   end
 
   test "invalid JWT.scopes type" do
-    get_api_model_data()
+    :api
+    |> build_factory_params()
     |> Map.put(:plugins, [
       %{name: "jwt", is_enabled: true, settings: %{"signature" => @jwt_secret}},
       %{name: "acl", is_enabled: true, settings: %{
@@ -89,7 +90,8 @@ defmodule Gateway.Acceptance.Plugin.ACLTest do
   end
 
   def api_acl_data(request_data, scope) when is_binary(scope) do
-    get_api_model_data()
+    :api
+    |> build_factory_params()
     |> Map.put(:request, request_data)
     |> Map.put(:plugins, [
       %{name: "jwt", is_enabled: true, settings: %{"signature" => @jwt_secret}},
