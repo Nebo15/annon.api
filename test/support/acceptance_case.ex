@@ -45,6 +45,13 @@ defmodule Gateway.AcceptanceCase do
         "http://#{host}:#{port}/#{url}"
       end
 
+      def build_api do
+        :api
+        |> build_factory_params()
+        |> build_api()
+        |> assert_status(201)
+      end
+
       def build_api(data) do
         "apis"
         |> put_management_url()
