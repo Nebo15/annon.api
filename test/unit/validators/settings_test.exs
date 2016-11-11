@@ -4,10 +4,10 @@ defmodule Gateway.Changeset.Validator.SettingsTest do
   describe "ACL plugin validation" do
     test "Valid settings" do
       rules = [
-        %{"methods" => ["GET", "POST", "PUT", "DELETE"], "path" => "*", "scopes" => ["request_api"]},
-        %{"methods" => ["GET"], "path" => "/profiles/me", "scopes" => ["read_profile"]},
-        %{"methods" => ["POST", "PUT"], "path" => "/profiles/me", "scopes" => ["update_profile"]},
-        %{"methods" => ["DELETE"], "path" => "/profiles/me", "scopes" => ["delete_profile"]}
+        %{"methods" => ["GET", "POST", "PUT", "DELETE"], "path" => ".*", "scopes" => ["request_api"]},
+        %{"methods" => ["GET"], "path" => "^/profiles/me$", "scopes" => ["read_profile"]},
+        %{"methods" => ["POST", "PUT"], "path" => "^/profiles/me$", "scopes" => ["update_profile"]},
+        %{"methods" => ["DELETE"], "path" => "^/profiles/me$", "scopes" => ["delete_profile"]}
       ]
 
       changeset =

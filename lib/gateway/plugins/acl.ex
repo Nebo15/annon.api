@@ -34,7 +34,7 @@ defmodule Gateway.Plugins.ACL do
   defp validate_scopes(server_scopes, client_scopes, conn) when is_list(client_scopes) do
     matching_fun = fn server_scope ->
       method_matches? = conn.method in server_scope["methods"]
-      path_matches? = server_scope["path"] == "*" || String.starts_with?(conn.request_path, server_scope["path"])
+      path_matches? = conn.request_path =~ ~r"#{server_scope["path"]}"
       acl_rule_matches? = Enum.any?(client_scopes, fn(s) -> s in server_scope["scopes"] end)
 
       method_matches? && acl_rule_matches? && path_matches?

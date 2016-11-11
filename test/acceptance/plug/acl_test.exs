@@ -71,7 +71,7 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
       %{name: "jwt", is_enabled: true, settings: %{"signature" => @jwt_secret}},
       %{name: "acl", is_enabled: true, settings: %{
         "rules" => [
-          %{"methods" => ["GET"], "path" => "*", "scopes" => ["acl_read"]}
+          %{"methods" => ["GET"], "path" => ".*", "scopes" => ["acl_read"]}
         ]
       }}
     ])
@@ -95,7 +95,7 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
       %{name: "jwt", is_enabled: true, settings: %{"signature" => @jwt_secret}},
       %{name: "acl", is_enabled: true, settings: %{
         "rules" => [
-          %{"methods" => request_data.method, "path" => "*", "scopes" => [scope]}
+          %{"methods" => request_data.method, "path" => ".*", "scopes" => [scope]}
         ]
       }}
     ])

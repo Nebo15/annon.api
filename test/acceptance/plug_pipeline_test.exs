@@ -151,7 +151,7 @@ defmodule Gateway.Acceptance.PlugPipelineTest do
     [
       %{name: "acl", is_enabled: true, settings: %{
         "rules" => [
-          %{"methods" => methods, "path" => "*", "scopes" => ["api_create"]}
+          %{"methods" => methods, "path" => ".*", "scopes" => ["api_create"]}
         ]
       }},
       %{name: "jwt", is_enabled: true, settings: %{"signature" => @token_secret}},
