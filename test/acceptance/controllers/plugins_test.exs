@@ -133,12 +133,15 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
 
       %{
         "error" => %{
-          "invalid" => [%{"entry" => "$.scope", "rules" => [%{"rule" => "cast"}]}]
-          # TODO: Entry should be $.settings.scope
+          "invalid" => [%{"entry" => "$.settings", "rules" => [%{"rule" => "cast"}]}]
+          # TODO: Entry should be $.settings.rules[0].scopes
         }
       } = "apis/#{api_id}/plugins"
       |> put_management_url()
-      |> post!(%{name: "acl", is_enabled: false, settings: %{"scope" => 100}})
+      |> post!(%{name: "acl",
+        is_enabled: false,
+        settings: %{rules: [%{"methods" => ["GET"], "path" => ".*", "scopes" => 100}]}
+      })
       |> assert_status(422)
       |> get_body()
     end
@@ -221,7 +224,7 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
           "invalid" => [%{"entry" => "$.settings", "rules" => [%{"rule" => "cast"}]}]
           # TODO: Entry should be $.settings.ip_blacklist
           # "invalid" => [%{"entry" => "$.settings.ip_whitelis", "rules" => [%{"rule" => "format"}]}]
-          # TODO: different fields should not be merged togather in one `entry`
+          # TODO: different fields should not be merged together in one `entry`
         }
       } = "apis/#{api_id}/plugins"
       |> put_management_url()
