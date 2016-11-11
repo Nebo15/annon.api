@@ -1,5 +1,5 @@
 defmodule Gateway.Changeset.Validator.SettingsTest do
-  use Gateway.API.ModelCase
+  use Gateway.UnitCase
 
   describe "ACL plugin validation" do
     test "Valid settings" do
