@@ -31,7 +31,16 @@ defmodule Gateway.Factory do
     %Gateway.DB.Schemas.Plugin{
       name: "proxy",
       is_enabled: true,
-      settings: %{}
+      settings: %{
+        "additional_headers" => [
+          %{"static" => "header"}
+        ],
+        "host" => "localhost",
+        "port" => 3000,
+        "path" => "/some/path",
+        "scheme" => "https",
+        "method" => "GET"
+      }
     }
   end
 
