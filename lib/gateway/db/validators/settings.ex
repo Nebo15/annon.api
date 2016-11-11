@@ -95,8 +95,15 @@ defmodule Gateway.Changeset.Validator.Settings do
     ch
     |> validate_via_json_schema(:settings, %{
        "type" => "object",
+       "additionalProperties" => false,
        "required" => ["host"],
        "properties" => %{
+         "additional_headers" => %{
+           "type" => "array",
+           "items" => %{
+             "type" => "object"
+           }
+         },
          "scheme" => %{
            "enum" => ["http", "https"]
          },
