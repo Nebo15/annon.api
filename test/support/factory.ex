@@ -32,6 +32,7 @@ defmodule Gateway.Factory do
       name: "proxy",
       is_enabled: true,
       settings: %{
+        "strip_request_path" => false,
         "additional_headers" => [
           %{"static" => "header"}
         ],

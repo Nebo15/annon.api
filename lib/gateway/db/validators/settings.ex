@@ -104,6 +104,9 @@ defmodule Gateway.Changeset.Validator.Settings do
              "type" => "object"
            }
          },
+         "strip_request_path" => %{
+           "type" => "boolean"
+         },
          "scheme" => %{
            "enum" => ["http", "https"]
          },
