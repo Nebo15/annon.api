@@ -7,7 +7,7 @@ defmodule Gateway.Controllers.ConsumerTest do
       consumer_data = Gateway.Factory.insert_pair(:consumer)
 
       "/consumers"
-      |> send_get()
+      |> call_get()
       |> assert_conn_status()
       |> assert_response_body(consumer_data)
     end
@@ -18,7 +18,7 @@ defmodule Gateway.Controllers.ConsumerTest do
       metadata = consumer_data.metadata
 
       conn = "/consumers"
-      |> send_post(consumer_data)
+      |> call_post(consumer_data)
       |> assert_conn_status(201)
 
       assert %{
@@ -33,7 +33,7 @@ defmodule Gateway.Controllers.ConsumerTest do
   describe "/consumers/:external_id" do
     test "GET 404" do
       "not_exist"
-      |> send_get()
+      |> call_get()
       |> assert_conn_status(404)
     end
 
@@ -41,7 +41,7 @@ defmodule Gateway.Controllers.ConsumerTest do
       consumer = Gateway.Factory.insert(:consumer)
 
       "/consumers/#{consumer.external_id}"
-      |> send_get()
+      |> call_get()
       |> assert_conn_status()
       |> assert_response_body(consumer)
     end
@@ -51,7 +51,7 @@ defmodule Gateway.Controllers.ConsumerTest do
       consumer_update = Gateway.Factory.build(:consumer, %{metadata: %{foo: "bar"}})
 
       conn = "/consumers/#{consumer.external_id}"
-      |> send_put(consumer_update)
+      |> call_put(consumer_update)
       |> assert_conn_status()
 
       assert %{
@@ -68,11 +68,11 @@ defmodule Gateway.Controllers.ConsumerTest do
       consumer = Gateway.Factory.insert(:consumer)
 
       "/consumers/#{consumer.external_id}"
-      |> send_delete()
+      |> call_delete()
       |> assert_conn_status()
 
       "/consumers/#{consumer.external_id}"
-      |> send_get()
+      |> call_get()
       |> assert_conn_status(404)
     end
   end

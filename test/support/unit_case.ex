@@ -21,37 +21,37 @@ defmodule Gateway.UnitCase do
     conn
   end
 
-  def send_get(path) do
+  def call_get(path) do
     :get
     |> conn(path)
-    |> prepare_conn
+    |> call_router()
   end
 
-  def send_public_get(path) do
+  def call_public_router(path) do
     :get
     |> conn(path)
-    |> prepare_conn(Gateway.PublicRouter)
+    |> call_router(Gateway.PublicRouter)
   end
 
-  def send_delete(path) do
+  def call_delete(path) do
     :delete
     |> conn(path)
-    |> prepare_conn
+    |> call_router()
   end
 
-  def send_post(path, data) do
+  def call_post(path, data) do
     :post
     |> conn(path, Poison.encode!(data))
-    |> prepare_conn
+    |> call_router()
   end
 
-  def send_put(path, data) do
+  def call_put(path, data) do
     :put
     |> conn(path, Poison.encode!(data))
-    |> prepare_conn
+    |> call_router()
   end
 
-  defp prepare_conn(conn, router \\ Gateway.ManagementRouter) do
+  defp call_router(conn, router \\ Gateway.ManagementRouter) do
     conn
     |> put_req_header("content-type", "application/json")
     |> router.call([])

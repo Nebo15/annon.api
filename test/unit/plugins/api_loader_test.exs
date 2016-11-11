@@ -69,12 +69,12 @@ defmodule Gateway.Plugins.APILoaderTest do
 
       Gateway.AutoClustering.do_reload_config()
 
-      assert 404 == send_public_get("/some_path").status
-      assert 200 == send_public_get("/mockbin").status
-      assert 200 == send_public_get("/mockbin/path").status
+      assert 404 == call_public_router("/some_path").status
+      assert 200 == call_public_router("/mockbin").status
+      assert 200 == call_public_router("/mockbin/path").status
 
-      assert "http://localhost:5001/apis" == get_from_body(send_public_get("/mockbin"), ["meta", "url"])
-      assert "http://localhost:5001/apis" == get_from_body(send_public_get("/mockbin/path"), ["meta", "url"])
+      assert "http://localhost:5001/apis" == get_from_body(call_public_router("/mockbin"), ["meta", "url"])
+      assert "http://localhost:5001/apis" == get_from_body(call_public_router("/mockbin/path"), ["meta", "url"])
     end
   end
 

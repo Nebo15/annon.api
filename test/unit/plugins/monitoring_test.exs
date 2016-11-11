@@ -33,7 +33,7 @@ defmodule Gateway.MonitoringTest do
     Gateway.AutoClustering.do_reload_config()
 
     "/apis"
-    |> send_public_get()
+    |> call_public_router()
   end
 
   defp check_statsd(metric_type, metric_name) do
