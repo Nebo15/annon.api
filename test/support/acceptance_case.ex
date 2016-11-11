@@ -6,86 +6,54 @@ defmodule Gateway.AcceptanceCase do
   """
 
   use ExUnit.CaseTemplate
+  import Joken
 
   using do
-    quote do
-      import Joken
-      import Ecto
-      import Ecto.Changeset
-      import Ecto.Query, only: [from: 2]
+    quote location: :keep do
+      use HTTPoison.Base
       import Gateway.AcceptanceCase
 
-      alias Gateway.DB.Configs.Repo
-      alias Gateway.DB.Schemas.Plugin
-      alias Gateway.DB.Schemas.API, as: APISchema
-
+      # Load configuration from environment that allows to test Docker containers that run on another port
       @config Confex.get_map(:gateway, :acceptance)
 
-      def get(url, endpoint_type, headers \\ []), do: request(:get, endpoint_type, url, "", headers)
-      def put(url, body, endpoint_type, headers \\ []), do: request(:put, endpoint_type, url, body, headers)
-      def post(url, body, endpoint_type, headers \\ []), do: request(:post, endpoint_type, url, body, headers)
-      def delete(url, endpoint_type, headers \\ []), do: request(:delete, endpoint_type, url, "", headers)
-
-      def request(request_type, endpoint_type, url, body, custom_headers) do
-        port = get_port(endpoint_type)
-        host = get_host(endpoint_type)
-
-        headers = [{"Content-Type", "application/json"} | custom_headers]
-
-        HTTPoison.request(request_type, "http://#{host}:#{port}/#{url}", body, headers)
+      defp process_request_body(body) do
+        body
+        |> Poison.encode!
       end
 
-      def get_port(endpoint_type), do: @config[endpoint_type][:port]
-      def get_host(endpoint_type), do: @config[endpoint_type][:host]
-
-      def assert_status({:ok, %HTTPoison.Response{} = response}, status), do: assert_status(response, status)
-      def assert_status(%HTTPoison.Response{} = response, status) do
-        assert response.status_code == status
-        response
+      defp process_response_body(body) do
+        body
+        |> Poison.decode!
       end
 
-      def get_body(%HTTPoison.Response{} = response), do: response.body
+      defp process_request_headers(headers) when is_list(headers) do
+        [{"content-type", "application/json"}] ++ headers
+      end
+      defp process_request_headers(_), do: [{"content-type", "application/json"}]
 
-      def jwt_token(payload, signature) do
-        payload
-        |> token
-        |> sign(hs256(signature))
-        |> get_compact
+      def put_public_url(url) do
+        port = get_endpoint_port(:public)
+        host = get_endpoint_host(:public)
+
+        "http://#{host}:#{port}/#{url}"
       end
 
-      def http_api_create(data) do
+      def put_management_url(url) do
+        port = get_endpoint_port(:management)
+        host = get_endpoint_host(:management)
+
+        "http://#{host}:#{port}/#{url}"
+      end
+
+      def build_api(data) do
         "apis"
-        |> post(Poison.encode!(data), :management)
+        |> put_management_url()
+        |> post(data)
         |> assert_status(201)
-        |> assert_resp_body_json()
       end
 
-      def assert_resp_body_json(%HTTPoison.Response{body: body} = resp) do
-        assert {:ok, _} = Poison.decode(body)
-        resp
-      end
-
-      def build_factory_params(factory, overrides \\ []) do
-        factory
-        |> Gateway.Factory.build(overrides)
-        |> schema_to_map()
-      end
-
-      defp schema_to_map(schema) do
-        schema
-        |> Map.drop([:__struct__, :__meta__])
-        |> Enum.reduce(%{}, fn
-          {key, %Ecto.Association.NotLoaded{}}, acc ->
-            acc
-            |> Map.put(key, %{})
-          {key, %{__struct__: _} = map}, acc ->
-            acc
-            |> Map.put(key, schema_to_map(map))
-          {key, val}, acc ->
-            acc
-            |> Map.put(key, val)
-        end)
-      end
+      defp get_endpoint_port(endpoint_type), do: @config[endpoint_type][:port]
+      defp get_endpoint_host(endpoint_type), do: @config[endpoint_type][:host]
 
       setup tags do
         opts =
@@ -107,5 +75,42 @@ defmodule Gateway.AcceptanceCase do
         :ok
       end
     end
+  end
+
+  def assert_status({:ok, %HTTPoison.Response{} = response}, status), do: assert_status(response, status)
+  def assert_status(%HTTPoison.Response{} = response, status) do
+    assert response.status_code == status
+    response
+  end
+
+  def get_body(%HTTPoison.Response{body: body}), do: body
+
+  def build_jwt_token(payload, signature) do
+    payload
+    |> token
+    |> sign(hs256(signature))
+    |> get_compact
+  end
+
+  def build_factory_params(factory, overrides \\ []) do
+    factory
+    |> Gateway.Factory.build(overrides)
+    |> schema_to_map()
+  end
+
+  defp schema_to_map(schema) do
+    schema
+    |> Map.drop([:__struct__, :__meta__])
+    |> Enum.reduce(%{}, fn
+      {key, %Ecto.Association.NotLoaded{}}, acc ->
+        acc
+        |> Map.put(key, %{})
+      {key, %{__struct__: _} = map}, acc ->
+        acc
+        |> Map.put(key, schema_to_map(map))
+      {key, val}, acc ->
+        acc
+        |> Map.put(key, val)
+    end)
   end
 end
