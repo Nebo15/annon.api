@@ -283,6 +283,28 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
     end
   end
 
+  describe "Idempotency Plugin" do
+    test "create", %{api_id: api_id} do
+      idempotency = :idempotency_plugin
+      |> build_factory_params()
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(idempotency)
+      |> assert_status(201)
+
+      %{
+        "data" => [%{
+          "name" => "idempotency",
+          "api_id" => ^api_id
+        }
+      ]} = "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> get!()
+      |> get_body()
+    end
+  end
+
   defp build_invalid_plugin(plugin_name) when is_binary(plugin_name) do
     %{
       name: plugin_name,

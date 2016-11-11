@@ -68,7 +68,7 @@ defmodule Gateway.AcceptanceCase do
       def create_api(data) do
         "apis"
         |> put_management_url()
-        |> post(data)
+        |> post!(data)
         |> assert_status(201)
       end
 
