@@ -18,17 +18,11 @@ defmodule Gateway.Plugins.Validator do
   def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
     plugins
     |> find_plugin_settings()
-    |> IO.inspect
     |> execute(conn)
   end
   def call(conn, _), do: conn
 
   defp execute(%Plugin{settings: %{"rules" => rules}}, %Plug.Conn{body_params: %{} = body} = conn) do
-    IO.puts "-----"
-    IO.inspect rules
-    IO.inspect conn.method
-    IO.inspect conn.request_path
-    IO.puts "-----"
     rules
     |> Enum.find_value(fn(rule) ->
          method_matches? = conn.method in rule["methods"]
