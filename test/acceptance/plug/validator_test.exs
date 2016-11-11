@@ -18,7 +18,7 @@ defmodule Gateway.Acceptance.Plug.ValidatorTest do
     |> Map.put(:plugins, [
       %{name: "validator", is_enabled: true, settings: %{
         "rules" => [
-          %{"methods" => ["POST"], "path" => ".*", "schema" => @schema}
+          %{"methods" => ["GET", "POST"], "path" => ".*", "schema" => @schema}
         ]
       }}
     ])
