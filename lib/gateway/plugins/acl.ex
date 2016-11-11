@@ -24,21 +24,28 @@ defmodule Gateway.Plugins.ACL do
   def call(conn, _), do: conn
 
   defp execute(nil, _conn), do: :ok
-  defp execute(%Plugin{settings: %{"scope" => plugin_scope}},
-               %Conn{private: %{jwt_token: %Token{claims: %{"scopes" => token_scopes}}}}) do
-    plugin_scope
-    |> validate_scopes(token_scopes)
+  defp execute(%Plugin{settings: %{"rules" => rules}},
+               %Conn{private: %{jwt_token: %Token{claims: %{"scopes" => token_scopes}}}} = conn) do
+    validate_scopes(rules, token_scopes, Map.take(conn, [:request_path, :method]))
   end
-  defp execute(%Plugin{settings: %{"scope" => _}}, _conn), do: {:error, :forbidden}
+  defp execute(%Plugin{settings: %{"rules" => _}}, _conn), do: {:error, :forbidden}
   defp execute(_plugin, _conn), do: {:error, :no_scopes_is_set}
 
-  defp validate_scopes(scope, scopes) when is_list(scopes) do
-    case Enum.member?(scopes, scope) do
+  defp validate_scopes(server_scopes, client_scopes, conn) when is_list(client_scopes) do
+    matching_fun = fn server_scope ->
+      method_matches? = conn.method in server_scope["methods"]
+      path_matches? = server_scope["path"] == "*" || String.starts_with?(conn.request_path, server_scope["path"])
+      acl_rule_matches? = Enum.any?(client_scopes, fn(s) -> s in server_scope["scopes"] end)
+
+      method_matches? && acl_rule_matches? && path_matches?
+    end
+
+    case Enum.any?(server_scopes, matching_fun) do
       true -> :ok
       false -> {:error, :forbidden}
     end
   end
-  defp validate_scopes(_scope, _scopes), do: {:error, :invalid_scopes_type}
+  defp validate_scopes(_scope, _scopes, _conn_data), do: {:error, :invalid_scopes_type}
 
   defp send_response(:ok, conn), do: conn
   defp send_response({:error, :forbidden}, conn) do

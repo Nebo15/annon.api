@@ -4,7 +4,7 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
 
   @jwt_secret "secret"
 
-  test "ACL for GET and POST method" do
+  setup do
     request_data = %{host: get_host(:public), path: "/acl", port: get_port(:public), scheme: "http", method: ["POST"]}
     request_data
     |> api_acl_data("acl_create")
@@ -17,7 +17,10 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
 
     Gateway.AutoClustering.do_reload_config()
 
-    # token without scopes
+    :ok
+  end
+
+  test "token without scopes" do
     token_without_scopes = jwt_token(%{"name" => "Alice"}, @jwt_secret)
 
     "acl"
@@ -27,8 +30,9 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
     "acl"
     |> post("{}", :public, [{"authorization", "Bearer #{token_without_scopes}"}])
     |> assert_status(403)
+  end
 
-    # just write
+  test "just write" do
     token_w = jwt_token(%{"scopes" => ["acl_create", "asd"]}, @jwt_secret)
     "acl"
     |> post("{}", :public, [{"authorization", "Bearer #{token_w}"}])
@@ -37,8 +41,9 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
     "acl"
     |> get(:public, [{"authorization", "Bearer #{token_w}"}])
     |> assert_status(403)
+  end
 
-    # just read
+  test "just read" do
     token_r = jwt_token(%{"scopes" => ["acl_read"]}, @jwt_secret)
     "acl"
     |> post("{}", :public, [{"authorization", "Bearer #{token_r}"}])
@@ -47,8 +52,9 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
     "acl"
     |> get(:public, [{"authorization", "Bearer #{token_r}"}])
     |> assert_status(404)
+  end
 
-    # read and write
+  test "read and write" do
     token_rw = jwt_token(%{"scopes" => ["acl_read", "acl_create"]}, @jwt_secret)
     "acl"
     |> post("{}", :public, [{"authorization", "Bearer #{token_rw}"}])
@@ -63,7 +69,13 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
     get_api_model_data()
     |> Map.put(:plugins, [
       %{name: "jwt", is_enabled: true, settings: %{"signature" => @jwt_secret}},
-      %{name: "acl", is_enabled: true, settings: %{"scope" => "acl_read"}}])
+      %{name: "acl", is_enabled: true, settings: %{
+        "rules" => [
+          %{"methods" => ["GET"], "path" => "*", "scopes" => ["acl_read"]}
+        ]
+      }}
+    ])
+
     |> Map.put(:request,
       %{host: get_host(:public), path: "/acl/scopes", port: get_port(:public), scheme: "http", method: ["GET"]})
     |> http_api_create()
@@ -81,7 +93,11 @@ defmodule Gateway.Acceptance.Plug.ACLTest do
     |> Map.put(:request, request_data)
     |> Map.put(:plugins, [
       %{name: "jwt", is_enabled: true, settings: %{"signature" => @jwt_secret}},
-      %{name: "acl", is_enabled: true, settings: %{"scope" => scope}}
+      %{name: "acl", is_enabled: true, settings: %{
+        "rules" => [
+          %{"methods" => request_data.method, "path" => "*", "scopes" => [scope]}
+        ]
+      }}
     ])
   end
 end
