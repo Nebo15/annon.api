@@ -155,7 +155,11 @@ defmodule Gateway.Acceptance.PlugPipelineTest do
         ]
       }},
       %{name: "jwt", is_enabled: true, settings: %{"signature" => @token_secret}},
-      %{name: "validator", is_enabled: true, settings: %{"rules" => [%{"methods" => ["POST"], "path" => ".*", "schema" => @schema}]}},
+      %{name: "validator", is_enabled: true, settings: %{
+        "rules" => [
+          %{"methods" => methods, "path" => ".*", "schema" => @schema}
+        ]
+      }},
       %{name: "idempotency", is_enabled: true, settings: %{"key" => 100}},
       %{name: "proxy", is_enabled: true, settings: %{
           host: get_host(:management),

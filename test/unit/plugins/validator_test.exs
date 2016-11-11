@@ -19,7 +19,9 @@ defmodule Gateway.Plugins.ValidatorTest do
     }
 
     model = %APISchema{plugins: [
-      %PluginSchema{is_enabled: true, name: "validator", settings: %{"rules" => [%{"methods" => ["GET", "PUT"], "path" => ".*", "schema" => schema}]}}
+      %PluginSchema{is_enabled: true, name: "validator", settings: %{
+        "rules" => [%{"methods" => ["GET", "PUT"], "path" => ".*", "schema" => schema}]
+      }}
     ]}
 
     conn = :get
