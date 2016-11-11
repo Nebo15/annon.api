@@ -30,7 +30,7 @@ defmodule Gateway.Acceptance.Plug.JWTTest do
     is_enabled: true,
     settings: %{
       "rules" => [
-        %{"methods" => ["POST"], "path" => ".*", "schema" => Poison.encode!(@consumer_schema)}
+        %{"methods" => ["POST"], "path" => ".*", "schema" => @consumer_schema}
       ]
     }
   }

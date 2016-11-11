@@ -38,7 +38,6 @@ defmodule Gateway.Plugins.Validator do
            rule["schema"]
          end
        end)
-    |> Poison.decode!()
     |> NExJsonSchema.Validator.validate(body)
     |> normalize_validation(conn)
   end
