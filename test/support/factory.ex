@@ -49,7 +49,7 @@ defmodule Gateway.Factory do
       is_enabled: true,
       settings: %{
         "rules" => [
-          %{"methods" => ["GET"], "path" => "*", "scopes" => ["some_resource:read"]}
+          %{"methods" => ["GET"], "path" => ".*", "scopes" => ["some_resource:read"]}
         ]
       }
     }
