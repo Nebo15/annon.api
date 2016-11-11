@@ -1,10 +1,10 @@
 defmodule Gateway.Acceptance.Controllers.APITest do
   @moduledoc false
-  use Gateway.AcceptanceCase
+  use Gateway.AcceptanceCase, async: true
 
   describe "apis/:api_id/" do
     test "PUT" do
-      body = build_api() |> get_body()
+      body = create_api() |> get_body()
 
       id = get_in(body, ["data", "id"])
 
@@ -30,7 +30,7 @@ defmodule Gateway.Acceptance.Controllers.APITest do
     end
 
     test "DELETE" do
-      body = build_api() |> get_body()
+      body = create_api() |> get_body()
 
       id = get_in(body, ["data", "id"])
 

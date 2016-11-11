@@ -95,24 +95,28 @@ defmodule Gateway.Changeset.Validator.Settings do
   def validate_settings(%Changeset{changes: %{name: "ip_restriction"}} = ch) do
     ch
     |> validate_via_json_schema(:settings, %{
-       "type" => "object",
-       "required" => ["ip_whitelist", "ip_blacklist"],
-       "properties" => %{
-         "ip_whitelist" => %{
-           "type" => "array",
-           "items" => %{
+      "type" => "object",
+      "anyOf" => [
+        %{"required" => ["ip_whitelist", "ip_blacklist"]},
+        %{"required" => ["ip_whitelist"]},
+        %{"required" => ["ip_blacklist"]}
+      ],
+      "properties" => %{
+        "ip_whitelist" => %{
+          "type" => "array",
+          "items" => %{
             "type" => "string",
             "pattern" => @ip_pattern,
-           }
-         },
-         "ip_blacklist" => %{
-           "type" => "array",
-           "items" => %{
-            "type" => "string",
-            "pattern" => @ip_pattern,
-           }
-         },
-       },
+          }
+        },
+        "ip_blacklist" => %{
+        "type" => "array",
+        "items" => %{
+          "type" => "string",
+          "pattern" => @ip_pattern,
+          }
+        }
+      }
      })
   end
 

@@ -17,10 +17,9 @@ defmodule Gateway.Acceptance.Plugin.ProxyTest do
   test "proxy plugin" do
 
     api_id = @api_url
-    |> post(Poison.encode!(get_api_proxy_data("/proxy/test")), :management)
+    |> post(get_api_proxy_data("/proxy/test"), :management)
     |> assert_status(201)
     |> get_body()
-    |> Poison.decode!
     |> get_in(["data", "id"])
 
     proxy_plugin = %{
@@ -34,9 +33,8 @@ defmodule Gateway.Acceptance.Plugin.ProxyTest do
       }
     }
 
-    url = @api_url <> "/#{api_id}/plugins"
-    url
-    |> post(Poison.encode!(proxy_plugin), :management)
+    "#{@api_url}/#{api_id}/plugins"
+    |> post(proxy_plugin, :management)
     |> assert_status(201)
 
     Gateway.AutoClustering.do_reload_config()
@@ -45,7 +43,6 @@ defmodule Gateway.Acceptance.Plugin.ProxyTest do
     |> get(:public, [{"authorization", "Bearer #{jwt_token(@payload, @token_secret)}"}])
     |> assert_status(200)
     |> get_body()
-    |> Poison.decode!
     |> Map.get("data")
 
     assert response["id"] == api_id
@@ -79,36 +76,35 @@ defmodule Gateway.Acceptance.Plugin.ProxyTest do
 
   test "proxy settings scheme validator" do
     @api_url
-    |> post(Poison.encode!(get_api_data("/proxy/invalid_scheme", "http", "GET")), :management)
+    |> post(get_api_data("/proxy/invalid_scheme", "http", "GET"), :management)
     |> assert_status(201)
 
     @api_url
-    |> post(Poison.encode!(get_api_data("/proxy/invalid_scheme", "httpa", "GET")), :management)
+    |> post(get_api_data("/proxy/invalid_scheme", "httpa", "GET"), :management)
     |> assert_status(422)
   end
 
   test "proxy settings method validator" do
     @api_url
-    |> post(Poison.encode!(get_api_data("/proxy/invalid_scheme", "http", "GET")), :management)
+    |> post(get_api_data("/proxy/invalid_scheme", "http", "GET"), :management)
     |> assert_status(201)
 
     @api_url
-    |> post(Poison.encode!(get_api_data("/proxy/invalid_scheme", "https", "GETS")), :management)
+    |> post(get_api_data("/proxy/invalid_scheme", "https", "GETS"), :management)
     |> assert_status(422)
   end
 
   test "proxy with additional headers" do
     api_id = @api_url
-    |> post(Poison.encode!(get_api_proxy_data("/proxy/test_headers", false)), :management)
+    |> post(get_api_proxy_data("/proxy/test_headers", false), :management)
     |> assert_status(201)
     |> get_body()
-    |> Poison.decode!
     |> get_in(["data", "id"])
 
     Gateway.AutoClustering.do_reload_config()
 
     @api_url
-    |> post(Poison.encode!(get_api_proxy_data("/proxy/test")), :management)
+    |> post(get_api_proxy_data("/proxy/test"), :management)
     |> assert_status(201)
 
     Gateway.AutoClustering.do_reload_config()
@@ -124,9 +120,8 @@ defmodule Gateway.Acceptance.Plugin.ProxyTest do
       }
     }
 
-    url = @api_url <> "/#{api_id}/plugins"
-    url
-    |> post(Poison.encode!(proxy_plugin), :management)
+    "#{@api_url}/#{api_id}/plugins"
+    |> post(proxy_plugin, :management)
     |> assert_status(201)
 
     Gateway.AutoClustering.do_reload_config()
@@ -139,14 +134,12 @@ defmodule Gateway.Acceptance.Plugin.ProxyTest do
       [%{"authorization" => "Bearer #{jwt_token(@payload, @token_secret)}"}])
     proxy_plugin = Map.put(proxy_plugin, :settings, new_settings)
 
-    url = @api_url <> "/#{api_id}/plugins/proxy"
-    url
+    "#{@api_url}/#{api_id}/plugins/proxy"
     |> delete(:management)
     |> assert_status(200)
 
-    url = @api_url <> "/#{api_id}/plugins"
-    url
-    |> post(Poison.encode!(proxy_plugin), :management)
+    "#{@api_url}/#{api_id}/plugins"
+    |> post(proxy_plugin, :management)
     |> assert_status(201)
 
     "proxy/test_headers"

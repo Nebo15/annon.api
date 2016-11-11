@@ -8,8 +8,8 @@ defmodule Gateway.AcceptanceCase do
   use ExUnit.CaseTemplate
   import Joken
 
-  using do
-    quote location: :keep do
+  using(opts) do
+    quote location: :keep, bind_quoted: [opts: opts] do
       use HTTPoison.Base
       import Gateway.AcceptanceCase
 
@@ -26,10 +26,23 @@ defmodule Gateway.AcceptanceCase do
         |> Poison.decode!
       end
 
-      defp process_request_headers(headers) when is_list(headers) do
-        [{"content-type", "application/json"}] ++ headers
+      if opts[:async] do
+        defp process_request_headers(headers) when is_list(headers) do
+          conf_meta = Phoenix.Ecto.SQL.Sandbox.metadata_for(Gateway.DB.Configs.Repo, self())
+          # logg_meta = Phoenix.Ecto.SQL.Sandbox.metadata_for(Gateway.DB.Logger.Repo, self()) # TODO
+
+          encoded = {:v1, conf_meta}
+          |> :erlang.term_to_binary
+          |> Base.url_encode64
+
+          [{"content-type", "application/json"},
+           {"user-agent", "BeamMetadata (#{encoded})"}] ++ headers
+        end
+      else
+        defp process_request_headers(headers) when is_list(headers) do
+          [{"content-type", "application/json"}] ++ headers
+        end
       end
-      defp process_request_headers(_), do: [{"content-type", "application/json"}]
 
       def put_public_url(url) do
         port = get_endpoint_port(:public)
@@ -45,14 +58,14 @@ defmodule Gateway.AcceptanceCase do
         "http://#{host}:#{port}/#{url}"
       end
 
-      def build_api do
+      def create_api do
         :api
         |> build_factory_params()
-        |> build_api()
+        |> create_api()
         |> assert_status(201)
       end
 
-      def build_api(data) do
+      def create_api(data) do
         "apis"
         |> put_management_url()
         |> post(data)
@@ -63,6 +76,8 @@ defmodule Gateway.AcceptanceCase do
       defp get_endpoint_host(endpoint_type), do: @config[endpoint_type][:host]
 
       setup tags do
+        :ets.delete_all_objects(:config)
+
         opts =
           case tags[:cluster] do
             true -> [sandbox: false]
@@ -77,13 +92,15 @@ defmodule Gateway.AcceptanceCase do
           Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Logger.Repo, {:shared, self()})
         end
 
-        :ets.delete_all_objects(:config)
-
         :ok
       end
     end
   end
 
+  def assert_status({:error, error}, _status) do
+    assert false
+    error
+  end
   def assert_status({:ok, %HTTPoison.Response{} = response}, status), do: assert_status(response, status)
   def assert_status(%HTTPoison.Response{} = response, status) do
     assert response.status_code == status
