@@ -28,18 +28,27 @@ defmodule Gateway.Acceptance.Plug.JWTTest do
   @consumer_plugin %{
     plugin_id: 2, # holy hardcoded shit
     is_enabled: true,
-    settings: %{"schema" => Poison.encode!(@consumer_schema)}
+    settings: %{
+      "rules" => [
+        %{"methods" => ["POST"], "path" => ".*", "schema" => @consumer_schema}
+      ]
+    }
   }
   @payload %{"id" => @consumer_id, "name" => "John Doe"}
 
   test "jwt consumer plugins settings rewrite" do
+    validator_settings = %{
+      "rules" => [
+        %{"methods" => ["POST"], "path" => ".*", "schema" => @schema}
+      ]
+    }
 
     data = get_api_model_data()
     |> Map.put(:request,
       %{host: get_host(:public), path: "/jwt/test", port: get_port(:public), scheme: "http", method: ["POST"]})
     |> Map.put(:plugins, [
       %{name: "jwt", is_enabled: true, settings: %{"signature" => "jwt_test_secret"}},
-      %{name: "validator", is_enabled: false, settings: %{"schema" => Poison.encode!(@schema)}}
+      %{name: "validator", is_enabled: false, settings: validator_settings}
     ])
 
     @api_url

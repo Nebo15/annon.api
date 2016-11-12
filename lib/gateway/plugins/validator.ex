@@ -22,9 +22,16 @@ defmodule Gateway.Plugins.Validator do
   end
   def call(conn, _), do: conn
 
-  defp execute(%Plugin{settings: %{"schema" => schema}}, %Plug.Conn{body_params: %{} = body} = conn) do
-    schema
-    |> Poison.decode!()
+  defp execute(%Plugin{settings: %{"rules" => rules}}, %Plug.Conn{body_params: %{} = body} = conn) do
+    rules
+    |> Enum.find_value(fn(rule) ->
+         method_matches? = conn.method in rule["methods"]
+         path_matches? = conn.request_path =~ ~r"#{rule["path"]}"
+
+         if method_matches? && path_matches? do
+           rule["schema"]
+         end
+       end)
     |> NExJsonSchema.Validator.validate(body)
     |> normalize_validation(conn)
   end

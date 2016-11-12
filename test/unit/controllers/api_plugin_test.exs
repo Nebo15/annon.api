@@ -72,7 +72,12 @@ defmodule Gateway.Controllers.API.PluginTest do
       api_model = Gateway.Factory.insert(:api)
       p1 = Gateway.Factory.insert(:jwt_plugin, api: api_model)
 
-      plugin_data = %{name: "validator", settings: %{"schema" => "{}"}}
+      settings = %{
+        "rules" => [
+          %{"methods" => ["PUT"], "path" => ".*", "schema" => %{"some_field" => "some_value"}},
+        ]
+      }
+      plugin_data = %{name: "validator", settings: settings}
 
       conn = "/apis/#{api_model.id}/plugins/#{p1.name}"
       |> send_put(plugin_data)
@@ -86,12 +91,12 @@ defmodule Gateway.Controllers.API.PluginTest do
       |> assert_conn_status()
 
       # Name can be read from uri params
-      plugin_data = %{settings: %{"schema" => "{}"}}
+      plugin_data = %{settings: settings}
       "/apis/#{api_model.id}/plugins/validator"
       |> send_put(plugin_data)
       |> assert_conn_status()
 
-      plugin_data = %{name: "validator", settings: %{"schema" => "{}"}}
+      plugin_data = %{name: "validator", settings: settings}
       conn = "/apis/#{api_model.id}/plugins/validator"
       |> send_put(plugin_data)
       |> assert_conn_status()

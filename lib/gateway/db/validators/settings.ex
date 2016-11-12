@@ -58,11 +58,37 @@ defmodule Gateway.Changeset.Validator.Settings do
 
   # Validator
   def validate_settings(%Changeset{changes: %{name: "validator", settings: settings}} = ch) do
-    {%{}, %{schema: :string}}
-    |> cast(settings, [:schema])
-    |> validate_required([:schema])
-    |> validate_json(:schema)
-    |> put_changeset_errors(ch)
+    validate_via_json_schema(ch, :settings, %{
+      "type" => "object",
+      "required" => ["rules"],
+      "properties" => %{
+        "rules" => %{
+          "type" => "array",
+          "minItems" => 1,
+          "uniqueItems" => true,
+          "items" => %{
+            "type" => "object",
+            "required" => ["methods", "path", "schema"],
+            "properties" => %{
+              "methods" => %{
+                "type" => "array",
+                "minItems" => 1,
+                "items" => %{
+                  "type" => "string",
+                  "enum" => ["GET", "POST", "PUT", "DELETE", "PATCH"]
+                }
+              },
+              "path" => %{
+                "type" => "string"
+              },
+              "schema" => %{
+                "type" => "object"
+              }
+            }
+          }
+        }
+      }
+    })
   end
 
   # IPRestriction

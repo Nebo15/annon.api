@@ -29,4 +29,33 @@ defmodule Gateway.Changeset.Validator.SettingsTest do
       refute [] == changeset.errors
     end
   end
+
+  describe "Validator plugin validation" do
+    test "Valid settings" do
+      rules = [
+        %{"methods" => ["GET", "POST", "PUT", "DELETE"], "path" => "*", "schema" => %{"some_field" => "some_value"}},
+        %{"methods" => ["GET"], "path" => "/profiles/me", "schema" => %{"some_field" => "some_value"}},
+        %{"methods" => ["POST", "PUT"], "path" => "/profiles/me", "schema" => %{"some_field" => "some_value"}},
+        %{"methods" => ["DELETE"], "path" => "/profiles/me", "schema" => %{"some_field" => "some_value"}}
+      ]
+
+      changeset =
+        %Ecto.Changeset{changes: %{name: "validator", settings: %{"rules" => rules}}}
+        |> Gateway.Changeset.Validator.Settings.validate_settings()
+
+      assert [] == changeset.errors
+    end
+
+    test "Invalid settings" do
+      rules = [
+        %{"methods" => [], "path" => ".*", "schema" => %{"some_field" => "some_value"}}
+      ]
+
+      changeset =
+        %Ecto.Changeset{changes: %{name: "validator", settings: %{"rules" => rules}}}
+        |> Gateway.Changeset.Validator.Settings.validate_settings()
+
+      refute [] == changeset.errors
+    end
+  end
 end

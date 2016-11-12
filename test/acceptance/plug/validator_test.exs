@@ -16,7 +16,11 @@ defmodule Gateway.Acceptance.Plug.ValidatorTest do
     data = get_api_model_data()
     |> Map.put(:request, request_data)
     |> Map.put(:plugins, [
-      %{name: "validator", is_enabled: true, settings: %{"schema" => Poison.encode!(@schema)}}
+      %{name: "validator", is_enabled: true, settings: %{
+        "rules" => [
+          %{"methods" => ["GET", "POST"], "path" => ".*", "schema" => @schema}
+        ]
+      }}
     ])
 
     "apis"
