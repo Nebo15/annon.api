@@ -5,101 +5,185 @@ defmodule Gateway.Acceptance.Plugin.ACLTest do
   @jwt_secret "secret"
 
   setup do
-    request_data = %{host: get_host(:public), path: "/acl", port: get_port(:public), scheme: "http", method: ["POST"]}
-    request_data
-    |> api_acl_data("acl_create")
-    |> http_api_create()
+    api_path = "/my_jwt_authorized_api"
+    api = :api
+    |> build_factory_params(%{
+      request: %{
+        method: ["GET", "POST", "PUT", "DELETE"],
+        scheme: "http",
+        host: get_endpoint_host(:public),
+        port: get_endpoint_port(:public),
+        path: api_path
+      }
+    })
+    |> create_api()
+    |> get_body()
 
-    request_data
-    |> Map.put(:method, ["GET"])
-    |> api_acl_data("acl_read")
-    |> http_api_create()
+    api_id = get_in(api, ["data", "id"])
 
-    Gateway.AutoClustering.do_reload_config()
+    jwt_plugin = :jwt_plugin
+    |> build_factory_params(%{settings: %{signature: @jwt_secret}})
 
-    :ok
-  end
-
-  test "token without scopes" do
-    token_without_scopes = jwt_token(%{"name" => "Alice"}, @jwt_secret)
-
-    "acl"
-    |> get(:public, [{"authorization", "Bearer #{token_without_scopes}"}])
-    |> assert_status(403)
-
-    "acl"
-    |> post("{}", :public, [{"authorization", "Bearer #{token_without_scopes}"}])
-    |> assert_status(403)
-  end
-
-  test "just write" do
-    token_w = jwt_token(%{"scopes" => ["acl_create", "asd"]}, @jwt_secret)
-    "acl"
-    |> post("{}", :public, [{"authorization", "Bearer #{token_w}"}])
-    |> assert_status(404)
-
-    "acl"
-    |> get(:public, [{"authorization", "Bearer #{token_w}"}])
-    |> assert_status(403)
-  end
-
-  test "just read" do
-    token_r = jwt_token(%{"scopes" => ["acl_read"]}, @jwt_secret)
-    "acl"
-    |> post("{}", :public, [{"authorization", "Bearer #{token_r}"}])
-    |> assert_status(403)
-
-    "acl"
-    |> get(:public, [{"authorization", "Bearer #{token_r}"}])
-    |> assert_status(404)
-  end
-
-  test "read and write" do
-    token_rw = jwt_token(%{"scopes" => ["acl_read", "acl_create"]}, @jwt_secret)
-    "acl"
-    |> post("{}", :public, [{"authorization", "Bearer #{token_rw}"}])
-    |> assert_status(404)
-
-    "acl"
-    |> get(:public, [{"authorization", "Bearer #{token_rw}"}])
-    |> assert_status(404)
-  end
-
-  test "invalid JWT.scopes type" do
-    :api
-    |> build_factory_params()
-    |> Map.put(:plugins, [
-      %{name: "jwt", is_enabled: true, settings: %{"signature" => @jwt_secret}},
-      %{name: "acl", is_enabled: true, settings: %{
-        "rules" => [
-          %{"methods" => ["GET"], "path" => ".*", "scopes" => ["acl_read"]}
-        ]
-      }}
-    ])
-
-    |> Map.put(:request,
-      %{host: get_host(:public), path: "/acl/scopes", port: get_port(:public), scheme: "http", method: ["GET"]})
-    |> http_api_create()
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(jwt_plugin)
+    |> assert_status(201)
 
     Gateway.AutoClustering.do_reload_config()
 
-    token = jwt_token(%{"scopes" => "invalid"}, @jwt_secret)
-    "acl/scopes"
-    |> get(:public, [{"authorization", "Bearer #{token}"}])
-    |> assert_status(501)
+    %{api_id: api_id, api_path: api_path}
   end
 
-  def api_acl_data(request_data, scope) when is_binary(scope) do
-    :api
-    |> build_factory_params()
-    |> Map.put(:request, request_data)
-    |> Map.put(:plugins, [
-      %{name: "jwt", is_enabled: true, settings: %{"signature" => @jwt_secret}},
-      %{name: "acl", is_enabled: true, settings: %{
-        "rules" => [
-          %{"methods" => request_data.method, "path" => ".*", "scopes" => [scope]}
+  test "token MUST have scopes", %{api_id: api_id, api_path: api_path} do
+    acl_plugin = :acl_plugin
+    |> build_factory_params(%{settings: %{
+      rules: [
+        %{methods: ["GET"], path: "^.*", scopes: ["api:access"]},
+      ]
+    }})
+
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(acl_plugin)
+    |> assert_status(201)
+
+    Gateway.AutoClustering.do_reload_config()
+
+    token_without_scopes = build_jwt_token(%{"name" => "Alice"}, @jwt_secret)
+    headers = [{"authorization", "Bearer #{token_without_scopes}"}]
+
+    assert %{
+      "error" => %{"message" => "Your scopes does not allow to access this resource."}
+    } = api_path
+    |> put_public_url()
+    |> get!(headers)
+    |> assert_status(403)
+    |> get_body()
+  end
+
+  test "token MUST have all scopes", %{api_id: api_id, api_path: api_path} do
+    acl_plugin = :acl_plugin
+    |> build_factory_params(%{settings: %{
+      rules: [
+        %{methods: ["GET"], path: "^.*", scopes: ["api:access", "api:request"]},
+      ]
+    }})
+
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(acl_plugin)
+    |> assert_status(201)
+
+    Gateway.AutoClustering.do_reload_config()
+
+    token = build_jwt_token(%{"scopes" => ["api:access"]}, @jwt_secret)
+    headers = [{"authorization", "Bearer #{token}"}]
+
+    assert %{
+      "error" => %{"message" => "Your scopes does not allow to access this resource."}
+    } = api_path
+    |> put_public_url()
+    |> get!(headers)
+    |> assert_status(403)
+    |> get_body()
+
+    token = build_jwt_token(%{"scopes" => ["api:access", "api:request"]}, @jwt_secret)
+    headers = [{"authorization", "Bearer #{token}"}]
+
+    api_path
+    |> put_public_url()
+    |> get!(headers)
+    |> assert_status(404)
+  end
+
+  test "multiple rules can be applied", %{api_id: api_id, api_path: api_path} do
+    acl_plugin = :acl_plugin
+    |> build_factory_params(%{settings: %{
+      rules: [
+        %{methods: ["GET", "POST"], path: "^.*", scopes: ["super_scope"]},
+        %{methods: ["GET"], path: "^.*", scopes: ["api:access", "api:request"]},
+      ]
+    }})
+
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(acl_plugin)
+    |> assert_status(201)
+
+    Gateway.AutoClustering.do_reload_config()
+
+    token = build_jwt_token(%{"scopes" => ["api:access", "api:request"]}, @jwt_secret)
+    headers = [{"authorization", "Bearer #{token}"}]
+
+    api_path
+    |> put_public_url()
+    |> get!(headers)
+    |> assert_status(404)
+  end
+
+  describe "rules is filtered" do
+    test "by method", %{api_id: api_id, api_path: api_path} do
+      acl_plugin = :acl_plugin
+      |> build_factory_params(%{settings: %{
+        rules: [
+          %{methods: ["GET", "POST"], path: "^.*", scopes: ["super_scope"]},
+          %{methods: ["PUT"], path: "^.*", scopes: ["api:access", "api:request"]},
         ]
-      }}
-    ])
+      }})
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(acl_plugin)
+      |> assert_status(201)
+
+      Gateway.AutoClustering.do_reload_config()
+
+      token = build_jwt_token(%{"scopes" => ["api:access", "api:request"]}, @jwt_secret)
+      headers = [{"authorization", "Bearer #{token}"}]
+
+      api_path
+      |> put_public_url()
+      |> get!(headers)
+      |> assert_status(403)
+    end
+
+    test "by path", %{api_id: api_id, api_path: api_path} do
+      acl_plugin = :acl_plugin
+      |> build_factory_params(%{settings: %{
+        rules: [
+          %{methods: ["GET"], path: "^/foo$", scopes: ["super_scope"]},
+        ]
+      }})
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(acl_plugin)
+      |> assert_status(201)
+
+      Gateway.AutoClustering.do_reload_config()
+
+      token = build_jwt_token(%{"scopes" => ["super_scope"]}, @jwt_secret)
+      headers = [{"authorization", "Bearer #{token}"}]
+
+      "#{api_path}/foo"
+      |> put_public_url()
+      |> get!(headers)
+      |> assert_status(404)
+    end
+  end
+
+  test "token settings validator", %{api_id: api_id} do
+    acl_plugin = :acl_plugin
+    |> build_factory_params(%{settings: %{
+      rules: [
+        %{methods: ["OTHER"], path: 123, scopes: "string"},
+      ]
+    }})
+
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(acl_plugin)
+    |> assert_status(422)
+    |> get_body()
   end
 end
