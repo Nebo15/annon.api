@@ -44,19 +44,25 @@ defmodule Gateway.AcceptanceCase do
         end
       end
 
-      def put_public_url(url) do
+      def get_public_url do
         port = get_endpoint_port(:public)
         host = get_endpoint_host(:public)
 
-        "http://#{host}:#{port}/#{url}"
+        "http://#{host}:#{port}/"
       end
 
-      def put_management_url(url) do
+      def get_management_url do
         port = get_endpoint_port(:management)
         host = get_endpoint_host(:management)
 
-        "http://#{host}:#{port}/#{url}"
+        "http://#{host}:#{port}/"
       end
+
+      def put_public_url("/" <> url), do: get_public_url() <> url
+      def put_public_url(url), do: get_public_url() <> url
+
+      def put_management_url("/" <> url), do: get_management_url() <> url
+      def put_management_url(url), do: get_management_url() <> url
 
       def create_api do
         :api
@@ -66,14 +72,43 @@ defmodule Gateway.AcceptanceCase do
       end
 
       def create_api(data) do
-        "apis"
+        api = "apis"
         |> put_management_url()
         |> post!(data)
         |> assert_status(201)
+
+        Gateway.AutoClustering.do_reload_config()
+
+        api
       end
 
-      defp get_endpoint_port(endpoint_type), do: @config[endpoint_type][:port]
-      defp get_endpoint_host(endpoint_type), do: @config[endpoint_type][:host]
+      def update_api(api_id, data) do
+        api = "apis/#{api_id}"
+        |> put_management_url()
+        |> put!(data)
+        |> assert_status(200)
+
+        Gateway.AutoClustering.do_reload_config()
+
+        api
+      end
+
+      def update_plugin(api_id, plugin_name, params) do
+        plugin = "apis/#{api_id}/plugins/proxy"
+        |> put_management_url()
+        |> put!(params)
+        |> assert_status(200)
+
+        Gateway.AutoClustering.do_reload_config()
+
+        plugin
+      end
+
+      def get_mock_response(%{"data" => data}), do: data
+      def get_mock_response(%{"error" => error}), do: error
+
+      def get_endpoint_port(endpoint_type), do: @config[endpoint_type][:port]
+      def get_endpoint_host(endpoint_type), do: @config[endpoint_type][:host]
 
       setup tags do
         :ets.delete_all_objects(:config)
