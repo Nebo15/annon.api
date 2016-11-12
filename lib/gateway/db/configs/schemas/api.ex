@@ -13,7 +13,7 @@ defmodule Gateway.DB.Schemas.API do
   schema "apis" do
     field :name, :string
 
-    embeds_one :request, Request, primary_key: false do
+    embeds_one :request, Request, primary_key: false, on_replace: :update do
       field :scheme, :string
       field :host, :string
       field :port, :integer
@@ -35,15 +35,10 @@ defmodule Gateway.DB.Schemas.API do
 
   def changeset(api, params \\ %{}) do
     api
-    |> update_changeset(params)
-    |> validate_required(@required_api_fields)
-  end
-
-  def update_changeset(api, params \\ %{}) do
-    api
     |> cast(params, @required_api_fields)
-    |> cast_assoc(:plugins)
+    |> validate_required(@required_api_fields)
     |> cast_embed(:request, with: &request_changeset/2)
+    |> cast_assoc(:plugins)
     |> unique_constraint(:name)
   end
 
@@ -63,7 +58,7 @@ defmodule Gateway.DB.Schemas.API do
     case get_one_by([id: api_id]) do
       %APISchema{} = api ->
         api
-        |> update_changeset(params)
+        |> changeset(params)
         |> Repo.update()
       _ -> nil
     end

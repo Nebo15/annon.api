@@ -68,7 +68,16 @@ defmodule Gateway.Controllers.APITest do
 
     test "PUT" do
       api = Gateway.Factory.insert(:api)
-      api_update = Gateway.Factory.build(:api)
+      api_update = %{
+        name: "New name",
+        request: %{
+          host: "other_host",
+          port: 1337,
+          path: "/foo/bar",
+          scheme: "https",
+          method: ["POST", "PUT"]
+        }
+      }
 
       conn = "/apis/#{api.id}"
       |> call_put(api_update)

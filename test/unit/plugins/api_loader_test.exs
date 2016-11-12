@@ -62,7 +62,7 @@ defmodule Gateway.Plugins.APILoaderTest do
           method: "GET",
           scheme: "http",
           host: "localhost",
-          port: 5001,
+          port: 4040,
           path: "/apis"
         }
       })
@@ -73,8 +73,13 @@ defmodule Gateway.Plugins.APILoaderTest do
       assert 200 == call_public_router("/mockbin").status
       assert 200 == call_public_router("/mockbin/path").status
 
-      assert "http://localhost:5001/apis" == get_from_body(call_public_router("/mockbin"), ["meta", "url"])
-      assert "http://localhost:5001/apis" == get_from_body(call_public_router("/mockbin/path"), ["meta", "url"])
+      assert "http://localhost:4040/apis/mockbin" == "/mockbin"
+      |> call_public_router()
+      |> get_from_body(["meta", "url"])
+
+      assert "http://localhost:4040/apis/mockbin/path" == "/mockbin/path"
+      |> call_public_router()
+      |> get_from_body(["meta", "url"])
     end
   end
 

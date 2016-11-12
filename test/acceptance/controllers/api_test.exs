@@ -1,6 +1,6 @@
 defmodule Gateway.Acceptance.Controllers.APITest do
   @moduledoc false
-  use Gateway.AcceptanceCase, async: true
+  use Gateway.AcceptanceCase
 
   describe "apis/:api_id/" do
     test "PUT" do

@@ -4,11 +4,7 @@ defmodule Gateway.Plugins.ProxyTest do
   alias Gateway.Plugins.Proxy
   import Gateway.Helpers.IP
 
-  @proxy_settings_full %{"host" => "localhost", "path" => "/proxy/test", "port" => 4000, "scheme" => "http"}
-  @proxy_settings_port %{"host" => "localhost", "path" => "/proxy/test", "scheme" => "http"}
-  @proxy_settings_scheme %{"host" => "localhost", "path" => "/proxy/test", "scheme" => "https"}
-  @proxy_settings_path %{"host" => "localhost", "path" => "/proxy", "scheme" => "https"}
-  @proxy_settings_just_host %{"host" => "localhost"}
+  @api_path "/my_api"
 
   describe "proxy link builder" do
     setup do
@@ -16,23 +12,40 @@ defmodule Gateway.Plugins.ProxyTest do
     end
 
     test "supports port", %{conn: conn} do
-      assert Proxy.make_link(@proxy_settings_port, conn) == "http://localhost/proxy/test"
+      assert Proxy.make_link(%{
+        "host" => "localhost",
+        "path" => "/proxy/test",
+        "scheme" => "http"
+      }, @api_path, conn) == "http://localhost/proxy/test/some/path"
     end
 
     test "supports scheme", %{conn: conn} do
-      assert Proxy.make_link(@proxy_settings_scheme, conn) == "https://localhost/proxy/test"
+      assert Proxy.make_link(%{
+        "host" => "localhost",
+        "path" => "/proxy/test",
+        "scheme" => "https"
+      }, @api_path, conn) == "https://localhost/proxy/test/some/path"
     end
 
     test "supports path", %{conn: conn} do
-      assert Proxy.make_link(@proxy_settings_path, conn) == "https://localhost/proxy"
+      assert Proxy.make_link(%{
+        "host" => "localhost",
+        "path" => "/proxy",
+        "scheme" => "https"
+      }, @api_path, conn) == "https://localhost/proxy/some/path"
     end
 
     test "works when only host is set", %{conn: conn} do
-      assert Proxy.make_link(@proxy_settings_just_host, conn) == "https://localhost/some/path"
+      assert Proxy.make_link(%{"host" => "localhost"}, @api_path, conn) == "https://localhost/some/path"
     end
 
     test "works with all settings", %{conn: conn} do
-      assert Proxy.make_link(@proxy_settings_full, conn) == "http://localhost:4000/proxy/test"
+      assert Proxy.make_link(%{
+        "host" => "localhost",
+        "path" => "/proxy/test",
+        "port" => 4000,
+        "scheme" => "http"
+      }, @api_path, conn) == "http://localhost:4000/proxy/test/some/path"
     end
 
     test "puts additional headers", %{conn: conn} do
@@ -48,31 +61,36 @@ defmodule Gateway.Plugins.ProxyTest do
 
     test "preserves query string" do
       conn = %Plug.Conn{request_path: "/some/path", query_string: "key=value"}
-      assert Proxy.make_link(@proxy_settings_full, conn) == "http://localhost:4000/proxy/test?key=value"
+      assert Proxy.make_link(%{
+        "host" => "localhost",
+        "path" => "/proxy/test",
+        "port" => 4000,
+        "scheme" => "http"
+      }, @api_path, conn) == "http://localhost:4000/proxy/test/some/path?key=value"
     end
 
     test "preserves request path" do
       incoming_request = make_conn("/mockbin")
-      proxy_params = %{"host" => "localhost", "path" => "/mockbin", "strip_request_path" => false}
-      assert "https://localhost/mockbin" == Proxy.make_link(proxy_params, incoming_request)
+      proxy_params = %{"host" => "localhost", "path" => "/proxy", "strip_request_path" => false}
+      assert "https://localhost/proxy/mockbin" == Proxy.make_link(proxy_params, @api_path, incoming_request)
     end
 
     test "preserves deep request paths" do
       incoming_request = make_conn("/mockbin/some/path")
-      proxy_params = %{"host" => "localhost", "path" => "/mockbin/some/path", "strip_request_path" => false}
-      assert "https://localhost/mockbin/some/path" == Proxy.make_link(proxy_params, incoming_request)
+      proxy_params = %{"host" => "localhost", "path" => "/", "strip_request_path" => false}
+      assert "https://localhost/mockbin/some/path" == Proxy.make_link(proxy_params, @api_path, incoming_request)
     end
 
     test "strips request path" do
-      incoming_request = make_conn("/mockbin")
+      incoming_request = make_conn("#{@api_path}/foo")
       proxy_params = %{"host" => "localhost", "path" => "/mockbin", "strip_request_path" => true}
-      assert "https://localhost" == Proxy.make_link(proxy_params, incoming_request)
+      assert "https://localhost/mockbin/foo" == Proxy.make_link(proxy_params, @api_path, incoming_request)
     end
 
     test "strips deep requests paths" do
-      incoming_request = make_conn("/mockbin/some/path")
+      incoming_request = make_conn("#{@api_path}/some/path")
       proxy_params = %{"host" => "localhost", "path" => "/mockbin", "strip_request_path" => true}
-      assert "https://localhost/some/path" == Proxy.make_link(proxy_params, incoming_request)
+      assert "https://localhost/mockbin/some/path" == Proxy.make_link(proxy_params, @api_path, incoming_request)
     end
   end
 

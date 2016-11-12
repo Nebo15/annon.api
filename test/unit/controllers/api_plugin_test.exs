@@ -101,8 +101,9 @@ defmodule Gateway.Controllers.API.PluginTest do
       |> call_put(plugin_data)
       |> assert_conn_status()
 
-      resp = Poison.decode!(conn.resp_body)["data"]
-      assert resp["settings"] == plugin_data.settings
+      assert %{
+        "settings" => %{"schema" => "{}"}
+      } = Poison.decode!(conn.resp_body)["data"]
     end
 
     test "DELETE" do
