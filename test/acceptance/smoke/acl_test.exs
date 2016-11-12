@@ -1,4 +1,4 @@
-defmodule Gateway.SmokeTests.BasicAclTest do
+defmodule Gateway.Acceptance.AclSmokeTest do
   @moduledoc false
   use Gateway.AcceptanceCase
 
