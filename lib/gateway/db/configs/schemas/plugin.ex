@@ -67,6 +67,9 @@ defmodule Gateway.DB.Schemas.Plugin do
   def update(api_id, name, params) when is_map(params) do
     case get_one_by([api_id: api_id, name: name]) do
       %PluginSchema{} = plugin ->
+        params = params
+        |> update_settings(plugin)
+
         plugin
         |> changeset(params)
         |> Repo.update()
@@ -79,4 +82,11 @@ defmodule Gateway.DB.Schemas.Plugin do
      where: p.api_id == ^api_id,
      where: p.name == ^name
   end
+
+  defp update_settings(%{"settings" => settings} = params, %PluginSchema{settings: plugin_settings}),
+    do: Map.put(params, "settings", Map.merge(plugin_settings, settings))
+  defp update_settings(%{settings: settings} = params, %PluginSchema{settings: plugin_settings}),
+    do: %{params | settings: Map.merge(plugin_settings, settings)}
+  defp update_settings(params, _),
+    do: params
 end

@@ -26,10 +26,21 @@ defmodule Gateway.DB.Schemas.API do
     timestamps()
   end
 
+  def get_one_by(selector) do
+    Repo.one from APISchema,
+      where: ^selector,
+      limit: 1
+  end
+
   def changeset(api, params \\ %{}) do
     api
-    |> cast(params, @required_api_fields)
+    |> update_changeset(params)
     |> validate_required(@required_api_fields)
+  end
+
+  def update_changeset(api, params \\ %{}) do
+    api
+    |> cast(params, @required_api_fields)
     |> cast_assoc(:plugins)
     |> cast_embed(:request, with: &request_changeset/2)
     |> unique_constraint(:name)
@@ -48,12 +59,12 @@ defmodule Gateway.DB.Schemas.API do
   end
 
   def update(api_id, params) when is_map(params) do
-    try do
-      %APISchema{id: String.to_integer(api_id)}
-      |> changeset(params)
-      |> Repo.update()
-    rescue
-      Ecto.StaleEntryError -> nil
+    case get_one_by([api_id: api_id]) do
+      %APISchema{} = api ->
+        api
+        |> update_changeset(params)
+        |> Repo.update()
+      _ -> nil
     end
   end
 
