@@ -231,7 +231,7 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
       |> post!(%{
         name: "ip_restriction",
         is_enabled: false,
-        settings: %{"ip_blacklist" => 100} #, "ip_whitelist" => ["127.0.0.256"]
+        settings: %{"ip_blacklist" => 100} # , "ip_whitelist" => ["127.0.0.256"]
       })
       |> assert_status(422)
       |> get_body()

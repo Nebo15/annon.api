@@ -46,28 +46,28 @@ defmodule Gateway.Acceptance.Plugin.IdempotencyTest do
   end
 
   test "test idempotency POST request", %{api_path: api_path} do
-    req1_id = "#{api_path}"
+    req1_id = api_path
     |> put_public_url()
     |> post!(%{foo: "bar"}, [{"x-idempotency-key", @idempotency_key}])
     |> get_body()
     |> get_mock_response()
     |> get_request_id
 
-    req2_id = "#{api_path}"
+    req2_id = api_path
     |> put_public_url()
     |> post!(%{foo: "bar"}, [{"x-idempotency-key", @idempotency_key}])
     |> get_body()
     |> get_mock_response()
     |> get_request_id
 
-    req3_id = "#{api_path}"
+    req3_id = api_path
     |> put_public_url()
     |> post!(%{foo: "bar"}, [{"x-idempotency-key", @idempotency_key}])
     |> get_body()
     |> get_mock_response()
     |> get_request_id
 
-    req4_id = "#{api_path}"
+    req4_id = api_path
     |> put_public_url()
     |> post!(%{foo: "bar"}, [{"x-idempotency-key", "some_other_idempotency_key"}])
     |> get_body()

@@ -138,7 +138,7 @@ defmodule Gateway.Acceptance.Plugin.ProxyTest do
 
     assert %{"request" => %{
       "headers" => [%{"hello" => "world"} | _]
-    }} = "#{api_path}"
+    }} = api_path
     |> put_public_url()
     |> get!()
     |> get_body()
@@ -154,7 +154,7 @@ defmodule Gateway.Acceptance.Plugin.ProxyTest do
 
     assert %{"request" => %{
       "headers" => [%{"foo" => "bar"} | _] # There might be issues with headers order in here
-    }} = "#{api_path}"
+    }} = api_path
     |> put_public_url()
     |> get!([{"foo", "bar"}])
     |> get_body()
