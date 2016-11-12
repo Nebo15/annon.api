@@ -6,9 +6,6 @@ defmodule Gateway.Changeset.Validator.Settings do
   import Ecto.Changeset
   import Gateway.Changeset.Validator.JsonSchema
 
-  # TODO: JSON Schema has IP type and internal validator for it
-  @ip_pattern "^(?:(?:\\*|25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:\\*|25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
-
   # JWT
   def validate_settings(%Changeset{changes: %{name: "jwt", settings: settings}} = ch) do
     {%{}, %{signature: :string}}
@@ -18,10 +15,11 @@ defmodule Gateway.Changeset.Validator.Settings do
   end
 
   # ACL
-  def validate_settings(%Changeset{changes: %{name: "acl", settings: settings}} = ch) do
+  def validate_settings(%Changeset{changes: %{name: "acl"}} = ch) do
     validate_via_json_schema(ch, :settings, %{
       "type" => "object",
       "required" => ["rules"],
+      "additionalProperties" => false,
       "properties" => %{
         "rules" => %{
           "type" => "array",
@@ -101,50 +99,74 @@ defmodule Gateway.Changeset.Validator.Settings do
         %{"required" => ["ip_whitelist"]},
         %{"required" => ["ip_blacklist"]}
       ],
+      "additionalProperties" => false,
       "properties" => %{
         "ip_whitelist" => %{
           "type" => "array",
           "items" => %{
             "type" => "string",
-            "pattern" => @ip_pattern,
+            "oneOf": [
+              %{"format" => "host-name"},
+              %{"format" => "ipv4"},
+              %{"format" => "ipv6"}
+            ]
           }
         },
         "ip_blacklist" => %{
-        "type" => "array",
-        "items" => %{
-          "type" => "string",
-          "pattern" => @ip_pattern,
+          "type" => "array",
+          "items" => %{
+            "type" => "string",
+            "oneOf": [
+              %{"format" => "host-name"},
+              %{"format" => "ipv4"},
+              %{"format" => "ipv6"}
+            ]
           }
         }
       }
-     })
+    })
   end
 
   # Proxy
   def validate_settings(%Changeset{changes: %{name: "proxy"}} = ch) do
     ch
     |> validate_via_json_schema(:settings, %{
-       "type" => "object",
-       "required" => ["host"],
-       "properties" => %{
-         "scheme" => %{
-           "enum" => ["http", "https"]
-         },
-         "host" => %{
-           "type" => "string"
-         },
-         "port" => %{
-           "type" => "integer"
-         },
-         "path" => %{
-           "type" => "string"
-         },
-         "method" => %{
-           "type" => "string",
-           "enum" => ["GET", "POST", "PUT", "DELETE", "PATCH"]
-         },
-       },
-     })
+      "type" => "object",
+      "required" => ["host"],
+      "additionalProperties" => false,
+      "properties" => %{
+        "scheme" => %{
+          "enum" => ["http", "https"]
+        },
+        "host" => %{
+          "type" => "string",
+          "oneOf": [
+            %{"format" => "host-name"},
+            %{"format" => "ipv4"},
+            %{"format" => "ipv6"}
+          ]
+        },
+        "port" => %{
+          "type" => "integer"
+        },
+        "path" => %{
+          "type" => "string"
+        },
+        "method" => %{
+          "type" => "string",
+          "enum" => ["GET", "POST", "PUT", "DELETE", "PATCH"]
+        },
+        "strip_request_path" => %{
+          "type" => "boolean"
+        },
+        "additional_headers" => %{
+          "type" => "array",
+          "items" => %{
+            "type" => "object"
+          }
+        }
+      },
+    })
   end
 
   # general
