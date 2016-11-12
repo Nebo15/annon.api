@@ -3,28 +3,35 @@ defmodule Gateway.SmokeTests.BasicProxyTest do
   use Gateway.AcceptanceCase
 
   setup do
-    {:ok, api} = Gateway.DB.Schemas.API.create(%{
+    api = :api
+    |> build_factory_params(%{
       name: "An HTTPBin service endpoint",
       request: %{
         method: ["GET"],
         scheme: "http",
-        host: "localhost",
-        port: get_port(:public),
+        host: get_endpoint_host(:public),
+        port: get_endpoint_port(:public),
         path: "/httpbin",
       }
     })
+    |> create_api()
+    |> get_body()
 
-    Gateway.DB.Schemas.Plugin.create(api.id, %{
-      name: "proxy",
-      is_enabled: true,
-      settings: %{
-        "method" => "GET",
-        "scheme" => "http",
-        "host" => "httpbin.org",
-        "port" => 80,
-        "path" => "/get"
-      }
-    })
+    api_id = get_in(api, ["data", "id"])
+
+    proxy_plugin = :proxy_plugin
+    |> build_factory_params(%{settings: %{
+      scheme: "http",
+      host: "httpbin.org",
+      port: 80,
+      path: "/get",
+      strip_request_path: true
+    }})
+
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(proxy_plugin)
+    |> assert_status(201)
 
     Gateway.AutoClustering.do_reload_config()
 
@@ -32,10 +39,9 @@ defmodule Gateway.SmokeTests.BasicProxyTest do
   end
 
   test "A request from user reaches upstream" do
-    api_endpoint = "#{get_host(:public)}:#{get_port(:public)}"
-
     response =
-      "http://#{api_endpoint}/httpbin?my_param=my_value"
+      "/httpbin?my_param=my_value"
+      |> put_public_url()
       |> HTTPoison.get!
       |> Map.get(:body)
       |> Poison.decode!
