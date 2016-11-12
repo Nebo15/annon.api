@@ -25,7 +25,7 @@ defmodule Gateway.MonitoringTest do
         method: "GET",
         scheme: "http",
         host: "localhost",
-        port: 5001,
+        port: 4040,
         path: "/apis"
       }
     })
