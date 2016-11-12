@@ -2,96 +2,77 @@ defmodule Gateway.Acceptance.Plugin.JWTTest do
   @moduledoc false
   use Gateway.AcceptanceCase
 
-  @api_url "apis"
-  @consumer_url "consumers"
+  @jwt_secret "secret"
 
-  @schema %{"type" => "object",
-            "properties" => %{"foo" => %{ "type" => "number"}, "bar" => %{ "type" => "string"}},
-            "required" => ["bar"]}
+  setup do
+    api_path = "/my_jwt_authorized_api"
+    api = :api
+    |> build_factory_params(%{
+      request: %{
+        method: ["GET", "POST", "PUT", "DELETE"],
+        scheme: "http",
+        host: get_endpoint_host(:public),
+        port: get_endpoint_port(:public),
+        path: api_path
+      }
+    })
+    |> create_api()
+    |> get_body()
 
-  @consumer_schema %{"type" => "object",
-                     "properties" => %{"foo" => %{"type" => "string"}, "bar" => %{"type" => "number"}},
-                     "required" => ["foo"]}
+    api_id = get_in(api, ["data", "id"])
 
-  @consumer_id Ecto.UUID.generate()
-  @consumer %{
-    external_id: @consumer_id,
-    metadata: %{"key": "value"},
-  }
-  @consumer_plugin %{
-    plugin_id: 2, # holy hardcoded shit
-    is_enabled: true,
-    settings: %{
-      "rules" => [
-        %{"methods" => ["POST"], "path" => ".*", "schema" => @consumer_schema}
-      ]
-    }
-  }
-  @payload %{"id" => @consumer_id, "name" => "John Doe"}
-
-  test "jwt consumer plugins settings rewrite" do
-
-    validator_settings = %{
-      "rules" => [
-        %{"methods" => ["POST"], "path" => ".*", "schema" => @schema}
-      ]
-    }
-
-    data = :api
-    |> build_factory_params()
-    |> Map.put(:request,
-      %{host: get_host(:public), path: "/jwt/test", port: get_port(:public), scheme: "http", method: ["POST"]})
-    |> Map.put(:plugins, [
-      %{name: "jwt", is_enabled: true, settings: %{"signature" => "jwt_test_secret"}},
-      %{name: "validator", is_enabled: false, settings: validator_settings}
-    ])
-
-    @api_url
-    |> post(Poison.encode!(data), :management)
-    |> assert_status(201)
-
-    @consumer_url
-    |> post(Poison.encode!(@consumer), :management)
-    |> assert_status(201)
-
-    "#{@consumer_url}/#{@consumer_id}/plugins"
-    |> post(Poison.encode!(@consumer_plugin), :management)
-    |> assert_status(201)
-
-    token = jwt_token(@payload, "jwt_test_secret")
-
-    "jwt/test"
-    |> post(Poison.encode!(%{bar: "string"}), :public, [{"authorization", "Bearer invalid.credentials.signature"}])
-    |> assert_status(401)
-
-    # TODO: FIX ME I AM BROKEN
-    # "jwt/test"
-    # |> post(Poison.encode!(%{bar: "string"}), :public, [{"authorization", "Bearer #{token}"}])
-    # |> assert_status(422)
-
-    "jwt/test"
-    |> post(Poison.encode!(%{foo: "string", bar: 123}), :public, [{"authorization", "Bearer #{token}"}])
-    |> assert_status(404)
+    %{api_id: api_id, api_path: api_path}
   end
 
-  test "jwt default plugins settings" do
-    :api
-    |> build_factory_params()
-    |> Map.put(:request,
-      %{host: get_host(:public), path: "/jwt/default", port: get_port(:public), scheme: "http", method: ["GET"]})
-    |> Map.put(:plugins, [
-      %{name: "jwt", is_enabled: true, settings: %{"signature" => "jwt_default_secret"}},
-    ])
-    |> http_api_create()
+  test "token is required when JWT plugin is enabled", %{api_id: api_id, api_path: api_path} do
+    jwt_plugin = :jwt_plugin
+    |> build_factory_params(%{settings: %{signature: @jwt_secret}})
+
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(jwt_plugin)
+    |> assert_status(201)
 
     Gateway.AutoClustering.do_reload_config()
 
-    "jwt/default"
-    |> get(:public, [{"authorization", "Bearer invalid.credentials.signature"}])
+    assert %{
+      "error" => %{"message" => "You need to use JWT token to access this resource."}
+    } = api_path
+    |> put_public_url()
+    |> get!()
     |> assert_status(401)
+    |> get_body()
+  end
 
-    "jwt/default"
-    |> get(:public, [{"authorization", "Bearer #{jwt_token(@payload, "jwt_default_secret")}"}])
-    |> assert_status(404)
+  test "token must be valid", %{api_id: api_id, api_path: api_path} do
+    jwt_plugin = :jwt_plugin
+    |> build_factory_params(%{settings: %{signature: @jwt_secret}})
+
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(jwt_plugin)
+    |> assert_status(201)
+
+    Gateway.AutoClustering.do_reload_config()
+
+    auth_token = build_jwt_token(%{"scopes" => ["httpbin:read"]}, "a_secret_signature")
+
+    assert %{
+      "error" => %{"message" => "Your JWT token is invalid."}
+    } = api_path
+    |> put_public_url()
+    |> get!([{"authorization", "Bearer #{auth_token}"}])
+    |> assert_status(401)
+    |> get_body()
+  end
+
+  test "settings is validated", %{api_id: api_id} do
+    jwt_plugin = :jwt_plugin
+    |> build_factory_params(%{settings: %{signature: %{}}})
+
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(jwt_plugin)
+    |> assert_status(422)
   end
 end
