@@ -4,61 +4,86 @@ defmodule Gateway.Acceptance.Plugin.IdempotencyTest do
 
   @idempotency_key Ecto.UUID.generate()
 
-  test "test idempotency POST request" do
-    api_data = "POST"
-    |> api_idempotency_data("/idempotency")
+  setup do
+    api_path = "/my_idempotent_api"
+    api = :api
+    |> build_factory_params(%{
+      request: %{
+        method: ["GET", "POST", "PUT", "DELETE"],
+        scheme: "http",
+        host: get_endpoint_host(:public),
+        port: get_endpoint_port(:public),
+        path: api_path
+      }
+    })
+    |> create_api()
+    |> get_body()
 
-    http_api_create(api_data)
+    api_id = get_in(api, ["data", "id"])
 
-    api_data = api_data
-    |> put_in([:request, :port], 3001)
-    |> Map.put("name", "idempotency test api")
-    |> Poison.encode!()
+    proxy_plugin = :proxy_plugin
+    |> build_factory_params(%{settings: %{
+      host: "localhost",
+      port: 4040
+    }})
 
-    Gateway.AutoClustering.do_reload_config
-
-    "idempotency"
-    |> post(api_data, :public, [{"x-idempotency-key", @idempotency_key}])
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(proxy_plugin)
     |> assert_status(201)
 
-    "idempotency"
-    |> post(api_data, :public, [{"x-idempotency-key", @idempotency_key}])
-    |> assert_status(201)
-
-    "idempotency"
-    |> post(api_data, :public, [{"x-idempotency-key", @idempotency_key}])
-    |> assert_status(201)
-
-    "idempotency"
-    |> post(~s({"name": "start"}), :public, [{"x-idempotency-key", @idempotency_key}])
-    |> assert_status(409)
-
-    %HTTPoison.Response{body: body} = "apis"
-    |> get(:management)
-    |> assert_status(200)
-
-    assert 2 == body
-    |> Poison.decode!()
-    |> Map.fetch!("data")
-    |> Enum.count()
-  end
-
-  def api_idempotency_data(method, path) do
-    :api
+    idempotency_plugin = :idempotency_plugin
     |> build_factory_params()
-    |> Map.put(:request,
-      %{host: get_host(:public), path: path, port: get_port(:public), scheme: "http", method: [method]})
-    |> Map.put(:plugins, get_plugins())
+
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(idempotency_plugin)
+    |> assert_status(201)
+
+    Gateway.AutoClustering.do_reload_config()
+
+    %{api_id: api_id, api_path: api_path, api: api}
   end
 
-  def get_plugins do
-    [%{name: "idempotency", is_enabled: true, settings: %{"key" => 100}},
-     %{name: "proxy", is_enabled: true, settings: %{
-        host: get_host(:management),
-        path: "/apis",
-        port: get_port(:management),
-        scheme: "http"
-     }}
-    ]
+  test "test idempotency POST request", %{api_path: api_path} do
+    req1_id = "#{api_path}"
+    |> put_public_url()
+    |> post!(%{foo: "bar"}, [{"x-idempotency-key", @idempotency_key}])
+    |> get_body()
+    |> get_mock_response()
+    |> get_request_id
+
+    req2_id = "#{api_path}"
+    |> put_public_url()
+    |> post!(%{foo: "bar"}, [{"x-idempotency-key", @idempotency_key}])
+    |> get_body()
+    |> get_mock_response()
+    |> get_request_id
+
+    req3_id = "#{api_path}"
+    |> put_public_url()
+    |> post!(%{foo: "bar"}, [{"x-idempotency-key", @idempotency_key}])
+    |> get_body()
+    |> get_mock_response()
+    |> get_request_id
+
+    req4_id = "#{api_path}"
+    |> put_public_url()
+    |> post!(%{foo: "bar"}, [{"x-idempotency-key", "some_other_idempotency_key"}])
+    |> get_body()
+    |> get_mock_response()
+    |> get_request_id
+
+    assert req3_id == req2_id
+    assert req2_id == req1_id
+    assert req4_id != req1_id
+  end
+
+  defp get_request_id(%{"response" => %{"headers" => headers}}) do
+    headers
+    |> Enum.find_value(fn
+      %{"x-request-id" => request_id} -> request_id
+      _ -> false
+    end)
   end
 end
