@@ -28,18 +28,17 @@ defmodule Gateway.AcceptanceCase do
 
       if opts[:async] do
         defp process_request_headers(headers) when is_list(headers) do
-          config_meta = build_metadata(Gateway.DB.Configs.Repo)
-          logger_meta = build_metadata(Gateway.DB.Logger.Repo)
+          meta = Phoenix.Ecto.SQL.Sandbox.metadata_for([Gateway.DB.Configs.Repo, Gateway.DB.Logger.Repo], self())
+          encoded_meta = {:v1, meta}
+          |> :erlang.term_to_binary
+          |> Base.url_encode64
+
 
           [{"content-type", "application/json"},
-           {"user-agent", "BeamMetadata (#{config_meta},#{logger_meta})"}] ++ headers
+           {"user-agent", "BeamMetadata (#{encoded_meta})"}] ++ headers
         end
 
         defp build_metadata(repo) do
-          meta = Phoenix.Ecto.SQL.Sandbox.metadata_for(repo, self())
-          {:v1, meta}
-          |> :erlang.term_to_binary
-          |> Base.url_encode64
         end
       else
         defp process_request_headers(headers) when is_list(headers) do

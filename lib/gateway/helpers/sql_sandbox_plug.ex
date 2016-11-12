@@ -1,21 +1,29 @@
 defmodule Phoenix.Ecto.SQL.Sandbox do
   @moduledoc """
   A plug to allow concurrent, transactional acceptance tests with Ecto.Adapters.SQL.Sandbox.
+
   ## Example
+
   This plug should only be used during tests. First, set a flag to
   enable it in `config/test.exs`:
+
       config :your_app, sql_sandbox: true
+
   And use the flag to conditionally add the plug to `lib/your_app/endpoint.ex`:
+
       if Application.get_env(:your_app, :sql_sandbox) do
         plug Phoenix.Ecto.SQL.Sandbox
       end
 
   It's important that this is at the top of `endpoint.ex`, before any other plugs.
+
   Then, within an acceptance test, checkout a sandboxed connection as before.
   Use `metadata_for/2` helper to get the session metadata to that will allow access
   to the test's connection.
   Here's an example using [Hound](https://hex.pm/packages/hound):
+
       use Hound.Helpers
+
       setup do
         :ok = Ecto.Adapters.SQL.Sandbox.checkout(YourApp.Repo)
         metadata = Phoenix.Ecto.SQL.Sandbox.metadata_for(YourApp.Repo, self())
@@ -34,7 +42,7 @@ defmodule Phoenix.Ecto.SQL.Sandbox do
     |> get_req_header("user-agent")
     |> List.first
     |> extract_metadata
-    |> Enum.each(&allow_sandbox_access(&1, sandbox))
+    |> allow_sandbox_access(sandbox)
 
     conn
   end
@@ -57,12 +65,8 @@ defmodule Phoenix.Ecto.SQL.Sandbox do
   defp extract_metadata(user_agent) when is_binary(user_agent) do
     ua_last_part = user_agent |> String.split("/") |> List.last
     case Regex.run(~r/BeamMetadata \((.*?)\)/, ua_last_part) do
-      [_, metadata] ->
-        metadata
-        |> String.split(",")
-        |> Enum.reduce([], fn meta, acc -> [parse_metadata(meta)] ++ acc end)
-      _ ->
-        %{}
+      [_, metadata] -> parse_metadata(metadata)
+      _             -> %{}
     end
   end
   defp extract_metadata(_), do: %{}
@@ -72,10 +76,8 @@ defmodule Phoenix.Ecto.SQL.Sandbox do
     |> Base.url_decode64!
     |> :erlang.binary_to_term
     |> case do
-         {:v1, metadata} ->
-          metadata
-         _ ->
-          %{}
+         {:v1, metadata} -> metadata
+         _               -> %{}
        end
   end
 end
