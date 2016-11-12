@@ -1,9 +1,47 @@
-# Setup fake server
-FakeServer.Status.create(:status200, %{response_code: 200, response_body: "Hello World"})
-{:ok, address} = FakeServer.run(:external_server, [], %{port: 9090})
+# Setup Mock server
+defmodule Gateway.MockServer do
+  @moduledoc false
+  use Plug.Router
+  require Logger
+  alias Gateway.Helpers.Response
 
-# Write it's url to env
-Application.put_env(:gateway, :fake_server_url, address)
+  plug :match
+
+  plug Plug.RequestId
+  plug Plug.Parsers, parsers: [:json],
+                     pass:  ["application/json"],
+                     json_decoder: Poison
+  plug :dispatch
+
+  defp debug_conn(conn) do
+    %{
+      request: %{
+        method: conn.method,
+        uri: conn.request_path,
+        query: Plug.Conn.Query.decode(conn.query_string),
+        headers: modify_headers_list(conn.req_headers),
+        body: conn.body_params
+      },
+      response: %{
+        status_code: conn.status,
+        headers: modify_headers_list(conn.resp_headers),
+        body: conn.resp_body
+      }
+    }
+  end
+
+  defp modify_headers_list([]), do: []
+  defp modify_headers_list([{key, value} | t]), do: [%{key => value}] ++ modify_headers_list(t)
+
+  match _ do
+    conn
+    |> debug_conn
+    |> Response.send(conn, 200)
+  end
+end
+
+# Start mock server
+{:ok, _} = Plug.Adapters.Cowboy.http Gateway.MockServer, [], port: 4040
 
 # Start Factory service
 {:ok, _} = Application.ensure_all_started(:ex_machina)
