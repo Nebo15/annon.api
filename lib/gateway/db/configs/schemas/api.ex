@@ -29,7 +29,8 @@ defmodule Gateway.DB.Schemas.API do
   def get_one_by(selector) do
     Repo.one from APISchema,
       where: ^selector,
-      limit: 1
+      limit: 1,
+      preload: [:plugins]
   end
 
   def changeset(api, params \\ %{}) do
@@ -59,7 +60,7 @@ defmodule Gateway.DB.Schemas.API do
   end
 
   def update(api_id, params) when is_map(params) do
-    case get_one_by([api_id: api_id]) do
+    case get_one_by([id: api_id]) do
       %APISchema{} = api ->
         api
         |> update_changeset(params)
