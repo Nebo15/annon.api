@@ -69,7 +69,6 @@ defmodule Gateway.AcceptanceCase do
         :api
         |> build_factory_params()
         |> create_api()
-        |> assert_status(201)
       end
 
       def create_api(data) do
@@ -159,8 +158,12 @@ defmodule Gateway.AcceptanceCase do
   end
   def assert_status({:ok, %HTTPoison.Response{} = response}, status), do: assert_status(response, status)
   def assert_status(%HTTPoison.Response{} = response, status) do
-    assert response.status_code == status
-    response
+    if(response.status_code == status) do
+      response
+    else
+      flunk "Expected response status #{inspect status}, got #{inspect response.status_code}. " <>
+            "Response: #{inspect response}"
+    end
   end
 
   def get_body(%HTTPoison.Response{body: body}), do: body
