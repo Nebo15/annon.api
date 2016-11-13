@@ -3,6 +3,7 @@ sudo: required
 cache:
   directories:
   - deps
+  - _build/dev
   - $HOME/docker
 services:
   - docker
