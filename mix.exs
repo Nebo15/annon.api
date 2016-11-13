@@ -63,7 +63,6 @@ defmodule Gateway.Mixfile do
      {:httpoison, ">= 0.0.0"},
      {:ex_statsd, ">= 0.5.1"},
      {:eview,  ">= 0.0.0"},
-     {:fake_server, "~> 0.5.0", only: [:dev, :test]},
      {:ex_machina, ">= 1.0.0", only: [:dev, :test]},
      {:faker, "~> 0.7.0", only: [:dev, :test]},
      {:dogma, "> 0.1.0", only: [:dev, :test]},
