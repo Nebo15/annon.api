@@ -37,7 +37,7 @@ defmodule Gateway.Acceptance.Plugins.ValidatorTest do
     |> post!(validator_plugin)
     |> assert_status(201)
 
-    Gateway.AutoClustering.do_reload_config
+    Gateway.AutoClustering.do_reload_config()
 
     assert %{
       "error" => %{"type" => "validation_failed"}
