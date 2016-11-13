@@ -13,8 +13,10 @@ defmodule Gateway.UnitCase do
     end
   end
 
-  def assert_halt(%Plug.Conn{halted: true} = plug), do: plug
-  def assert_not_halt(%Plug.Conn{halted: false} = plug), do: plug
+  def assert_halt(%Plug.Conn{halted: true} = conn), do: conn
+  def assert_halt(%Plug.Conn{halted: false} = conn), do: flunk "connection is not halted"
+  def assert_not_halt(%Plug.Conn{halted: false} = conn), do: conn
+  def assert_not_halt(%Plug.Conn{halted: true} = conn), do: flunk "connection is halted"
 
   def assert_conn_status(conn, code \\ 200) do
     assert code == conn.status

@@ -57,7 +57,9 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
   describe "Validator Plugin" do
     test "create", %{api_id: api_id} do
       validator = :validator_plugin
-      |> build_factory_params(%{settings: %{schema: "{}"}})
+      |> build_factory_params(%{settings: %{
+        rules: [%{methods: ["GET", "POST", "PUT", "DELETE"], path: ".*", schema: %{}}]
+      }})
 
       "apis/#{api_id}/plugins"
       |> put_management_url()
@@ -88,12 +90,18 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
 
       %{
         "error" => %{
-          "invalid" => [%{"entry" => "$.settings", "rules" => [%{"rule" => "json"}]}]
-          # TODO: Entry should be $.settings.schema
+          "invalid" => [%{"entry" => "$.settings", "rules" => [%{"rule" => "cast"}]}]
+          # TODO: There are should be more entries with valid paths $.settings.schema
         }
       } = "apis/#{api_id}/plugins"
       |> put_management_url()
-      |> post!(%{name: "validator", is_enabled: false, settings: %{"schema" => "{invalid: schema: json]"}})
+      |> post!(%{
+        name: "validator",
+        is_enabled: false,
+        settings: %{
+          rules: [%{methods: ["UNKNOWN"], path: 123, schema: nil}]
+        }
+      })
       |> assert_status(422)
       |> get_body()
     end

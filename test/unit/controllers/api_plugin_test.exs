@@ -102,7 +102,10 @@ defmodule Gateway.Controllers.API.PluginTest do
       |> assert_conn_status()
 
       assert %{
-        "settings" => %{"schema" => "{}"}
+        "settings" => %{
+          "rules" => [%{"methods" => ["PUT"], "path" => ".*", "schema" => %{"some_field" => "some_value"}}],
+          "signature" => "secret-sign"
+        }
       } = Poison.decode!(conn.resp_body)["data"]
     end
 

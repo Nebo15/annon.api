@@ -55,7 +55,7 @@ defmodule Gateway.Changeset.Validator.Settings do
   end
 
   # Validator
-  def validate_settings(%Changeset{changes: %{name: "validator", settings: settings}} = ch) do
+  def validate_settings(%Changeset{changes: %{name: "validator"}} = ch) do
     validate_via_json_schema(ch, :settings, %{
       "type" => "object",
       "required" => ["rules"],
@@ -171,18 +171,6 @@ defmodule Gateway.Changeset.Validator.Settings do
 
   # general
   def validate_settings(ch), do: ch
-
-  # helpers
-  defp validate_json(%Changeset{} = ch, field) do
-    ch
-    |> get_field(field, "")
-    |> Poison.decode()
-    |> validate_json(ch)
-  end
-  defp validate_json({:ok, _}, ch), do: ch
-  defp validate_json({:error, _}, ch) do
-    add_error(ch, :settings, "Validator.settings: field 'schema' is invalid json", [validation: :json, json: []])
-  end
 
   defp put_changeset_errors(%Changeset{valid?: true}, ch), do: ch
   defp put_changeset_errors(%Changeset{valid?: false, errors: errors}, ch) do
