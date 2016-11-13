@@ -3,7 +3,7 @@ defmodule Gateway.Acceptance.Plugins.IPRestrictionTest do
   use Gateway.AcceptanceCase
 
   setup do
-    api_path = "/my_ip_filtered_api"
+    api_path = "/my_ip_filtered_api-" <> Ecto.UUID.generate() <> "/"
     api = :api
     |> build_factory_params(%{
       request: %{

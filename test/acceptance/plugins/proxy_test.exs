@@ -3,7 +3,7 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
   use Gateway.AcceptanceCase
 
   setup do
-    api_path = "/my_api"
+    api_path = "/my_proxied_api-" <> Ecto.UUID.generate() <> "/"
 
     api = :api
     |> build_factory_params(%{
@@ -160,7 +160,7 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
 
       assert api_path == uri
 
-      assert %{"request" => %{"uri" => uri}} = "my_api/foo"
+      assert %{"request" => %{"uri" => uri}} = "#{api_path}/foo"
       |> put_public_url()
       |> get!()
       |> get_body()
@@ -184,7 +184,7 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
 
       assert api_path == uri
 
-      assert %{"request" => %{"uri" => uri}} = "my_api/foo"
+      assert %{"request" => %{"uri" => uri}} = "#{api_path}/foo"
       |> put_public_url()
       |> get!()
       |> get_body()
@@ -211,7 +211,7 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
 
       assert proxy_path <> api_path == uri
 
-      assert %{"request" => %{"uri" => uri}} = "my_api/foo"
+      assert %{"request" => %{"uri" => uri}} = "#{api_path}/foo"
       |> put_public_url()
       |> get!()
       |> get_body()
@@ -238,7 +238,7 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
 
       assert "/" == uri
 
-      assert %{"request" => %{"uri" => uri}} = "my_api/foo"
+      assert %{"request" => %{"uri" => uri}} = "#{api_path}/foo"
       |> put_public_url()
       |> get!()
       |> get_body()
@@ -262,7 +262,7 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
 
       assert "/" == uri
 
-      assert %{"request" => %{"uri" => uri}} = "my_api/foo"
+      assert %{"request" => %{"uri" => uri}} = "#{api_path}/foo"
       |> put_public_url()
       |> get!()
       |> get_body()
@@ -289,7 +289,7 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
 
       assert proxy_path == uri
 
-      assert %{"request" => %{"uri" => uri}} = "my_api/foo"
+      assert %{"request" => %{"uri" => uri}} = "#{api_path}/foo"
       |> put_public_url()
       |> get!()
       |> get_body()

@@ -3,6 +3,7 @@ defmodule Gateway.Acceptance.Smoke.AclTest do
   use Gateway.AcceptanceCase
 
   setup do
+    api_path = "/httpbin"
     api = :api
     |> build_factory_params(%{
       name: "An HTTPBin service endpoint",
@@ -11,7 +12,7 @@ defmodule Gateway.Acceptance.Smoke.AclTest do
         scheme: "http",
         host: get_endpoint_host(:public),
         port: get_endpoint_port(:public),
-        path: "/httpbin",
+        path: api_path,
       }
     })
     |> create_api()
@@ -56,12 +57,12 @@ defmodule Gateway.Acceptance.Smoke.AclTest do
 
     Gateway.AutoClustering.do_reload_config()
 
-    :ok
+    %{api_path: api_path}
   end
 
-  test "A request with no auth header is forbidden to access upstream" do
+  test "A request with no auth header is forbidden to access upstream", %{api_path: api_path} do
     response =
-      "httpbin?my_param=my_value"
+      "/httpbin?my_param=my_value"
       |> put_public_url()
       |> HTTPoison.get!
       |> Map.get(:body)
@@ -74,7 +75,7 @@ defmodule Gateway.Acceptance.Smoke.AclTest do
     assert_logs_are_written(response)
   end
 
-  test "A request with incorrect auth header is forbidden to access upstream" do
+  test "A request with incorrect auth header is forbidden to access upstream", %{api_path: api_path} do
     response =
       "/httpbin?my_param=my_value"
       |> put_public_url()
@@ -89,7 +90,7 @@ defmodule Gateway.Acceptance.Smoke.AclTest do
     assert_logs_are_written(response)
   end
 
-  test "A request with good auth header is allowed to access upstream" do
+  test "A request with good auth header is allowed to access upstream", %{api_path: api_path} do
     auth_token = build_jwt_token(%{"scopes" => ["httpbin:read"]}, "a_secret_signature")
 
     response =
@@ -104,7 +105,7 @@ defmodule Gateway.Acceptance.Smoke.AclTest do
     assert_logs_are_written(response)
   end
 
-  test "A valid access scope is required to access upstream" do
+  test "A valid access scope is required to access upstream", %{api_path: api_path} do
     auth_token = build_jwt_token(%{"scopes" => ["httpbin:read"]}, "a_secret_signature")
     headers = [
       {"authorization", "Bearer #{auth_token}"},

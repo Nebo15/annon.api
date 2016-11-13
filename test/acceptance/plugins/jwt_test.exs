@@ -5,7 +5,7 @@ defmodule Gateway.Acceptance.Plugins.JWTTest do
   @jwt_secret "secret"
 
   setup do
-    api_path = "/my_jwt_authorized_api"
+    api_path = "/my_jwt_authorized_api-" <> Ecto.UUID.generate() <> "/"
     api = :api
     |> build_factory_params(%{
       request: %{

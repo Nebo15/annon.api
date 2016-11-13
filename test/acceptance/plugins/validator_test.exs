@@ -7,7 +7,7 @@ defmodule Gateway.Acceptance.Plugins.ValidatorTest do
             "required" => ["bar"]}
 
   setup do
-    api_path = "/my_validated_api"
+    api_path = "/my_validated_api-" <> Ecto.UUID.generate() <> "/"
     api = :api
     |> build_factory_params(%{
       request: %{

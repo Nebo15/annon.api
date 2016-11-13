@@ -5,7 +5,7 @@ defmodule Gateway.Acceptance.Plugins.IdempotencyTest do
   @idempotency_key Ecto.UUID.generate()
 
   setup do
-    api_path = "/my_idempotent_api"
+    api_path = "/my_idempotent_api-" <> Ecto.UUID.generate() <> "/"
     api = :api
     |> build_factory_params(%{
       request: %{
