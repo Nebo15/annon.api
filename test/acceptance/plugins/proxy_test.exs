@@ -26,10 +26,7 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
   describe "proxy settings validator" do
     test "allows only host and port", %{api_id: api_id, api_path: api_path} do
       api_id
-      |> create_proxy(%{settings: %{
-        host: "localhost",
-        port: 4040
-      }})
+      |> create_proxy_to_mock()
 
       assert %{"request" => %{"uri" => uri}} = api_path
       |> put_public_url()
@@ -59,10 +56,7 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
   describe "preserves HTTP method, body and query params" do
     test "GET", %{api_id: api_id, api_path: api_path} do
       api_id
-      |> create_proxy(%{settings: %{
-        host: "localhost",
-        port: 4040
-      }})
+      |> create_proxy_to_mock()
 
       assert %{"request" => %{
         "method" => "GET",
@@ -76,10 +70,7 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
 
     test "POST", %{api_id: api_id, api_path: api_path} do
       api_id
-      |> create_proxy(%{settings: %{
-        host: "localhost",
-        port: 4040
-      }})
+      |> create_proxy_to_mock()
 
       assert %{"request" => %{
         "method" => "POST",
@@ -94,10 +85,7 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
 
     test "PUT", %{api_id: api_id, api_path: api_path} do
       api_id
-      |> create_proxy(%{settings: %{
-        host: "localhost",
-        port: 4040
-      }})
+      |> create_proxy_to_mock()
 
       assert %{"request" => %{
         "method" => "PUT",
@@ -112,10 +100,7 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
 
     test "DELETE", %{api_id: api_id, api_path: api_path} do
       api_id
-      |> create_proxy(%{settings: %{
-        host: "localhost",
-        port: 4040
-      }})
+      |> create_proxy_to_mock()
 
       assert %{"request" => %{
         "method" => "DELETE",
@@ -130,11 +115,9 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
 
   test "supports additional headers", %{api_id: api_id, api_path: api_path} do
     api_id
-    |> create_proxy(%{settings: %{
-      host: "localhost",
-      port: 4040,
+    |> create_proxy_to_mock(%{
       additional_headers: [%{"hello" => "world"}]
-    }})
+    })
 
     assert %{"request" => %{
       "headers" => [%{"hello" => "world"} | _]
@@ -147,10 +130,7 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
 
   test "preserves original headers", %{api_id: api_id, api_path: api_path} do
     api_id
-    |> create_proxy(%{settings: %{
-      host: "localhost",
-      port: 4040
-    }})
+    |> create_proxy_to_mock()
 
     assert %{"request" => %{
       "headers" => [%{"foo" => "bar"} | _] # There might be issues with headers order in here
@@ -166,13 +146,11 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
       proxy_path = "/"
 
       api_id
-      |> create_proxy(%{settings: %{
-        host: "localhost",
+      |> create_proxy_to_mock(%{
         path: proxy_path,
-        port: 4040,
         scheme: "http",
         strip_request_path: false
-      }})
+      })
 
       assert %{"request" => %{"uri" => uri}} = api_path
       |> put_public_url()
@@ -193,12 +171,10 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
 
     test "when `strip_request_path` is false and proxy path is not set", %{api_id: api_id, api_path: api_path} do
       api_id
-      |> create_proxy(%{settings: %{
-        host: "localhost",
-        port: 4040,
+      |> create_proxy_to_mock(%{
         scheme: "http",
         strip_request_path: false
-      }})
+      })
 
       assert %{"request" => %{"uri" => uri}} = api_path
       |> put_public_url()
@@ -221,13 +197,11 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
       proxy_path = "/proxy"
 
       api_id
-      |> create_proxy(%{settings: %{
-        host: "localhost",
+      |> create_proxy_to_mock(%{
         path: proxy_path,
-        port: 4040,
         scheme: "http",
         strip_request_path: false
-      }})
+      })
 
       assert %{"request" => %{"uri" => uri}} = api_path
       |> put_public_url()
@@ -250,13 +224,11 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
       proxy_path = "/"
 
       api_id
-      |> create_proxy(%{settings: %{
-        host: "localhost",
+      |> create_proxy_to_mock(%{
         path: proxy_path,
-        port: 4040,
         scheme: "http",
         strip_request_path: true
-      }})
+      })
 
       assert %{"request" => %{"uri" => uri}} = api_path
       |> put_public_url()
@@ -277,12 +249,10 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
 
     test "when `strip_request_path` is true and proxy path is not set", %{api_id: api_id, api_path: api_path} do
       api_id
-      |> create_proxy(%{settings: %{
-        host: "localhost",
-        port: 4040,
+      |> create_proxy_to_mock(%{
         scheme: "http",
         strip_request_path: true
-      }})
+      })
 
       assert %{"request" => %{"uri" => uri}} = api_path
       |> put_public_url()
@@ -305,13 +275,11 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
       proxy_path = "/proxy"
 
       api_id
-      |> create_proxy(%{settings: %{
-        host: "localhost",
+      |> create_proxy_to_mock(%{
         path: proxy_path,
-        port: 4040,
         scheme: "http",
         strip_request_path: true
-      }})
+      })
 
       assert %{"request" => %{"uri" => uri}} = api_path
       |> put_public_url()
@@ -329,19 +297,5 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
 
       assert proxy_path <> "/foo" == uri
     end
-  end
-
-  defp create_proxy(api_id, params) do
-    params = :proxy_plugin
-    |> build_factory_params(params)
-
-    proxy = "apis/#{api_id}/plugins"
-    |> put_management_url()
-    |> post!(params)
-    |> assert_status(201)
-
-    Gateway.AutoClustering.do_reload_config() # TODO: Why this should be called even when conf updated via API?!
-
-    proxy
   end
 end

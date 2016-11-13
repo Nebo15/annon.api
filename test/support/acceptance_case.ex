@@ -33,7 +33,6 @@ defmodule Gateway.AcceptanceCase do
           |> :erlang.term_to_binary
           |> Base.url_encode64
 
-
           [{"content-type", "application/json"},
            {"user-agent", "BeamMetadata (#{encoded_meta})"}] ++ headers
         end
@@ -111,6 +110,26 @@ defmodule Gateway.AcceptanceCase do
 
       def get_endpoint_port(endpoint_type), do: @config[endpoint_type][:port]
       def get_endpoint_host(endpoint_type), do: @config[endpoint_type][:host]
+
+      def create_proxy_to_mock(api_id, settings \\ %{}) do
+        settings = %{
+          host: get_endpoint_host(:mock),
+          port: get_endpoint_port(:mock)
+        }
+        |> Map.merge(settings)
+
+        params = :proxy_plugin
+        |> build_factory_params(%{settings: settings})
+
+        proxy = "apis/#{api_id}/plugins"
+        |> put_management_url()
+        |> post!(params)
+        |> assert_status(201)
+
+        Gateway.AutoClustering.do_reload_config() # TODO: Why this should be called even when conf updated via API?!
+
+        proxy
+      end
 
       setup tags do
         :ets.delete_all_objects(:config)

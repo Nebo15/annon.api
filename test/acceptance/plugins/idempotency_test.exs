@@ -21,16 +21,8 @@ defmodule Gateway.Acceptance.Plugins.IdempotencyTest do
 
     api_id = get_in(api, ["data", "id"])
 
-    proxy_plugin = :proxy_plugin
-    |> build_factory_params(%{settings: %{
-      host: "localhost",
-      port: 4040
-    }})
-
-    "apis/#{api_id}/plugins"
-    |> put_management_url()
-    |> post!(proxy_plugin)
-    |> assert_status(201)
+    api_id
+    |> create_proxy_to_mock()
 
     idempotency_plugin = :idempotency_plugin
     |> build_factory_params()
