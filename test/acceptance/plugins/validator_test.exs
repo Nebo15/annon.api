@@ -53,79 +53,116 @@ defmodule Gateway.Acceptance.Plugins.ValidatorTest do
     |> assert_status(404)
   end
 
-  # test "multiple rules can be applied", %{api_id: api_id, api_path: api_path} do
-  #   acl_plugin = :acl_plugin
-  #   |> build_factory_params(%{settings: %{
-  #     rules: [
-  #       %{methods: ["GET", "POST"], path: "^.*", scopes: ["super_scope"]},
-  #       %{methods: ["GET"], path: "^.*", scopes: ["api:access", "api:request"]},
-  #     ]
-  #   }})
+  test "works without matching rules", %{api_id: api_id, api_path: api_path} do
+    validator_plugin = :validator_plugin
+    |> build_factory_params(%{settings: %{
+      rules: [%{methods: ["DELETE"], path: ".*", schema: @schema}]
+    }})
 
-  #   "apis/#{api_id}/plugins"
-  #   |> put_management_url()
-  #   |> post!(acl_plugin)
-  #   |> assert_status(201)
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(validator_plugin)
+    |> assert_status(201)
 
-  #   Gateway.AutoClustering.do_reload_config()
+    Gateway.AutoClustering.do_reload_config()
 
-  #   token = build_jwt_token(%{"scopes" => ["api:access", "api:request"]}, @jwt_secret)
-  #   headers = [{"authorization", "Bearer #{token}"}]
+    api_path
+    |> put_public_url()
+    |> post!(%{data: "aaaa"})
+    |> assert_status(404)
+    |> get_body()
+  end
 
-  #   api_path
-  #   |> put_public_url()
-  #   |> get!(headers)
-  #   |> assert_status(404)
-  # end
+  test "first of many rules is applied", %{api_id: api_id, api_path: api_path} do
+    validator_plugin = :validator_plugin
+    |> build_factory_params(%{settings: %{
+      rules: [
+        %{methods: ["GET", "POST", "PUT", "DELETE"], path: ".*", schema: %{}}, # Allow request
+        %{methods: ["GET", "POST", "PUT", "DELETE"], path: ".*", schema: @schema} # And deny it
+      ]
+    }})
 
-  # describe "rules is filtered" do
-  #   test "by method", %{api_id: api_id, api_path: api_path} do
-  #     acl_plugin = :acl_plugin
-  #     |> build_factory_params(%{settings: %{
-  #       rules: [
-  #         %{methods: ["GET", "POST"], path: "^.*", scopes: ["super_scope"]},
-  #         %{methods: ["PUT"], path: "^.*", scopes: ["api:access", "api:request"]},
-  #       ]
-  #     }})
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(validator_plugin)
+    |> assert_status(201)
 
-  #     "apis/#{api_id}/plugins"
-  #     |> put_management_url()
-  #     |> post!(acl_plugin)
-  #     |> assert_status(201)
+    Gateway.AutoClustering.do_reload_config()
 
-  #     Gateway.AutoClustering.do_reload_config()
+    api_path
+    |> put_public_url()
+    |> post!(%{data: "aaaa"})
+    |> assert_status(404)
+    |> get_body()
+  end
 
-  #     token = build_jwt_token(%{"scopes" => ["api:access", "api:request"]}, @jwt_secret)
-  #     headers = [{"authorization", "Bearer #{token}"}]
+  test "following rules can't cancel validation results", %{api_id: api_id, api_path: api_path} do
+    validator_plugin = :validator_plugin
+    |> build_factory_params(%{settings: %{
+      rules: [
+        %{methods: ["GET", "POST", "PUT", "DELETE"], path: ".*", schema: @schema},
+        %{methods: ["GET", "POST", "PUT", "DELETE"], path: ".*", schema: %{}}
+      ]
+    }})
 
-  #     api_path
-  #     |> put_public_url()
-  #     |> get!(headers)
-  #     |> assert_status(403)
-  #   end
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(validator_plugin)
+    |> assert_status(201)
 
-  #   test "by path", %{api_id: api_id, api_path: api_path} do
-  #     acl_plugin = :acl_plugin
-  #     |> build_factory_params(%{settings: %{
-  #       rules: [
-  #         %{methods: ["GET"], path: "^/foo$", scopes: ["super_scope"]},
-  #       ]
-  #     }})
+    Gateway.AutoClustering.do_reload_config()
 
-  #     "apis/#{api_id}/plugins"
-  #     |> put_management_url()
-  #     |> post!(acl_plugin)
-  #     |> assert_status(201)
+    api_path
+    |> put_public_url()
+    |> post!(%{data: "aaaa"})
+    |> assert_status(422)
+    |> get_body()
+  end
 
-  #     Gateway.AutoClustering.do_reload_config()
+  describe "rules is filtered" do
+    test "by method", %{api_id: api_id, api_path: api_path} do
+    validator_plugin = :validator_plugin
+    |> build_factory_params(%{settings: %{
+      rules: [
+        %{methods: ["PUT", "DELETE"], path: ".*", schema: @schema},
+        %{methods: ["POST"], path: ".*", schema: %{}}
+      ]
+    }})
 
-  #     token = build_jwt_token(%{"scopes" => ["super_scope"]}, @jwt_secret)
-  #     headers = [{"authorization", "Bearer #{token}"}]
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(validator_plugin)
+    |> assert_status(201)
 
-  #     "#{api_path}/foo"
-  #     |> put_public_url()
-  #     |> get!(headers)
-  #     |> assert_status(404)
-  #   end
-  # end
+    Gateway.AutoClustering.do_reload_config()
+
+    api_path
+    |> put_public_url()
+    |> post!(%{data: "aaaa"})
+    |> assert_status(404)
+    |> get_body()
+    end
+
+    test "by path", %{api_id: api_id, api_path: api_path} do
+      validator_plugin = :validator_plugin
+      |> build_factory_params(%{settings: %{
+        rules: [
+          %{methods: ["POST"], path: "^/foo$", schema: @schema}
+        ]
+      }})
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(validator_plugin)
+      |> assert_status(201)
+
+      Gateway.AutoClustering.do_reload_config()
+
+      "#{api_path}/foo"
+      |> put_public_url()
+      |> post!(%{data: "aaaa"})
+      |> assert_status(422)
+      |> get_body()
+    end
+  end
 end

@@ -79,6 +79,23 @@ defmodule Gateway.Acceptance.Plugins.IdempotencyTest do
     assert req4_id != req1_id
   end
 
+  test "test idempotency validates request equality", %{api_path: api_path} do
+    api_path
+    |> put_public_url()
+    |> post!(%{foo: "bar"}, [{"x-idempotency-key", @idempotency_key}])
+    |> get_body()
+    |> get_mock_response()
+    |> get_request_id
+
+    assert %{
+      "error" => %{"message" => "You sent duplicate idempotency key but request params was different."}
+    } = api_path
+    |> put_public_url()
+    |> post!(%{foo: "baz"}, [{"x-idempotency-key", @idempotency_key}])
+    |> assert_status(409)
+    |> get_body()
+  end
+
   defp get_request_id(%{"response" => %{"headers" => headers}}) do
     headers
     |> Enum.find_value(fn

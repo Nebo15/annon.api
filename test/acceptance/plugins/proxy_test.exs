@@ -191,6 +191,32 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
       assert api_path <> "/foo" == uri
     end
 
+    test "when `strip_request_path` is false and proxy path is not set", %{api_id: api_id, api_path: api_path} do
+      api_id
+      |> create_proxy(%{settings: %{
+        host: "localhost",
+        port: 4040,
+        scheme: "http",
+        strip_request_path: false
+      }})
+
+      assert %{"request" => %{"uri" => uri}} = api_path
+      |> put_public_url()
+      |> get!()
+      |> get_body()
+      |> get_mock_response()
+
+      assert api_path == uri
+
+      assert %{"request" => %{"uri" => uri}} = "my_api/foo"
+      |> put_public_url()
+      |> get!()
+      |> get_body()
+      |> get_mock_response()
+
+      assert api_path <> "/foo" == uri
+    end
+
     test "when `strip_request_path` is false and proxy path is set", %{api_id: api_id, api_path: api_path} do
       proxy_path = "/proxy"
 
@@ -227,6 +253,32 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
       |> create_proxy(%{settings: %{
         host: "localhost",
         path: proxy_path,
+        port: 4040,
+        scheme: "http",
+        strip_request_path: true
+      }})
+
+      assert %{"request" => %{"uri" => uri}} = api_path
+      |> put_public_url()
+      |> get!()
+      |> get_body()
+      |> get_mock_response()
+
+      assert "/" == uri
+
+      assert %{"request" => %{"uri" => uri}} = "my_api/foo"
+      |> put_public_url()
+      |> get!()
+      |> get_body()
+      |> get_mock_response()
+
+      assert "/foo" == uri
+    end
+
+    test "when `strip_request_path` is true and proxy path is not set", %{api_id: api_id, api_path: api_path} do
+      api_id
+      |> create_proxy(%{settings: %{
+        host: "localhost",
         port: 4040,
         scheme: "http",
         strip_request_path: true

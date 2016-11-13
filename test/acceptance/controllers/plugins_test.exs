@@ -9,6 +9,43 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
     %{api: api, api_id: api_id}
   end
 
+  describe "partially update settings" do
+    test "create", %{api_id: api_id} do
+      proxy = :proxy_plugin
+      |> build_factory_params(%{settings: %{host: "localhost"}})
+
+      assert  %{
+        "data" => %{"is_enabled" => true, "settings" => %{"host" => "localhost"}}
+      } = "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(proxy)
+      |> assert_status(201)
+      |> get_body()
+
+      proxy = :proxy_plugin
+      |> build_factory_params(%{settings: %{port: 4040}})
+
+      assert  %{
+        "data" => %{"is_enabled" => true, "settings" => %{"host" => "localhost", "port" => 4040}}
+      } = "apis/#{api_id}/plugins/proxy"
+      |> put_management_url()
+      |> put!(proxy)
+      |> assert_status(200)
+      |> get_body()
+
+      proxy = :proxy_plugin
+      |> build_factory_params(%{is_enabled: false})
+
+      assert  %{
+        "data" => %{"is_enabled" => false, "settings" => %{"host" => "localhost", "port" => 4040}}
+      } = "apis/#{api_id}/plugins/proxy"
+      |> put_management_url()
+      |> put!(proxy)
+      |> assert_status(200)
+      |> get_body()
+    end
+  end
+
   describe "JWT Plugin" do
     test "create", %{api_id: api_id} do
       jwt_plugin = :jwt_plugin
