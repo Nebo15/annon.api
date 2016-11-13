@@ -54,7 +54,7 @@ defmodule Phoenix.Ecto.SQL.Sandbox do
     conn
   end
 
-  defp init_repos_config() do
+  defp init_repos_config do
     ecto_repos = Application.get_env(:gateway, :ecto_repos)
 
     ecto_repos
