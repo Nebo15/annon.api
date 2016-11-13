@@ -1,4 +1,4 @@
-defmodule Gateway.Acceptance.Plugin.ValidatorTest do
+defmodule Gateway.Acceptance.Plugins.ValidatorTest do
   @moduledoc false
   use Gateway.AcceptanceCase
 

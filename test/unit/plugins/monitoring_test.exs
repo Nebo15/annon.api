@@ -1,4 +1,4 @@
-defmodule Gateway.MonitoringTest do
+defmodule Gateway.Plugins.MonitoringTest do
   @moduledoc false
   use Gateway.UnitCase
 

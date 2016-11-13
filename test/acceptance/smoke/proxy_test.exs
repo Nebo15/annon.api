@@ -1,4 +1,4 @@
-defmodule Gateway.Acceptance.ProxySmokeTest do
+defmodule Gateway.Acceptance.Smoke.ProxyTest do
   @moduledoc false
   use Gateway.AcceptanceCase
 

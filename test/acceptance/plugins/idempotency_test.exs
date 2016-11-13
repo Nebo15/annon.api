@@ -1,4 +1,4 @@
-defmodule Gateway.Acceptance.Plugin.IdempotencyTest do
+defmodule Gateway.Acceptance.Plugins.IdempotencyTest do
   @moduledoc false
   use Gateway.AcceptanceCase
 

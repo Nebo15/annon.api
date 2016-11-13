@@ -1,4 +1,4 @@
-defmodule Gateway.Acceptance.Plugin.JWTTest do
+defmodule Gateway.Acceptance.Plugins.JWTTest do
   @moduledoc false
   use Gateway.AcceptanceCase
 

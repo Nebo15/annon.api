@@ -1,4 +1,4 @@
-defmodule Gateway.ClusterConfigReloaderTest do
+defmodule Gateway.Acceptance.Cluster.ConfigReloaderTest do
   @moduledoc false
   # Integration test to check that the config cache is reloaded across cluster after a config change
   use Gateway.AcceptanceCase

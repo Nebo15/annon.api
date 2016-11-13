@@ -1,4 +1,4 @@
-defmodule Gateway.Acceptance.Plugin.ProxyTest do
+defmodule Gateway.Acceptance.Plugins.ProxyTest do
   @moduledoc false
   use Gateway.AcceptanceCase
 
