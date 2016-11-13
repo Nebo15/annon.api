@@ -24,7 +24,7 @@ defmodule PhoenixEcto.SQL.SandboxTest do
     metadata = Sandbox.metadata_for(MyRepo, self())
     assert metadata == %{repo: MyRepo, owner: self()}
 
-    _conn = conn(:get, "/") |> add_metadata(metadata) |> call_plug
+    _conn = :get |> conn("/") |> add_metadata(metadata) |> call_plug
 
     assert_receive {:allowed, MyRepo}
   end
@@ -34,14 +34,14 @@ defmodule PhoenixEcto.SQL.SandboxTest do
     metadata = Sandbox.metadata_for(repos, self())
     assert metadata == %{repo: repos, owner: self()}
 
-    _conn = conn(:get, "/") |> add_metadata(metadata) |> call_plug
+    _conn = :get |> conn("/") |> add_metadata(metadata) |> call_plug
 
     assert_receive {:allowed, MyRepoOne}
     assert_receive {:allowed, MyRepoTwo}
   end
 
   test "does not allow sandbox access without metadata" do
-    conn(:get, "/") |> call_plug
+    :get |> conn("/") |> call_plug
 
     refute_receive {:allowed, _}
   end
