@@ -16,9 +16,7 @@ defmodule Gateway.Helpers.CommonRouter do
                          json_decoder: Poison
 
       # Allow acceptance tests to run in concurrent mode
-      if Confex.get(:gateway, :sql_sandbox) do
-        plug Phoenix.Ecto.SQL.Sandbox
-      end
+      plug Phoenix.Ecto.SQL.Sandbox
 
       plug :dispatch
     end

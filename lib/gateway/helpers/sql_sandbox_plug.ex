@@ -32,19 +32,36 @@ defmodule Phoenix.Ecto.SQL.Sandbox do
   """
 
   import Plug.Conn
+  require Logger
 
   def init(opts \\ []) do
     Keyword.get(opts, :sandbox, Ecto.Adapters.SQL.Sandbox)
   end
 
   def call(conn, sandbox) do
-    conn
-    |> get_req_header("user-agent")
-    |> List.first
-    |> extract_metadata
-    |> allow_sandbox_access(sandbox)
+    if Confex.get(:gateway, :sql_sandbox) do
+      Logger.warn("SQL Sandbox is on, use it only for tests purposes!")
+
+      init_repos_config()
+
+      conn
+      |> get_req_header("user-agent")
+      |> List.first
+      |> extract_metadata
+      |> allow_sandbox_access(sandbox)
+    end
 
     conn
+  end
+
+  defp init_repos_config() do
+    ecto_repos = Application.get_env(:gateway, :ecto_repos)
+
+    ecto_repos
+    |> Enum.map(fn repo ->
+      repo_conf = Application.get_env(:gateway, repo)
+      Application.put_env(:gateway, repo, repo_conf ++ [pool: Ecto.Adapters.SQL.Sandbox])
+    end)
   end
 
   @doc """
