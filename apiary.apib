@@ -243,6 +243,22 @@ Proxy allows:
 - Add headers to upstream request (for example, to authentificate on back-end behind gateway).
 - Proxy `X-Request-ID` header, so all upstream back-ends can log request state with same UUID.
 
+### Strip Request Path
+
+You can set `strip_request_path` setting if you want to exclude API-related prefix from upstream request.
+
+Request Path | Proxy Path | API Path | `strip_request_path` | Upstream Request
+------ | -------- | ------ | ------- | --------
+`/`    | `/proxy` | `/api` | `false` | `/proxy/api/`
+`/foo` | `/proxy` | `/api` | `false` | `/proxy/api/foo`
+`/`    | `/` | `/api` | `false` | `/api/`
+`/foo` | `/` | `/api` | `false` | `/api/foo`
+`/`    | `/proxy` | `/api` | `true` | `/proxy/`
+`/foo` | `/proxy` | `/api` | `true` | `/proxy/foo`
+`/`    | `/` | `/api` | `true` | `/`
+`/foo` | `/` | `/api` | `true` | `/foo`
+
+
 ### Bind Proxy Plugin [POST /apis/{api_id}/plugins]
 
 + Parameters
