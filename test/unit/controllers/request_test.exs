@@ -21,7 +21,7 @@ defmodule Gateway.Controllers.RequestTest do
   describe "/requests" do
     test "GET empty list" do
       conn = "/requests"
-      |> send_get()
+      |> call_get()
       |> assert_conn_status()
 
       assert 0 == conn.resp_body
@@ -34,7 +34,7 @@ defmodule Gateway.Controllers.RequestTest do
       create_requests(3)
 
       conn = "/requests"
-      |> send_get()
+      |> call_get()
       |> assert_conn_status()
 
       assert 3 == conn.resp_body
@@ -47,7 +47,7 @@ defmodule Gateway.Controllers.RequestTest do
   describe "/requests/:request_id" do
     test "GET 404" do
       "/requests/not_exists"
-      |> send_get()
+      |> call_get()
       |> assert_conn_status(404)
     end
 
@@ -57,7 +57,7 @@ defmodule Gateway.Controllers.RequestTest do
       |> Enum.at(0) || ""
 
       conn = "/requests/#{id}"
-      |> send_get()
+      |> call_get()
       |> assert_conn_status()
 
       assert %{"data" => %{"id" => ^id}} = Poison.decode!(conn.resp_body)
@@ -69,12 +69,12 @@ defmodule Gateway.Controllers.RequestTest do
       |> Enum.at(0) || ""
 
       "/requests/#{id}"
-      |> send_delete()
+      |> call_delete()
       |> assert_conn_status()
       |> assert_response_body(%{})
 
       "/requests/#{id}"
-      |> send_get()
+      |> call_get()
       |> assert_conn_status(404)
     end
   end

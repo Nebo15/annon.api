@@ -13,27 +13,28 @@ defmodule Gateway.Plugins.Proxy do
   alias Gateway.DB.Schemas.API, as: APISchema
 
   @doc false
-  def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts) when is_list(plugins) do
+  def call(%Conn{private: %{api_config: %APISchema{plugins: plugins, request: %{path: api_path}}}} = conn, _opts)
+    when is_list(plugins) do
     plugins
     |> find_plugin_settings()
-    |> execute(conn)
+    |> execute(api_path, conn)
   end
   def call(conn, _), do: conn
 
-  defp execute(nil, conn), do: conn
-  defp execute(%Plugin{settings: settings} = plugin, conn) do
+  defp execute(nil, _, conn), do: conn
+  defp execute(%Plugin{settings: settings} = plugin, api_path, conn) do
     conn = plugin
     |> get_additional_headers()
     |> add_additional_headers(conn)
 
     settings
     # TODO: check variables
-    |> do_proxy(conn)
+    |> do_proxy(api_path, conn)
   end
 
-  defp do_proxy(settings, %Plug.Conn{method: method} = conn) do
+  defp do_proxy(settings, api_path, %Conn{method: method} = conn) do
     response = settings
-    |> make_link(conn)
+    |> make_link(api_path, conn)
     |> do_request(conn, method)
     |> get_response
 
@@ -56,12 +57,12 @@ defmodule Gateway.Plugins.Proxy do
 
   def get_response(%HTTPoison.Response{} = response), do: response
 
-  def make_link(proxy, conn) do
+  def make_link(proxy, api_path, conn) do
     proxy
     |> put_scheme(conn)
     |> put_host(proxy)
     |> put_port(proxy)
-    |> put_path(proxy, conn)
+    |> put_path(proxy, api_path, conn)
     |> put_query(proxy, conn)
   end
 
@@ -77,7 +78,7 @@ defmodule Gateway.Plugins.Proxy do
   defp get_additional_headers(_), do: []
 
   defp put_scheme(%{"scheme" => scheme}, _conn), do: scheme <> "://"
-  defp put_scheme(_, %Plug.Conn{scheme: scheme}), do: Atom.to_string(scheme) <> "://"
+  defp put_scheme(_, %Conn{scheme: scheme}), do: Atom.to_string(scheme) <> "://"
 
   defp put_host(pr, %{"host" => host}), do: pr <> host
   defp put_host(pr, %{}), do: pr
@@ -86,12 +87,24 @@ defmodule Gateway.Plugins.Proxy do
   defp put_port(pr, %{"port" => port}), do: pr <> ":" <> port
   defp put_port(pr, %{}), do: pr
 
-  defp put_path(pr, %{"path" => path, "strip_request_path" => true}, conn) do
-    pr <> String.trim_leading(conn.request_path, path)
-  end
-  defp put_path(pr, %{"path" => path}, _conn), do: pr <> path
-  defp put_path(pr, %{}, %Plug.Conn{request_path: path}), do: pr <> path
+  defp put_path(pr, %{"strip_request_path" => true, "path" => "/"}, api_path, %Conn{request_path: request_path}),
+    do: pr <> String.trim_leading(request_path, api_path)
 
-  defp put_query(pr, _, %Plug.Conn{query_string: ""}), do: pr
-  defp put_query(pr, _, %Plug.Conn{query_string: query_string}), do: pr <> "?" <> query_string
+  defp put_path(pr, %{"strip_request_path" => true, "path" => proxy_path}, api_path, %Conn{request_path: request_path}),
+    do: pr <> proxy_path <> String.trim_leading(request_path, api_path)
+
+  defp put_path(pr, %{"strip_request_path" => true}, api_path, %Conn{request_path: request_path}),
+    do: pr <> String.trim_leading(request_path, api_path)
+
+  defp put_path(pr, %{"path" => "/"}, _api_path, %Conn{request_path: request_path}),
+    do: pr <> request_path
+
+  defp put_path(pr, %{"path" => proxy_path}, _api_path, %Conn{request_path: request_path}),
+    do: pr <> proxy_path <> request_path
+
+  defp put_path(pr, _proxy_path, _api_path, %Conn{request_path: request_path}),
+    do: pr <> request_path
+
+  defp put_query(pr, _, %Conn{query_string: ""}), do: pr
+  defp put_query(pr, _, %Conn{query_string: query_string}), do: pr <> "?" <> query_string
 end

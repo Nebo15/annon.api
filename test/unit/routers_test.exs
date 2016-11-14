@@ -33,7 +33,7 @@ defmodule Gateway.RoutersTest do
         Gateway.ManagementRouter.call(conn, [])
       end
 
-      assert {500, _headers, _body} = sent_resp(conn)
+      assert {400, _headers, _body} = sent_resp(conn)
     end
   end
 end

@@ -1,4 +1,4 @@
-defmodule Gateway.MonitoringTest do
+defmodule Gateway.Plugins.MonitoringTest do
   @moduledoc false
   use Gateway.UnitCase
 
@@ -25,7 +25,7 @@ defmodule Gateway.MonitoringTest do
         method: "GET",
         scheme: "http",
         host: "localhost",
-        port: 5001,
+        port: 4040,
         path: "/apis"
       }
     })
@@ -33,7 +33,7 @@ defmodule Gateway.MonitoringTest do
     Gateway.AutoClustering.do_reload_config()
 
     "/apis"
-    |> send_public_get()
+    |> call_public_router()
   end
 
   defp check_statsd(metric_type, metric_name) do

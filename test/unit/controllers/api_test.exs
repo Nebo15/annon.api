@@ -5,7 +5,7 @@ defmodule Gateway.Controllers.APITest do
   describe "/apis" do
     test "GET empty list" do
       conn = "/apis"
-      |> send_get()
+      |> call_get()
       |> assert_conn_status()
 
       assert 0 = Enum.count(Poison.decode!(conn.resp_body)["data"])
@@ -15,7 +15,7 @@ defmodule Gateway.Controllers.APITest do
       api = Gateway.Factory.insert_pair(:api)
 
       "/apis"
-      |> send_get()
+      |> call_get()
       |> assert_conn_status()
       |> assert_response_body(api)
     end
@@ -24,7 +24,7 @@ defmodule Gateway.Controllers.APITest do
       api = Gateway.Factory.build(:api)
 
       conn = "/apis"
-      |> send_post(api)
+      |> call_post(api)
       |> assert_conn_status(201)
 
       assert %{
@@ -53,7 +53,7 @@ defmodule Gateway.Controllers.APITest do
   describe "/apis/:api_id" do
     test "GET 404" do
       "/apis/0"
-      |> send_get()
+      |> call_get()
       |> assert_conn_status(404)
     end
 
@@ -61,17 +61,26 @@ defmodule Gateway.Controllers.APITest do
       api = Gateway.Factory.insert(:api)
 
       "/apis/#{api.id}"
-      |> send_get()
+      |> call_get()
       |> assert_conn_status()
       |> assert_response_body(api)
     end
 
     test "PUT" do
       api = Gateway.Factory.insert(:api)
-      api_update = Gateway.Factory.build(:api)
+      api_update = %{
+        name: "New name",
+        request: %{
+          host: "other_host",
+          port: 1337,
+          path: "/foo/bar",
+          scheme: "https",
+          method: ["POST", "PUT"]
+        }
+      }
 
       conn = "/apis/#{api.id}"
-      |> send_put(api_update)
+      |> call_put(api_update)
       |> assert_conn_status()
 
       assert %{
@@ -100,11 +109,11 @@ defmodule Gateway.Controllers.APITest do
       data = Gateway.Factory.insert(:api)
 
       "/apis/#{data.id}"
-      |> send_delete()
+      |> call_delete()
       |> assert_conn_status()
 
       "/apis/#{data.id}"
-      |> send_delete()
+      |> call_delete()
       |> assert_conn_status(404)
     end
   end

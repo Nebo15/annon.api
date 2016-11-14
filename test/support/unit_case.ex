@@ -13,45 +13,47 @@ defmodule Gateway.UnitCase do
     end
   end
 
-  def assert_halt(%Plug.Conn{halted: true} = plug), do: plug
-  def assert_not_halt(%Plug.Conn{halted: false} = plug), do: plug
+  def assert_halt(%Plug.Conn{halted: true} = conn), do: conn
+  def assert_halt(%Plug.Conn{halted: false}), do: flunk "connection is not halted"
+  def assert_not_halt(%Plug.Conn{halted: false} = conn), do: conn
+  def assert_not_halt(%Plug.Conn{halted: true}), do: flunk "connection is halted"
 
   def assert_conn_status(conn, code \\ 200) do
     assert code == conn.status
     conn
   end
 
-  def send_get(path) do
+  def call_get(path) do
     :get
     |> conn(path)
-    |> prepare_conn
+    |> call_router()
   end
 
-  def send_public_get(path) do
+  def call_public_router(path) do
     :get
     |> conn(path)
-    |> prepare_conn(Gateway.PublicRouter)
+    |> call_router(Gateway.PublicRouter)
   end
 
-  def send_delete(path) do
+  def call_delete(path) do
     :delete
     |> conn(path)
-    |> prepare_conn
+    |> call_router()
   end
 
-  def send_post(path, data) do
+  def call_post(path, data) do
     :post
     |> conn(path, Poison.encode!(data))
-    |> prepare_conn
+    |> call_router()
   end
 
-  def send_put(path, data) do
+  def call_put(path, data) do
     :put
     |> conn(path, Poison.encode!(data))
-    |> prepare_conn
+    |> call_router()
   end
 
-  defp prepare_conn(conn, router \\ Gateway.ManagementRouter) do
+  defp call_router(conn, router \\ Gateway.ManagementRouter) do
     conn
     |> put_req_header("content-type", "application/json")
     |> router.call([])

@@ -15,10 +15,10 @@ defmodule Gateway.AutoClustering do
   end
 
   def reload_config do
-    Gateway.AutoClustering.do_reload_config()
+    __MODULE__.do_reload_config()
 
     Enum.each(Node.list(), fn(remote_node) ->
-      send({Gateway.AutoClustering, remote_node}, :reload_config)
+      send({__MODULE__, remote_node}, :reload_config)
     end)
   end
 
@@ -41,13 +41,13 @@ defmodule Gateway.AutoClustering do
   end
 
   def handle_info(:reload_config, state) do
-    Gateway.AutoClustering.do_reload_config()
+    do_reload_config()
 
     {:noreply, state}
   end
 
   def handle_info({:nodeup, _}, state) do
-    Gateway.AutoClustering.do_reload_config()
+    do_reload_config()
 
     {:noreply, state}
   end

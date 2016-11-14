@@ -21,7 +21,7 @@ defmodule Gateway.Factory do
       scheme: "http",
       host: sequence(:host, &"www.example#{&1}.com"),
       port: 80,
-      path: "/apis"
+      path: "/my_api/"
     }
   end
 

@@ -1,11 +1,11 @@
-defmodule Gateway.LoggerTest do
+defmodule Gateway.Acceptance.Plugins.LoggerTest do
   @moduledoc false
   use Plug.Test
   use Gateway.AcceptanceCase
 
   alias Gateway.DB.Schemas.Log
 
-  @random_url "random_url"
+  @random_url Ecto.UUID.generate()
   @random_data %{"data" => "random"}
 
   defp get_header(response, header) do
@@ -13,8 +13,10 @@ defmodule Gateway.LoggerTest do
   end
 
   test "logger_plugin" do
-    url = @random_url <> "?key=value"
-    {:ok, response} = post(url, Poison.encode!(@random_data), :public)
+    response = "#{@random_url}?key=value"
+    |> put_public_url()
+    |> post!(@random_data)
+    |> assert_status(404)
 
     id = response
     |> get_header("x-request-id")
@@ -24,6 +26,7 @@ defmodule Gateway.LoggerTest do
     result = Log.get_one_by([id: id])
 
     assert(result !== nil, "Logs are missing")
+
     uri_to_check = result.request
     |> Map.from_struct
     |> Map.get(:uri)

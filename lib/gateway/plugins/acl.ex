@@ -15,37 +15,41 @@ defmodule Gateway.Plugins.ACL do
   alias Gateway.Helpers.Response
 
   @doc false
-  def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts) when is_list(plugins) do
+  def call(%Conn{private: %{api_config: %APISchema{plugins: plugins, request: %{path: api_path}}}} = conn, _opts)
+    when is_list(plugins) do
     plugins
     |> find_plugin_settings()
-    |> execute(conn)
+    |> execute(api_path, conn)
     |> send_response(conn)
   end
   def call(conn, _), do: conn
 
-  defp execute(nil, _conn), do: :ok
+  defp execute(nil, _api_path, _conn), do: :ok
   defp execute(%Plugin{settings: %{"rules" => rules}},
+               api_path,
                %Conn{private: %{jwt_token: %Token{claims: %{"scopes" => token_scopes}}}} = conn) do
-    validate_scopes(rules, token_scopes, Map.take(conn, [:request_path, :method]))
+    validate_scopes(rules, token_scopes, api_path, Map.take(conn, [:request_path, :method]))
   end
-  defp execute(%Plugin{settings: %{"rules" => _}}, _conn), do: {:error, :forbidden}
-  defp execute(_plugin, _conn), do: {:error, :no_scopes_is_set}
+  defp execute(%Plugin{settings: %{"rules" => _}}, _api_path, _conn), do: {:error, :forbidden}
+  defp execute(_plugin, _api_path, _conn), do: {:error, :no_scopes_is_set}
 
-  defp validate_scopes(server_scopes, client_scopes, conn) when is_list(client_scopes) do
-    matching_fun = fn server_scope ->
-      method_matches? = conn.method in server_scope["methods"]
-      path_matches? = conn.request_path =~ ~r"#{server_scope["path"]}"
-      acl_rule_matches? = Enum.any?(client_scopes, fn(s) -> s in server_scope["scopes"] end)
+  defp validate_scopes(server_rules, client_scopes, api_path, conn) when is_list(client_scopes) do
+    request_path = String.trim_leading(conn.request_path, api_path)
+
+    matching_fun = fn server_rules ->
+      method_matches? = conn.method in server_rules["methods"]
+      path_matches? = request_path =~ ~r"#{server_rules["path"]}"
+      acl_rule_matches? = Enum.all?(server_rules["scopes"], fn(server_scope) -> server_scope in client_scopes end)
 
       method_matches? && acl_rule_matches? && path_matches?
     end
 
-    case Enum.any?(server_scopes, matching_fun) do
+    case Enum.any?(server_rules, matching_fun) do
       true -> :ok
       false -> {:error, :forbidden}
     end
   end
-  defp validate_scopes(_scope, _scopes, _conn_data), do: {:error, :invalid_scopes_type}
+  defp validate_scopes(_scope, _scopes, _api_path, _conn_data), do: {:error, :invalid_scopes_type}
 
   defp send_response(:ok, conn), do: conn
   defp send_response({:error, :forbidden}, conn) do

@@ -29,6 +29,13 @@ defmodule Gateway.Helpers.Response do
     |> send_error_template(conn, status)
   end
 
+  def send_validation_error(conn, invalid) do
+    "422.json"
+    |> EView.Views.ValidationError.render(%{schema: invalid})
+    |> send(conn, 422)
+    |> halt()
+  end
+
   @doc """
   Send request to a API consumer.
 

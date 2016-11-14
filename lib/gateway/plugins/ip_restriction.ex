@@ -28,9 +28,9 @@ defmodule Gateway.Plugins.IPRestriction do
     if check_ip(plugin, ip_to_string(remote_ip)) do
       conn
     else
-      "400.json"
+      "403.json"
       |> ErrorView.render(%{message: "You has been blocked from accessing this resource."})
-      |> Response.send(conn, 400)
+      |> Response.send(conn, 403)
     end
   end
   defp execute(_, conn), do: conn

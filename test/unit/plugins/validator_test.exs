@@ -1,12 +1,11 @@
 defmodule Gateway.Plugins.ValidatorTest do
   @moduledoc false
   use Gateway.UnitCase, async: true
-  alias Gateway.DB.Schemas.API, as: APISchema
-  alias Gateway.DB.Schemas.Plugin, as: PluginSchema
 
   test "validator plugin" do
     schema = %{
       "type" => "object",
+      "additionalProperties" => false,
       "properties" => %{
         "foo" => %{
           "type" => "number"
@@ -18,11 +17,15 @@ defmodule Gateway.Plugins.ValidatorTest do
       "required" => ["bar"]
     }
 
-    model = %APISchema{plugins: [
-      %PluginSchema{is_enabled: true, name: "validator", settings: %{
-        "rules" => [%{"methods" => ["GET", "PUT"], "path" => ".*", "schema" => schema}]
-      }}
-    ]}
+    model = Gateway.Factory.build(:api, %{
+      plugins: [
+        Gateway.Factory.build(:validator_plugin, %{
+          settings: %{
+            "rules" => [%{"methods" => ["GET", "POST"], "path" => ".*", "schema" => schema}]
+          }
+        })
+      ]
+    })
 
     conn = :get
     |> conn("/", Poison.encode!(%{}))
@@ -30,19 +33,22 @@ defmodule Gateway.Plugins.ValidatorTest do
     conn
     |> Map.put(:body_params, %{"foo" =>  "100500", "bar" => "a"})
     |> put_private(:api_config, model)
-    |> Gateway.Plugins.Validator.call(%{})
+    |> Gateway.Plugins.Validator.call([])
+    |> assert_conn_status(422)
     |> assert_halt
 
     conn
     |> Map.put(:body_params, %{"foo" =>  100500, "bar" => "a"})
     |> put_private(:api_config, model)
-    |> Gateway.Plugins.Validator.call(%{})
+    |> Gateway.Plugins.Validator.call([])
+    |> assert_conn_status(nil)
     |> assert_not_halt
 
     conn
     |> Map.put(:body_params, %{"foo" =>  100500})
     |> put_private(:api_config, model)
-    |> Gateway.Plugins.Validator.call(%{})
+    |> Gateway.Plugins.Validator.call([])
+    |> assert_conn_status(422)
     |> assert_halt
   end
 end

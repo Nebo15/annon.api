@@ -18,7 +18,7 @@ defmodule Gateway.Controllers.Consumer.PluginSettingsTest do
       Gateway.Factory.insert(:consumer_plugin_settings, consumer: consumer, plugin: plugin2)
 
       conn = "/consumers/#{consumer.external_id}/plugins"
-      |> send_get()
+      |> call_get()
       |> assert_conn_status()
 
       assert 2 == Enum.count(Poison.decode!(conn.resp_body)["data"])
@@ -34,7 +34,7 @@ defmodule Gateway.Controllers.Consumer.PluginSettingsTest do
       }
 
       conn = "/consumers/#{consumer.external_id}/plugins"
-      |> send_post(overrides)
+      |> call_post(overrides)
       |> assert_conn_status(201)
 
       assert %{
@@ -56,7 +56,7 @@ defmodule Gateway.Controllers.Consumer.PluginSettingsTest do
       cust_plugin1 = Gateway.Factory.insert(:consumer_plugin_settings, consumer: consumer, plugin: plugin)
 
       conn = "/consumers/#{consumer.external_id}/plugins/#{plugin.name}"
-      |> send_get()
+      |> call_get()
       |> assert_conn_status()
 
       assert %{
@@ -89,7 +89,7 @@ defmodule Gateway.Controllers.Consumer.PluginSettingsTest do
       }
 
       conn = "/consumers/#{consumer.external_id}/plugins/#{plugin.name}"
-      |> send_put(overrides)
+      |> call_put(overrides)
       |> assert_conn_status()
 
       assert %{
@@ -111,11 +111,11 @@ defmodule Gateway.Controllers.Consumer.PluginSettingsTest do
       Gateway.Factory.insert(:consumer_plugin_settings, plugin: plugin, consumer: consumer)
 
       "/consumers/#{consumer.external_id}/plugins/#{plugin.name}"
-      |> send_delete()
+      |> call_delete()
       |> assert_conn_status()
 
       "/consumers/#{consumer.external_id}/plugins/#{plugin.name}"
-      |> send_get()
+      |> call_get()
       |> assert_conn_status(404)
     end
   end

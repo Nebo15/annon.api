@@ -18,6 +18,10 @@ config :gateway, :acceptance,
   public: [
     port: {:system, :integer, "MIX_TEST_PUBLIC_PORT", 5000},
     host: {:system, "MIX_TEST_HOST", "localhost"}
+  ],
+  mock: [
+    port: {:system, :integer, "TEST_MOCK_PORT", 4040},
+    host: {:system, "TEST_MOCK_HOST", "localhost"}
   ]
 
 config :gateway, :public_http,

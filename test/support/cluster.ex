@@ -9,7 +9,7 @@ defmodule Gateway.Cluster do
 
     # Allow spawned nodes to fetch all code from this node
     :erl_boot_server.start([])
-    allow_boot to_char_list("127.0.0.1")
+    allow_boot '127.0.0.1'
 
     nodes = [:'node1@127.0.0.1', :'node2@127.0.0.1']
 
@@ -58,12 +58,14 @@ defmodule Gateway.Cluster do
         :'node1@127.0.0.1' ->
           [
             {:public_http, [port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 6000}]},
-            {:management_http, [port: {:system, :integer, "GATEWAY_MANAGEMENT_PORT", 6001}]}
+            {:management_http, [port: {:system, :integer, "GATEWAY_MANAGEMENT_PORT", 6001}]},
+            {:sql_sandbox, false}
           ]
         :'node2@127.0.0.1' ->
           [
             {:public_http, [port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 6002}]},
-            {:management_http, [port: {:system, :integer, "GATEWAY_MANAGEMENT_PORT", 6003}]}
+            {:management_http, [port: {:system, :integer, "GATEWAY_MANAGEMENT_PORT", 6003}]},
+            {:sql_sandbox, false}
           ]
       end
 

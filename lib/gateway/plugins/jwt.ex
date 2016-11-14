@@ -40,7 +40,7 @@ defmodule Gateway.Plugins.JWT do
     |> Response.send_error(:internal_error)
   end
 
-  defp parse_auth(conn, ["Bearer " <> incoming_token], signature) do
+  defp parse_auth(conn, ["Bearer " <> incoming_token | _], signature) do
     incoming_token
     |> token()
     |> with_signer(hs256(signature))
@@ -49,10 +49,10 @@ defmodule Gateway.Plugins.JWT do
   end
   defp parse_auth(conn, _header, _signature) do
     # TODO: This plugin should not authorize, only authentificate
-    # so simply return conn
+    # so simply return conn. This should be discussed with team (!)
     "401.json"
     |> ErrorView.render(%{
-      message: "There are no JWT token in request or your token is invalid.",
+      message: "You need to use JWT token to access this resource.",
       invalid: [%{
         entry_type: "header",
         entry: "Authorization",
@@ -72,7 +72,7 @@ defmodule Gateway.Plugins.JWT do
     # TODO: Simply 422 error, because token is invalid
     "401.json"
     |> ErrorView.render(%{
-      message: "Your scopes does not allow to access this resource.",
+      message: "Your JWT token is invalid.",
       invalid: [%{
         entry_type: "header",
         entry: "Authorization",

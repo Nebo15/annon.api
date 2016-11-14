@@ -55,6 +55,20 @@ defmodule Gateway.Plugins.JWTTest do
     |> assert_conn_status(nil)
   end
 
+  test "jwt without signature", %{api: api} do
+    jwt_plugin = Gateway.Factory.build(:jwt_plugin, %{
+      api: api,
+      settings: %{}
+    })
+
+    :get
+    |> prepare_conn(jwt_plugin.api.request)
+    |> Map.put(:private, %{api_config: %{ jwt_plugin.api | plugins: [jwt_plugin]}})
+    |> Map.put(:req_headers, [ {"authorization", "Bearer #{jwt_token("super_coolHacker")}"}])
+    |> Gateway.Plugins.JWT.call(%{})
+    |> assert_conn_status(501)
+  end
+
   test "jwt required signature in settings" do
     params = %{name: "jwt", settings: %{"some" => "value"}}
     changeset = Gateway.DB.Schemas.Plugin.changeset(%Gateway.DB.Schemas.Plugin{}, params)
