@@ -96,13 +96,13 @@ defmodule Gateway.Changeset.Validator.Settings do
     |> validate_via_json_schema(:settings, %{
       "type" => "object",
       "anyOf" => [
-        %{"required" => ["ip_whitelist", "ip_blacklist"]},
-        %{"required" => ["ip_whitelist"]},
-        %{"required" => ["ip_blacklist"]}
+        %{"required" => ["whitelist", "blacklist"]},
+        %{"required" => ["whitelist"]},
+        %{"required" => ["blacklist"]}
       ],
       "additionalProperties" => false,
       "properties" => %{
-        "ip_whitelist" => %{
+        "whitelist" => %{
           "type" => "array",
           "items" => %{
             "type" => "string",
@@ -111,7 +111,7 @@ defmodule Gateway.Changeset.Validator.Settings do
             ]
           }
         },
-        "ip_blacklist" => %{
+        "blacklist" => %{
           "type" => "array",
           "items" => %{
             "type" => "string",

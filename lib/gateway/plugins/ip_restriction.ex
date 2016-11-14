@@ -41,13 +41,13 @@ defmodule Gateway.Plugins.IPRestriction do
     whitelisted || (whitelisted === nil && !blacklisted)
   end
 
-  defp whitelisted?(%Plugin{settings: %{"ip_whitelist" => list}}, ip) do
+  defp whitelisted?(%Plugin{settings: %{"whitelist" => list}}, ip) do
     list
     |> Enum.any?(fn(item) -> ip_matches?(item, ip) end)
   end
   defp whitelisted?(_plugin, _ip), do: nil
 
-  defp blacklisted?(%Plugin{settings: %{"ip_blacklist" => list}}, ip) do
+  defp blacklisted?(%Plugin{settings: %{"blacklist" => list}}, ip) do
     list
     |> Enum.any?(fn(item) -> ip_matches?(item, ip) end)
   end

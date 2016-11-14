@@ -195,7 +195,7 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
   describe "IPRestriction Plugin" do
     test "create whitelist", %{api_id: api_id} do
       ip_restriction = :ip_restriction_plugin
-      |> build_factory_params(%{settings: %{ip_whitelist: ["127.0.0.1"]}})
+      |> build_factory_params(%{settings: %{whitelist: ["127.0.0.1"]}})
 
       "apis/#{api_id}/plugins"
       |> put_management_url()
@@ -215,7 +215,7 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
 
     test "create blacklist", %{api_id: api_id} do
       ip_restriction = :ip_restriction_plugin
-      |> build_factory_params(%{settings: %{ip_blacklist: ["127.0.0.1"]}})
+      |> build_factory_params(%{settings: %{blacklist: ["127.0.0.1"]}})
 
       "apis/#{api_id}/plugins"
       |> put_management_url()
@@ -235,7 +235,7 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
 
     test "create whitelist and blacklist", %{api_id: api_id} do
       ip_restriction = :ip_restriction_plugin
-      |> build_factory_params(%{settings: %{ip_whitelist: ["127.0.0.1"], ip_blacklist: ["127.0.0.1"]}})
+      |> build_factory_params(%{settings: %{whitelist: ["127.0.0.1"], blacklist: ["127.0.0.1"]}})
 
       "apis/#{api_id}/plugins"
       |> put_management_url()
@@ -267,7 +267,7 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
       %{
         "error" => %{
           "invalid" => [%{"entry" => "$.settings", "rules" => [%{"rule" => "cast"}]}]
-          # TODO: Entry should be $.settings.ip_blacklist
+          # TODO: Entry should be $.settings.blacklist
           # "invalid" => [%{"entry" => "$.settings.ip_whitelis", "rules" => [%{"rule" => "format"}]}]
           # TODO: different fields should not be merged together in one `entry`
         }
@@ -276,7 +276,7 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
       |> post!(%{
         name: "ip_restriction",
         is_enabled: false,
-        settings: %{"ip_blacklist" => 100} # , "ip_whitelist" => ["127.0.0.256"]
+        settings: %{"blacklist" => 100} # , "whitelist" => ["127.0.0.256"]
       })
       |> assert_status(422)
       |> get_body()
