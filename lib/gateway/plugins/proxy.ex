@@ -51,9 +51,7 @@ defmodule Gateway.Plugins.Proxy do
   end
 
   def do_request(link, conn, method) do
-    body = conn
-    |> Map.get(:body_params)
-    |> Poison.encode!()
+    body = conn.read_body
 
     method
     |> String.to_atom
