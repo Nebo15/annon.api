@@ -26,7 +26,7 @@ defmodule Gateway.Acceptance.Plugins.JWTTest do
 
   test "token is required when JWT plugin is enabled", %{api_id: api_id, api_path: api_path} do
     jwt_plugin = :jwt_plugin
-    |> build_factory_params(%{settings: %{signature: @jwt_secret}})
+    |> build_factory_params(%{settings: %{signature: build_jwt_signature(@jwt_secret)}})
 
     "apis/#{api_id}/plugins"
     |> put_management_url()
@@ -46,7 +46,7 @@ defmodule Gateway.Acceptance.Plugins.JWTTest do
 
   test "token must be valid", %{api_id: api_id, api_path: api_path} do
     jwt_plugin = :jwt_plugin
-    |> build_factory_params(%{settings: %{signature: @jwt_secret}})
+    |> build_factory_params(%{settings: %{signature: build_jwt_signature(@jwt_secret)}})
 
     "apis/#{api_id}/plugins"
     |> put_management_url()
