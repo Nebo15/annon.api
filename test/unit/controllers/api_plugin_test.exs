@@ -70,7 +70,7 @@ defmodule Gateway.Controllers.API.PluginTest do
 
     test "PUT" do
       api_model = Gateway.Factory.insert(:api)
-      p1 = Gateway.Factory.insert(:jwt_plugin, api: api_model)
+      p1 = Gateway.Factory.insert(:validator_plugin, api: api_model)
 
       settings = %{
         "rules" => [
@@ -104,7 +104,6 @@ defmodule Gateway.Controllers.API.PluginTest do
       assert %{
         "settings" => %{
           "rules" => [%{"methods" => ["PUT"], "path" => ".*", "schema" => %{"some_field" => "some_value"}}],
-          "signature" => "secret-sign"
         }
       } = Poison.decode!(conn.resp_body)["data"]
     end
