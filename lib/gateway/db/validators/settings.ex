@@ -136,7 +136,6 @@ defmodule Gateway.Changeset.Validator.Settings do
         },
         "additional_headers" => %{
           "type" => "array",
-          "minItems" => 1,
           "uniqueItems" => true,
           "items" => %{
             "type" => "string"
