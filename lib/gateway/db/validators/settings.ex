@@ -62,7 +62,6 @@ defmodule Gateway.Changeset.Validator.Settings do
       "properties" => %{
         "rules" => %{
           "type" => "array",
-          "minItems" => 1,
           "uniqueItems" => true,
           "items" => %{
             "type" => "object",
