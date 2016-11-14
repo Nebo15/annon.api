@@ -422,10 +422,8 @@ Validator plugin allows to set a [JSON Schema](http://json-schema.org/) to valid
 
 ```
 rules: [
-    {methods: ["GET", "POST", "PUT", "DELETE"], path: ".*", schema: "{}"},
-    {methods: ["GET"], path: "^/profiles/me", schema: "{}"},
-    {methods: ["POST", "PUT"], path: "^/profiles/me", schema: "{}"},
-    {methods: ["DELETE"], path: "^/profiles/me", schema: "{}"}
+    {methods: ["POST", "PUT"], path: ".*", schema: "{}"},
+    {methods: ["POST"], path: "^/profiles/me", schema: "{}"}
 ]
 ```
 
@@ -777,8 +775,6 @@ This is equal to sending an empty object to `Update Settings` endpoint.
 + methods (array[enum], required)
     + POST
     + PUT
-    + GET
-    + DELETE
 + path: `^my_resource/` (string, required) - Regular expression on path. **Warning!** It's relative to API path.
 + schema: {} (string, required) - [JSON Schema](http://json-schema.org/) for validating request body.
   
