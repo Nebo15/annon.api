@@ -113,7 +113,6 @@ defmodule Gateway.Plugins.ProxyTest do
       headers_after_filter =
         conn
         |> Gateway.Plugins.Proxy.skip_filtered_headers(plugin_settings)
-        |> IO.inspect
         |> Map.get(:req_headers)
 
       assert [{"should", "remain"}] == headers_after_filter
