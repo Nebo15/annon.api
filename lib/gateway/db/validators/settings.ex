@@ -132,6 +132,16 @@ defmodule Gateway.Changeset.Validator.Settings do
       "required" => ["host"],
       "additionalProperties" => false,
       "properties" => %{
+        "strip_request_path" => %{
+          "type" => "boolean"
+        },
+        "additional_headers" => %{
+          "type" => "array",
+          "uniqueItems" => true,
+          "items" => %{
+            "type" => "string"
+          }
+        },
         "scheme" => %{
           "enum" => ["http", "https"]
         },

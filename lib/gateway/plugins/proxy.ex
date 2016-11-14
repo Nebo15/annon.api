@@ -26,6 +26,7 @@ defmodule Gateway.Plugins.Proxy do
     conn = plugin
     |> get_additional_headers()
     |> add_additional_headers(conn)
+    |> skip_filtered_headers(settings)
 
     settings
     # TODO: check variables
@@ -76,6 +77,11 @@ defmodule Gateway.Plugins.Proxy do
 
   defp get_additional_headers(%Plugin{settings: %{"additional_headers" => headers}}), do: headers
   defp get_additional_headers(_), do: []
+
+  def skip_filtered_headers(conn, %{"strip_headers" => true, "headers_to_strip" => headers}) do
+    Enum.reduce(headers, conn, &Plug.Conn.delete_req_header(&2, &1))
+  end
+  def skip_filtered_headers(conn, _plugin), do: conn
 
   defp put_scheme(%{"scheme" => scheme}, _conn), do: scheme <> "://"
   defp put_scheme(_, %Conn{scheme: scheme}), do: Atom.to_string(scheme) <> "://"

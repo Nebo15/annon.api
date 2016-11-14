@@ -94,6 +94,32 @@ defmodule Gateway.Plugins.ProxyTest do
     end
   end
 
+  describe "Proxying headers" do
+    test "selected headers are not forwarded to upstream" do
+      plugin_settings = %{
+        "headers_to_strip" => [
+          "authorization",
+          "some-other-header",
+        ],
+        "strip_headers" => true
+      }
+
+      conn =
+        "/"
+        |> make_conn()
+        |> Plug.Conn.put_req_header("should", "remain")
+        |> Plug.Conn.put_req_header("authorization", "secret")
+        |> Plug.Conn.put_req_header("some-other-header", "another-secret")
+
+      headers_after_filter =
+        conn
+        |> Gateway.Plugins.Proxy.skip_filtered_headers(plugin_settings)
+        |> Map.get(:req_headers)
+
+      assert [{"should", "remain"}] == headers_after_filter
+    end
+  end
+
   defp make_conn(request_path) do
     %Plug.Conn{
       scheme: :https,
