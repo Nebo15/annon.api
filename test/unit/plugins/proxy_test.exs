@@ -95,7 +95,7 @@ defmodule Gateway.Plugins.ProxyTest do
   end
 
   describe "Proxying headers headers" do
-    test "authorization header is forwarded to upstream" do
+    test "selected headers are not forwarded to upstream" do
       plugin_settings = %{
         "headers_to_strip" => [
           "authorization",
