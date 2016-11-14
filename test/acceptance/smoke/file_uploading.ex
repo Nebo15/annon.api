@@ -40,14 +40,10 @@ defmodule Gateway.Acceptance.Smoke.ProxyTest do
 
   test "A POST request from user reaches upstream" do
     response =
-      "/httpbin"
-      |> put_public_url()
-      |> HTTPoison.post({:multipart, [{:file, __ENV__.file}, {"name", "value"}]})
-      |> elem(1)
+      HTTPoison.post!("https://httpbin.org/post", {:multipart, [{:file, __ENV__.file}]})
       |> Map.get(:body)
       |> Poison.decode!
-      |> IO.inspect
 
-    assert "my_value" == response["args"]["my_param"]
+    assert String.starts_with?(response["files"]["file"], "defmodule")
   end
 end
