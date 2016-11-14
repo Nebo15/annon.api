@@ -660,11 +660,11 @@ This is equal to sending an empty object to `Update Settings` endpoint.
 + type: validation_failed (string) - type of an error.
 + message: Validation failed. You can find validators description at our API Manifest: http://docs.apimanifest.apiary.io/#introduction/interacting-with-api/errors. (string)
 + invalid (array)
-  + `entry_type`: `json_data_proprty` (string) - Type of error.
-  + entry: $.cvv (string) - JSON Path to an invalid property.
-  + rules (array)
-    + rule: required (string) - String constant that represents validation rule type. List of all types can be found in [API Manifest](http://docs.apimanifest.apiary.io/#introduction/interacting-with-api/errors).
-    + params (array) - Validation Parameters.
+    + `entry_type`: `json_data_proprty` (string) - Type of error.
+    + entry: $.cvv (string) - JSON Path to an invalid property.
+    + rules (array)
+        + rule: required (string) - String constant that represents validation rule type. List of all types can be found in [API Manifest](http://docs.apimanifest.apiary.io/#introduction/interacting-with-api/errors).
+        + params (array) - Validation Parameters.
 
 ### `Response__Pagination`
 + limit: 20 (number) - A limit on the number of objects to be returned, between 1 and 100. Default: 50.
@@ -678,11 +678,15 @@ This is equal to sending an empty object to `Update Settings` endpoint.
 + id: 56c31536a60ad644060041af (string) - Unique ID for API.
 + name: my_api (string) - Unique name for API.
 + request (object, fixed-type) - Request description.
-  + method: GET (string) - HTTP request method.
-  + scheme: http (string) - HTTP request scheme. May be: `http`, `https`.
-  + host: `os-dev-gateway.nebo15.com` (string) - DNS address of your API or its IP.
-  + port: 80 (number) - Port on which your API recieves requests.
-  + path: /andrew/ (string) - Public path to your API.
+    + methods (array[enum], required) - HTTP request method.
+        + POST
+        + PUT
+        + GET
+        + DELETE
+    + scheme: http (string) - HTTP request scheme. May be: `http`, `https`.
+    + host: `os-dev-gateway.nebo15.com` (string) - DNS address of your API or its IP.
+    + port: 80 (number) - Port on which your API recieves requests.
+    + path: /andrew/ (string, required) - Public path to your API.
 
 ## Plugin
 + name: myplugin (string) - Plugin name
@@ -726,14 +730,14 @@ This is equal to sending an empty object to `Update Settings` endpoint.
 
 ### `Plugin_ACL__Settings__Rule`
 + methods (array[enum], required)
-  + POST
-  + PUT
-  + GET
-  + DELETE
+    + POST
+    + PUT
+    + GET
+    + DELETE
 + path: ^my_resource/ (string, required) - Regular expression on path. **Warning!** It's relative to API path.
 + scopes (array[string], required)
-  + request_api
-  + read_profile
+    + request_api
+    + read_profile
 
 ## Validator Plugin
 ### `Plugin_Validator`
@@ -745,10 +749,10 @@ This is equal to sending an empty object to `Update Settings` endpoint.
 
 ### `Plugin_Validator__Settings__Rule`
 + methods (array[enum], required)
-  + POST
-  + PUT
-  + GET
-  + DELETE
+    + POST
+    + PUT
+    + GET
+    + DELETE
 + path: `^my_resource/` (string, required) - Regular expression on path. **Warning!** It's relative to API path.
 + schema: {} (string, required) - [JSON Schema](http://json-schema.org/) for validating request body.
   
@@ -763,17 +767,17 @@ This is equal to sending an empty object to `Update Settings` endpoint.
 
 ### `Plugin_IPRestriction__Settings`
 + ip_whitelist (array[string], fixed-type, optional) - list of matching IP addresses to whitelist them.
-  + 255.255.255.1
-  + 127.0.0.*
+    + 255.255.255.1
+    + 127.0.0.*
 + ip_blacklist (array[string], fixed-type, optional) - list of matching IP addresses to blacklist them.
-  + 255.255.255.1
-  + 127.0.0.*
+    + 255.255.255.1
+    + 127.0.0.*
 
 ## Consumers
 ### Consumer
 + external_id: 56c31536a60ad644060041af (string, required) - **Unique ID** for Consumer that can be used to update it.
 + metadata (object) - Attach any metadata to a consumer. For Auth0 it will be written to `app_metadate` field.
-  + key: value (string) - Key-value data attached to a consumer.
+    + key: value (string) - Key-value data attached to a consumer.
 
 ## Requests
 ### Request
