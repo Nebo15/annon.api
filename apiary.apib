@@ -305,6 +305,8 @@ This plugin **DOES NOT** authorize API resources, for this purposes use [ACL](#r
 
 But if token is invalid, appropriate error response will be send back to api consumer.
 
+**Warning!** JWT signature should be Base64 encoded. Some providers (for example, Auth0) already encode it for you (just copy-paste your `Client Secret` from `Clients` -> `Settings` to plugins `signature` configuration).
+
 ### Consumer Usage
 
 Consumer should send `Authorization: Bearer <token>` header with his requests.
@@ -704,7 +706,7 @@ This is equal to sending an empty object to `Update Settings` endpoint.
 + `strip_host`: false (boolean, optional) - Keep HTTP HOST host header when proxying request to an upstream.
 + `strip_request_path`: false (boolean, optional) - Strip API part of path when sending request to upstream. 
 + `additional_headers` (object, optional)
-    + X-Consumer-Header: `header_value`
+    + `X-Consumer-Header`: `header_value`
 
 ### `Plugin_Proxy__Settings__Upstream`
 + scheme: https (string) - HTTP request scheme. May be: `http`, `https`, `amqp`, `ws`.
@@ -718,7 +720,7 @@ This is equal to sending an empty object to `Update Settings` endpoint.
 + settings (Plugin_JWT__Settings, fixed-type)
 
 ### `Plugin_JWT__Settings`
-+ signature: super_coolHacker (string, required) - signature to decode JWT token.
++ signature: c3VwZXJfY29vbEhhY2tlcgo= (string, required) - Base64 encoded secret to decode JWT token.
 
 ## ACL Plugin
 ### `Plugin_ACL`
