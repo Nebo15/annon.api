@@ -309,11 +309,31 @@ This plugin **DOES NOT** authorize API resources, for this purposes use [ACL](#r
 
 But if token is invalid, appropriate error response will be send back to api consumer.
 
-**Warning!** JWT signature should be Base64 encoded. Some providers (for example, Auth0) already encode it for you (just copy-paste your `Client Secret` from `Clients` -> `Settings` to plugins `signature` configuration).
+**Warning!** JWT signature should be Base64 encoded. Some providers (for example, Auth0) already encode it for you.
 
 ### Consumer Usage
 
 Consumer should send `Authorization: Bearer <token>` header with his requests.
+
+### Auth0 Support
+
+#### Configuration
+To configure Annon copy-paste your `Client Secret` from `Clients` -> `Settings` to plugins `signature` configuration.
+
+#### Issuing a Token
+
+To receive an valid JWT with scopes token you must:
+1. Set `app_metadata` for all your users, it should have AT LEAST one array with scopes:
+    ```
+    {
+      "scopes": [
+        "read:email"
+      ]
+    }
+    ```
+    You can set default scopes in `Client` -> `Settings` -> `Advanced` -> `App Metadata`.
+2. When authorizing consumers set correct scope to receive JWT token with `app_metadata`: `scope=openid app_metadata`.
+3. Whenever you make requests to Annon, use `id_token` from Auth0 response (it's a JWT token that we need) in a `Authorization: Bearer <id_token>` header.
 
 ### Bind JWT Plugin [POST /apis/{api_id}/plugins]
 
