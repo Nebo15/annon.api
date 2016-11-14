@@ -59,6 +59,7 @@ defmodule Gateway.Changeset.Validator.Settings do
     validate_via_json_schema(ch, :settings, %{
       "type" => "object",
       "required" => ["rules"],
+      "additionalProperties" => false,
       "properties" => %{
         "rules" => %{
           "type" => "array",
