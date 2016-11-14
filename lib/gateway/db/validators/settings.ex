@@ -38,7 +38,8 @@ defmodule Gateway.Changeset.Validator.Settings do
                 }
               },
               "path" => %{
-                "type" => "string"
+                "type" => "string",
+                "pattern": "^/.*$"
               },
               "scopes" => %{
                 "type" => "array",
@@ -156,7 +157,8 @@ defmodule Gateway.Changeset.Validator.Settings do
           "type" => "integer"
         },
         "path" => %{
-          "type" => "string"
+          "type" => "string",
+          "pattern": "^/.*"
         },
         "strip_request_path" => %{
           "type" => "boolean"
