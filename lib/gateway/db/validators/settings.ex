@@ -106,9 +106,7 @@ defmodule Gateway.Changeset.Validator.Settings do
           "items" => %{
             "type" => "string",
             "oneOf": [
-              %{"format" => "host-name"},
-              %{"format" => "ipv4"},
-              %{"format" => "ipv6"}
+              %{"format" => "ipv4"}
             ]
           }
         },
@@ -117,9 +115,7 @@ defmodule Gateway.Changeset.Validator.Settings do
           "items" => %{
             "type" => "string",
             "oneOf": [
-              %{"format" => "host-name"},
-              %{"format" => "ipv4"},
-              %{"format" => "ipv6"}
+              %{"format" => "ipv4"}
             ]
           }
         }
@@ -141,9 +137,8 @@ defmodule Gateway.Changeset.Validator.Settings do
         "host" => %{
           "type" => "string",
           "oneOf": [
-            %{"format" => "host-name"},
-            %{"format" => "ipv4"},
-            %{"format" => "ipv6"}
+            %{"format" => "hostname"},
+            %{"format" => "ipv4"}
           ]
         },
         "port" => %{
