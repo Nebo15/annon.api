@@ -692,13 +692,15 @@ This is equal to sending an empty object to `Update Settings` endpoint.
 
 ## Proxy Plugin
 ### `Plugin_Proxy`
-+ is_enabled: true (boolean)
++ is_enabled: true (boolean, required)
 + settings (Plugin_Proxy__Settings, fixed-type)
 
 ### `Plugin_Proxy__Settings`
 + upstream (Plugin_Proxy__Settings__Upstream, fixed-type)
 + `strip_host`: false (boolean, optional) - Keep HTTP HOST host header when proxying request to an upstream.
 + `strip_request_path`: false (boolean, optional) - Strip API part of path when sending request to upstream. 
++ `additional_headers` (object, optional)
+    + X-Consumer-Header: `header_value`
 
 ### `Plugin_Proxy__Settings__Upstream`
 + scheme: https (string) - HTTP request scheme. May be: `http`, `https`, `amqp`, `ws`.
@@ -712,7 +714,7 @@ This is equal to sending an empty object to `Update Settings` endpoint.
 + settings (Plugin_JWT__Settings, fixed-type)
 
 ### `Plugin_JWT__Settings`
-+ signature: super_coolHacker (string) - signature to decode JWT token.
++ signature: super_coolHacker (string, required) - signature to decode JWT token.
 
 ## ACL Plugin
 ### `Plugin_ACL`
@@ -728,14 +730,14 @@ This is equal to sending an empty object to `Update Settings` endpoint.
   + PUT
   + GET
   + DELETE
-+ path: ^my_resource/ (string) - Regular expression on path. **Warning!** It's relative to API path.
-+ scopes (array[string])
++ path: ^my_resource/ (string, required) - Regular expression on path. **Warning!** It's relative to API path.
++ scopes (array[string], required)
   + request_api
   + read_profile
 
 ## Validator Plugin
 ### `Plugin_Validator`
-+ is_enabled: true (boolean)
++ is_enabled: true (boolean, required)
 + settings (Plugin_Validator__Settings, fixed-type)
 
 ### `Plugin_Validator__Settings`
@@ -747,12 +749,12 @@ This is equal to sending an empty object to `Update Settings` endpoint.
   + PUT
   + GET
   + DELETE
-+ path: ^my_resource/ (string) - Regular expression on path. **Warning!** It's relative to API path.
-+ schema: {} (string) - [JSON Schema](http://json-schema.org/) for validating request body.
++ path: `^my_resource/` (string, required) - Regular expression on path. **Warning!** It's relative to API path.
++ schema: {} (string, required) - [JSON Schema](http://json-schema.org/) for validating request body.
   
 ## Idempotency Plugin
 ### `Plugin_Idempotency`
-+ is_enabled: true (boolean)
++ is_enabled: true (boolean, required)
 
 ## IP Restrictions Plugin
 ### `Plugin_IPRestriction`
@@ -760,10 +762,10 @@ This is equal to sending an empty object to `Update Settings` endpoint.
 + settings (Plugin_IPRestriction__Settings, fixed-type)
 
 ### `Plugin_IPRestriction__Settings`
-+ ip_whitelist (array[string], fixed-type) - list of matching IP addresses to whitelist them.
++ ip_whitelist (array[string], fixed-type, optional) - list of matching IP addresses to whitelist them.
   + 255.255.255.1
   + 127.0.0.*
-+ ip_blacklist (array[string], fixed-type) - list of matching IP addresses to blacklist them.
++ ip_blacklist (array[string], fixed-type, optional) - list of matching IP addresses to blacklist them.
   + 255.255.255.1
   + 127.0.0.*
 
