@@ -7,7 +7,7 @@ defmodule Gateway.DB.Schemas.API do
   alias Gateway.DB.Schemas.API, as: APISchema
 
   @required_api_fields [:name]
-  @required_request_fields [:scheme, :host, :port, :path, :method]
+  @required_request_fields [:scheme, :host, :port, :path, :methods]
 
   @derive {Poison.Encoder, except: [:__meta__, :plugins]}
   schema "apis" do
@@ -18,7 +18,7 @@ defmodule Gateway.DB.Schemas.API do
       field :host, :string
       field :port, :integer
       field :path, :string
-      field :method, {:array, :string}
+      field :methods, {:array, :string}
     end
 
     has_many :plugins, Gateway.DB.Schemas.Plugin

@@ -22,7 +22,6 @@ defmodule Gateway.Plugins.MonitoringTest do
       is_enabled: true,
       api: api,
       settings: %{
-        method: "GET",
         scheme: "http",
         host: "localhost",
         port: 4040,

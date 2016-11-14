@@ -37,7 +37,7 @@ defmodule Gateway.Controllers.APITest do
           "port" => api_request_port,
           "path" => api_request_path,
           "scheme" => api_request_scheme,
-          "method" => api_request_methods
+          "methods" => api_request_methods
         }
       } = Poison.decode!(conn.resp_body)["data"]
 
@@ -46,7 +46,7 @@ defmodule Gateway.Controllers.APITest do
       assert api_request_port == api.request.port
       assert api_request_path == api.request.path
       assert api_request_scheme == api.request.scheme
-      assert api_request_methods == api.request.method # TODO: rename method to methods?
+      assert api_request_methods == api.request.methods
     end
   end
 
@@ -75,7 +75,7 @@ defmodule Gateway.Controllers.APITest do
           port: 1337,
           path: "/foo/bar",
           scheme: "https",
-          method: ["POST", "PUT"]
+          methods: ["POST", "PUT"]
         }
       }
 
@@ -93,7 +93,7 @@ defmodule Gateway.Controllers.APITest do
           "port" => api_request_port,
           "path" => api_request_path,
           "scheme" => api_request_scheme,
-          "method" => api_request_methods
+          "methods" => api_request_methods
         }
       } = Poison.decode!(conn.resp_body)["data"]
 
@@ -102,7 +102,7 @@ defmodule Gateway.Controllers.APITest do
       assert api_request_port == api_update.request.port
       assert api_request_path == api_update.request.path
       assert api_request_scheme == api_update.request.scheme
-      assert api_request_methods == api_update.request.method
+      assert api_request_methods == api_update.request.methods
     end
 
     test "DELETE" do

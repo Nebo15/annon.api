@@ -148,10 +148,6 @@ defmodule Gateway.Changeset.Validator.Settings do
         "path" => %{
           "type" => "string"
         },
-        "method" => %{
-          "type" => "string",
-          "enum" => ["GET", "POST", "PUT", "DELETE", "PATCH"]
-        },
         "strip_request_path" => %{
           "type" => "boolean"
         },

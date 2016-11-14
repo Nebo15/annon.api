@@ -7,7 +7,7 @@ defmodule Gateway.Acceptance.Plugins.IPRestrictionTest do
     api = :api
     |> build_factory_params(%{
       request: %{
-        method: ["GET", "POST", "PUT", "DELETE"],
+        methods: ["GET", "POST", "PUT", "DELETE"],
         scheme: "http",
         host: get_endpoint_host(:public),
         port: get_endpoint_port(:public),

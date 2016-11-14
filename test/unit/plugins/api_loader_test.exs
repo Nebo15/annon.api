@@ -15,7 +15,7 @@ defmodule Gateway.Plugins.APILoaderTest do
         |> conn(request.path, Poison.encode!(%{}))
         |> Map.put(:host, request.host)
         |> Map.put(:port, request.port)
-        |> Map.put(:method, request.method |> hd())
+        |> Map.put(:method, request.methods |> hd())
         |> Map.put(:scheme, request.scheme)
         |> Gateway.Plugins.APILoader.call([])
 
@@ -34,7 +34,7 @@ defmodule Gateway.Plugins.APILoaderTest do
         |> conn(request.path, Poison.encode!(%{}))
         |> Map.put(:host, request.host)
         |> Map.put(:port, request.port)
-        |> Map.put(:method, request.method |> hd())
+        |> Map.put(:method, request.methods |> hd())
         |> Map.put(:scheme, request.scheme)
         |> Gateway.Plugins.APILoader.call([])
     end
@@ -45,7 +45,7 @@ defmodule Gateway.Plugins.APILoaderTest do
       api = Gateway.Factory.insert(:api, %{
         name: "API loader Test api",
         request: Gateway.Factory.build(:request, %{
-          method: ["GET"],
+          methods: ["GET"],
           scheme: "http",
           host: "www.example.com",
           port: 80,
