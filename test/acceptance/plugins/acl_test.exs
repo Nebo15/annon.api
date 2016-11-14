@@ -22,7 +22,7 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
     api_id = get_in(api, ["data", "id"])
 
     jwt_plugin = :jwt_plugin
-    |> build_factory_params(%{settings: %{signature: @jwt_secret}})
+    |> build_factory_params(%{settings: %{signature: build_jwt_signature(@jwt_secret)}})
 
     "apis/#{api_id}/plugins"
     |> put_management_url()

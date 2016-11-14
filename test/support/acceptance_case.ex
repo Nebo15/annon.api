@@ -175,6 +175,10 @@ defmodule Gateway.AcceptanceCase do
     |> get_compact
   end
 
+  def build_jwt_signature(signature) do
+    Base.encode64(signature)
+  end
+
   def build_factory_params(factory, overrides \\ []) do
     factory
     |> Gateway.Factory.build(overrides)

@@ -29,7 +29,7 @@ defmodule Gateway.Plugins.JWTTest do
   test "jwt sucessful auth", %{api: api} do
     jwt_plugin = Gateway.Factory.build(:jwt_plugin, %{
       api: api,
-      settings: %{"signature" => "super_coolHacker"}
+      settings: %{"signature" => build_jwt_signature("super_coolHacker")}
     })
 
     %Plug.Conn{private: %{jwt_token: %Joken.Token{} = jwt_token}} = :get
@@ -45,7 +45,7 @@ defmodule Gateway.Plugins.JWTTest do
     jwt_plugin = Gateway.Factory.insert(:jwt_plugin, %{
       api: api,
       is_enabled: false,
-      settings: %{"signature" => "super_coolHacker"}
+      settings: %{"signature" => build_jwt_signature("super_coolHacker")}
     })
 
     :get

@@ -10,6 +10,20 @@ defmodule Gateway.UnitCase do
       use ExUnit.Case, async: true
       use Plug.Test
       import Gateway.UnitCase
+
+      setup tags do
+        :ets.delete_all_objects(:config)
+
+        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Configs.Repo)
+        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Logger.Repo)
+
+        unless tags[:async] do
+          Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Configs.Repo, {:shared, self()})
+          Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Logger.Repo, {:shared, self()})
+        end
+
+        :ok
+      end
     end
   end
 
@@ -95,17 +109,7 @@ defmodule Gateway.UnitCase do
     |> Poison.encode!()
   end
 
-  setup tags do
-    :ets.delete_all_objects(:config)
-
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Configs.Repo)
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Logger.Repo)
-
-    unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Configs.Repo, {:shared, self()})
-      Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Logger.Repo, {:shared, self()})
-    end
-
-    :ok
+  def build_jwt_signature(signature) do
+    Base.encode64(signature)
   end
 end

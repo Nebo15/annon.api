@@ -8,6 +8,8 @@ defmodule Gateway.Plugins.JWT do
   use Gateway.Helpers.Plugin,
     plugin_name: "jwt"
 
+  require Logger
+
   import Joken
   import Ecto.Query, only: [from: 2]
 
@@ -31,16 +33,20 @@ defmodule Gateway.Plugins.JWT do
   defp execute(nil, conn), do: conn
   defp execute(%Plugin{settings: %{"signature" => signature}}, conn) do
     conn
-    |> parse_auth(Conn.get_req_header(conn, "authorization"), signature)
+    |> parse_auth(Conn.get_req_header(conn, "authorization"), Base.decode64(signature))
   end
   defp execute(_plugin, conn) do
     Logger.error("JWT tokens decryption key is not set")
-
     conn
     |> Response.send_error(:internal_error)
   end
 
-  defp parse_auth(conn, ["Bearer " <> incoming_token | _], signature) do
+  defp parse_auth(conn, _, :error) do
+    Logger.error("Your JWT token secret MUST be base64 encoded")
+    conn
+    |> Response.send_error(:internal_error)
+  end
+  defp parse_auth(conn, ["Bearer " <> incoming_token | _], {:ok, signature}) do
     incoming_token
     |> token()
     |> with_signer(hs256(signature))
