@@ -7,7 +7,7 @@ defmodule Gateway.Acceptance.Smoke.ProxyTest do
     |> build_factory_params(%{
       name: "An HTTPBin service endpoint",
       request: %{
-        method: ["GET"],
+        methods: ["GET"],
         scheme: "http",
         host: get_endpoint_host(:public),
         port: get_endpoint_port(:public),

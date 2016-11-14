@@ -17,7 +17,7 @@ defmodule Gateway.Factory do
 
   def request_factory do
     %Gateway.DB.Schemas.API.Request{
-      method: ["GET"],
+      methods: ["GET"],
       scheme: "http",
       host: sequence(:host, &"www.example#{&1}.com"),
       port: 80,

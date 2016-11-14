@@ -32,7 +32,7 @@ defmodule Gateway.Plugins.APILoader do
 
   def find_matching_method(apis, method) do
     apis
-    |> Enum.filter(&Enum.member?(&1.request.method, method))
+    |> Enum.filter(&Enum.member?(&1.request.methods, method))
   end
 
   def find_matching_path(apis, path) do
