@@ -39,8 +39,11 @@ defmodule Gateway.Acceptance.Smoke.ProxyTest do
   end
 
   test "A POST request from user reaches upstream" do
+    path = "https://httpbin.org/post"
+    path = put_public_url("/httpbin")
+
     response =
-      HTTPoison.post!("https://httpbin.org/post", {:multipart, [{:file, __ENV__.file}]})
+      HTTPoison.post!(path, {:multipart, [{:file, __ENV__.file}]})
       |> Map.get(:body)
       |> Poison.decode!
 

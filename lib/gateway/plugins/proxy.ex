@@ -50,8 +50,22 @@ defmodule Gateway.Plugins.Proxy do
     |> Conn.halt
   end
 
+  def do_request(link, %Plug.Conn{params: %{"file" => %Plug.Upload{}}} = conn, method) do
+    {:ok, raw_body, _} = Plug.Conn.read_body(conn)
+
+    # TODO: This works only for files uploaded with "file" key. Need to make this general.
+    # TODO: Now, reconstruct raw_body as if it was a multipart upload...
+
+    method
+    |> String.to_atom
+    |> HTTPoison.request!(link, raw_body, Map.get(conn, :req_headers))
+    |> get_response
+  end
+
   def do_request(link, conn, method) do
     {:ok, raw_body, _} = Plug.Conn.read_body(conn)
+
+    # TODO: Bring this back to how it was before.
 
     method
     |> String.to_atom
