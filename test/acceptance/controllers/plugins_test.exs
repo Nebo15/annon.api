@@ -95,7 +95,7 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
     test "create", %{api_id: api_id} do
       validator = :validator_plugin
       |> build_factory_params(%{settings: %{
-        rules: [%{methods: ["GET", "POST", "PUT", "DELETE"], path: ".*", schema: %{}}]
+        rules: [%{methods: ["POST", "PUT", "PATCH"], path: ".*", schema: %{}}]
       }})
 
       "apis/#{api_id}/plugins"
