@@ -7,7 +7,7 @@ defmodule Gateway.Acceptance.Smoke.ProxyTest do
     |> build_factory_params(%{
       name: "An HTTPBin service endpoint",
       request: %{
-        methods: ["GET"],
+        method: ["POST"],
         scheme: "http",
         host: get_endpoint_host(:public),
         port: get_endpoint_port(:public),
@@ -24,8 +24,8 @@ defmodule Gateway.Acceptance.Smoke.ProxyTest do
       scheme: "http",
       host: "httpbin.org",
       port: 80,
-      path: "/get",
-      strip_api_path: true
+      path: "/post",
+      strip_request_path: true
     }})
 
     "apis/#{api_id}/plugins"
@@ -38,27 +38,15 @@ defmodule Gateway.Acceptance.Smoke.ProxyTest do
     :ok
   end
 
-  test "A PUT request from user reaches upstream" do
-    response =
-      "/httpbin?my_param=my_value"
-      |> put_public_url()
-      |> HTTPoison.get!([{"my-custom-header", "some-value"}])
-      |> Map.get(:body)
-      |> Poison.decode!
-
-    assert "my_value" == response["args"]["my_param"]
-    assert "some-value" == response["headers"]["My-Custom-Header"]
-  end
-
   test "A POST request from user reaches upstream" do
     response =
-      "/httpbin?my_param=my_value"
+      "/httpbin"
       |> put_public_url()
-      |> HTTPoison.get!
+      |> HTTPoison.post({:multipart, [{:file, __ENV__.file}, {"name", "value"}]})
+      |> elem(1)
       |> Map.get(:body)
       |> Poison.decode!
-
-    HTTPoison.post("localhost:8080/post", {:multipart, [{:file, "test/test_helper.exs"}, {"name", "value"}]})
+      |> IO.inspect
 
     assert "my_value" == response["args"]["my_param"]
   end

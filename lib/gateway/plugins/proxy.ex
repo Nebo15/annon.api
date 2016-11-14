@@ -51,11 +51,11 @@ defmodule Gateway.Plugins.Proxy do
   end
 
   def do_request(link, conn, method) do
-    body = conn.read_body
+    {:ok, raw_body, _} = Plug.Conn.read_body(conn)
 
     method
     |> String.to_atom
-    |> HTTPoison.request!(link, body, Map.get(conn, :req_headers))
+    |> HTTPoison.request!(link, raw_body, Map.get(conn, :req_headers))
     |> get_response
   end
 
