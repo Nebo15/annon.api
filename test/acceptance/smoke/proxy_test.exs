@@ -42,10 +42,11 @@ defmodule Gateway.Acceptance.Smoke.ProxyTest do
     response =
       "/httpbin?my_param=my_value"
       |> put_public_url()
-      |> HTTPoison.get!
+      |> HTTPoison.get!([{"my-custom-header", "some-value"}])
       |> Map.get(:body)
       |> Poison.decode!
 
     assert "my_value" == response["args"]["my_param"]
+    assert "some-value" == response["headers"]["My-Custom-Header"]
   end
 end
