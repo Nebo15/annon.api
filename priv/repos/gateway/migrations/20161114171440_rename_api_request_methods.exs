@@ -2,7 +2,6 @@ defmodule Gateway.DB.Configs.Repo.Migrations.RenameAPIRequestMethods do
   use Ecto.Migration
 
   def change do
-
     columns = [
       "(request->>'host')",
       "(request->>'port')",
