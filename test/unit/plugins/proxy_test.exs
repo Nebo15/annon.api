@@ -105,7 +105,8 @@ defmodule Gateway.Plugins.ProxyTest do
       }
 
       conn =
-        make_conn("/")
+        "/"
+        |> make_conn()
         |> Plug.Conn.put_req_header("should", "remain")
         |> Plug.Conn.put_req_header("authorization", "secret")
         |> Plug.Conn.put_req_header("some-other-header", "another-secret")
