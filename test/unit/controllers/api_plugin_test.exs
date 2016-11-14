@@ -108,6 +108,26 @@ defmodule Gateway.Controllers.API.PluginTest do
       } = Poison.decode!(conn.resp_body)["data"]
     end
 
+    test "PUT (renaming a plugin)" do
+      api_model = Gateway.Factory.insert(:api)
+      p1 = Gateway.Factory.insert(:jwt_plugin, api: api_model)
+
+      settings = %{
+        "rules" => [
+          %{"methods" => ["PUT"], "path" => ".*", "schema" => %{"some_field" => "some_value"}},
+        ]
+      }
+
+      plugin_data = %{name: "validator", settings: settings}
+
+      conn = "/apis/#{api_model.id}/plugins/#{p1.name}"
+      |> call_put(plugin_data)
+
+      assert %{
+        "type" => "validation_failed"
+      } = Poison.decode!(conn.resp_body)["error"]
+    end
+
     test "DELETE" do
       api_model = Gateway.Factory.insert(:api)
       acl_plugin = Gateway.Factory.insert(:acl_plugin, api: api_model)
