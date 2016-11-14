@@ -33,10 +33,10 @@ defmodule Gateway.Changeset.Validator.SettingsTest do
   describe "Validator plugin validation" do
     test "Valid settings" do
       rules = [
-        %{"methods" => ["GET", "POST", "PUT", "DELETE"], "path" => "*", "schema" => %{"some_field" => "some_value"}},
-        %{"methods" => ["GET"], "path" => "/profiles/me", "schema" => %{"some_field" => "some_value"}},
+        %{"methods" => ["POST", "PUT"], "path" => "*", "schema" => %{"some_field" => "some_value"}},
+        %{"methods" => ["PUT"], "path" => "/profiles/me", "schema" => %{"some_field" => "some_value"}},
         %{"methods" => ["POST", "PUT"], "path" => "/profiles/me", "schema" => %{"some_field" => "some_value"}},
-        %{"methods" => ["DELETE"], "path" => "/profiles/me", "schema" => %{"some_field" => "some_value"}}
+        %{"methods" => ["PATCH"], "path" => "/profiles/me", "schema" => %{"some_field" => "some_value"}}
       ]
 
       changeset =

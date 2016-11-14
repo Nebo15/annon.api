@@ -75,7 +75,7 @@ defmodule Gateway.Changeset.Validator.Settings do
                 "minItems" => 1,
                 "items" => %{
                   "type" => "string",
-                  "enum" => ["GET", "POST", "PUT", "DELETE", "PATCH"]
+                  "enum" => ["POST", "PUT", "PATCH"]
                 }
               },
               "path" => %{

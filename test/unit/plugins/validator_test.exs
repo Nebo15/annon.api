@@ -21,13 +21,13 @@ defmodule Gateway.Plugins.ValidatorTest do
       plugins: [
         Gateway.Factory.build(:validator_plugin, %{
           settings: %{
-            "rules" => [%{"methods" => ["GET", "POST"], "path" => ".*", "schema" => schema}]
+            "rules" => [%{"methods" => ["POST"], "path" => ".*", "schema" => schema}]
           }
         })
       ]
     })
 
-    conn = :get
+    conn = :post
     |> conn("/", Poison.encode!(%{}))
 
     conn

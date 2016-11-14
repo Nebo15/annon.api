@@ -29,7 +29,7 @@ defmodule Gateway.Acceptance.Plugins.ValidatorTest do
   test "validates versus schema", %{api_id: api_id, api_path: api_path} do
     validator_plugin = :validator_plugin
     |> build_factory_params(%{settings: %{
-      rules: [%{methods: ["GET", "POST", "PUT", "DELETE"], path: ".*", schema: @schema}]
+      rules: [%{methods: ["POST", "PUT"], path: ".*", schema: @schema}]
     }})
 
     "apis/#{api_id}/plugins"
@@ -56,7 +56,7 @@ defmodule Gateway.Acceptance.Plugins.ValidatorTest do
   test "works without matching rules", %{api_id: api_id, api_path: api_path} do
     validator_plugin = :validator_plugin
     |> build_factory_params(%{settings: %{
-      rules: [%{methods: ["DELETE"], path: ".*", schema: @schema}]
+      rules: [%{methods: ["PATCH"], path: ".*", schema: @schema}]
     }})
 
     "apis/#{api_id}/plugins"
@@ -77,8 +77,8 @@ defmodule Gateway.Acceptance.Plugins.ValidatorTest do
     validator_plugin = :validator_plugin
     |> build_factory_params(%{settings: %{
       rules: [
-        %{methods: ["GET", "POST", "PUT", "DELETE"], path: ".*", schema: %{}}, # Allow request
-        %{methods: ["GET", "POST", "PUT", "DELETE"], path: ".*", schema: @schema} # And deny it
+        %{methods: ["POST", "PUT", "PATCH"], path: ".*", schema: %{}}, # Allow request
+        %{methods: ["POST", "PUT", "PATCH"], path: ".*", schema: @schema} # And deny it
       ]
     }})
 
@@ -100,8 +100,8 @@ defmodule Gateway.Acceptance.Plugins.ValidatorTest do
     validator_plugin = :validator_plugin
     |> build_factory_params(%{settings: %{
       rules: [
-        %{methods: ["GET", "POST", "PUT", "DELETE"], path: ".*", schema: @schema},
-        %{methods: ["GET", "POST", "PUT", "DELETE"], path: ".*", schema: %{}}
+        %{methods: ["POST", "PUT"], path: ".*", schema: @schema},
+        %{methods: ["POST", "PUT"], path: ".*", schema: %{}}
       ]
     }})
 
@@ -124,7 +124,7 @@ defmodule Gateway.Acceptance.Plugins.ValidatorTest do
     validator_plugin = :validator_plugin
     |> build_factory_params(%{settings: %{
       rules: [
-        %{methods: ["PUT", "DELETE"], path: ".*", schema: @schema},
+        %{methods: ["PUT", "PATCH"], path: ".*", schema: @schema},
         %{methods: ["POST"], path: ".*", schema: %{}}
       ]
     }})
