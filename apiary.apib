@@ -131,6 +131,10 @@ It is possible to use `api_name` instead `api_id` in any resource paths.
 
 ### Create API [POST]
 
+#### API's Processing Order
+
+Notice that even truough we trying to protect you from creating interlapped API's, we can not guarantee that they always unique. In general, API that was defined earlier will always have higher priority.
+
 + Request (application/json)
     + Attributes (API)
 
