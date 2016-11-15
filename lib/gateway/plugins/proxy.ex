@@ -29,7 +29,6 @@ defmodule Gateway.Plugins.Proxy do
     |> skip_filtered_headers(settings)
 
     settings
-    # TODO: check variables
     |> do_proxy(api_path, conn)
   end
 
