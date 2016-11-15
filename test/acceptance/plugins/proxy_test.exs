@@ -141,6 +141,20 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
     |> get_mock_response()
   end
 
+  test "returns upstream headers", %{api_id: api_id, api_path: api_path} do
+    api_id
+    |> create_proxy_to_mock()
+
+    assert %{headers: headers} = api_path
+    |> put_public_url()
+    |> get!()
+
+    assert Enum.find(headers, fn
+      {"server", "Cowboy"} -> true
+      _ -> false
+    end)
+  end
+
   describe "builds valid upstream path" do
     test "when `strip_api_path` is false and proxy path is `/`", %{api_id: api_id, api_path: api_path} do
       proxy_path = "/"
