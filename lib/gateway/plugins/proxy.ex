@@ -63,7 +63,10 @@ defmodule Gateway.Plugins.Proxy do
     end
   end
 
-  def do_request(link, conn, method) do
+  def do_fileupload_request_cont(link, conn, method) do
+  end
+
+  def do_request_cont(link, conn, method) do
     body = conn
     |> Map.get(:body_params)
     |> Poison.encode!()
