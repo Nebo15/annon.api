@@ -52,21 +52,16 @@ defmodule Gateway.DB.Schemas.Log do
     timestamps()
   end
 
-  def changeset_request(struct, params \\ %{}) do
+  def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:id, :idempotency_key, :ip_address])
+    |> cast(params, [:id, :idempotency_key, :ip_address, :status_code])
     |> cast_embed(:request, with: &changeset_embeded_request/2)
-  end
-
-  def changeset_response(api, params \\ %{}) do
-    api
-    |> cast(params, [:idempotency_key, :ip_address, :status_code])
     |> cast_embed(:api, with: &changeset_embeded_api/2)
     |> cast_embed(:consumer, with: &changeset_embeded_consumer/2)
     |> cast_embed(:request, with: &changeset_embeded_request/2)
     |> cast_embed(:response, with: &changeset_embeded_response/2)
     |> cast_embed(:latencies, with: &changeset_embeded_latencies/2)
-    |> validate_required([:api, :consumer, :latencies, :response, :status_code])
+    |> validate_required([:response, :status_code])
   end
 
   def changeset_embeded_request(data, params \\ %{}) do
@@ -108,18 +103,8 @@ defmodule Gateway.DB.Schemas.Log do
 
   def create_request(params) when is_map(params) do
     %LogSchema{}
-    |> changeset_request(params)
+    |> changeset(params)
     |> Repo.insert
-  end
-
-  def put_response(request_id, params) when is_map(params) do
-    try do
-      %LogSchema{id: request_id}
-      |> changeset_response(params)
-      |> Repo.update()
-    rescue
-      Ecto.StaleEntryError -> nil
-    end
   end
 
   def delete(request_id) do
