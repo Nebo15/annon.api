@@ -25,7 +25,8 @@ defmodule Gateway.Plugins.Proxy do
   defp execute(%Plugin{settings: settings} = plugin, api_path, conn) do
     conn = plugin
     |> get_additional_headers()
-    |> add_additional_headers(conn)
+    |> put_request_id(conn)
+    |> put_additional_headers(conn)
     |> skip_filtered_headers(settings)
 
     settings
@@ -39,7 +40,10 @@ defmodule Gateway.Plugins.Proxy do
     |> get_response
 
     response.headers
-    |> Enum.reduce(conn, fn {header_key, header_value}, conn ->
+    |> Enum.reduce(conn, fn
+      {"x-request-id", _header_value}, conn ->
+        conn
+      {header_key, header_value}, conn ->
         conn |> Conn.put_resp_header(header_key, header_value)
     end)
     |> Conn.send_resp(response.status_code, response.body)
@@ -68,7 +72,15 @@ defmodule Gateway.Plugins.Proxy do
     |> put_query(proxy, conn)
   end
 
-  def add_additional_headers(headers, conn) do
+  defp put_request_id(headers, conn) do
+    id = conn
+    |> Conn.get_resp_header("x-request-id")
+    |> Enum.at(0)
+
+    [%{"x-request-id" => id}] ++ headers
+  end
+
+  def put_additional_headers(headers, conn) do
     headers
     |> Kernel.++([%{"x-forwarded-for" => ip_to_string(conn.remote_ip)}])
     |> Enum.reduce(conn, fn(header, conn) ->
