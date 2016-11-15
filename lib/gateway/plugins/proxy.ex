@@ -74,11 +74,22 @@ defmodule Gateway.Plugins.Proxy do
     IO.inspect conn
 
     # TODO: walk through all body_params, and attach them?
-    :hackney.send_multipart_body(pid, {:file, "/Users/gmile/.vimrc"})
+
+    # Not possible to do right now. See: https://github.com/benoitc/hackney/issues/363
+    Enum.each conn.body_params, fn {key, value} ->
+      :ok = :hackney.send_multipart_body(pid, {:file, "/Users/gmile/.vimrc"})
+    end
 
     {:ok, _status, _headers, pid} = :hackney.start_response(pid)
     {:ok, body} = :hackney.body(pid)
-    # TODO: should I do something about the pid?
+
+    :hackney.close(pid)
+
+    body
+  end
+
+  defp put_thing({key, %Plug.Upload{} = upload}) do
+    {:file, upload[:path], } # Explore additional headers from hackney as the third parameter here!
   end
 
   def do_request_cont(link, conn, method) do
