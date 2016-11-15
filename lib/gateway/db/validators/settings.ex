@@ -133,7 +133,7 @@ defmodule Gateway.Changeset.Validator.Settings do
       "required" => ["host"],
       "additionalProperties" => false,
       "properties" => %{
-        "strip_request_path" => %{
+        "strip_api_path" => %{
           "type" => "boolean"
         },
         "additional_headers" => %{
@@ -160,7 +160,7 @@ defmodule Gateway.Changeset.Validator.Settings do
           "type" => "string",
           "pattern": "^/.*"
         },
-        "strip_request_path" => %{
+        "strip_api_path" => %{
           "type" => "boolean"
         },
         "additional_headers" => %{

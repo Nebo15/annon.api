@@ -58,7 +58,7 @@ defmodule Gateway.Plugins.APILoaderTest do
         is_enabled: true,
         api: api,
         settings: %{
-          strip_request_path: false,
+          strip_api_path: false,
           method: "GET",
           scheme: "http",
           host: "localhost",

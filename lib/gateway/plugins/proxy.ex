@@ -93,13 +93,13 @@ defmodule Gateway.Plugins.Proxy do
   defp put_port(pr, %{"port" => port}), do: pr <> ":" <> port
   defp put_port(pr, %{}), do: pr
 
-  defp put_path(pr, %{"strip_request_path" => true, "path" => "/"}, api_path, %Conn{request_path: request_path}),
+  defp put_path(pr, %{"strip_api_path" => true, "path" => "/"}, api_path, %Conn{request_path: request_path}),
     do: pr <> String.trim_leading(request_path, api_path)
 
-  defp put_path(pr, %{"strip_request_path" => true, "path" => proxy_path}, api_path, %Conn{request_path: request_path}),
+  defp put_path(pr, %{"strip_api_path" => true, "path" => proxy_path}, api_path, %Conn{request_path: request_path}),
     do: pr <> proxy_path <> String.trim_leading(request_path, api_path)
 
-  defp put_path(pr, %{"strip_request_path" => true}, api_path, %Conn{request_path: request_path}),
+  defp put_path(pr, %{"strip_api_path" => true}, api_path, %Conn{request_path: request_path}),
     do: pr <> String.trim_leading(request_path, api_path)
 
   defp put_path(pr, %{"path" => "/"}, _api_path, %Conn{request_path: request_path}),

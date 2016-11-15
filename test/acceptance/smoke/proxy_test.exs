@@ -25,7 +25,7 @@ defmodule Gateway.Acceptance.Smoke.ProxyTest do
       host: "httpbin.org",
       port: 80,
       path: "/get",
-      strip_request_path: true
+      strip_api_path: true
     }})
 
     "apis/#{api_id}/plugins"

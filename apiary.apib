@@ -255,9 +255,9 @@ Proxy allows:
 
 ### Strip Request Path
 
-You can set `strip_request_path` setting if you want to exclude API-related prefix from upstream request.
+You can set `strip_api_path` setting if you want to exclude API-related prefix from upstream request.
 
-Request Path | Proxy Path | API Path | `strip_request_path` | Upstream Request
+Request Path | Proxy Path | API Path | `strip_api_path` | Upstream Request
 ------ | -------- | ------ | ------- | --------
 `/`    | `/proxy` | `/api` | `false` | `/proxy/api/`
 `/foo` | `/proxy` | `/api` | `false` | `/proxy/api/foo`
@@ -732,7 +732,7 @@ This is equal to sending an empty object to `Update Settings` endpoint.
 ### `Plugin_Proxy__Settings`
 + upstream (Plugin_Proxy__Settings__Upstream, fixed-type)
 + `strip_host`: false (boolean, optional) - Keep HTTP HOST host header when proxying request to an upstream.
-+ `strip_request_path`: false (boolean, optional) - Strip API part of path when sending request to upstream.
++ `strip_api_path`: false (boolean, optional) - Strip API part of path when sending request to upstream.
 + `additional_headers` (object, optional)
     + `X-Consumer-Header`: `header_value`
 
