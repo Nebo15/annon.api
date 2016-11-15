@@ -14,7 +14,7 @@ defmodule Gateway.Plugins.APILoader do
   def get_config(conn) do
     match_spec = %{
       request: %{
-        host: conn.host,
+        host: get_host(conn),
         port: conn.port,
         scheme: normalize_scheme(conn.scheme)
       }
@@ -25,6 +25,13 @@ defmodule Gateway.Plugins.APILoader do
     |> Enum.map(&elem(&1, 1))
     |> find_matching_method(conn.method)
     |> find_matching_path(conn.request_path)
+  end
+
+  defp get_host(conn) do
+    case get_req_header(conn, "x-host-override") do
+      [] -> conn.host
+      [override | _] -> override
+    end
   end
 
   defp normalize_scheme(scheme) when is_atom(scheme), do: Atom.to_string(scheme)
