@@ -51,6 +51,8 @@ defmodule Gateway.Plugins.Proxy do
   end
 
   def do_request(link, conn, method) do
+    # TODO: Make sure we also accept octet-stream header in
+    #       conj. with form via content-disposition
     case Plug.Conn.get_req_header(conn, "content-type") do
       [content_type] ->
         if String.starts_with?(content_type, "multipart/form-data") do
@@ -58,12 +60,25 @@ defmodule Gateway.Plugins.Proxy do
         else
           do_request_cont(link, conn, method)
         end
-      _ ->
+      [nil] ->
         do_request_cont(link, conn, method)
     end
   end
 
   def do_fileupload_request_cont(link, conn, method) do
+    req_headers = [] # TODO: make sure we pass along all incoming request headers,
+                     # except for
+
+    {:ok, pid} = :hackney.request(method, link, req_headers, :stream_multipart, [])
+
+    IO.inspect conn
+
+    # TODO: walk through all body_params, and attach them?
+    :hackney.send_multipart_body(pid, {:file, "/Users/gmile/.vimrc"})
+
+    {:ok, _status, _headers, pid} = :hackney.start_response(pid)
+    {:ok, body} = :hackney.body(pid)
+    # TODO: should I do something about the pid?
   end
 
   def do_request_cont(link, conn, method) do
@@ -74,16 +89,6 @@ defmodule Gateway.Plugins.Proxy do
     method
     |> String.to_atom
     |> HTTPoison.request!(link, body, Map.get(conn, :req_headers))
-    |> get_response
-  end
-
-  def do_fileupload_request(link, conn, method) do
-    # TODO: This works only for files uploaded with "file" key. Need to make this general.
-    # TODO: Now, reconstruct raw_body as if it was a multipart upload...
-
-    method
-    |> String.to_atom
-    |> HTTPoison.request!(link, {:multipart, [{:file, "sad"}]}, Map.get(conn, :req_headers))
     |> get_response
   end
 

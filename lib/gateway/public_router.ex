@@ -12,7 +12,7 @@ defmodule Gateway.PublicRouter do
 
   plug Plug.RequestId
   plug Plug.Parsers,
-    parsers: [:urlencoded, :json],
+    parsers: [:multipart, :urlencoded, :json],
     pass: ["*/*"],
     json_decoder: Poison
 
