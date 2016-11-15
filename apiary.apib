@@ -79,7 +79,7 @@ There are several use cases for EventEmitters:
 
 Relay request to a multiple back-ends. Useful when you want to send multiple notifications when proxying request itself.
 
-Subsequent requests will 
+Subsequent requests will
 
 #### Cache
 
@@ -462,7 +462,7 @@ Path is relative to API path, so you **don't need to specify API path prefix**!
 
 ## Idempotency [/apis/{api_id}/plugins/idempotency]
 
-Gateway supports idempotency for safely retrying requests without accidentally performing the same operation twice. 
+Gateway supports idempotency for safely retrying requests without accidentally performing the same operation twice.
 
 To perform an idempotent request, attach a unique key to any POST request made to the API via the `X-Idempotency-Key: <key>` header.
 
@@ -587,7 +587,7 @@ You can omit any request parameters if you want to partially update Consumer.
 
 ## Consumer settings overrides for Plugins [/consumers/{external_id}/plugins/{plugin_name}]
 
-Consumer can have overrides for different plugins, for example you can set different IP Restrictions `ip_whitelist` and `ip_blacklist` values to allow consumer make requests from specific IP's. Also if you plan to use [ACL](#reference/plugins/acl/get-all-requests) plugin, you can to set scopes that consumer owns in overrides.
+Consumer can have overrides for different plugins, for example you can set different IP Restrictions `whitelist` and `blacklist` values to allow consumer make requests from specific IP's. Also if you plan to use [ACL](#reference/plugins/acl/get-all-requests) plugin, you can to set scopes that consumer owns in overrides.
 
 ### Update Settings [PUT]
 
@@ -726,7 +726,7 @@ This is equal to sending an empty object to `Update Settings` endpoint.
 ### `Plugin_Proxy__Settings`
 + upstream (Plugin_Proxy__Settings__Upstream, fixed-type)
 + `strip_host`: false (boolean, optional) - Keep HTTP HOST host header when proxying request to an upstream.
-+ `strip_request_path`: false (boolean, optional) - Strip API part of path when sending request to upstream. 
++ `strip_request_path`: false (boolean, optional) - Strip API part of path when sending request to upstream.
 + `additional_headers` (object, optional)
     + `X-Consumer-Header`: `header_value`
 
@@ -777,7 +777,7 @@ This is equal to sending an empty object to `Update Settings` endpoint.
     + PUT
 + path: `^my_resource/` (string, required) - Regular expression on path. **Warning!** It's relative to API path.
 + schema: {} (string, required) - [JSON Schema](http://json-schema.org/) for validating request body.
-  
+
 ## Idempotency Plugin
 ### `Plugin_Idempotency`
 + is_enabled: true (boolean, required)
@@ -789,10 +789,10 @@ This is equal to sending an empty object to `Update Settings` endpoint.
 + settings (Plugin_IPRestriction__Settings, fixed-type)
 
 ### `Plugin_IPRestriction__Settings`
-+ ip_whitelist (array[string], fixed-type, optional) - list of matching IP addresses to whitelist them.
++ whitelist (array[string], fixed-type, optional) - list of matching IP addresses to whitelist them.
     + 255.255.255.1
     + 127.0.0.*
-+ ip_blacklist (array[string], fixed-type, optional) - list of matching IP addresses to blacklist them.
++ blacklist (array[string], fixed-type, optional) - list of matching IP addresses to blacklist them.
     + 255.255.255.1
     + 127.0.0.*
 

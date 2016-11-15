@@ -25,8 +25,8 @@ defmodule Gateway.Acceptance.Plugins.IPRestrictionTest do
   test "blacklists ipv4 addresses", %{api_id: api_id, api_path: api_path} do
     ip_restriction_plugin = :ip_restriction_plugin
     |> build_factory_params(%{settings: %{
-      ip_blacklist: ["127.0.0.*"],
-      ip_whitelist: ["128.30.50.245"]
+      blacklist: ["127.0.0.*"],
+      whitelist: ["128.30.50.245"]
     }})
 
     "apis/#{api_id}/plugins"
@@ -48,8 +48,8 @@ defmodule Gateway.Acceptance.Plugins.IPRestrictionTest do
   test "whitelist allows blacklistsed addresses", %{api_id: api_id, api_path: api_path} do
     ip_restriction_plugin = :ip_restriction_plugin
     |> build_factory_params(%{settings: %{
-      ip_blacklist: ["255.255.255.1", "127.0.0.*"],
-      ip_whitelist: ["192.168.0.1", "127.0.0.1"]
+      blacklist: ["255.255.255.1", "127.0.0.*"],
+      whitelist: ["192.168.0.1", "127.0.0.1"]
     }})
 
     "apis/#{api_id}/plugins"
