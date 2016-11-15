@@ -39,9 +39,9 @@ defmodule Gateway.Plugins.ACL do
     do: extract_token_scopes(token_claims)
   defp extract_token_scopes(%{"scopes" => scopes}),
     do: scopes
-  defp extract_token_scopes(%{"app_metadata" => %{scopes: scopes}}) when is_list(scopes),
+  defp extract_token_scopes(%{"app_metadata" => %{"scopes" => scopes}}) when is_list(scopes),
     do: scopes
-  defp extract_token_scopes(%{"app_metadata" => %{scopes: scopes}}) when is_binary(scopes),
+  defp extract_token_scopes(%{"app_metadata" => %{"scopes" => scopes}}) when is_binary(scopes),
     do: String.split(scopes, ",")
   defp extract_token_scopes(_),
     do: nil

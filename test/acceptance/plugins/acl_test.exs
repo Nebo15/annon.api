@@ -34,6 +34,38 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
     %{api_id: api_id, api_path: api_path}
   end
 
+  test "Auth0 Flow is supported", %{api_id: api_id, api_path: api_path} do
+      acl_plugin = :acl_plugin
+    |> build_factory_params(%{settings: %{
+      rules: [
+        %{methods: ["GET"], path: "^.*", scopes: ["api:access"]},
+      ]
+    }})
+
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(acl_plugin)
+    |> assert_status(201)
+
+    Gateway.AutoClustering.do_reload_config()
+
+    token_data = %{
+      "app_metadata" => %{"scopes" => ["api:access"]},
+      "aud" => "wQjijHbg3UszGURQKIshwi03ho4NcVKl",
+      "iat" => 1479225057,
+      "iss" => "https://nebo15.eu.auth0.com/",
+      "sub" => "auth0|582a0e210e8ef1fa16b4a4b0"
+    }
+    token_without_scopes = build_jwt_token(token_data, @jwt_secret)
+    headers = [{"authorization", "Bearer #{token_without_scopes}"}]
+
+    api_path
+    |> put_public_url()
+    |> get!(headers)
+    |> assert_status(404)
+    |> get_body()
+  end
+
   test "token MUST have scopes", %{api_id: api_id, api_path: api_path} do
     acl_plugin = :acl_plugin
     |> build_factory_params(%{settings: %{
