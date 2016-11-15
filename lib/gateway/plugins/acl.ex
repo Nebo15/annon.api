@@ -27,17 +27,32 @@ defmodule Gateway.Plugins.ACL do
   defp execute(nil, _api_path, _conn), do: :ok
   defp execute(%Plugin{settings: %{"rules" => rules}},
                api_path,
-               %Conn{private: %{jwt_token: %Token{claims: %{"scopes" => token_scopes}}}} = conn) do
-    validate_scopes(rules, token_scopes, api_path, Map.take(conn, [:request_path, :method]))
+               %Conn{private: %{jwt_token: token}} = conn) do
+    token
+    |> extract_token_scopes()
+    |> validate_scopes(rules, api_path, Map.take(conn, [:request_path, :method]))
   end
   defp execute(%Plugin{settings: %{"rules" => _}}, _api_path, _conn), do: {:error, :forbidden}
   defp execute(_plugin, _api_path, _conn), do: {:error, :no_scopes_is_set}
 
-  defp validate_scopes(server_rules, client_scopes, api_path, conn) when is_list(client_scopes) do
-    request_path = String.trim_leading(conn.request_path, api_path)
+  defp extract_token_scopes(%Token{claims: token_claims}),
+    do: extract_token_scopes(token_claims)
+  defp extract_token_scopes(%{"scopes" => scopes}),
+    do: scopes
+  defp extract_token_scopes(%{"app_metadata" => %{scopes: scopes}}) when is_list(scopes),
+    do: scopes
+  defp extract_token_scopes(%{"app_metadata" => %{scopes: scopes}}) when is_binary(scopes),
+    do: String.split(scopes, ",")
+  defp extract_token_scopes(_),
+    do: nil
+
+  defp validate_scopes(nil, _server_rules, _api_path, _conn_data),
+    do: {:error, :forbidden}
+  defp validate_scopes(client_scopes, server_rules, api_path, conn_data) when is_list(client_scopes) do
+    request_path = String.trim_leading(conn_data.request_path, api_path)
 
     matching_fun = fn server_rules ->
-      method_matches? = conn.method in server_rules["methods"]
+      method_matches? = conn_data.method in server_rules["methods"]
       path_matches? = request_path =~ ~r"#{server_rules["path"]}"
       acl_rule_matches? = Enum.all?(server_rules["scopes"], fn(server_scope) -> server_scope in client_scopes end)
 
@@ -49,7 +64,7 @@ defmodule Gateway.Plugins.ACL do
       false -> {:error, :forbidden}
     end
   end
-  defp validate_scopes(_scope, _scopes, _api_path, _conn_data), do: {:error, :invalid_scopes_type}
+  defp validate_scopes(_client_scope, _server_rules, _api_path, _conn_data), do: {:error, :invalid_scopes_type}
 
   defp send_response(:ok, conn), do: conn
   defp send_response({:error, :forbidden}, conn) do
