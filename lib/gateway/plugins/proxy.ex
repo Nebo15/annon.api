@@ -39,8 +39,10 @@ defmodule Gateway.Plugins.Proxy do
     |> do_request(conn, method)
     |> get_response
 
-    # TODO: Proxy response headers
-    conn
+    response.headers
+    |> Enum.reduce(conn, fn {header_key, header_value}, conn ->
+        conn |> Conn.put_resp_header(header_key, header_value)
+    end)
     |> Conn.send_resp(response.status_code, response.body)
     |> Conn.halt
   end
