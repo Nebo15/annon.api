@@ -50,27 +50,37 @@ defmodule Gateway.Plugins.Proxy do
     |> Conn.halt
   end
 
-  def do_request(link, %Plug.Conn{body_params: %{"file" => %Plug.Upload{}}} = conn, method) do
-    {:ok, raw_body, _} = Plug.Conn.read_body(conn)
+  def do_request(link, conn, method) do
+    case Plug.Conn.get_req_header(conn, "content-type") do
+      [content_type] ->
+        if String.starts_with?(content_type, "multipart/form-data") do
+          do_fileupload_request_cont(link, conn, method)
+        else
+          do_request_cont(link, conn, method)
+        end
+      _ ->
+        do_request_cont(link, conn, method)
+    end
+  end
 
-    IO.puts "Here!"
+  def do_request(link, conn, method) do
+    body = conn
+    |> Map.get(:body_params)
+    |> Poison.encode!()
+
+    method
+    |> String.to_atom
+    |> HTTPoison.request!(link, body, Map.get(conn, :req_headers))
+    |> get_response
+  end
+
+  def do_fileupload_request(link, conn, method) do
     # TODO: This works only for files uploaded with "file" key. Need to make this general.
     # TODO: Now, reconstruct raw_body as if it was a multipart upload...
 
     method
     |> String.to_atom
-    |> HTTPoison.request!(link, raw_body, Map.get(conn, :req_headers))
-    |> get_response
-  end
-
-  def do_request(link, conn, method) do
-    {:ok, raw_body, _} = Plug.Conn.read_body(conn)
-
-    # TODO: Bring this back to how it was before.
-
-    method
-    |> String.to_atom
-    |> HTTPoison.request!(link, raw_body, Map.get(conn, :req_headers))
+    |> HTTPoison.request!(link, {:multipart, [{:file, "sad"}]}, Map.get(conn, :req_headers))
     |> get_response
   end
 
