@@ -1,0 +1,82 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: gateway
+  name: gateway
+  labels:
+    app: gateway
+    version: "0.1.64"
+spec:
+  replicas: 3
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: gateway
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: gateway
+        version: "0.1.64"
+    spec:
+      containers:
+      - name: gateway
+        image: nebo15/gateway:0.1.64
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 4000
+          protocol: TCP
+          name: public-api
+        - containerPort: 4001
+          protocol: TCP
+          name: mngmnt-api
+        - containerPort: 4369
+          name: epmd
+        env:
+        # Phoenix
+        - name: GATEWAY_PUBLIC_PORT
+          value: "4000"
+        - name: GATEWAY_MANAGEMENT_PORT
+          value: "4001"
+        # Postgre DB
+        - name: DB_NAME
+          value: "postgre"
+        - name: DB_USER
+          value: "postgre"
+        - name: DB_PASSWORD
+          value: "postgre"
+        - name: DB_HOST
+          value: "db-svc"
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_POOL_SIZE
+          value: "100"
+        - name: APP_MIGRATE
+          value: "true"
+        - name: SQL_SANDBOX
+          value: "false"
+        # This variable is used by Erlang VM
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: ERLANG_COOKIE
+          value: "my_super_strong_erlang_cookie"
+        livenessProbe:
+          exec:
+            command:
+              - gateway/bin/gateway
+              - ping
+          failureThreshold: 3
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 3
+        resources:
+          requests:
+            cpu: 200m
+            memory: 100Mi
