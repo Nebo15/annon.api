@@ -49,17 +49,4 @@ defmodule Gateway.Acceptance.Smoke.ProxyTest do
     assert "my_value" == response["args"]["my_param"]
     assert "some-value" == response["headers"]["My-Custom-Header"]
   end
-
-  test "A POST request from user reaches upstream" do
-    response =
-      "/httpbin?my_param=my_value"
-      |> put_public_url()
-      |> HTTPoison.get!
-      |> Map.get(:body)
-      |> Poison.decode!
-
-    HTTPoison.post("localhost:8080/post", {:multipart, [{:file, "test/test_helper.exs"}, {"name", "value"}]})
-
-    assert "my_value" == response["args"]["my_param"]
-  end
 end
