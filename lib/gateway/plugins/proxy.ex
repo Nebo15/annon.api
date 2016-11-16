@@ -57,7 +57,7 @@ defmodule Gateway.Plugins.Proxy do
         else
           do_request_cont(link, conn, method)
         end
-      [nil] ->
+      _ ->
         do_request_cont(link, conn, method)
     end
   end
