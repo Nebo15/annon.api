@@ -37,7 +37,6 @@ defmodule Gateway.Plugins.Proxy do
     response = settings
     |> make_link(api_path, conn)
     |> do_request(conn, method)
-    |> get_response
 
     response.headers
     |> Enum.reduce(conn, fn
@@ -51,6 +50,49 @@ defmodule Gateway.Plugins.Proxy do
   end
 
   def do_request(link, conn, method) do
+    case Plug.Conn.get_req_header(conn, "content-type") do
+      [content_type] ->
+        if String.starts_with?(content_type, "multipart/form-data") do
+          do_fileupload_request_cont(link, conn, method)
+        else
+          do_request_cont(link, conn, method)
+        end
+      _ ->
+        do_request_cont(link, conn, method)
+    end
+  end
+
+  defp do_fileupload_request_cont(link, conn, method) do
+    req_headers = Enum.reject(conn.req_headers, fn {k, _} ->
+      String.downcase(k) in ["content-type", "content-disposition", "content-length"]
+    end)
+
+    {:ok, ref} = :hackney.request(method, link, req_headers, :stream_multipart, [])
+
+    stream_body_params(ref, conn.body_params)
+
+    {:ok, status, headers, ref} = :hackney.start_response(ref)
+    {:ok, body} = :hackney.body(ref)
+
+    :hackney.close(ref)
+
+    %{status_code: status, headers: headers, body: body}
+  end
+
+  defp stream_body_params(ref, body_params) do
+    Enum.each body_params, fn {key, value} ->
+      case value do
+        %Plug.Upload{path: path} ->
+          :ok = :hackney.send_multipart_body(ref, {:file, path})
+        other ->
+          :ok = :hackney.send_multipart_body(ref, {:data, key, value})
+      end
+    end
+
+    :ok = :hackney.send_multipart_body(ref, :eof)
+  end
+
+  defp do_request_cont(link, conn, method) do
     body = conn
     |> Map.get(:body_params)
     |> Poison.encode!()
@@ -58,10 +100,7 @@ defmodule Gateway.Plugins.Proxy do
     method
     |> String.to_atom
     |> HTTPoison.request!(link, body, Map.get(conn, :req_headers))
-    |> get_response
   end
-
-  def get_response(%HTTPoison.Response{} = response), do: response
 
   def make_link(proxy, api_path, conn) do
     proxy
