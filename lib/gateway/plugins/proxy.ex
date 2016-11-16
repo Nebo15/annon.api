@@ -62,23 +62,14 @@ defmodule Gateway.Plugins.Proxy do
     end
   end
 
-  def do_fileupload_request_cont(link, conn, method) do
+  defp do_fileupload_request_cont(link, conn, method) do
     req_headers = Enum.reject(conn.req_headers, fn {k, _} ->
       String.downcase(k) in ["content-type", "content-disposition", "content-length"]
     end)
 
     {:ok, ref} = :hackney.request(method, link, req_headers, :stream_multipart, [])
 
-    Enum.each conn.body_params, fn {key, value} ->
-      case value do
-        %Plug.Upload{path: path} ->
-          :ok = :hackney.send_multipart_body(ref, {:file, path})
-        other ->
-          :ok = :hackney.send_multipart_body(ref, {:data, key, value})
-      end
-    end
-
-    :ok = :hackney.send_multipart_body(ref, :eof)
+    stream_body_params(ref, conn.body_params)
 
     {:ok, status, headers, ref} = :hackney.start_response(ref)
     {:ok, body} = :hackney.body(ref)
@@ -88,7 +79,20 @@ defmodule Gateway.Plugins.Proxy do
     %{status_code: status, headers: headers, body: body}
   end
 
-  def do_request_cont(link, conn, method) do
+  defp stream_body_params(ref, body_params) do
+    Enum.each body_params, fn {key, value} ->
+      case value do
+        %Plug.Upload{path: path} ->
+          :ok = :hackney.send_multipart_body(ref, {:file, path})
+        other ->
+          :ok = :hackney.send_multipart_body(ref, {:data, key, value})
+      end
+    end
+
+    :ok = :hackney.send_multipart_body(ref, :eof)
+  end
+
+  defp do_request_cont(link, conn, method) do
     body = conn
     |> Map.get(:body_params)
     |> Poison.encode!()
