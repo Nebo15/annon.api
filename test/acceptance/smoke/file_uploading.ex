@@ -46,7 +46,6 @@ defmodule Gateway.Acceptance.Smoke.ProxyTest do
       HTTPoison.post!(path, {:multipart, [{:file, __ENV__.file}, {"some-name", "some-value"}]}, [{"X-Custom-Header", "custom-value"}])
       |> Map.get(:body)
       |> Poison.decode!
-      |> IO.inspect
 
     assert String.starts_with?(response["files"]["file"], "defmodule")
     assert "some-value" == response["form"]["some-name"]
