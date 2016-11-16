@@ -50,8 +50,6 @@ defmodule Gateway.Plugins.Proxy do
   end
 
   def do_request(link, conn, method) do
-    # TODO: Make sure we also accept octet-stream header in
-    #       conj. with form via content-disposition
     case Plug.Conn.get_req_header(conn, "content-type") do
       [content_type] ->
         if String.starts_with?(content_type, "multipart/form-data") do
@@ -69,8 +67,6 @@ defmodule Gateway.Plugins.Proxy do
                      # except for
 
     {:ok, ref} = :hackney.request(method, link, req_headers, :stream_multipart, [])
-
-    # TODO: walk through all body_params, and attach them?
 
     Enum.each conn.body_params, fn {key, value} ->
       case value do
