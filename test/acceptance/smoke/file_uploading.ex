@@ -25,7 +25,7 @@ defmodule Gateway.Acceptance.Smoke.FileUploadingTest do
       host: "httpbin.org",
       port: 80,
       path: "/post",
-      strip_request_path: true
+      strip_api_path: true
     }})
 
     "apis/#{api_id}/plugins"
