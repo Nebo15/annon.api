@@ -37,7 +37,6 @@ defmodule Gateway.Plugins.Proxy do
     response = settings
     |> make_link(api_path, conn)
     |> do_request(conn, method)
-    |> get_response
 
     response.headers
     |> Enum.reduce(conn, fn
@@ -69,23 +68,27 @@ defmodule Gateway.Plugins.Proxy do
     req_headers = [] # TODO: make sure we pass along all incoming request headers,
                      # except for
 
-    {:ok, pid} = :hackney.request(method, link, req_headers, :stream_multipart, [])
-
-    IO.inspect conn
+    {:ok, ref} = :hackney.request(method, link, req_headers, :stream_multipart, [])
 
     # TODO: walk through all body_params, and attach them?
 
     # Not possible to do right now. See: https://github.com/benoitc/hackney/issues/363
+
     Enum.each conn.body_params, fn {key, value} ->
-      :ok = :hackney.send_multipart_body(pid, {:file, "/Users/gmile/.vimrc"})
+      case value do
+        %Plug.Upload{path: path} ->
+          :ok = :hackney.send_multipart_body(ref, {:file, path})
+      end
     end
 
-    {:ok, _status, _headers, pid} = :hackney.start_response(pid)
-    {:ok, body} = :hackney.body(pid)
+    :ok = :hackney.send_multipart_body(ref, :eof)
 
-    :hackney.close(pid)
+    {:ok, status, headers, ref} = :hackney.start_response(ref)
+    {:ok, body} = :hackney.body(ref)
 
-    body
+    :hackney.close(ref)
+
+    %{status_code: status, headers: headers, body: body}
   end
 
   defp put_thing({key, %Plug.Upload{} = upload}) do
@@ -100,10 +103,7 @@ defmodule Gateway.Plugins.Proxy do
     method
     |> String.to_atom
     |> HTTPoison.request!(link, body, Map.get(conn, :req_headers))
-    |> get_response
   end
-
-  def get_response(%HTTPoison.Response{} = response), do: response
 
   def make_link(proxy, api_path, conn) do
     proxy
