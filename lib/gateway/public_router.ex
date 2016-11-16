@@ -12,8 +12,8 @@ defmodule Gateway.PublicRouter do
 
   plug Plug.RequestId
   plug Plug.Parsers, parsers: [:multipart, :json],
-    pass: ["*/*"],
-    json_decoder: Poison
+                     pass: ["*/*"],
+                     json_decoder: Poison
 
   plug Gateway.Plugins.APILoader
 
