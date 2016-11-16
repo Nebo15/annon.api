@@ -63,8 +63,9 @@ defmodule Gateway.Plugins.Proxy do
   end
 
   def do_fileupload_request_cont(link, conn, method) do
-    req_headers = [] # TODO: make sure we pass along all incoming request headers,
-                     # except for
+    req_headers = Enum.reject(conn.req_headers, fn {k, _} ->
+      String.downcase(k) in ["content-type", "content-disposition", "content-length"]
+    end)
 
     {:ok, ref} = :hackney.request(method, link, req_headers, :stream_multipart, [])
 
@@ -85,10 +86,6 @@ defmodule Gateway.Plugins.Proxy do
     :hackney.close(ref)
 
     %{status_code: status, headers: headers, body: body}
-  end
-
-  defp put_thing({key, %Plug.Upload{} = upload}) do
-    {:file, upload[:path], } # Explore additional headers from hackney as the third parameter here!
   end
 
   def do_request_cont(link, conn, method) do
