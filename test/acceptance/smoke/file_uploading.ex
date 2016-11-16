@@ -7,7 +7,7 @@ defmodule Gateway.Acceptance.Smoke.FileUploadingTest do
     |> build_factory_params(%{
       name: "An HTTPBin service endpoint",
       request: %{
-        method: ["POST"],
+        methods: ["POST"],
         scheme: "http",
         host: get_endpoint_host(:public),
         port: get_endpoint_port(:public),
