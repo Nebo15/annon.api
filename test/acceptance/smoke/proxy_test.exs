@@ -38,7 +38,7 @@ defmodule Gateway.Acceptance.Smoke.ProxyTest do
     :ok
   end
 
-  test "A PUT request from user reaches upstream" do
+  test "A request from user reaches upstream" do
     response =
       "/httpbin?my_param=my_value"
       |> put_public_url()
