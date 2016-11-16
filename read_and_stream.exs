@@ -1,7 +1,7 @@
 req_headers = [
 ]
 
-path = "https://httpbin.org/post"
+path = "http://requestb.in/1mvy1741"
 
 method = :post
 
