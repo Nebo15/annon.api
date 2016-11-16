@@ -11,42 +11,37 @@ defmodule Gateway.Plugins.Logger do
   alias Plug.Conn
   alias Gateway.DB.Schemas.Log
   alias Gateway.DB.Schemas.API, as: APISchema
+  require Logger
 
-  # TODO: Make one insert per HTTP request
   @doc false
   def call(conn, _opts) do
     conn
-    |> log_request()
     |> Conn.register_before_send(fn conn ->
       conn
-      |> log_response()
+      |> log_request()
     end)
   end
 
   defp log_request(conn) do
-    %{
+    log = %{
       id: get_request_id(conn),
       idempotency_key: get_idempotency_key(conn) || "",
       ip_address: conn.remote_ip |> Tuple.to_list |> Enum.join("."),
-      request: get_request_data(conn)
-    }
-    |> Log.create_request
-
-    conn
-  end
-
-  defp log_response(conn) do
-    conn
-    |> get_request_id()
-    |> Log.put_response(%{
+      request: get_request_data(conn),
       api: get_api_data(conn),
       consumer: get_consumer_data(conn),
       response: get_response_data(conn),
       latencies: get_latencies_data(conn),
       status_code: conn.status
-    })
+    }
 
-    conn
+    case Log.create_request(log) do
+      {:ok, _} ->
+        conn
+      {:error, error} ->
+        Logger.warn("Can not save request information. Changeset: #{inspect error}")
+        conn
+    end
   end
 
   defp get_request_id(conn) do

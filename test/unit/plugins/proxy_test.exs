@@ -50,7 +50,7 @@ defmodule Gateway.Plugins.ProxyTest do
 
     test "puts additional headers", %{conn: conn} do
       headers = [%{"random_name1" => "random_value1"}, %{"random_name2" => "random_value2"}]
-      conn = Proxy.add_additional_headers(headers, conn)
+      conn = Proxy.put_additional_headers(headers, conn)
       random_value1 = get_req_header(conn, "random_name1")
       random_value2 = get_req_header(conn, "random_name2")
       x_forwarded_for_value = get_req_header(conn, "x-forwarded-for")
@@ -71,25 +71,25 @@ defmodule Gateway.Plugins.ProxyTest do
 
     test "preserves request path" do
       incoming_request = make_conn("/mockbin")
-      proxy_params = %{"host" => "localhost", "path" => "/proxy", "strip_request_path" => false}
+      proxy_params = %{"host" => "localhost", "path" => "/proxy", "strip_api_path" => false}
       assert "https://localhost/proxy/mockbin" == Proxy.make_link(proxy_params, @api_path, incoming_request)
     end
 
     test "preserves deep request paths" do
       incoming_request = make_conn("/mockbin/some/path")
-      proxy_params = %{"host" => "localhost", "path" => "/", "strip_request_path" => false}
+      proxy_params = %{"host" => "localhost", "path" => "/", "strip_api_path" => false}
       assert "https://localhost/mockbin/some/path" == Proxy.make_link(proxy_params, @api_path, incoming_request)
     end
 
     test "strips request path" do
       incoming_request = make_conn("#{@api_path}/foo")
-      proxy_params = %{"host" => "localhost", "path" => "/mockbin", "strip_request_path" => true}
+      proxy_params = %{"host" => "localhost", "path" => "/mockbin", "strip_api_path" => true}
       assert "https://localhost/mockbin/foo" == Proxy.make_link(proxy_params, @api_path, incoming_request)
     end
 
     test "strips deep requests paths" do
       incoming_request = make_conn("#{@api_path}/some/path")
-      proxy_params = %{"host" => "localhost", "path" => "/mockbin", "strip_request_path" => true}
+      proxy_params = %{"host" => "localhost", "path" => "/mockbin", "strip_api_path" => true}
       assert "https://localhost/mockbin/some/path" == Proxy.make_link(proxy_params, @api_path, incoming_request)
     end
   end

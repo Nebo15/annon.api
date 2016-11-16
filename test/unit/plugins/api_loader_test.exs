@@ -58,7 +58,7 @@ defmodule Gateway.Plugins.APILoaderTest do
         is_enabled: true,
         api: api,
         settings: %{
-          strip_request_path: false,
+          strip_api_path: false,
           method: "GET",
           scheme: "http",
           host: "localhost",
@@ -80,6 +80,52 @@ defmodule Gateway.Plugins.APILoaderTest do
       assert "http://localhost:4040/apis/mockbin/path" == "/mockbin/path"
       |> call_public_router()
       |> get_from_body(["meta", "url"])
+    end
+
+    test "with matching by overrided host" do
+      api = Gateway.Factory.insert(:api, %{
+        name: "API loader Test api",
+        request: Gateway.Factory.build(:request, %{
+          methods: ["GET"],
+          scheme: "http",
+          host: "www.example.com",
+          port: 80,
+          path: "/mockbin",
+        })
+      })
+
+      Gateway.Factory.insert(:proxy_plugin, %{
+        name: "proxy",
+        is_enabled: true,
+        api: api,
+        settings: %{
+          strip_request_path: false,
+          method: "GET",
+          scheme: "http",
+          host: "localhost",
+          port: 4040,
+          path: "/apis"
+        }
+      })
+
+      Gateway.AutoClustering.do_reload_config()
+
+      resp = :get
+      |> conn("/mockbin")
+      |> put_req_header("content-type", "application/json")
+      |> Map.put(:host, "other_host")
+      |> Gateway.PublicRouter.call([])
+
+      assert 404 == resp.status
+
+      resp = :get
+      |> conn("/mockbin")
+      |> put_req_header("content-type", "application/json")
+      |> put_req_header("x-host-override", "www.example.com")
+      |> Map.put(:host, "other_host")
+      |> Gateway.PublicRouter.call([])
+
+      assert 200 == resp.status
     end
   end
 

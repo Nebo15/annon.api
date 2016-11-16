@@ -115,6 +115,12 @@ Other:
 - `sizelimit` - _TBD 2.0_ block HTTP requests by body size.
 -->
 
+## Installation
+
+Most simple way to install it is to use pre-built docker container available on [Docker Hub](https://hub.docker.com/r/nebo15/gateway/).
+
+You can deploy it to Kubernetes using [example configs from Annon's repo](https://github.com/Nebo15/os.gateway/tree/master/_k8s).
+
 # Group APIs
 
 ## Collection [/apis]
@@ -249,9 +255,9 @@ Proxy allows:
 
 ### Strip Request Path
 
-You can set `strip_request_path` setting if you want to exclude API-related prefix from upstream request.
+You can set `strip_api_path` setting if you want to exclude API-related prefix from upstream request.
 
-Request Path | Proxy Path | API Path | `strip_request_path` | Upstream Request
+Request Path | Proxy Path | API Path | `strip_api_path` | Upstream Request
 ------ | -------- | ------ | ------- | --------
 `/`    | `/proxy` | `/api` | `false` | `/proxy/api/`
 `/foo` | `/proxy` | `/api` | `false` | `/proxy/api/foo`
@@ -726,7 +732,7 @@ This is equal to sending an empty object to `Update Settings` endpoint.
 ### `Plugin_Proxy__Settings`
 + upstream (Plugin_Proxy__Settings__Upstream, fixed-type)
 + `strip_host`: false (boolean, optional) - Keep HTTP HOST host header when proxying request to an upstream.
-+ `strip_request_path`: false (boolean, optional) - Strip API part of path when sending request to upstream.
++ `strip_api_path`: false (boolean, optional) - Strip API part of path when sending request to upstream.
 + `additional_headers` (object, optional)
     + `X-Consumer-Header`: `header_value`
 

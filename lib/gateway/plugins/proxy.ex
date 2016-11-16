@@ -25,11 +25,11 @@ defmodule Gateway.Plugins.Proxy do
   defp execute(%Plugin{settings: settings} = plugin, api_path, conn) do
     conn = plugin
     |> get_additional_headers()
-    |> add_additional_headers(conn)
+    |> put_request_id(conn)
+    |> put_additional_headers(conn)
     |> skip_filtered_headers(settings)
 
     settings
-    # TODO: check variables
     |> do_proxy(api_path, conn)
   end
 
@@ -39,8 +39,13 @@ defmodule Gateway.Plugins.Proxy do
     |> do_request(conn, method)
     |> get_response
 
-    # TODO: Proxy response headers
-    conn
+    response.headers
+    |> Enum.reduce(conn, fn
+      {"x-request-id", _header_value}, conn ->
+        conn
+      {header_key, header_value}, conn ->
+        conn |> Conn.put_resp_header(header_key, header_value)
+    end)
     |> Conn.send_resp(response.status_code, response.body)
     |> Conn.halt
   end
@@ -67,7 +72,15 @@ defmodule Gateway.Plugins.Proxy do
     |> put_query(proxy, conn)
   end
 
-  def add_additional_headers(headers, conn) do
+  defp put_request_id(headers, conn) do
+    id = conn
+    |> Conn.get_resp_header("x-request-id")
+    |> Enum.at(0)
+
+    [%{"x-request-id" => id}] ++ headers
+  end
+
+  def put_additional_headers(headers, conn) do
     headers
     |> Kernel.++([%{"x-forwarded-for" => ip_to_string(conn.remote_ip)}])
     |> Enum.reduce(conn, fn(header, conn) ->
@@ -93,13 +106,13 @@ defmodule Gateway.Plugins.Proxy do
   defp put_port(pr, %{"port" => port}), do: pr <> ":" <> port
   defp put_port(pr, %{}), do: pr
 
-  defp put_path(pr, %{"strip_request_path" => true, "path" => "/"}, api_path, %Conn{request_path: request_path}),
+  defp put_path(pr, %{"strip_api_path" => true, "path" => "/"}, api_path, %Conn{request_path: request_path}),
     do: pr <> String.trim_leading(request_path, api_path)
 
-  defp put_path(pr, %{"strip_request_path" => true, "path" => proxy_path}, api_path, %Conn{request_path: request_path}),
+  defp put_path(pr, %{"strip_api_path" => true, "path" => proxy_path}, api_path, %Conn{request_path: request_path}),
     do: pr <> proxy_path <> String.trim_leading(request_path, api_path)
 
-  defp put_path(pr, %{"strip_request_path" => true}, api_path, %Conn{request_path: request_path}),
+  defp put_path(pr, %{"strip_api_path" => true}, api_path, %Conn{request_path: request_path}),
     do: pr <> String.trim_leading(request_path, api_path)
 
   defp put_path(pr, %{"path" => "/"}, _api_path, %Conn{request_path: request_path}),

@@ -42,7 +42,7 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
       |> build_factory_params(%{settings: %{
         path: 123,
         scheme: "httpd",
-        strip_request_path: "hello",
+        strip_api_path: "hello",
         additional_headers: "string"
       }})
 
@@ -141,15 +141,29 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
     |> get_mock_response()
   end
 
+  test "returns upstream headers", %{api_id: api_id, api_path: api_path} do
+    api_id
+    |> create_proxy_to_mock()
+
+    assert %{headers: headers} = api_path
+    |> put_public_url()
+    |> get!()
+
+    assert Enum.find(headers, fn
+      {"server", "Cowboy"} -> true
+      _ -> false
+    end)
+  end
+
   describe "builds valid upstream path" do
-    test "when `strip_request_path` is false and proxy path is `/`", %{api_id: api_id, api_path: api_path} do
+    test "when `strip_api_path` is false and proxy path is `/`", %{api_id: api_id, api_path: api_path} do
       proxy_path = "/"
 
       api_id
       |> create_proxy_to_mock(%{
         path: proxy_path,
         scheme: "http",
-        strip_request_path: false
+        strip_api_path: false
       })
 
       assert %{"request" => %{"uri" => uri}} = api_path
@@ -169,11 +183,11 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
       assert api_path <> "/foo" == uri
     end
 
-    test "when `strip_request_path` is false and proxy path is not set", %{api_id: api_id, api_path: api_path} do
+    test "when `strip_api_path` is false and proxy path is not set", %{api_id: api_id, api_path: api_path} do
       api_id
       |> create_proxy_to_mock(%{
         scheme: "http",
-        strip_request_path: false
+        strip_api_path: false
       })
 
       assert %{"request" => %{"uri" => uri}} = api_path
@@ -193,14 +207,14 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
       assert api_path <> "/foo" == uri
     end
 
-    test "when `strip_request_path` is false and proxy path is set", %{api_id: api_id, api_path: api_path} do
+    test "when `strip_api_path` is false and proxy path is set", %{api_id: api_id, api_path: api_path} do
       proxy_path = "/proxy"
 
       api_id
       |> create_proxy_to_mock(%{
         path: proxy_path,
         scheme: "http",
-        strip_request_path: false
+        strip_api_path: false
       })
 
       assert %{"request" => %{"uri" => uri}} = api_path
@@ -220,14 +234,14 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
       assert proxy_path <> api_path <> "/foo" == uri
     end
 
-    test "when `strip_request_path` is true and proxy path is /", %{api_id: api_id, api_path: api_path} do
+    test "when `strip_api_path` is true and proxy path is /", %{api_id: api_id, api_path: api_path} do
       proxy_path = "/"
 
       api_id
       |> create_proxy_to_mock(%{
         path: proxy_path,
         scheme: "http",
-        strip_request_path: true
+        strip_api_path: true
       })
 
       assert %{"request" => %{"uri" => uri}} = api_path
@@ -247,11 +261,11 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
       assert "/foo" == uri
     end
 
-    test "when `strip_request_path` is true and proxy path is not set", %{api_id: api_id, api_path: api_path} do
+    test "when `strip_api_path` is true and proxy path is not set", %{api_id: api_id, api_path: api_path} do
       api_id
       |> create_proxy_to_mock(%{
         scheme: "http",
-        strip_request_path: true
+        strip_api_path: true
       })
 
       assert %{"request" => %{"uri" => uri}} = api_path
@@ -271,14 +285,14 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
       assert "/foo" == uri
     end
 
-    test "when `strip_request_path` is true and proxy path is set", %{api_id: api_id, api_path: api_path} do
+    test "when `strip_api_path` is true and proxy path is set", %{api_id: api_id, api_path: api_path} do
       proxy_path = "/proxy"
 
       api_id
       |> create_proxy_to_mock(%{
         path: proxy_path,
         scheme: "http",
-        strip_request_path: true
+        strip_api_path: true
       })
 
       assert %{"request" => %{"uri" => uri}} = api_path
