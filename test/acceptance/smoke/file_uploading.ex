@@ -43,10 +43,11 @@ defmodule Gateway.Acceptance.Smoke.ProxyTest do
     path = put_public_url("/httpbin")
 
     response =
-      HTTPoison.post!(path, {:multipart, [{:file, __ENV__.file}]})
+      HTTPoison.post!(path, {:multipart, [{:file, __ENV__.file}, {"some-name", "some-value"}]})
       |> Map.get(:body)
       |> Poison.decode!
 
     assert String.starts_with?(response["files"]["file"], "defmodule")
+    assert "some-value" == response["form"]["some-name"]
   end
 end

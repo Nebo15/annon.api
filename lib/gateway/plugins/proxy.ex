@@ -72,12 +72,12 @@ defmodule Gateway.Plugins.Proxy do
 
     # TODO: walk through all body_params, and attach them?
 
-    # Not possible to do right now. See: https://github.com/benoitc/hackney/issues/363
-
     Enum.each conn.body_params, fn {key, value} ->
       case value do
         %Plug.Upload{path: path} ->
           :ok = :hackney.send_multipart_body(ref, {:file, path})
+        other ->
+          :ok = :hackney.send_multipart_body(ref, {:data, key, value})
       end
     end
 
