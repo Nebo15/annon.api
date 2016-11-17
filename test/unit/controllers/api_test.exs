@@ -20,6 +20,16 @@ defmodule Gateway.Controllers.APITest do
       |> assert_response_body(api)
     end
 
+    test "GET list with pagination" do
+      api = Gateway.Factory.insert_list(10, :api)
+
+      conn = "/apis?starting_after=3&limit=5"
+      |> call_get()
+      |> assert_conn_status()
+
+      assert 10 = Enum.count(Poison.decode!(conn.resp_body)["data"])
+    end
+
     test "POST" do
       api = Gateway.Factory.build(:api)
 
