@@ -14,6 +14,7 @@ defmodule Gateway.Helpers.Scopes.StrategyB do
     |> get_in(["data", "scopes"])
   end
 
+  def get_scopes(nil, _), do: []
   def get_scopes(party_id, url_template) do
     party_id
     |> get_url(url_template)

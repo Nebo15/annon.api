@@ -3,6 +3,29 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
   use Gateway.AcceptanceCase
 
   @jwt_secret "secret"
+  @pcm_mock_port 4444
+
+  setup_all do
+    defmodule Gateway.PCMMockServer do
+      @moduledoc """
+      Mock server that simulates gettings scopes from PCM.
+      """
+      use Plug.Router
+
+      plug :match
+      plug Plug.Parsers, parsers: [:json],
+                        pass:  ["application/json"],
+                        json_decoder: Poison
+      plug :dispatch
+
+      @scopes_body %{"meta" => %{"code" => 200, "description" => "Success"}, "data" => %{"scopes" => ["api:access"]}}
+
+      get "scopes", do: send_resp(conn, 200, Poison.encode!(@scopes_body))
+    end
+
+    {:ok, _} = Plug.Adapters.Cowboy.http Gateway.PCMMockServer, [], port: @pcm_mock_port
+    :ok
+  end
 
   setup do
     api_path = "/my_jwt_authorized_api-" <> Ecto.UUID.generate() <> "/"
@@ -29,183 +52,190 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
     |> post!(jwt_plugin)
     |> assert_status(201)
 
-    scopes_plugin = :scopes_plugin
-    |> build_factory_params(%{settings: %{"strategy": "a"}})
-
-    "apis/#{api_id}/plugins"
-    |> put_management_url()
-    |> post!(scopes_plugin)
-    |> assert_status(201)
-
     Gateway.AutoClustering.do_reload_config()
 
     %{api_id: api_id, api_path: api_path}
   end
 
-  test "Auth0 Flow is supported", %{api_id: api_id, api_path: api_path} do
-      acl_plugin = :acl_plugin
-    |> build_factory_params(%{settings: %{
-      rules: [
-        %{methods: ["GET"], path: "^.*", scopes: ["api:access"]},
-      ]
-    }})
-
-    "apis/#{api_id}/plugins"
-    |> put_management_url()
-    |> post!(acl_plugin)
-    |> assert_status(201)
-
-    Gateway.AutoClustering.do_reload_config()
-
-    token_data = %{
-      "app_metadata" => %{"scopes" => ["api:access"]},
-      "aud" => "wQjijHbg3UszGURQKIshwi03ho4NcVKl",
-      "iat" => 1479225057,
-      "iss" => "https://nebo15.eu.auth0.com/",
-      "sub" => "auth0|582a0e210e8ef1fa16b4a4b0"
-    }
-    token = build_jwt_token(token_data, @jwt_secret)
-    headers = [{"authorization", "Bearer #{token}"}]
-
-    api_path
-    |> put_public_url()
-    |> get!(headers)
-    |> assert_status(404)
-    |> get_body()
-  end
-
-  test "Auth0 Flow is supported when scopes is string", %{api_id: api_id, api_path: api_path} do
-      acl_plugin = :acl_plugin
-    |> build_factory_params(%{settings: %{
-      rules: [
-        %{methods: ["GET"], path: "^.*", scopes: ["api:access"]},
-      ]
-    }})
-
-    "apis/#{api_id}/plugins"
-    |> put_management_url()
-    |> post!(acl_plugin)
-    |> assert_status(201)
-
-    Gateway.AutoClustering.do_reload_config()
-
-    token_data = %{
-      "app_metadata" => %{"scopes" => "api:access,api:delete"},
-      "aud" => "wQjijHbg3UszGURQKIshwi03ho4NcVKl",
-      "iat" => 1479225057,
-      "iss" => "https://nebo15.eu.auth0.com/",
-      "sub" => "auth0|582a0e210e8ef1fa16b4a4b0"
-    }
-    token = build_jwt_token(token_data, @jwt_secret)
-    headers = [{"authorization", "Bearer #{token}"}]
-
-    api_path
-    |> put_public_url()
-    |> get!(headers)
-    |> assert_status(404)
-    |> get_body()
-  end
-
-  test "token MUST have scopes", %{api_id: api_id, api_path: api_path} do
-    acl_plugin = :acl_plugin
-    |> build_factory_params(%{settings: %{
-      rules: [
-        %{methods: ["GET"], path: "^.*", scopes: ["api:access"]},
-      ]
-    }})
-
-    "apis/#{api_id}/plugins"
-    |> put_management_url()
-    |> post!(acl_plugin)
-    |> assert_status(201)
-
-    Gateway.AutoClustering.do_reload_config()
-
-    token_without_scopes = build_jwt_token(%{"name" => "Alice"}, @jwt_secret)
-    headers = [{"authorization", "Bearer #{token_without_scopes}"}]
-
-    assert %{
-      "error" => %{"message" => "Your scopes does not allow to access this resource."}
-    } = api_path
-    |> put_public_url()
-    |> get!(headers)
-    |> assert_status(403)
-    |> get_body()
-  end
-
-  test "token MUST have all scopes", %{api_id: api_id, api_path: api_path} do
-    acl_plugin = :acl_plugin
-    |> build_factory_params(%{settings: %{
-      rules: [
-        %{methods: ["GET"], path: "^.*", scopes: ["api:access", "api:request"]},
-      ]
-    }})
-
-    "apis/#{api_id}/plugins"
-    |> put_management_url()
-    |> post!(acl_plugin)
-    |> assert_status(201)
-
-    Gateway.AutoClustering.do_reload_config()
-
-    token = build_jwt_token(%{"scopes" => ["api:access"]}, @jwt_secret)
-    headers = [{"authorization", "Bearer #{token}"}]
-
-    assert %{
-      "error" => %{"message" => "Your scopes does not allow to access this resource."}
-    } = api_path
-    |> put_public_url()
-    |> get!(headers)
-    |> assert_status(403)
-    |> get_body()
-
-    token = build_jwt_token(%{"scopes" => ["api:access", "api:request"]}, @jwt_secret)
-    headers = [{"authorization", "Bearer #{token}"}]
-
-    api_path
-    |> put_public_url()
-    |> get!(headers)
-    |> assert_status(404)
-  end
-
-  test "multiple rules can be applied", %{api_id: api_id, api_path: api_path} do
-    acl_plugin = :acl_plugin
-    |> build_factory_params(%{settings: %{
-      rules: [
-        %{methods: ["GET", "POST"], path: "^.*", scopes: ["super_scope"]},
-        %{methods: ["GET"], path: "^.*", scopes: ["api:access", "api:request"]},
-      ]
-    }})
-
-    "apis/#{api_id}/plugins"
-    |> put_management_url()
-    |> post!(acl_plugin)
-    |> assert_status(201)
-
-    Gateway.AutoClustering.do_reload_config()
-
-    token = build_jwt_token(%{"scopes" => ["api:access", "api:request"]}, @jwt_secret)
-    headers = [{"authorization", "Bearer #{token}"}]
-
-    api_path
-    |> put_public_url()
-    |> get!(headers)
-    |> assert_status(404)
-  end
-
-  describe "rules is filtered" do
-    test "by method", %{api_id: api_id, api_path: api_path} do
-      acl_plugin = :acl_plugin
+  describe "Strategy A" do
+    test "Auth0 Flow is supported", %{api_id: api_id, api_path: api_path} do
+        acl_plugin = :acl_plugin
       |> build_factory_params(%{settings: %{
         rules: [
-          %{methods: ["GET", "POST"], path: "^.*", scopes: ["super_scope"]},
-          %{methods: ["PUT"], path: "^.*", scopes: ["api:access", "api:request"]},
+          %{methods: ["GET"], path: "^.*", scopes: ["api:access"]},
         ]
       }})
 
       "apis/#{api_id}/plugins"
       |> put_management_url()
       |> post!(acl_plugin)
+      |> assert_status(201)
+
+      scopes_plugin = :scopes_plugin
+      |> build_factory_params(%{settings: %{"strategy": "a"}})
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(scopes_plugin)
+      |> assert_status(201)
+
+      Gateway.AutoClustering.do_reload_config()
+
+      token_data = %{
+        "app_metadata" => %{"scopes" => ["api:access"]},
+        "aud" => "wQjijHbg3UszGURQKIshwi03ho4NcVKl",
+        "iat" => 1479225057,
+        "iss" => "https://nebo15.eu.auth0.com/",
+        "sub" => "auth0|582a0e210e8ef1fa16b4a4b0"
+      }
+      token = build_jwt_token(token_data, @jwt_secret)
+      headers = [{"authorization", "Bearer #{token}"}]
+
+      api_path
+      |> put_public_url()
+      |> get!(headers)
+      |> assert_status(404)
+      |> get_body()
+    end
+
+    test "Auth0 Flow is supported when scopes is string", %{api_id: api_id, api_path: api_path} do
+        acl_plugin = :acl_plugin
+      |> build_factory_params(%{settings: %{
+        rules: [
+          %{methods: ["GET"], path: "^.*", scopes: ["api:access"]},
+        ]
+      }})
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(acl_plugin)
+      |> assert_status(201)
+
+      scopes_plugin = :scopes_plugin
+      |> build_factory_params(%{settings: %{"strategy": "a"}})
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(scopes_plugin)
+      |> assert_status(201)
+
+      Gateway.AutoClustering.do_reload_config()
+
+      token_data = %{
+        "app_metadata" => %{"scopes" => "api:access,api:delete"},
+        "aud" => "wQjijHbg3UszGURQKIshwi03ho4NcVKl",
+        "iat" => 1479225057,
+        "iss" => "https://nebo15.eu.auth0.com/",
+        "sub" => "auth0|582a0e210e8ef1fa16b4a4b0"
+      }
+      token = build_jwt_token(token_data, @jwt_secret)
+      headers = [{"authorization", "Bearer #{token}"}]
+
+      api_path
+      |> put_public_url()
+      |> get!(headers)
+      |> assert_status(404)
+      |> get_body()
+    end
+
+    test "token MUST have scopes", %{api_id: api_id, api_path: api_path} do
+      acl_plugin = :acl_plugin
+      |> build_factory_params(%{settings: %{
+        rules: [
+          %{methods: ["GET"], path: "^.*", scopes: ["api:access"]},
+        ]
+      }})
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(acl_plugin)
+      |> assert_status(201)
+
+      scopes_plugin = :scopes_plugin
+      |> build_factory_params(%{settings: %{"strategy": "a"}})
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(scopes_plugin)
+      |> assert_status(201)
+
+      Gateway.AutoClustering.do_reload_config()
+
+      token_without_scopes = build_jwt_token(%{"name" => "Alice"}, @jwt_secret)
+      headers = [{"authorization", "Bearer #{token_without_scopes}"}]
+
+      assert %{
+        "error" => %{"message" => "Your scopes does not allow to access this resource."}
+      } = api_path
+      |> put_public_url()
+      |> get!(headers)
+      |> assert_status(403)
+      |> get_body()
+    end
+
+    test "token MUST have all scopes", %{api_id: api_id, api_path: api_path} do
+      acl_plugin = :acl_plugin
+      |> build_factory_params(%{settings: %{
+        rules: [
+          %{methods: ["GET"], path: "^.*", scopes: ["api:access", "api:request"]},
+        ]
+      }})
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(acl_plugin)
+      |> assert_status(201)
+
+      scopes_plugin = :scopes_plugin
+      |> build_factory_params(%{settings: %{"strategy": "a"}})
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(scopes_plugin)
+      |> assert_status(201)
+
+      Gateway.AutoClustering.do_reload_config()
+
+      token = build_jwt_token(%{"scopes" => ["api:access"]}, @jwt_secret)
+      headers = [{"authorization", "Bearer #{token}"}]
+
+      assert %{
+        "error" => %{"message" => "Your scopes does not allow to access this resource."}
+      } = api_path
+      |> put_public_url()
+      |> get!(headers)
+      |> assert_status(403)
+      |> get_body()
+
+      token = build_jwt_token(%{"scopes" => ["api:access", "api:request"]}, @jwt_secret)
+      headers = [{"authorization", "Bearer #{token}"}]
+
+      api_path
+      |> put_public_url()
+      |> get!(headers)
+      |> assert_status(404)
+    end
+
+    test "multiple rules can be applied", %{api_id: api_id, api_path: api_path} do
+      acl_plugin = :acl_plugin
+      |> build_factory_params(%{settings: %{
+        rules: [
+          %{methods: ["GET", "POST"], path: "^.*", scopes: ["super_scope"]},
+          %{methods: ["GET"], path: "^.*", scopes: ["api:access", "api:request"]},
+        ]
+      }})
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(acl_plugin)
+      |> assert_status(201)
+
+      scopes_plugin = :scopes_plugin
+      |> build_factory_params(%{settings: %{"strategy": "a"}})
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(scopes_plugin)
       |> assert_status(201)
 
       Gateway.AutoClustering.do_reload_config()
@@ -216,14 +246,96 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       api_path
       |> put_public_url()
       |> get!(headers)
-      |> assert_status(403)
+      |> assert_status(404)
     end
 
-    test "by path", %{api_id: api_id, api_path: api_path} do
+    test "rules is filtered by method", %{api_id: api_id, api_path: api_path} do
+        acl_plugin = :acl_plugin
+        |> build_factory_params(%{settings: %{
+          rules: [
+            %{methods: ["GET", "POST"], path: "^.*", scopes: ["super_scope"]},
+            %{methods: ["PUT"], path: "^.*", scopes: ["api:access", "api:request"]},
+          ]
+        }})
+
+        "apis/#{api_id}/plugins"
+        |> put_management_url()
+        |> post!(acl_plugin)
+        |> assert_status(201)
+
+        scopes_plugin = :scopes_plugin
+        |> build_factory_params(%{settings: %{"strategy": "a"}})
+
+        "apis/#{api_id}/plugins"
+        |> put_management_url()
+        |> post!(scopes_plugin)
+        |> assert_status(201)
+
+        Gateway.AutoClustering.do_reload_config()
+
+        token = build_jwt_token(%{"scopes" => ["api:access", "api:request"]}, @jwt_secret)
+        headers = [{"authorization", "Bearer #{token}"}]
+
+        api_path
+        |> put_public_url()
+        |> get!(headers)
+        |> assert_status(403)
+      end
+
+      test "rules is filtered by path", %{api_id: api_id, api_path: api_path} do
+        acl_plugin = :acl_plugin
+        |> build_factory_params(%{settings: %{
+          rules: [
+            %{methods: ["GET"], path: "^/foo$", scopes: ["super_scope"]},
+          ]
+        }})
+
+        "apis/#{api_id}/plugins"
+        |> put_management_url()
+        |> post!(acl_plugin)
+        |> assert_status(201)
+
+        scopes_plugin = :scopes_plugin
+        |> build_factory_params(%{settings: %{"strategy": "a"}})
+
+        "apis/#{api_id}/plugins"
+        |> put_management_url()
+        |> post!(scopes_plugin)
+        |> assert_status(201)
+
+        Gateway.AutoClustering.do_reload_config()
+
+        token = build_jwt_token(%{"scopes" => ["super_scope"]}, @jwt_secret)
+        headers = [{"authorization", "Bearer #{token}"}]
+
+        "#{api_path}/foo"
+        |> put_public_url()
+        |> get!(headers)
+        |> assert_status(404)
+      end
+
+    test "token settings validator", %{api_id: api_id} do
       acl_plugin = :acl_plugin
       |> build_factory_params(%{settings: %{
         rules: [
-          %{methods: ["GET"], path: "^/foo$", scopes: ["super_scope"]},
+          %{methods: ["OTHER"], path: 123, scopes: "string"},
+        ]
+      }})
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(acl_plugin)
+      |> assert_status(422)
+      |> get_body()
+    end
+  end
+
+  describe "Strategy B" do
+    test "Auth0 Flow is supported", %{api_id: api_id, api_path: api_path} do
+      acl_plugin = :acl_plugin
+      |> build_factory_params(%{settings: %{
+        rules: [
+          %{methods: ["GET"], path: "^/foo$", scopes: ["api:access"]},
         ]
       }})
 
@@ -232,9 +344,20 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> post!(acl_plugin)
       |> assert_status(201)
 
+      scopes_plugin = :scopes_plugin
+      |> build_factory_params(%{settings: %{
+        "strategy": "b",
+        "url_template": "http://localhost:#{@pcm_mock_port}/scopes"
+        }})
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(scopes_plugin)
+      |> assert_status(201)
+
       Gateway.AutoClustering.do_reload_config()
 
-      token = build_jwt_token(%{"scopes" => ["super_scope"]}, @jwt_secret)
+      token = build_jwt_token(%{"user_metadata" => %{"party_id" => "random_party_id"}}, @jwt_secret)
       headers = [{"authorization", "Bearer #{token}"}]
 
       "#{api_path}/foo"
@@ -242,20 +365,5 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> get!(headers)
       |> assert_status(404)
     end
-  end
-
-  test "token settings validator", %{api_id: api_id} do
-    acl_plugin = :acl_plugin
-    |> build_factory_params(%{settings: %{
-      rules: [
-        %{methods: ["OTHER"], path: 123, scopes: "string"},
-      ]
-    }})
-
-    "apis/#{api_id}/plugins"
-    |> put_management_url()
-    |> post!(acl_plugin)
-    |> assert_status(422)
-    |> get_body()
   end
 end
