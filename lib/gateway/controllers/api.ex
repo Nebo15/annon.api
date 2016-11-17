@@ -45,14 +45,13 @@ defmodule Gateway.Controllers.API do
   forward "/", to: Gateway.Controllers.API.Plugin
 
   defp page_info_from(params) do
-    starting_after = extract_integer(params, "ending_before")
+    starting_after = extract_integer(params, "starting_after")
     ending_before = extract_integer(params, "ending_before")
     limit = extract_integer(params, "limit")
 
     cursors = %Ecto.Paging.Cursors{starting_after: starting_after, ending_before: ending_before}
 
     %Ecto.Paging{limit: limit, cursors: cursors}
-    |> IO.inspect
   end
 
   defp extract_integer(map, key) do

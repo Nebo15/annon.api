@@ -2,6 +2,48 @@ defmodule Gateway.Controllers.APITest do
   @moduledoc false
   use Gateway.UnitCase, async: true
 
+  describe "/apis (pagination)" do
+    setup do
+      apis = Gateway.Factory.insert_list(10, :api)
+
+      {:ok, %{apis: apis}}
+    end
+
+    test "GET /apis?starting_after=3&limit=5", %{apis: apis} do
+      id = Enum.at(apis, 2).id
+
+      conn = "/apis?starting_after=#{id}&limit=5"
+      |> call_get()
+      |> assert_conn_status()
+
+      expected_records =
+        Enum.slice(apis, 3, 5)
+        |> Enum.map(&Map.get(&1, :id))
+
+      actual_records =
+        Poison.decode!(conn.resp_body)["data"]
+        |> Enum.map(&Map.get(&1, "id"))
+
+      assert expected_records == actual_records
+    end
+
+    test "GET /apis?ending_before=8&limit=4", %{apis: apis} do
+      conn = "/apis?ending_before=8&limit=4"
+      |> call_get()
+      |> assert_conn_status()
+
+      assert 4 = Enum.count(Poison.decode!(conn.resp_body)["data"])
+    end
+
+    test "GET /apis?ending_before=3&limit=5", %{apis: apis} do
+      conn = "/apis?ending_before=3&limit=5"
+      |> call_get()
+      |> assert_conn_status()
+
+      assert 3 = Enum.count(Poison.decode!(conn.resp_body)["data"])
+    end
+  end
+
   describe "/apis" do
     test "GET empty list" do
       conn = "/apis"
@@ -18,16 +60,6 @@ defmodule Gateway.Controllers.APITest do
       |> call_get()
       |> assert_conn_status()
       |> assert_response_body(api)
-    end
-
-    test "GET list with pagination" do
-      api = Gateway.Factory.insert_list(10, :api)
-
-      conn = "/apis?starting_after=3&limit=5"
-      |> call_get()
-      |> assert_conn_status()
-
-      assert 10 = Enum.count(Poison.decode!(conn.resp_body)["data"])
     end
 
     test "POST" do
