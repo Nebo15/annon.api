@@ -8,7 +8,6 @@ defmodule Gateway.Plugins.ACL do
     plugin_name: "acl"
 
   alias Plug.Conn
-  alias Joken.Token
   alias Gateway.DB.Schemas.Plugin
   alias Gateway.DB.Schemas.API, as: APISchema
   alias EView.Views.Error, as: ErrorView
@@ -27,24 +26,12 @@ defmodule Gateway.Plugins.ACL do
   defp execute(nil, _api_path, _conn), do: :ok
   defp execute(%Plugin{settings: %{"rules" => rules}},
                api_path,
-               %Conn{private: %{jwt_token: token}} = conn) do
-    token
-    |> extract_token_scopes()
+               %Conn{private: %{scopes: scopes}} = conn) do
+    scopes
     |> validate_scopes(rules, api_path, Map.take(conn, [:request_path, :method]))
   end
   defp execute(%Plugin{settings: %{"rules" => _}}, _api_path, _conn), do: {:error, :forbidden}
   defp execute(_plugin, _api_path, _conn), do: {:error, :no_scopes_is_set}
-
-  defp extract_token_scopes(%Token{claims: token_claims}),
-    do: extract_token_scopes(token_claims)
-  defp extract_token_scopes(%{"scopes" => scopes}),
-    do: scopes
-  defp extract_token_scopes(%{"app_metadata" => %{"scopes" => scopes}}) when is_list(scopes),
-    do: scopes
-  defp extract_token_scopes(%{"app_metadata" => %{"scopes" => scopes}}) when is_binary(scopes),
-    do: String.split(scopes, ",")
-  defp extract_token_scopes(_),
-    do: nil
 
   defp validate_scopes(nil, _server_rules, _api_path, _conn_data),
     do: {:error, :forbidden}

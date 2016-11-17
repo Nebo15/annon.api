@@ -9,6 +9,8 @@ defmodule Gateway.Plugins.Scopes do
   alias Joken.Token
   alias Gateway.DB.Schemas.Plugin
   alias Gateway.DB.Schemas.API, as: APISchema
+  alias Gateway.Helpers.Scopes.StrategyA
+  alias Gateway.Helpers.Scopes.StrategyB
 
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts)
     when is_list(plugins) do
@@ -22,27 +24,26 @@ defmodule Gateway.Plugins.Scopes do
   defp extract_party_id(%{"user_metadata" => %{"party_id" => party_id}}), do: party_id
   defp extract_party_id(_), do: nil
 
-  defp get_url(party_id, url_template), do: String.replace(url_template, "{party_id}", party_id)
-
-  defp get_scopes(url) do
-    url
-    |> HTTPoison.get!
-    |> Map.get(:body)
-    |> Poison.decode!
-    |> get_in(["data", "scopes"])
-  end
-
   defp save_scopes(scopes, conn) do
     conn
     |> Conn.put_private(:scopes, scopes)
   end
 
-  defp execute(nil, conn), do: conn
-  defp execute(%Plugin{settings: %{"url_template" => url_template}}, %Conn{private: %{jwt_token: token}} = conn) do
+  defp get_scopes(token, %{"strategy" => "a"}) do
+    token
+    |> StrategyA.get_scopes()
+  end
+  defp get_scopes(token, %{"strategy" => "b", "url_template" => url_template}) do
     token
     |> extract_party_id()
-    |> get_url(url_template)
-    |> get_scopes()
+    |> StrategyB.get_scopes(url_template)
+  end
+  defp get_scopes(_token, _), do: []
+
+  defp execute(nil, conn), do: conn
+  defp execute(%Plugin{settings: settings}, %Conn{private: %{jwt_token: token}} = conn) do
+    token
+    |> get_scopes(settings)
     |> save_scopes(conn)
   end
 end

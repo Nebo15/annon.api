@@ -47,6 +47,14 @@ defmodule Gateway.Acceptance.Smoke.AclTest do
     |> post!(acl_plugin)
     |> assert_status(201)
 
+    scopes_plugin = :scopes_plugin
+    |> build_factory_params(%{settings: %{"strategy": "a"}})
+
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(scopes_plugin)
+    |> assert_status(201)
+
     jwt_plugin = :jwt_plugin
     |> build_factory_params(%{settings: %{signature: build_jwt_signature("a_secret_signature")}})
 

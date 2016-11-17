@@ -47,6 +47,14 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
     |> post!(acl_plugin)
     |> assert_status(201)
 
+    scopes_plugin = :scopes_plugin
+    |> build_factory_params(%{settings: %{"strategy": "a"}})
+
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(scopes_plugin)
+    |> assert_status(201)
+
     Gateway.AutoClustering.do_reload_config()
 
     token_data = %{
@@ -77,6 +85,14 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
     "apis/#{api_id}/plugins"
     |> put_management_url()
     |> post!(acl_plugin)
+    |> assert_status(201)
+
+    scopes_plugin = :scopes_plugin
+    |> build_factory_params(%{settings: %{"strategy": "a"}})
+
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(scopes_plugin)
     |> assert_status(201)
 
     Gateway.AutoClustering.do_reload_config()
@@ -111,6 +127,14 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
     |> post!(acl_plugin)
     |> assert_status(201)
 
+    scopes_plugin = :scopes_plugin
+    |> build_factory_params(%{settings: %{"strategy": "a"}})
+
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(scopes_plugin)
+    |> assert_status(201)
+
     Gateway.AutoClustering.do_reload_config()
 
     token_without_scopes = build_jwt_token(%{"name" => "Alice"}, @jwt_secret)
@@ -136,6 +160,14 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
     "apis/#{api_id}/plugins"
     |> put_management_url()
     |> post!(acl_plugin)
+    |> assert_status(201)
+
+    scopes_plugin = :scopes_plugin
+    |> build_factory_params(%{settings: %{"strategy": "a"}})
+
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(scopes_plugin)
     |> assert_status(201)
 
     Gateway.AutoClustering.do_reload_config()
@@ -172,6 +204,14 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
     "apis/#{api_id}/plugins"
     |> put_management_url()
     |> post!(acl_plugin)
+    |> assert_status(201)
+
+    scopes_plugin = :scopes_plugin
+    |> build_factory_params(%{settings: %{"strategy": "a"}})
+
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(scopes_plugin)
     |> assert_status(201)
 
     Gateway.AutoClustering.do_reload_config()
@@ -222,6 +262,14 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       "apis/#{api_id}/plugins"
       |> put_management_url()
       |> post!(acl_plugin)
+      |> assert_status(201)
+
+      scopes_plugin = :scopes_plugin
+      |> build_factory_params(%{settings: %{"strategy": "a"}})
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(scopes_plugin)
       |> assert_status(201)
 
       Gateway.AutoClustering.do_reload_config()
