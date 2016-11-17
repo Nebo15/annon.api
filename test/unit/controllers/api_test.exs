@@ -46,11 +46,21 @@ defmodule Gateway.Controllers.APITest do
     end
 
     test "GET /apis?ending_before=3&limit=5", %{apis: apis} do
-      conn = "/apis?ending_before=3&limit=5"
+      id = Enum.at(apis, 3).id
+
+      conn = "/apis?ending_before=#{id}&limit=4"
       |> call_get()
       |> assert_conn_status()
 
-      assert 3 = Enum.count(Poison.decode!(conn.resp_body)["data"])
+      expected_records =
+        Enum.slice(apis, 0, 3)
+        |> Enum.map(&Map.get(&1, :id))
+
+      actual_records =
+        Poison.decode!(conn.resp_body)["data"]
+        |> Enum.map(&Map.get(&1, "id"))
+
+      assert expected_records == actual_records
     end
   end
 
