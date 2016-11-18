@@ -10,10 +10,11 @@ defmodule Gateway.Controllers.API do
   use Gateway.Helpers.CommonRouter
   alias Gateway.DB.Schemas.API, as: APISchema
   alias Gateway.DB.Configs.Repo
+  alias Gateway.Helpers.Pagination
 
   get "/" do
     APISchema
-    |> Repo.page(page_info_from(conn.query_params))
+    |> Repo.page(Pagination.page_info_from(conn.query_params))
     |> elem(0)
     |> render_collection(conn)
   end
@@ -43,25 +44,4 @@ defmodule Gateway.Controllers.API do
   end
 
   forward "/", to: Gateway.Controllers.API.Plugin
-
-  defp page_info_from(params) do
-    starting_after = extract_integer(params, "starting_after")
-    ending_before = extract_integer(params, "ending_before")
-    limit = extract_integer(params, "limit")
-
-    cursors = %Ecto.Paging.Cursors{starting_after: starting_after, ending_before: ending_before}
-
-    %Ecto.Paging{limit: limit, cursors: cursors}
-  end
-
-  defp extract_integer(map, key) do
-    case Map.get(map, key) do
-      nil ->
-        nil
-      string ->
-        string
-        |> Integer.parse
-        |> elem(0)
-    end
-  end
 end
