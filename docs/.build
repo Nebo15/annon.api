@@ -46,6 +46,7 @@ Gateway.ManagementRouter.html
 Gateway.PCMMockServer.html
 Gateway.Plugins.ACL.html
 Gateway.Plugins.APILoader.html
+Gateway.Plugins.Consumers.html
 Gateway.Plugins.IPRestriction.html
 Gateway.Plugins.Idempotency.html
 Gateway.Plugins.JWT.html

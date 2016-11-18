@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.3">
-    <title>Gateway.Plugins.ACL – gateway v0.1.67</title>
+    <title>Gateway.Plugins.Consumers – gateway v0.1.67</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -59,15 +59,14 @@
 
       <h1>
         <small class="visible-xs">gateway v0.1.67</small>
-        Gateway.Plugins.ACL
+        Gateway.Plugins.Consumers
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p><a href="http://docs.annon.apiary.io/#reference/plugins/acl">Access Control Layer (ACL) plugin</a>.</p>
-<p>It allows to set list of scopes that is required for path relative to an API.</p>
+          <p>This plugin reads consumer settings.</p>
 
         </section>
       
@@ -89,13 +88,49 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
+    <a href="#call/2">call(conn, arg2)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#find_plugin_settings/1">find_plugin_settings(plugins)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
+    <a href="#get_consumer_settings/1">get_consumer_settings(external_id)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#init/1">init(opts)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#merge_consumer_settings/2">merge_consumer_settings(conn, token)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#merge_plugin/2">merge_plugin(arg1, plugin)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#merge_plugins/2">merge_plugins(consumer, default)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#put_api_to_conn/2">put_api_to_conn(plugins, conn)</a>
   </div>
   
 </div>
@@ -120,13 +155,43 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="find_plugin_settings/1">
+          <div class="detail" id="call/2">
+  
+  <div class="detail-header">
+    <a href="#call/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">call(conn, arg2)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="find_plugin_settings/1">
   
   <div class="detail-header">
     <a href="#find_plugin_settings/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
     <span class="signature">find_plugin_settings(plugins)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="get_consumer_settings/1">
+  
+  <div class="detail-header">
+    <a href="#get_consumer_settings/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">get_consumer_settings(external_id)</span>
     
     
     
@@ -142,6 +207,66 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">init(opts)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="merge_consumer_settings/2">
+  
+  <div class="detail-header">
+    <a href="#merge_consumer_settings/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">merge_consumer_settings(conn, token)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="merge_plugin/2">
+  
+  <div class="detail-header">
+    <a href="#merge_plugin/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">merge_plugin(arg1, plugin)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="merge_plugins/2">
+  
+  <div class="detail-header">
+    <a href="#merge_plugins/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">merge_plugins(consumer, default)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="put_api_to_conn/2">
+  
+  <div class="detail-header">
+    <a href="#put_api_to_conn/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">put_api_to_conn(plugins, conn)</span>
     
     
     
