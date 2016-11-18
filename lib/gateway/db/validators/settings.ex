@@ -173,6 +173,24 @@ defmodule Gateway.Changeset.Validator.Settings do
     })
   end
 
+  # Scopes
+  def validate_settings(%Changeset{changes: %{name: "scopes"}} = ch) do
+    ch
+    |> validate_via_json_schema(:settings, %{
+      "type" => "object",
+      "required" => ["strategy"],
+      "additionalProperties" => false,
+      "properties" => %{
+        "strategy" => %{
+          "enum" => ["pcm", "jwt"]
+        },
+        "url_template" => %{
+          "type" => "string"
+        }
+      }
+    })
+  end
+
   # general
   def validate_settings(ch), do: ch
 
