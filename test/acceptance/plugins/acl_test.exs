@@ -116,12 +116,10 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
     token_without_scopes = build_jwt_token(%{"name" => "Alice"}, @jwt_secret)
     headers = [{"authorization", "Bearer #{token_without_scopes}"}]
 
-    assert %{
-      "error" => %{"message" => "Your scopes does not allow to access this resource."}
-    } = api_path
+    api_path
     |> put_public_url()
     |> get!(headers)
-    |> assert_status(403)
+    |> assert_status(501)
     |> get_body()
   end
 

@@ -15,12 +15,6 @@ defmodule Gateway.Plugins.JWTTest do
     :get
     |> prepare_conn(api.request)
     |> Map.put(:private, %{api_config: %{api | plugins: [jwt_plugin]}})
-    |> Gateway.Plugins.JWT.call(%{})
-    |> assert_conn_status(401)
-
-    :get
-    |> prepare_conn(api.request)
-    |> Map.put(:private, %{api_config: %{api | plugins: [jwt_plugin]}})
     |> Map.put(:req_headers, [{"authorization", "Bearer #{jwt_token("super_coolHacker")}bad"}])
     |> Gateway.Plugins.JWT.call(%{})
     |> assert_conn_status(401)

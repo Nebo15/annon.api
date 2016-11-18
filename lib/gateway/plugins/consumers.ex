@@ -32,7 +32,6 @@ defmodule Gateway.Plugins.Consumers do
   def merge_consumer_settings(conn, _token), do: conn
 
   # TODO: Read if from cache
-  # TODO: Move consumer and api settings merge to a separate plugin to support different auth strategies
   def get_consumer_settings(external_id) do
     Repo.all from c in Consumer,
       where: c.external_id == ^external_id,

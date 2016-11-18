@@ -50,21 +50,7 @@ defmodule Gateway.Plugins.JWT do
     |> verify()
     |> evaluate(conn)
   end
-  defp parse_auth(conn, _header, _signature) do
-    # TODO: This plugin should not authorize, only authentificate
-    # so simply return conn. This should be discussed with team (!)
-    "401.json"
-    |> ErrorView.render(%{
-      message: "You need to use JWT token to access this resource.",
-      invalid: [%{
-        entry_type: "header",
-        entry: "Authorization",
-        rules: []
-      }]
-    })
-    |> Response.send(conn, 401)
-    |> Response.halt()
-  end
+  defp parse_auth(conn, _header, _signature), do: conn
 
   defp evaluate(%Token{error: nil} = token, conn) do
     conn

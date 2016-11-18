@@ -60,21 +60,6 @@ defmodule Gateway.Acceptance.Smoke.AclTest do
     %{api_path: api_path}
   end
 
-  test "A request with no auth header is forbidden to access upstream" do
-    response =
-      "/httpbin?my_param=my_value"
-      |> put_public_url()
-      |> HTTPoison.get!
-      |> Map.get(:body)
-      |> Poison.decode!
-
-    assert "You need to use JWT token to access this resource." == response["error"]["message"]
-    assert "access_denied" == response["error"]["type"]
-    assert 401 == response["meta"]["code"]
-
-    assert_logs_are_written(response)
-  end
-
   test "A request with incorrect auth header is forbidden to access upstream" do
     response =
       "/httpbin?my_param=my_value"
