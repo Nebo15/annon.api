@@ -26,11 +26,8 @@ defmodule Gateway.PublicRouter do
   # Security plugins that can halt connection immediately
   plug Gateway.Plugins.IPRestriction
   plug Gateway.Plugins.JWT
-<<<<<<< HEAD
   plug Gateway.Plugins.Consumers
-=======
   plug Gateway.Plugins.Scopes
->>>>>>> 219f778da0d2360983b89fb2a1af4fec34cbf98a
   plug Gateway.Plugins.ACL
 
   # Other helper plugins that can halt connection without proxy

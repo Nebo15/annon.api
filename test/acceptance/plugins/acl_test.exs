@@ -123,7 +123,6 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
           %{methods: ["GET"], path: "^.*", scopes: ["api:access"]},
         ]
       }})
->>>>>>> 219f778da0d2360983b89fb2a1af4fec34cbf98a
 
       "apis/#{api_id}/plugins"
       |> put_management_url()
@@ -147,8 +146,7 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> get!(headers)
       |> get_body()
 
-      assert 403 == response["meta"]["code"]
-      assert "Your scopes does not allow to access this resource." == response["error"]["message"]
+      assert 501 == response["meta"]["code"]
     end
 
     test "token MUST have all scopes", %{api_id: api_id, api_path: api_path} do
