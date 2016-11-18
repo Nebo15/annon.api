@@ -5,24 +5,24 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
   @jwt_secret "secret"
   @pcm_mock_port 4444
 
+  defmodule Gateway.PCMMockServer do
+    @moduledoc """
+    Mock server that simulates gettings scopes from PCM.
+    """
+    use Plug.Router
+
+    plug :match
+    plug Plug.Parsers, parsers: [:json],
+                      pass:  ["application/json"],
+                      json_decoder: Poison
+    plug :dispatch
+
+    @scopes_body %{"meta" => %{"code" => 200, "description" => "Success"}, "data" => %{"scopes" => ["api:access"]}}
+
+    get "scopes", do: send_resp(conn, 200, Poison.encode!(@scopes_body))
+  end
+
   setup_all do
-    defmodule Gateway.PCMMockServer do
-      @moduledoc """
-      Mock server that simulates gettings scopes from PCM.
-      """
-      use Plug.Router
-
-      plug :match
-      plug Plug.Parsers, parsers: [:json],
-                        pass:  ["application/json"],
-                        json_decoder: Poison
-      plug :dispatch
-
-      @scopes_body %{"meta" => %{"code" => 200, "description" => "Success"}, "data" => %{"scopes" => ["api:access"]}}
-
-      get "scopes", do: send_resp(conn, 200, Poison.encode!(@scopes_body))
-    end
-
     {:ok, _} = Plug.Adapters.Cowboy.http Gateway.PCMMockServer, [], port: @pcm_mock_port
     :ok
   end
