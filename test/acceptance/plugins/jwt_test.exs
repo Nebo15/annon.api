@@ -24,26 +24,6 @@ defmodule Gateway.Acceptance.Plugins.JWTTest do
     %{api_id: api_id, api_path: api_path}
   end
 
-  test "token is required when JWT plugin is enabled", %{api_id: api_id, api_path: api_path} do
-    jwt_plugin = :jwt_plugin
-    |> build_factory_params(%{settings: %{signature: build_jwt_signature(@jwt_secret)}})
-
-    "apis/#{api_id}/plugins"
-    |> put_management_url()
-    |> post!(jwt_plugin)
-    |> assert_status(201)
-
-    Gateway.AutoClustering.do_reload_config()
-
-    assert %{
-      "error" => %{"message" => "You need to use JWT token to access this resource."}
-    } = api_path
-    |> put_public_url()
-    |> get!()
-    |> assert_status(401)
-    |> get_body()
-  end
-
   test "token must be valid", %{api_id: api_id, api_path: api_path} do
     jwt_plugin = :jwt_plugin
     |> build_factory_params(%{settings: %{signature: build_jwt_signature(@jwt_secret)}})

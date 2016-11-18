@@ -34,7 +34,9 @@ defmodule Gateway.Plugins.ACL do
   defp execute(_plugin, _api_path, _conn), do: {:error, :no_scopes_is_set}
 
   defp validate_scopes(nil, _server_rules, _api_path, _conn_data),
-    do: {:error, :forbidden}
+    do: {:error, :no_scopes_is_set}
+  defp validate_scopes([], _server_rules, _api_path, _conn_data),
+    do: {:error, :no_scopes_is_set}
   defp validate_scopes(client_scopes, server_rules, api_path, conn_data) when is_list(client_scopes) do
     request_path = String.trim_leading(conn_data.request_path, api_path)
 
@@ -68,12 +70,12 @@ defmodule Gateway.Plugins.ACL do
     |> Response.halt()
   end
   defp send_response({:error, :no_scopes_is_set}, conn) do
-    Logger.error("Required field scope in Plugin.settings is not found!")
+    Logger.error("Scopes are empty!")
     conn
     |> Response.send_error(:internal_error)
   end
   defp send_response({:error, :invalid_scopes_type}, conn) do
-    Logger.error("JWT.scopes must be a list!")
+    Logger.error("Scopes must be a list!")
     conn
     |> Response.send_error(:internal_error)
   end
