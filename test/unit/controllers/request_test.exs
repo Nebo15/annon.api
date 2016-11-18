@@ -18,6 +18,77 @@ defmodule Gateway.Controllers.RequestTest do
     create_requests(count - 1)
   end
 
+  describe "/requests (pagination)" do
+    setup do
+      schema = %Gateway.DB.Schemas.Log{}
+
+      logs = for _ <- 1..10 do
+        attributes = %{id: Ecto.UUID.generate(), response: %{}, status_code: 200}
+        Gateway.DB.Schemas.Log.changeset(schema, attributes)
+        |> Gateway.DB.Logger.Repo.insert!()
+      end
+
+      {:ok, %{logs: logs}}
+    end
+
+    test "GET /requests?starting_after=2&limit=5", %{logs: logs} do
+      id = Enum.at(logs, 2).id
+
+      conn = "/requests?starting_after=#{id}&limit=5"
+      |> call_get()
+      |> assert_conn_status()
+
+      expected_records =
+        Enum.slice(logs, 3, 5)
+        |> Enum.map(&Map.get(&1, :id))
+
+      actual_records =
+        Poison.decode!(conn.resp_body)["data"]
+        |> Enum.map(&Map.get(&1, "id"))
+
+      assert expected_records == actual_records
+    end
+
+    @tag pending: true
+    test "GET /requests?ending_before=7&limit=4", %{logs: logs} do
+      id = Enum.at(logs, 7).id
+
+      conn = "/requests?ending_before=#{id}&limit=4"
+      |> call_get()
+      |> assert_conn_status()
+
+      expected_records =
+        Enum.slice(logs, 3, 4)
+        |> Enum.map(&Map.get(&1, :id))
+
+      actual_records =
+        Poison.decode!(conn.resp_body)["data"]
+        |> Enum.map(&Map.get(&1, "id"))
+
+      assert expected_records == actual_records
+    end
+
+    @tag pending: true
+    test "GET /requests?ending_before=3&limit=5", %{logs: logs} do
+      id = Enum.at(logs, 3).id
+      IO.inspect id
+
+      conn = "/requests?ending_before=#{id}&limit=4"
+      |> call_get()
+      |> assert_conn_status()
+
+      expected_records =
+        Enum.slice(logs, 0, 3)
+        |> Enum.map(&Map.get(&1, :id))
+
+      actual_records =
+        Poison.decode!(conn.resp_body)["data"]
+        |> Enum.map(&Map.get(&1, "id"))
+
+      assert expected_records == actual_records
+    end
+  end
+
   describe "/requests" do
     test "GET empty list" do
       conn = "/requests"
