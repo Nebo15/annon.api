@@ -29,11 +29,11 @@ defmodule Gateway.Plugins.Scopes do
     |> Conn.put_private(:scopes, scopes)
   end
 
-  defp get_scopes(token, %{"strategy" => "a"}) do
+  defp get_scopes(token, %{"strategy" => "jwt"}) do
     token
     |> JWTStrategy.get_scopes()
   end
-  defp get_scopes(token, %{"strategy" => "b", "url_template" => url_template}) do
+  defp get_scopes(token, %{"strategy" => "pcm", "url_template" => url_template}) do
     token
     |> extract_party_id()
     |> PCMStrategy.get_scopes(url_template)

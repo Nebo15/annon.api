@@ -53,7 +53,7 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> post!(acl_plugin)
       |> assert_status(201)
 
-      scopes_plugin = build_factory_params(:scopes_plugin, %{settings: %{"strategy": "a"}})
+      scopes_plugin = build_factory_params(:scopes_plugin, %{settings: %{"strategy": "jwt"}})
 
       "apis/#{api_id}/plugins"
       |> put_management_url()
@@ -91,7 +91,7 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> post!(acl_plugin)
       |> assert_status(201)
 
-      scopes_plugin = build_factory_params(:scopes_plugin, %{settings: %{"strategy": "a"}})
+      scopes_plugin = build_factory_params(:scopes_plugin, %{settings: %{"strategy": "jwt"}})
 
       "apis/#{api_id}/plugins"
       |> put_management_url()
@@ -129,7 +129,7 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> post!(acl_plugin)
       |> assert_status(201)
 
-      scopes_plugin = build_factory_params(:scopes_plugin, %{settings: %{"strategy": "a"}})
+      scopes_plugin = build_factory_params(:scopes_plugin, %{settings: %{"strategy": "jwt"}})
 
       "apis/#{api_id}/plugins"
       |> put_management_url()
@@ -162,7 +162,7 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> post!(acl_plugin)
       |> assert_status(201)
 
-      scopes_plugin = build_factory_params(:scopes_plugin, %{settings: %{"strategy": "a"}})
+      scopes_plugin = build_factory_params(:scopes_plugin, %{settings: %{"strategy": "jwt"}})
 
       "apis/#{api_id}/plugins"
       |> put_management_url()
@@ -204,7 +204,7 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> post!(acl_plugin)
       |> assert_status(201)
 
-      scopes_plugin = build_factory_params(:scopes_plugin, %{settings: %{"strategy": "a"}})
+      scopes_plugin = build_factory_params(:scopes_plugin, %{settings: %{"strategy": "jwt"}})
 
       "apis/#{api_id}/plugins"
       |> put_management_url()
@@ -235,7 +235,7 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> post!(acl_plugin)
       |> assert_status(201)
 
-      scopes_plugin = build_factory_params(:scopes_plugin, %{settings: %{"strategy": "a"}})
+      scopes_plugin = build_factory_params(:scopes_plugin, %{settings: %{"strategy": "jwt"}})
 
       "apis/#{api_id}/plugins"
       |> put_management_url()
@@ -265,7 +265,7 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> post!(acl_plugin)
       |> assert_status(201)
 
-      scopes_plugin = build_factory_params(:scopes_plugin, %{settings: %{"strategy": "a"}})
+      scopes_plugin = build_factory_params(:scopes_plugin, %{settings: %{"strategy": "jwt"}})
 
       "apis/#{api_id}/plugins"
       |> put_management_url()
@@ -316,7 +316,7 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
 
       scopes_plugin = build_factory_params(:scopes_plugin, %{
         settings: %{
-          "strategy": "b",
+          "strategy": "pcm",
           "url_template": "http://#{pcm_mock_host}:#{pcm_mock_port}/scopes"
         }
       })

@@ -48,7 +48,7 @@ defmodule Gateway.Acceptance.Smoke.AclTest do
     |> assert_status(201)
 
     scopes_plugin = :scopes_plugin
-    |> build_factory_params(%{settings: %{"strategy": "a"}})
+    |> build_factory_params(%{settings: %{"strategy": "jwt"}})
 
     "apis/#{api_id}/plugins"
     |> put_management_url()
