@@ -2,6 +2,77 @@ defmodule Gateway.Controllers.API.PluginTest do
   @moduledoc false
   use Gateway.UnitCase, async: true
 
+  describe "/apis/:api_id/plugins (pagination)" do
+    setup do
+      api = Gateway.Factory.insert(:api)
+
+      plugins = [
+        Gateway.Factory.insert(:proxy_plugin, api: api),
+        Gateway.Factory.insert(:jwt_plugin, api: api),
+        Gateway.Factory.insert(:acl_plugin, api: api),
+        Gateway.Factory.insert(:idempotency_plugin, api: api),
+        Gateway.Factory.insert(:ip_restriction_plugin, api: api),
+        Gateway.Factory.insert(:validator_plugin, api: api)
+      ]
+
+      {:ok, %{api_id: api.id, plugins: plugins}}
+    end
+
+    test "GET /apis/:api_id/plugins?starting_after=2&limit=3", %{api_id: api_id, plugins: plugins} do
+      id = Enum.at(plugins, 2).id
+
+      conn = "/apis/#{api_id}/plugins?starting_after=#{id}&limit=3"
+      |> call_get()
+      |> assert_conn_status()
+
+      expected_records =
+        Enum.slice(plugins, 3, 5)
+        |> Enum.map(&Map.get(&1, :id))
+
+      actual_records =
+        Poison.decode!(conn.resp_body)["data"]
+        |> Enum.map(&Map.get(&1, "id"))
+
+      assert expected_records == actual_records
+    end
+
+    test "GET /apis/:api_id/plugins?ending_before=3&limit=3", %{api_id: api_id, plugins: plugins} do
+      id = Enum.at(plugins, 3).id
+
+      conn = "/apis/#{api_id}/plugins?ending_before=#{id}&limit=3"
+      |> call_get()
+      |> assert_conn_status()
+
+      expected_records =
+        Enum.slice(plugins, 0, 3)
+        |> Enum.map(&Map.get(&1, :id))
+
+      actual_records =
+        Poison.decode!(conn.resp_body)["data"]
+        |> Enum.map(&Map.get(&1, "id"))
+
+      assert expected_records == actual_records
+    end
+
+    test "GET /apis/:api_id/plugins?ending_before=5&limit=2", %{api_id: api_id, plugins: plugins} do
+      id = Enum.at(plugins, 5).id
+
+      conn = "/apis/#{api_id}/plugins?ending_before=#{id}&limit=2"
+      |> call_get()
+      |> assert_conn_status()
+
+      expected_records =
+        Enum.slice(plugins, 3, 2)
+        |> Enum.map(&Map.get(&1, :id))
+
+      actual_records =
+        Poison.decode!(conn.resp_body)["data"]
+        |> Enum.map(&Map.get(&1, "id"))
+
+      assert expected_records == actual_records
+    end
+  end
+
   describe "/apis/:api_id/plugins" do
     test "GET empty list" do
       api_model = Gateway.Factory.insert(:api)
