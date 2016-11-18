@@ -14,9 +14,10 @@ defmodule Gateway.Helpers.Pagination do
       nil ->
         nil
       string ->
-        string
-        |> Integer.parse
-        |> elem(0)
+        case Integer.parse(string) do
+          {integer, ""} -> integer
+          _ -> string
+        end
     end
   end
 end
