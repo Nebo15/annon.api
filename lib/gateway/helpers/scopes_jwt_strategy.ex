@@ -1,6 +1,6 @@
-defmodule Gateway.Helpers.Scopes.StrategyA do
+defmodule Gateway.Helpers.Scopes.JWTStrategy do
   @moduledoc """
-  Helper for retrieving scopes with strategy A - getting scopes from token.
+  Helper for retrieving scopes with JWT strategy - getting scopes from token.
   """
 
   alias Joken.Token

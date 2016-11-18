@@ -10,7 +10,17 @@ defmodule Gateway.PCMMockServer do
                     json_decoder: Poison
   plug :dispatch
 
-  @scopes_body %{"meta" => %{"code" => 200, "description" => "Success"}, "data" => %{"scopes" => ["api:access"]}}
+  get "scopes" do
+    response_body = %{
+      "meta" => %{
+        "code" => 200,
+        "description" => "Success"
+      },
+      "data" => %{
+        "scopes" => ["api:access"]
+      }
+    }
 
-  get "scopes", do: send_resp(conn, 200, Poison.encode!(@scopes_body))
+    send_resp(conn, 200, Poison.encode!(response_body))
+  end
 end

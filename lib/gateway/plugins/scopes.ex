@@ -9,8 +9,8 @@ defmodule Gateway.Plugins.Scopes do
   alias Joken.Token
   alias Gateway.DB.Schemas.Plugin
   alias Gateway.DB.Schemas.API, as: APISchema
-  alias Gateway.Helpers.Scopes.StrategyA
-  alias Gateway.Helpers.Scopes.StrategyB
+  alias Gateway.Helpers.Scopes.JWTStrategy
+  alias Gateway.Helpers.Scopes.PCMStrategy
 
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts)
     when is_list(plugins) do
@@ -31,12 +31,12 @@ defmodule Gateway.Plugins.Scopes do
 
   defp get_scopes(token, %{"strategy" => "a"}) do
     token
-    |> StrategyA.get_scopes()
+    |> JWTStrategy.get_scopes()
   end
   defp get_scopes(token, %{"strategy" => "b", "url_template" => url_template}) do
     token
     |> extract_party_id()
-    |> StrategyB.get_scopes(url_template)
+    |> PCMStrategy.get_scopes(url_template)
   end
   defp get_scopes(_token, _), do: []
 

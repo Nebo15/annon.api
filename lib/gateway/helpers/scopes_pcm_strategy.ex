@@ -1,6 +1,6 @@
-defmodule Gateway.Helpers.Scopes.StrategyB do
+defmodule Gateway.Helpers.Scopes.PCMStrategy do
   @moduledoc """
-  Helper for retrieving scopes with strategy B - getting scopes from PCM by party_id.
+  Helper for retrieving scopes with PCM strategy - getting scopes from PCM by party_id.
   """
 
   defp get_url(party_id, url_template), do: String.replace(url_template, "{party_id}", party_id)
