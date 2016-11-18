@@ -3,27 +3,10 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
   use Gateway.AcceptanceCase
 
   @jwt_secret "secret"
-  @pcm_mock_port 4444
-
-  defmodule Gateway.PCMMockServer do
-    @moduledoc """
-    Mock server that simulates gettings scopes from PCM.
-    """
-    use Plug.Router
-
-    plug :match
-    plug Plug.Parsers, parsers: [:json],
-                      pass:  ["application/json"],
-                      json_decoder: Poison
-    plug :dispatch
-
-    @scopes_body %{"meta" => %{"code" => 200, "description" => "Success"}, "data" => %{"scopes" => ["api:access"]}}
-
-    get "scopes", do: send_resp(conn, 200, Poison.encode!(@scopes_body))
-  end
 
   setup_all do
-    {:ok, _} = Plug.Adapters.Cowboy.http Gateway.PCMMockServer, [], port: @pcm_mock_port
+    pcm_mock_port = Confex.get_map(:gateway, :acceptance)[:pcm_mock][:port]
+    {:ok, _} = Plug.Adapters.Cowboy.http Gateway.PCMMockServer, [], port: pcm_mock_port
     :ok
   end
 
@@ -344,10 +327,13 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> post!(acl_plugin)
       |> assert_status(201)
 
+      pcm_mock_host = Confex.get_map(:gateway, :acceptance)[:pcm_mock][:host]
+      pcm_mock_port = Confex.get_map(:gateway, :acceptance)[:pcm_mock][:port]
+
       scopes_plugin = :scopes_plugin
       |> build_factory_params(%{settings: %{
         "strategy": "b",
-        "url_template": "http://localhost:#{@pcm_mock_port}/scopes"
+        "url_template": "http://#{pcm_mock_host}:#{pcm_mock_port}/scopes"
         }})
 
       "apis/#{api_id}/plugins"
