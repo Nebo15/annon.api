@@ -26,7 +26,8 @@ defmodule Gateway.Controllers.API.PluginTest do
       |> assert_conn_status()
 
       expected_records =
-        Enum.slice(plugins, 3, 5)
+        plugins
+        |> Enum.slice(3, 5)
         |> Enum.map(&Map.get(&1, :id))
 
       actual_records =
@@ -44,7 +45,8 @@ defmodule Gateway.Controllers.API.PluginTest do
       |> assert_conn_status()
 
       expected_records =
-        Enum.slice(plugins, 0, 3)
+        plugins
+        |> Enum.slice(0, 3)
         |> Enum.map(&Map.get(&1, :id))
 
       actual_records =
@@ -62,7 +64,8 @@ defmodule Gateway.Controllers.API.PluginTest do
       |> assert_conn_status()
 
       expected_records =
-        Enum.slice(plugins, 3, 2)
+        plugins
+        |> Enum.slice(3, 2)
         |> Enum.map(&Map.get(&1, :id))
 
       actual_records =

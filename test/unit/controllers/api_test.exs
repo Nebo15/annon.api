@@ -17,7 +17,8 @@ defmodule Gateway.Controllers.APITest do
       |> assert_conn_status()
 
       expected_records =
-        Enum.slice(apis, 3, 5)
+        apis
+        |> Enum.slice(3, 5)
         |> Enum.map(&Map.get(&1, :id))
 
       actual_records =
@@ -35,7 +36,8 @@ defmodule Gateway.Controllers.APITest do
       |> assert_conn_status()
 
       expected_records =
-        Enum.slice(apis, 3, 4)
+        apis
+        |> Enum.slice(3, 4)
         |> Enum.map(&Map.get(&1, :id))
 
       actual_records =
@@ -53,7 +55,8 @@ defmodule Gateway.Controllers.APITest do
       |> assert_conn_status()
 
       expected_records =
-        Enum.slice(apis, 0, 3)
+        apis
+        |> Enum.slice(0, 3)
         |> Enum.map(&Map.get(&1, :id))
 
       actual_records =

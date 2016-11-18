@@ -49,10 +49,10 @@ defmodule Gateway.DB.Schemas.Plugin do
   end
 
   def get_by(selector, query_params) do
-    query = from PluginSchema,
-      where: ^selector
+    query = from PluginSchema, where: ^selector
 
-    Repo.page(query, Pagination.page_info_from(query_params))
+    query
+    |> Repo.page(Pagination.page_info_from(query_params))
     |> elem(0)
   end
 

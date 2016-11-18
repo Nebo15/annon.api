@@ -1,4 +1,8 @@
 defmodule Gateway.Helpers.Pagination do
+  @moduledoc """
+  Functions related to paging
+  """
+
   def page_info_from(params) do
     starting_after = extract_integer(params, "starting_after")
     ending_before = extract_integer(params, "ending_before")

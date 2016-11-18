@@ -20,11 +20,11 @@ defmodule Gateway.Controllers.RequestTest do
 
   describe "/requests (pagination)" do
     setup do
-      schema = %Gateway.DB.Schemas.Log{}
-
       logs = for _ <- 1..10 do
         attributes = %{id: Ecto.UUID.generate(), response: %{}, status_code: 200}
-        Gateway.DB.Schemas.Log.changeset(schema, attributes)
+
+        %Gateway.DB.Schemas.Log{}
+        |> Gateway.DB.Schemas.Log.changeset(attributes)
         |> Gateway.DB.Logger.Repo.insert!()
       end
 
@@ -39,7 +39,8 @@ defmodule Gateway.Controllers.RequestTest do
       |> assert_conn_status()
 
       expected_records =
-        Enum.slice(logs, 3, 5)
+        logs
+        |> Enum.slice(3, 5)
         |> Enum.map(&Map.get(&1, :id))
 
       actual_records =
@@ -58,7 +59,8 @@ defmodule Gateway.Controllers.RequestTest do
       |> assert_conn_status()
 
       expected_records =
-        Enum.slice(logs, 3, 4)
+        logs
+        |> Enum.slice(3, 4)
         |> Enum.map(&Map.get(&1, :id))
 
       actual_records =
@@ -78,7 +80,8 @@ defmodule Gateway.Controllers.RequestTest do
       |> assert_conn_status()
 
       expected_records =
-        Enum.slice(logs, 0, 3)
+        logs
+        |> Enum.slice(0, 3)
         |> Enum.map(&Map.get(&1, :id))
 
       actual_records =
