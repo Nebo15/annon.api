@@ -35,6 +35,14 @@ defmodule Gateway.Factory do
     }
   end
 
+  def scopes_plugin_factory do
+    %Gateway.DB.Schemas.Plugin{
+      name: "scopes",
+      is_enabled: true,
+      settings: %{}
+    }
+  end
+
   def jwt_plugin_factory do
     %Gateway.DB.Schemas.Plugin{
       name: "jwt",

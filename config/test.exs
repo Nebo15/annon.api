@@ -22,6 +22,10 @@ config :gateway, :acceptance,
   mock: [
     port: {:system, :integer, "TEST_MOCK_PORT", 4040},
     host: {:system, "TEST_MOCK_HOST", "localhost"}
+  ],
+  pcm_mock: [
+    port: {:system, :integer, "TEST_PCM_MOCK_PORT", 4050},
+    host: {:system, "TEST_PCM_MOCK_HOST", "localhost"}
   ]
 
 config :gateway, :public_http,
