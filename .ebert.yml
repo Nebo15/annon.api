@@ -1,0 +1,5 @@
+exclude_paths:
+- _build
+- deps
+- docs
+- test
