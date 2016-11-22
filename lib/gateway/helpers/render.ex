@@ -12,6 +12,12 @@ defmodule Gateway.Helpers.Render do
     |> send_error(:not_found)
   end
 
+  def render_collection({resources, %Ecto.Paging{} = paging}, conn) do
+    conn = conn
+    |> Plug.Conn.assign(:paging, paging)
+    render_collection(resources, conn)
+  end
+
   def render_collection(resources, conn) when is_list(resources) do
     resources
     |> send(conn, 200)

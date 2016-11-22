@@ -15,7 +15,6 @@ defmodule Gateway.Controllers.API do
   get "/" do
     APISchema
     |> Repo.page(Pagination.page_info_from(conn.query_params))
-    |> elem(0)
     |> render_collection(conn)
   end
 

@@ -25,7 +25,10 @@ defmodule Gateway.Controllers.APITest do
         Poison.decode!(conn.resp_body)["data"]
         |> Enum.map(&Map.get(&1, "id"))
 
+      paging = Poison.decode!(conn.resp_body)["paging"]
+
       assert expected_records == actual_records
+      assert paging
     end
 
     test "GET /apis?ending_before=7&limit=4", %{apis: apis} do
