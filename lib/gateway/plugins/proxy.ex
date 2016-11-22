@@ -84,7 +84,7 @@ defmodule Gateway.Plugins.Proxy do
       case value do
         %Plug.Upload{path: path} ->
           :ok = :hackney.send_multipart_body(ref, {:file, path})
-        other ->
+        _ ->
           :ok = :hackney.send_multipart_body(ref, {:data, key, value})
       end
     end
