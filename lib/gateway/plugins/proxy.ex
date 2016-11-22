@@ -43,7 +43,7 @@ defmodule Gateway.Plugins.Proxy do
       {"x-request-id", _header_value}, conn ->
         conn
       {header_key, header_value}, conn ->
-        conn |> Conn.put_resp_header(header_key, header_value)
+        conn |> Conn.put_resp_header(String.downcase(header_key), header_value)
     end)
     |> Conn.send_resp(response.status_code, response.body)
     |> Conn.halt
