@@ -1,0 +1,918 @@
+    <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.14.3">
+    <title>Gateway.DB.Logger.Repo – gateway v0.1.67</title>
+    <link rel="stylesheet" href="dist/app-091c05798a.css" />
+    
+    <script src="dist/sidebar_items.js"></script>
+  </head>
+  <body data-type="modules">
+    <script>if(localStorage.getItem('night-mode')) document.body.className += ' night-mode';</script>
+
+    <div class="main">
+<button class="sidebar-toggle">
+  <i class="icon-menu"></i>
+</button>
+<section class="sidebar">
+
+  
+  <a href="readme.html" class="sidebar-projectLink">
+    <div class="sidebar-projectDetails">
+      <h1 class="sidebar-projectName">
+        gateway
+      </h1>
+      <h2 class="sidebar-projectVersion">
+        v0.1.67
+      </h2>
+    </div>
+    
+  </a>
+
+  <div class="sidebar-search">
+    <i class="icon-search"></i>
+    <input type="text" class="sidebar-searchInput" placeholder="search" autocomplete="off" />
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+    
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
+    
+
+    
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+
+      <h1>
+        <small class="visible-xs">gateway v0.1.67</small>
+        Gateway.DB.Logger.Repo
+        
+        
+      </h1>
+
+      
+        <section id="moduledoc">
+          <p>This repo is used to store request and responses.</p>
+<p>We recommend database with low write latency,
+because it will have up to 2 writes for each API call that is going trough Annon.</p>
+<p>Also, if Idempotency plug is enabled and <code class="inline">X-Idempotency-Key: &lt;key&gt;</code> header is sent by a consumer,
+you can expect an additional read request.</p>
+
+        </section>
+      
+
+      
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <i class="icon-link"></i>
+            </a>
+            Summary
+          </h1>
+          
+
+          
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#aggregate/4">aggregate(queryable, aggregate, field, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:aggregate/4"><code class="inline">Ecto.Repo.aggregate/4</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#all/2">all(queryable, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:all/2"><code class="inline">Ecto.Repo.all/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#config/0">config()</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:config/0"><code class="inline">Ecto.Repo.config/0</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#delete/2">delete(struct, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:delete/2"><code class="inline">Ecto.Repo.delete/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#delete!/2">delete!(struct, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:delete!/2"><code class="inline">Ecto.Repo.delete!/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#delete_all/2">delete_all(queryable, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:delete_all/2"><code class="inline">Ecto.Repo.delete_all/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get/3">get(queryable, id, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:get/3"><code class="inline">Ecto.Repo.get/3</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get!/3">get!(queryable, id, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:get!/3"><code class="inline">Ecto.Repo.get!/3</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_by/3">get_by(queryable, clauses, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:get_by/3"><code class="inline">Ecto.Repo.get_by/3</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_by!/3">get_by!(queryable, clauses, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:get_by!/3"><code class="inline">Ecto.Repo.get_by!/3</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#in_transaction?/0">in_transaction?()</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:in_transaction?/0"><code class="inline">Ecto.Repo.in_transaction?/0</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#insert/2">insert(struct, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:insert/2"><code class="inline">Ecto.Repo.insert/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#insert!/2">insert!(struct, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:insert!/2"><code class="inline">Ecto.Repo.insert!/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#insert_all/3">insert_all(schema_or_source, entries, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:insert_all/3"><code class="inline">Ecto.Repo.insert_all/3</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#insert_or_update/2">insert_or_update(changeset, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:insert_or_update/2"><code class="inline">Ecto.Repo.insert_or_update/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#insert_or_update!/2">insert_or_update!(changeset, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:insert_or_update!/2"><code class="inline">Ecto.Repo.insert_or_update!/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#load/2">load(schema_or_types, data)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:load/2"><code class="inline">Ecto.Repo.load/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#one/2">one(queryable, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:one/2"><code class="inline">Ecto.Repo.one/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#one!/2">one!(queryable, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:one!/2"><code class="inline">Ecto.Repo.one!/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#preload/3">preload(struct_or_structs, preloads, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:preload/3"><code class="inline">Ecto.Repo.preload/3</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#query/3">query(sql, params \\ [], opts \\ [])</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#query!/3">query!(sql, params \\ [], opts \\ [])</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#rollback/1">rollback(value)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:rollback/1"><code class="inline">Ecto.Repo.rollback/1</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#start_link/1">start_link(opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:start_link/1"><code class="inline">Ecto.Repo.start_link/1</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#stop/2">stop(pid, timeout \\ 5000)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:stop/2"><code class="inline">Ecto.Repo.stop/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#transaction/2">transaction(fun_or_multi, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:transaction/2"><code class="inline">Ecto.Repo.transaction/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#update/2">update(struct, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:update/2"><code class="inline">Ecto.Repo.update/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#update!/2">update!(struct, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:update!/2"><code class="inline">Ecto.Repo.update!/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#update_all/3">update_all(queryable, updates, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:update_all/3"><code class="inline">Ecto.Repo.update_all/3</code></a></p>
+</div>
+  
+</div>
+
+  </div>
+
+
+          
+
+          
+
+        </section>
+      
+
+      
+
+      
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <i class="icon-link"></i>
+            </a>
+            Functions
+          </h1>
+          <div class="detail" id="aggregate/4">
+  
+    <span id="aggregate/3" />
+  
+  <div class="detail-header">
+    <a href="#aggregate/4" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">aggregate(queryable, aggregate, field, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:aggregate/4"><code class="inline">Ecto.Repo.aggregate/4</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="all/2">
+  
+    <span id="all/1" />
+  
+  <div class="detail-header">
+    <a href="#all/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">all(queryable, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:all/2"><code class="inline">Ecto.Repo.all/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="config/0">
+  
+  <div class="detail-header">
+    <a href="#config/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">config()</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:config/0"><code class="inline">Ecto.Repo.config/0</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="delete/2">
+  
+    <span id="delete/1" />
+  
+  <div class="detail-header">
+    <a href="#delete/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">delete(struct, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:delete/2"><code class="inline">Ecto.Repo.delete/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="delete!/2">
+  
+    <span id="delete!/1" />
+  
+  <div class="detail-header">
+    <a href="#delete!/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">delete!(struct, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:delete!/2"><code class="inline">Ecto.Repo.delete!/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="delete_all/2">
+  
+    <span id="delete_all/1" />
+  
+  <div class="detail-header">
+    <a href="#delete_all/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">delete_all(queryable, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:delete_all/2"><code class="inline">Ecto.Repo.delete_all/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="get/3">
+  
+    <span id="get/2" />
+  
+  <div class="detail-header">
+    <a href="#get/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">get(queryable, id, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:get/3"><code class="inline">Ecto.Repo.get/3</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="get!/3">
+  
+    <span id="get!/2" />
+  
+  <div class="detail-header">
+    <a href="#get!/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">get!(queryable, id, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:get!/3"><code class="inline">Ecto.Repo.get!/3</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="get_by/3">
+  
+    <span id="get_by/2" />
+  
+  <div class="detail-header">
+    <a href="#get_by/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">get_by(queryable, clauses, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:get_by/3"><code class="inline">Ecto.Repo.get_by/3</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="get_by!/3">
+  
+    <span id="get_by!/2" />
+  
+  <div class="detail-header">
+    <a href="#get_by!/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">get_by!(queryable, clauses, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:get_by!/3"><code class="inline">Ecto.Repo.get_by!/3</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="in_transaction?/0">
+  
+  <div class="detail-header">
+    <a href="#in_transaction?/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">in_transaction?()</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:in_transaction?/0"><code class="inline">Ecto.Repo.in_transaction?/0</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="insert/2">
+  
+    <span id="insert/1" />
+  
+  <div class="detail-header">
+    <a href="#insert/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">insert(struct, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:insert/2"><code class="inline">Ecto.Repo.insert/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="insert!/2">
+  
+    <span id="insert!/1" />
+  
+  <div class="detail-header">
+    <a href="#insert!/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">insert!(struct, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:insert!/2"><code class="inline">Ecto.Repo.insert!/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="insert_all/3">
+  
+    <span id="insert_all/2" />
+  
+  <div class="detail-header">
+    <a href="#insert_all/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">insert_all(schema_or_source, entries, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:insert_all/3"><code class="inline">Ecto.Repo.insert_all/3</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="insert_or_update/2">
+  
+    <span id="insert_or_update/1" />
+  
+  <div class="detail-header">
+    <a href="#insert_or_update/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">insert_or_update(changeset, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:insert_or_update/2"><code class="inline">Ecto.Repo.insert_or_update/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="insert_or_update!/2">
+  
+    <span id="insert_or_update!/1" />
+  
+  <div class="detail-header">
+    <a href="#insert_or_update!/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">insert_or_update!(changeset, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:insert_or_update!/2"><code class="inline">Ecto.Repo.insert_or_update!/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="load/2">
+  
+  <div class="detail-header">
+    <a href="#load/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">load(schema_or_types, data)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:load/2"><code class="inline">Ecto.Repo.load/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="one/2">
+  
+    <span id="one/1" />
+  
+  <div class="detail-header">
+    <a href="#one/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">one(queryable, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:one/2"><code class="inline">Ecto.Repo.one/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="one!/2">
+  
+    <span id="one!/1" />
+  
+  <div class="detail-header">
+    <a href="#one!/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">one!(queryable, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:one!/2"><code class="inline">Ecto.Repo.one!/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="preload/3">
+  
+    <span id="preload/2" />
+  
+  <div class="detail-header">
+    <a href="#preload/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">preload(struct_or_structs, preloads, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:preload/3"><code class="inline">Ecto.Repo.preload/3</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="query/3">
+  
+    <span id="query/1" />
+  
+    <span id="query/2" />
+  
+  <div class="detail-header">
+    <a href="#query/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">query(sql, params \\ [], opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="query!/3">
+  
+    <span id="query!/1" />
+  
+    <span id="query!/2" />
+  
+  <div class="detail-header">
+    <a href="#query!/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">query!(sql, params \\ [], opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="rollback/1">
+  
+  <div class="detail-header">
+    <a href="#rollback/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">rollback(value)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>rollback(term) :: no_return</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:rollback/1"><code class="inline">Ecto.Repo.rollback/1</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="start_link/1">
+  
+    <span id="start_link/0" />
+  
+  <div class="detail-header">
+    <a href="#start_link/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">start_link(opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:start_link/1"><code class="inline">Ecto.Repo.start_link/1</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="stop/2">
+  
+    <span id="stop/1" />
+  
+  <div class="detail-header">
+    <a href="#stop/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">stop(pid, timeout \\ 5000)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:stop/2"><code class="inline">Ecto.Repo.stop/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="transaction/2">
+  
+    <span id="transaction/1" />
+  
+  <div class="detail-header">
+    <a href="#transaction/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">transaction(fun_or_multi, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:transaction/2"><code class="inline">Ecto.Repo.transaction/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="update/2">
+  
+    <span id="update/1" />
+  
+  <div class="detail-header">
+    <a href="#update/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">update(struct, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:update/2"><code class="inline">Ecto.Repo.update/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="update!/2">
+  
+    <span id="update!/1" />
+  
+  <div class="detail-header">
+    <a href="#update!/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">update!(struct, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:update!/2"><code class="inline">Ecto.Repo.update!/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="update_all/3">
+  
+    <span id="update_all/2" />
+  
+  <div class="detail-header">
+    <a href="#update_all/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">update_all(queryable, updates, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:update_all/3"><code class="inline">Ecto.Repo.update_all/3</code></a>.</p>
+
+  </section>
+</div>
+
+        </section>
+      
+
+      
+
+      
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.14.3),
+          </span>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+  <script src="dist/app-574613960f.js"></script>
+  </body>
+</html>
+

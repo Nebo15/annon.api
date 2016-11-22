@@ -1,65 +1,70 @@
 defmodule Gateway.Plugins.Logger do
   @moduledoc """
-  Request/response logger plug
+  This plugin stores reqests and responses in `Logger` database.
+  It is enabled by default and can not be disabled without rebuilding Annon container.
+
+  All stored records can be accessible via [management API](http://docs.annon.apiary.io/#reference/requests).
   """
+  use Gateway.Helpers.Plugin,
+    plugin_name: "logger"
 
-  import Plug.Conn
-  alias Gateway.DB.Models.Log
-  alias Gateway.DB.Models.API, as: APIModel
-  alias EctoFixtures
+  alias Plug.Conn
+  alias Gateway.DB.Schemas.Log
+  alias Gateway.DB.Schemas.API, as: APISchema
+  require Logger
 
-  def init(opts) do
-    opts
-  end
-
+  @doc false
   def call(conn, _opts) do
-    log(conn, :request)
-    conn = register_before_send(conn, fn conn ->
-      log(conn, :response)
+    conn
+    |> Conn.register_before_send(fn conn ->
       conn
+      |> log_request()
     end)
-    conn
   end
 
-  defp log(conn, :request) do
-    id = conn
-    |> get_resp_header("x-request-id")
-    |> Enum.at(0)
-
-    idempotency_key = conn
-    |> get_req_header("x-idempotency-key")
-    |> Enum.at(0) || ""
-
-    %{
-      id: id,
-      idempotency_key: idempotency_key,
+  defp log_request(conn) do
+    log = %{
+      id: get_request_id(conn),
+      idempotency_key: get_idempotency_key(conn) || "",
       ip_address: conn.remote_ip |> Tuple.to_list |> Enum.join("."),
-      request: get_request_data(conn)
+      request: get_request_data(conn),
+      api: get_api_data(conn),
+      consumer: get_consumer_data(conn),
+      response: get_response_data(conn),
+      latencies: get_latencies_data(conn),
+      status_code: conn.status
     }
-    |> Log.create
+
+    case Log.create_request(log) do
+      {:ok, _} ->
+        conn
+      {:error, error} ->
+        Logger.warn("Can not save request information. Changeset: #{inspect error}")
+        conn
+    end
   end
 
-  defp log(conn, :response) do
+  defp get_request_id(conn) do
     conn
-    |> get_resp_header("x-request-id")
+    |> Conn.get_resp_header("x-request-id")
     |> Enum.at(0)
-    |> Log.put_response(%{api: get_api_data(conn),
-                    consumer: get_consumer_data(conn),
-                    response: get_response_data(conn),
-                    latencies: get_latencies_data(conn),
-                    status_code: conn.status
-                    })
+  end
+
+  defp get_idempotency_key(conn) do
+    conn
+    |> Conn.get_req_header("x-idempotency-key")
+    |> Enum.at(0)
   end
 
   defp modify_headers_list([]), do: []
   defp modify_headers_list([{key, value}|t]), do: [%{key => value}] ++ modify_headers_list(t)
 
-  defp get_api_data(%Plug.Conn{private: %{api_config: nil}}), do: %{}
-  defp get_api_data(%Plug.Conn{private: %{api_config: %APIModel{id: id, name: name, request: request}}}) do
+  defp get_api_data(%Plug.Conn{private: %{api_config: nil}}), do: nil
+  defp get_api_data(%Plug.Conn{private: %{api_config: %APISchema{id: id, name: name, request: request}}}) do
     %{
       id: id,
       name: name,
-      request: request
+      request: prepare_params(request)
     }
   end
 
@@ -69,7 +74,7 @@ defmodule Gateway.Plugins.Logger do
     %{
       method: conn.method,
       uri: conn.request_path,
-      query: conn.query_string,
+      query: Plug.Conn.Query.decode(conn.query_string),
       headers: modify_headers_list(conn.req_headers),
       body: conn.body_params
     }
@@ -94,8 +99,10 @@ defmodule Gateway.Plugins.Logger do
     |> prepare_params
   end
 
-  defp get_key(key) when is_binary(key), do: String.to_atom(key)
-  defp get_key(key) when is_atom(key), do: key
-  defp prepare_params(params) when params == nil, do: %{}
-  defp prepare_params(params), do: for {key, val} <- params, into: %{}, do: {get_key(key), val}
+  defp prepare_params(nil), do: %{}
+  defp prepare_params(%{__struct__: _} = params), do: params |> Map.delete(:__struct__) |> prepare_params()
+  defp prepare_params(params), do: for {key, val} <- params, into: %{}, do: {key_to_atom(key), val}
+
+  defp key_to_atom(key) when is_binary(key), do: String.to_atom(key)
+  defp key_to_atom(key) when is_atom(key), do: key
 end

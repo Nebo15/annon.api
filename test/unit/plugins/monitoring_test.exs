@@ -1,5 +1,5 @@
-defmodule Gateway.MonitoringTest do
-  use ExUnit.Case, async: false
+defmodule Gateway.Plugins.MonitoringTest do
+  @moduledoc false
   use Gateway.UnitCase
 
   @apis "apis"
@@ -12,54 +12,39 @@ defmodule Gateway.MonitoringTest do
   end
 
   defp make_connection do
-    { :ok, api } = create_api_endpoint()
-    create_proxy_plugin(api)
+    api = Gateway.Factory.insert(:api, %{
+      name: "Montoring Test api",
+      request: Gateway.Factory.build(:request, %{host: "www.example.com", path: "/apis"})
+    })
 
-    :get
-    |> conn("/apis")
-    |> put_req_header("content-type", "application/json")
-    |> Gateway.PublicRouter.call([])
+    Gateway.Factory.insert(:proxy_plugin, %{
+      name: "proxy",
+      is_enabled: true,
+      api: api,
+      settings: %{
+        scheme: "http",
+        host: "localhost",
+        port: 4040,
+        path: "/apis"
+      }
+    })
 
-    :timer.sleep(50)
+    Gateway.AutoClustering.do_reload_config()
+
+    "/apis"
+    |> call_public_router()
   end
 
   defp check_statsd(metric_type, metric_name) do
     {:ok, socket} = :gen_tcp.connect('localhost', 8126, [:list, {:active, false}])
     :ok = :gen_tcp.send(socket, metric_type)
 
+    :timer.sleep(100)
+
     socket
     |> :gen_tcp.recv(0)
     |> elem(1)
     |> to_string
     |> String.contains?(metric_name)
-  end
-
-  defp create_api_endpoint do
-    Gateway.DB.Models.API.create(%{
-      name: "Test api",
-      request: %{
-        method: "GET",
-        scheme: "http",
-        host: "www.example.com",
-        port: 80,
-        path: "/apis",
-      }
-    })
-  end
-
-  defp create_proxy_plugin(api) do
-    proxy = Poison.encode!(%{
-      mathod: "GET",
-      scheme: "http",
-      host: "localhost",
-      port: 5001,
-      path: "/apis"
-    })
-
-    Gateway.DB.Models.Plugin.create(api, %{
-      name: "Proxy",
-      is_enabled: true,
-      settings: %{ "proxy_to" => proxy }
-    })
   end
 end

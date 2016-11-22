@@ -1,6 +1,6 @@
 defmodule Gateway do
   @moduledoc """
-  This is an entry point of Gateway application.
+  This is an entry point of Annons application.
   """
   use Application
 
@@ -8,9 +8,9 @@ defmodule Gateway do
     import Supervisor.Spec, warn: false
 
     children = [
-      supervisor(Gateway.DB.Repo, []),
+      supervisor(Gateway.DB.Configs.Repo, []),
       supervisor(Gateway.DB.Logger.Repo, []),
-      http_endpoint_spec(Gateway.PrivateRouter, :private_http),
+      http_endpoint_spec(Gateway.ManagementRouter, :management_http),
       http_endpoint_spec(Gateway.PublicRouter, :public_http),
       worker(Gateway.AutoClustering, [])
     ]

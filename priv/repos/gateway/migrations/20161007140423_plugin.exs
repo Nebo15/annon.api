@@ -1,4 +1,4 @@
-defmodule Gateway.DB.Repo.Migrations.Plugin do
+defmodule Gateway.DB.Configs.Repo.Migrations.Plugin do
   use Ecto.Migration
 
   def change do

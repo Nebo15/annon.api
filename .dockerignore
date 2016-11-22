@@ -7,8 +7,11 @@ deps
 # If you run "mix test --cover", coverage assets end up here.
 cover
 
+# Ignore kubernetes config examples
+_k8s
+
 # Ignore released binaries
-rel/os_gateway
+rel/gateway
 
 # If the VM crashes, it generates a dump, let's ignore it too.
 erl_crash.dump

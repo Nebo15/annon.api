@@ -1,30 +1,75 @@
-defmodule Gateway.HTTPHelpers.Response do
+defmodule Gateway.Helpers.Response do
   @moduledoc """
-  Gateway HTTP Helpers Response
+  This is a helper module for dispatching requests.
+
+  It's used by `Gateway.Helpers.Render` helpers and places where we want to return an error.
   """
-  def render_delete_response({:ok, _resource}, conn), do: render_response(%{}, conn, 200)
-  def render_delete_response(_, conn), do: render_response(nil, conn)
 
-  def render_response({:ok, resource}, conn, status \\ 200), do: render_response(resource, conn, status)
-  def render_response({:error, changeset}, conn, _), do: Plug.Conn.send_resp(conn, 422, changeset)
-  def render_response(nil, conn, _), do: Plug.Conn.send_resp(conn, 404, Poison.encode!(%{}))
-  def render_response(resource, conn, status) do
-    conn
+  @doc """
+  Send error by a [EView.ErrorView](https://github.com/Nebo15/eview/blob/master/lib/eview/views/error_view.ex)
+  template to a API consumer and halt connection.
+  """
+  def send_error(conn, :not_found) do
+    "404.json"
+    |> send_error_template(conn, 404)
+  end
+
+  def send_error(conn, :internal_error) do
+    "501.json"
+    |> send_error_template(conn, 501)
+  end
+
+  # This method is used in Plug.ErrorHandler.
+  def send_error(conn, %{kind: kind, reason: reason, stack: _stack}) do
+    status = get_exception_status(kind, reason)
+
+    status
+    |> to_string()
+    |> Kernel.<>(".json")
+    |> send_error_template(conn, status)
+  end
+
+  def send_validation_error(conn, invalid) do
+    "422.json"
+    |> EView.Views.ValidationError.render(%{schema: invalid})
+    |> send(conn, 422)
+    |> halt()
+  end
+
+  @doc """
+  Send request to a API consumer.
+
+  You may need to halt connection after calling it,
+  if you want to stop rest of plugins from processing rests.
+  """
+  def send(resource, conn, status) do
+    conn = conn
+    |> Plug.Conn.put_status(status)
     |> Plug.Conn.put_resp_content_type("application/json")
-    |> Plug.Conn.send_resp(status, get_resp_body(resource))
+
+    body = resource
+    |> EView.wrap_body(conn)
+    |> Poison.encode!()
+
+    conn
+    |> Plug.Conn.send_resp(status, body)
   end
 
-  def get_resp_body(resource) when is_list(resource), do: Poison.encode!(resource)
-  def get_resp_body(resource) when is_map(resource), do: resource |> set_type() |> Poison.encode!()
+  @doc """
+  Halt the connection.
 
-  def set_type(resource) when resource != %{} do
-    type = resource
-    |> Map.get(:__struct__)
-    |> EView.DataRender.extract_object_name
+  Delegates to a `Plug.Conn.halt/1` function.
+  """
+  def halt(conn), do: conn |> Plug.Conn.halt()
 
-    resource
-    |> Map.put(:type, type)
+  defp send_error_template(template, conn, status) do
+    template
+    |> EView.Views.Error.render()
+    |> send(conn, status)
+    |> halt()
   end
 
-  def set_type(resource), do: resource
+  defp get_exception_status(:throw, _throw), do: 500
+  defp get_exception_status(:exit, _exit), do: 500
+  defp get_exception_status(:error, error), do: Plug.Exception.status(error)
 end

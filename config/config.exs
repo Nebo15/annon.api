@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :gateway, Gateway.DB.Repo,
+config :gateway, Gateway.DB.Configs.Repo,
   adapter: Ecto.Adapters.Postgres,
   priv: "priv/repos/gateway",
   database: "gateway",
@@ -18,7 +18,7 @@ config :gateway, Gateway.DB.Logger.Repo,
   hostname: "localhost",
   pool_size: 10
 
-config :gateway, ecto_repos: [Gateway.DB.Repo, Gateway.DB.Logger.Repo]
+config :gateway, ecto_repos: [Gateway.DB.Configs.Repo, Gateway.DB.Logger.Repo]
 
 config :ex_statsd,
        host: "localhost",
@@ -30,10 +30,13 @@ config :logger, level: :debug
 config :gateway, :public_http,
   port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 4000}
 
-config :gateway, :private_http,
-  port: {:system, :integer, "GATEWAY_PRIVATE_PORT", 4001}
+config :gateway, :management_http,
+  port: {:system, :integer, "GATEWAY_MANAGEMENT_PORT", 4001}
 
-config :libcluster,
-  strategy: {:system, :module, "LIBCLUSTER_STRATEGY", Cluster.Strategy.Epmd}
+config :skycluster,
+  strategy: {:system, :module, "SKYCLUSTER_STRATEGY", Cluster.Strategy.Epmd}
+
+config :gateway,
+  sql_sandbox: {:system, :boolean, "SQL_SANDBOX", false}
 
 import_config "#{Mix.env}.exs"

@@ -1,16 +1,23 @@
 defmodule Gateway.PublicRouter do
   @moduledoc """
-  Gateway HTTP Router
+  Router for a Annons public API.
+
+  It has all available plugins assigned (in a specific order),
+  but witch of them should process request will be resolved in run-time.
   """
   use Plug.Router
+  use Plug.ErrorHandler
 
   plug :match
-  plug Plug.Parsers, parsers: [:json],
-                     pass: ["application/json"],
-                     json_decoder: Poison
+
   plug Plug.RequestId
+  plug Plug.Parsers, parsers: [:multipart, :json],
+                     pass: ["*/*"],
+                     json_decoder: Poison
+
   plug Gateway.Plugins.APILoader
-  plug Gateway.Plugins.Idempotency # ToDo: set plug after logger plug
+
+  plug Gateway.Plugins.Idempotency # TODO: set plug after logger plug (and after acl/iprestiction, in others section)
 
   # Monitoring plugins that do not affect on request or response
   plug Gateway.Plugins.Logger
@@ -19,6 +26,8 @@ defmodule Gateway.PublicRouter do
   # Security plugins that can halt connection immediately
   plug Gateway.Plugins.IPRestriction
   plug Gateway.Plugins.JWT
+  plug Gateway.Plugins.Consumers
+  plug Gateway.Plugins.Scopes
   plug Gateway.Plugins.ACL
 
   # Other helper plugins that can halt connection without proxy
@@ -29,8 +38,13 @@ defmodule Gateway.PublicRouter do
 
   plug :dispatch
 
-  # TODO: Use EView 404.json view
   match _ do
-    send_resp(conn, 404, "{}")
+    conn
+    |> Gateway.Helpers.Response.send_error(:not_found)
+  end
+
+  def handle_errors(%Plug.Conn{halted: false} = conn, error) do
+    conn
+    |> Gateway.Helpers.Response.send_error(error)
   end
 end

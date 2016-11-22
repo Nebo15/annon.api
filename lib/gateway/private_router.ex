@@ -1,26 +1,32 @@
-defmodule Gateway.PrivateRouter do
+defmodule Gateway.ManagementRouter do
   @moduledoc """
-  Gateway HTTP Router
+  Router for a [Annons Management API](http://docs.annon.apiary.io/#reference/apis).
   """
-
   use Plug.Router
+  use Plug.ErrorHandler
 
   plug :match
+
+  plug Plug.RequestId
   plug Plug.Parsers, parsers: [:json],
-                     pass: ["application/json"],
+                     pass:  ["application/json"],
                      json_decoder: Poison
 
   plug :dispatch
+
   plug Gateway.ConfigReloader
 
-  forward "/apis", to: Gateway.HTTP.API
+  forward "/apis", to: Gateway.Controllers.API
+  forward "/consumers", to: Gateway.Controllers.Consumer
+  forward "/requests", to: Gateway.Controllers.Request
 
-  # TODO: WTF is this?
-  get "/" do
-    send_resp(conn, 200, "{result: ok}")
+  match _ do
+    conn
+    |> Gateway.Helpers.Response.send_error(:not_found)
   end
 
-  forward "/consumers", to: Gateway.HTTP.Consumers
-
-  forward "/requests", to: Gateway.HTTP.Requests
+  def handle_errors(conn, error) do
+    conn
+    |> Gateway.Helpers.Response.send_error(error)
+  end
 end

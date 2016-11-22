@@ -1,61 +1,82 @@
 defmodule Gateway.Plugins.ACL do
   @moduledoc """
-    Plugin for JWT verifying and decoding
+  [Access Control Layer (ACL) plugin](http://docs.annon.apiary.io/#reference/plugins/acl).
+
+  It allows to set list of scopes that is required for path relative to an API.
   """
-  import Plug.Conn
+  use Gateway.Helpers.Plugin,
+    plugin_name: "acl"
 
-  alias Joken.Token
-  alias Gateway.DB.Models.Plugin
-  alias Gateway.DB.Models.API, as: APIModel
+  alias Plug.Conn
+  alias Gateway.DB.Schemas.Plugin
+  alias Gateway.DB.Schemas.API, as: APISchema
+  alias EView.Views.Error, as: ErrorView
+  alias Gateway.Helpers.Response
 
-  def init([]), do: false
-
-  def call(%Plug.Conn{private: %{api_config: %APIModel{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
+  @doc false
+  def call(%Conn{private: %{api_config: %APISchema{plugins: plugins, request: %{path: api_path}}}} = conn, _opts)
+    when is_list(plugins) do
     plugins
-    |> get_enabled()
-    |> execute(conn)
-    |> normalize_resp(conn)
+    |> find_plugin_settings()
+    |> execute(api_path, conn)
+    |> send_response(conn)
   end
   def call(conn, _), do: conn
 
-  defp execute(nil, _conn), do: true
-  defp execute(%Plugin{settings: %{"scope" => plugin_scope}},
-               %Plug.Conn{private: %{jwt_token: %Token{claims: %{"scopes" => token_scopes}}}}) do
-    plugin_scope
-    |> validate_scopes(token_scopes)
+  defp execute(nil, _api_path, _conn), do: :ok
+  defp execute(%Plugin{settings: %{"rules" => rules}},
+               api_path,
+               %Conn{private: %{scopes: scopes}} = conn) do
+    scopes
+    |> validate_scopes(rules, api_path, Map.take(conn, [:request_path, :method]))
   end
-  defp execute(%Plugin{settings: %{"scope" => _}}, _conn), do: {:error, 403, "forbidden"}
-  defp execute(_plugin, _conn), do: {:error, 501, "required field scope in Plugin.settings"}
+  defp execute(%Plugin{settings: %{"rules" => _}}, _api_path, _conn), do: {:error, :forbidden}
+  defp execute(_plugin, _api_path, _conn), do: {:error, :no_scopes_is_set}
 
+  defp validate_scopes(nil, _server_rules, _api_path, _conn_data),
+    do: {:error, :no_scopes_is_set}
+  defp validate_scopes([], _server_rules, _api_path, _conn_data),
+    do: {:error, :no_scopes_is_set}
+  defp validate_scopes(client_scopes, server_rules, api_path, conn_data) when is_list(client_scopes) do
+    request_path = String.trim_leading(conn_data.request_path, api_path)
 
-  def validate_scopes(scope, scopes) when is_list(scopes), do: Enum.member?(scopes, scope)
-  def validate_scopes(_scope, _scopes), do: {:error, 501, "JWT.scopes must be a list"}
+    matching_fun = fn server_rules ->
+      method_matches? = conn_data.method in server_rules["methods"]
+      path_matches? = request_path =~ ~r"#{server_rules["path"]}"
+      acl_rule_matches? = Enum.all?(server_rules["scopes"], fn(server_scope) -> server_scope in client_scopes end)
 
-  def normalize_resp(true, conn), do: conn
-  def normalize_resp(false, conn), do: conn |> send_halt(403, "forbidden")
-  def normalize_resp({:error, code, msg}, conn), do: conn |> send_halt(code, msg)
+      method_matches? && acl_rule_matches? && path_matches?
+    end
 
-  defp get_enabled(plugins) when is_list(plugins) do
-    plugins
-    |> Enum.find(&filter_plugin/1)
+    case Enum.any?(server_rules, matching_fun) do
+      true -> :ok
+      false -> {:error, :forbidden}
+    end
   end
-  defp filter_plugin(%Plugin{name: :ACL, is_enabled: true}), do: true
-  defp filter_plugin(_), do: false
+  defp validate_scopes(_client_scope, _server_rules, _api_path, _conn_data), do: {:error, :invalid_scopes_type}
 
-  # TODO: use Gateway.HTTPHelpers.Response
-  defp send_halt(conn, code, message) do
-    conn
-    |> put_resp_content_type("application/json")
-    |> send_resp(code, create_json_response(code, message))
-    |> halt
-  end
-
-  defp create_json_response(code, message) do
-    Poison.encode!(%{
-      meta: %{
-        code: code,
-        error: message
-      }
+  defp send_response(:ok, conn), do: conn
+  defp send_response({:error, :forbidden}, conn) do
+    "403.json"
+    |> ErrorView.render(%{
+      message: "Your scopes does not allow to access this resource.",
+      invalid: [%{
+        entry_type: "header",
+        entry: "Authorization",
+        rules: []
+      }]
     })
+    |> Response.send(conn, 403)
+    |> Response.halt()
+  end
+  defp send_response({:error, :no_scopes_is_set}, conn) do
+    Logger.error("Scopes are empty!")
+    conn
+    |> Response.send_error(:internal_error)
+  end
+  defp send_response({:error, :invalid_scopes_type}, conn) do
+    Logger.error("Scopes must be a list!")
+    conn
+    |> Response.send_error(:internal_error)
   end
 end

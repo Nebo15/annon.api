@@ -1,45 +1,52 @@
 defmodule Gateway.Plugins.Monitoring do
   @moduledoc """
-  Monitoring data reporting to statsd
+  This plugin measures or receives performance metrics from other parts of Annon and sends them to StatsD server.
+
+  It is enabled by default and can not be disabled without rebuilding Annon container.
+
+  It can be used with [DataDog agent](http://datadoghq.com).
   """
-  import Plug.Conn
+  use Gateway.Helpers.Plugin,
+    plugin_name: "monitoring"
+
+  alias Plug.Conn
 
   @unit :milli_seconds
 
-  def init(opts) do
-    opts
-  end
-
-  def call(conn, _opts) do
-    request_size = headers_size(conn) + body_size(conn) + query_string_size(conn)
-
-    metric_name = conn.path_info
+  @doc false
+  def call(%Conn{path_info: path_info} = conn, _opts) do
+    request_size_metric_name = path_info
     |> metric_name("request_size")
 
-    ExStatsD.histogram(request_size, metric_name)
+    conn
+    |> get_request_size()
+    |> ExStatsD.histogram(request_size_metric_name)
 
-    conn.path_info
+    path_info
     |> metric_name("request_count")
     |> ExStatsD.increment
 
     req_start_time = :erlang.monotonic_time(@unit)
-    Plug.Conn.register_before_send conn, fn conn ->
-      request_duration = :erlang.monotonic_time(@unit) - req_start_time
 
-      metric_name = conn.request_path
-      |> metric_name("latency")
+    conn
+    |> Plug.Conn.register_before_send(&write_metrics(&1, req_start_time))
+  end
 
-      request_duration
-      |> ExStatsD.timer(metric_name)
+  defp write_metrics(%Conn{request_path: request_path} = conn, req_start_time) do
+    request_duration = :erlang.monotonic_time(@unit) - req_start_time
 
-      conn = assign(conn, :latencies_gateway, request_duration)
+    metric_name = request_path
+    |> metric_name("latency")
 
-      conn.request_path
-      |> metric_name("status_count_" <> to_string(conn.status))
-      |> ExStatsD.increment
+    request_duration
+    |> ExStatsD.timer(metric_name)
 
-      conn
-    end
+    request_path
+    |> metric_name("status_count_" <> to_string(conn.status))
+    |> ExStatsD.increment
+
+    conn
+    |> Conn.assign(:latencies_gateway, request_duration)
   end
 
   defp metric_name(path, type) when is_list(path) do
@@ -58,24 +65,27 @@ defmodule Gateway.Plugins.Monitoring do
     data <> "_" <> type
   end
 
-  defp headers_size(conn) do
-    conn.req_headers
+  defp get_request_size(conn) do
+    get_headers_size(conn) + get_body_size(conn) + get_query_string_size(conn)
+  end
+
+  defp get_headers_size(%Conn{req_headers: req_headers}) do
+    req_headers
     |> Enum.map(&Tuple.to_list(&1))
     |> List.flatten
     |> Enum.join
     |> byte_size
   end
 
-  defp body_size(conn) do
+  defp get_body_size(conn) do
     conn
-    |> read_body
+    |> Conn.read_body
     |> elem(1)
     |> byte_size
   end
 
-  defp query_string_size(conn) do
-    conn
-    |> Map.get(:query_string)
+  defp get_query_string_size(%Conn{query_string: query_string}) do
+    query_string
     |> byte_size
   end
 end

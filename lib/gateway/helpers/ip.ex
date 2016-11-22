@@ -1,6 +1,6 @@
 defmodule Gateway.Helpers.IP do
   @moduledoc """
-  Helper for working with IP
+  Helpers for working with IP addresses.
   """
 
   def ip_to_string(ip) when is_tuple(ip) do

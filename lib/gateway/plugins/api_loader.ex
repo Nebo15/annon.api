@@ -1,44 +1,52 @@
 defmodule Gateway.Plugins.APILoader do
-
   @moduledoc """
-  Plugin which get all configuration by endpoint
+  This plugin should be first in plugs pipeline,
+  because it's used to fetch all settings and decide which ones should be applied for current consumer request.
   """
+  use Gateway.Helpers.Plugin,
+    plugin_name: "api_loader"
 
   import Plug.Conn
-  import Ecto.Query, only: [from: 2]
 
-  def init(opts), do: opts
+  @doc false
+  def call(conn, _opts), do: put_private(conn, :api_config, conn |> get_config)
 
-  def call(conn, _), do: put_private(conn, :api_config, conn |> get_config)
-
-  # TODO: Get data from the cache, not from the DataBase
   def get_config(conn) do
-    query = from a in Gateway.DB.Models.API,
-            preload: [:plugins]
+    match_spec = %{
+      request: %{
+        host: get_host(conn),
+        port: conn.port,
+        scheme: normalize_scheme(conn.scheme)
+      }
+    }
 
-    models = query
-    |> Gateway.DB.Repo.all()
-
-    models
-    |> Enum.find(fn(x) -> equal?(x, conn) end)
+    :config
+    |> :ets.match_object({:_, match_spec})
+    |> Enum.map(&elem(&1, 1))
+    |> find_matching_method(conn.method)
+    |> find_matching_path(conn.request_path)
   end
 
-  def equal?(%{request: %{} = r}, c) do
-    equal_host?(r, c) and equal_port?(r, c) and equal_scheme?(r, c) and equal_path?(r, c) and equal_method?(r, c)
+  defp get_host(conn) do
+    case get_req_header(conn, "x-host-override") do
+      [] -> conn.host
+      [override | _] -> override
+    end
   end
 
-  def equal_host?(%{host: host}, conn), do: conn.host == host
-  def equal_method?(%{method: method}, conn), do: conn.method == method
-  def equal_port?(%{port: port}, conn), do: conn.port == port
-  def equal_scheme?(%{scheme: scheme}, %Plug.Conn{scheme: conn_scheme}) when is_atom(conn_scheme) do
-    conn_scheme
-    |> Atom.to_string
-    |> equal_scheme?(scheme)
-  end
-  def equal_scheme?(%{scheme: scheme}, %Plug.Conn{scheme: conn_scheme}) when is_binary(conn_scheme) do
-    equal_scheme?(conn_scheme, scheme)
-  end
-  def equal_scheme?(conn_scheme, scheme) when is_binary(scheme) and is_binary(conn_scheme), do: scheme == conn_scheme
+  defp normalize_scheme(scheme) when is_atom(scheme), do: Atom.to_string(scheme)
+  defp normalize_scheme(scheme), do: scheme
 
-  def equal_path?(%{path: path}, conn), do: conn.request_path == path
+  def find_matching_method(apis, method) do
+    apis
+    |> Enum.filter(&Enum.member?(&1.request.methods, method))
+  end
+
+  def find_matching_path(apis, path) do
+    apis
+    |> Enum.filter(&String.starts_with?(path, &1.request.path))
+    |> Enum.sort_by(&String.length(&1.request.path))
+    |> Enum.reverse
+    |> List.first
+  end
 end
