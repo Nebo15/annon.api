@@ -51,10 +51,10 @@ defmodule Gateway.Plugins.Proxy do
         conn |> Conn.put_resp_header(header_key, header_value)
     end)
     |> Conn.resp(response.status_code, response.body)
+    |> Conn.halt
 
     client_req_start_time = Map.get(conn.assigns, :client_req_start_time)
     write_latency(conn, :latencies_client, client_req_start_time)
-    |> Conn.halt
   end
 
   def do_request(link, conn, method) do
