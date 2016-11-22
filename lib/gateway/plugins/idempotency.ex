@@ -45,7 +45,7 @@ defmodule Gateway.Plugins.Idempotency do
                                                      status_code: status_code}}, conn) do
     conn
     |> Conn.merge_resp_headers(format_headers(headers))
-    |> Conn.send_resp(status_code, body)
+    |> Conn.resp(status_code, body)
     |> Conn.halt
   end
   defp normalize_resp({false, _}, conn) do
@@ -59,8 +59,7 @@ defmodule Gateway.Plugins.Idempotency do
         rules: [:unique]
       }]
     })
-    |> Response.send(conn, 409)
-    |> Response.halt()
+    |> Response.send(conn, 409, :halt)
   end
   defp normalize_resp(_, conn), do: conn
 

@@ -92,9 +92,9 @@ defmodule Gateway.Plugins.Logger do
 
   defp get_latencies_data(conn) do
     %{
-      gateway: conn.assigns.latencies_gateway,
-      upstream: "",
-      client_request: ""
+      gateway: Map.get(conn.assigns, :latencies_gateway),
+      upstream: Map.get(conn.assigns, :latencies_upstream),
+      client_request: Map.get(conn.assigns, :latencies_client)
     }
     |> prepare_params
   end
