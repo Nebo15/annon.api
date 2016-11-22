@@ -28,7 +28,7 @@ defmodule Gateway.Plugins.Monitoring do
     req_start_time = get_time()
 
     conn
-    |> Plug.Conn.register_before_send(&write_metrics(&1, req_start_time))
+    |> Conn.register_before_send(&write_metrics(&1, req_start_time))
   end
 
   defp write_metrics(%Conn{request_path: request_path} = conn, req_start_time) do

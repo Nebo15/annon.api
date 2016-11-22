@@ -41,7 +41,7 @@ defmodule Gateway.Plugins.Proxy do
     |> make_link(api_path, conn)
     |> do_request(conn, method)
 
-    write_latency(conn, :latencies_upstream, req_start_time)
+    conn = write_latency(conn, :latencies_upstream, req_start_time)
 
     conn = response.headers
     |> Enum.reduce(conn, fn
@@ -53,7 +53,7 @@ defmodule Gateway.Plugins.Proxy do
     |> Conn.resp(response.status_code, response.body)
     |> Conn.halt
 
-    client_req_start_time = conn.assigns.client_req_start_time
+    client_req_start_time = Map.get(conn.assigns, :client_req_start_time)
     write_latency(conn, :latencies_client, client_req_start_time)
   end
 

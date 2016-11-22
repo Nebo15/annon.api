@@ -10,6 +10,7 @@ defmodule Gateway.Helpers.Latency do
     :erlang.monotonic_time(@unit)
   end
 
+  def write_latency(conn, _key, nil), do: conn
   def write_latency(conn, key, start_time) do
     end_time = get_time()
     latency = end_time - start_time
