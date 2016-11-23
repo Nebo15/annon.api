@@ -16,7 +16,7 @@ PROXY=$(curl --silent --request POST --header "Content-Type: application/json" h
 PROXY_HOST=$(echo $PROXY | jq -r '.data.settings.host')
 
 if [ "$PROXY_HOST" != "httpbin.org" ]; then
-  echo "Unable to create proxy plugin Error response: $PROXY"
+  echo "Unable to create proxy plugin. Error response: $PROXY"
   exit 1
 fi
 
