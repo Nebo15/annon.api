@@ -1,6 +1,7 @@
 defmodule Gateway.Helpers.Response do
   @moduledoc """
   This is a helper module for dispatching requests.
+
   It's used by `Gateway.Helpers.Render` helpers and places where we want to return an error.
   """
 
@@ -37,6 +38,7 @@ defmodule Gateway.Helpers.Response do
 
   @doc """
   Send request to a API consumer.
+
   You may need to halt connection after calling it,
   if you want to stop rest of plugins from processing rests.
   """
@@ -55,6 +57,7 @@ defmodule Gateway.Helpers.Response do
 
   @doc """
   Halt the connection.
+
   Delegates to a `Plug.Conn.halt/1` function.
   """
   def halt(conn), do: conn |> Plug.Conn.halt()
