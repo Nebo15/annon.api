@@ -48,7 +48,7 @@ defmodule Gateway.Plugins.Proxy do
       {"x-request-id", _header_value}, conn ->
         conn
       {header_key, header_value}, conn ->
-        conn |> Conn.put_resp_header(header_key, header_value)
+        conn |> Conn.put_resp_header(String.downcase(header_key), header_value)
     end)
     |> Conn.send_resp(response.status_code, response.body)
     |> Conn.halt
@@ -92,7 +92,7 @@ defmodule Gateway.Plugins.Proxy do
       case value do
         %Plug.Upload{path: path} ->
           :ok = :hackney.send_multipart_body(ref, {:file, path})
-        other ->
+        _ ->
           :ok = :hackney.send_multipart_body(ref, {:data, key, value})
       end
     end

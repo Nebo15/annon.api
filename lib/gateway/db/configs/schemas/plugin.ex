@@ -9,6 +9,7 @@ defmodule Gateway.DB.Schemas.Plugin do
   alias Gateway.DB.Configs.Repo
   alias Gateway.DB.Schemas.Plugin, as: PluginSchema
   alias Gateway.DB.Schemas.API, as: APISchema
+  alias Gateway.Helpers.Pagination
 
   @type t :: %PluginSchema{
     name: atom,
@@ -47,10 +48,12 @@ defmodule Gateway.DB.Schemas.Plugin do
       limit: 1
   end
 
-  def get_by(selector, limit) do
-    Repo.all from PluginSchema,
-      where: ^selector,
-      limit: ^limit
+  def get_by(selector, query_params) do
+    query = from PluginSchema, where: ^selector
+
+    query
+    |> Repo.page(Pagination.page_info_from(query_params))
+    |> elem(0)
   end
 
   def create(api_id, params) when is_map(params) do

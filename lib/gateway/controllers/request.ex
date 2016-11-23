@@ -12,10 +12,12 @@ defmodule Gateway.Controllers.Request do
   use Gateway.Helpers.CommonRouter
   alias Gateway.DB.Logger.Repo
   alias Gateway.DB.Schemas.Log, as: LogSchema
+  alias Gateway.Helpers.Pagination
 
   get "/" do
     LogSchema
-    |> Repo.all
+    |> Repo.page(Pagination.page_info_from(conn.query_params))
+    |> elem(0)
     |> render_collection(conn)
   end
 

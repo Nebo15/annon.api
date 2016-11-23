@@ -13,7 +13,7 @@ defmodule Gateway.Controllers.API.Plugin do
 
   get "/:api_id/plugins" do
     [api_id: api_id]
-    |> PluginSchema.get_by(50)
+    |> PluginSchema.get_by(conn.query_params)
     |> render_collection(conn)
   end
 
