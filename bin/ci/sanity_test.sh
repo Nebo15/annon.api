@@ -2,7 +2,7 @@
 set -e
 
 # Create API
-API=$(curl --silent --request POST --header "Content-Type: application/json" http://localhost:4001/apis -d '{"request":{"scheme":"http","port":4000,"path":"/world","methods":["GET","POST"],"host":"localhost"},"name":"Sanity check"}')
+API=$(curl --verbose --request POST --header "Content-Type: application/json" http://localhost:4001/apis -d '{"request":{"scheme":"http","port":4000,"path":"/world","methods":["GET","POST"],"host":"localhost"},"name":"Sanity check"}')
 API_ID=$(echo $API | jq -r '.data.id')
 API_NAME=$(echo $API | jq -r '.data.name')
 
