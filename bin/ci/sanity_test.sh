@@ -12,7 +12,7 @@ if [ "$API_NAME" != "Sanity check" ]; then
 fi
 
 # Add proxy plugin
-PROXY=$(curl --silent --request POST --header "Content-Type: application/json" http://localhost:4001/apis/$API_ID/plugins -d '{"name":"proxy","is_enabled":true,"settings":{"scheme":"http","port":80,"path":"/","host":"httpbin.org"}}')
+PROXY=$(curl --verbose --silent --request POST --header "Content-Type: application/json" http://localhost:4001/apis/$API_ID/plugins -d '{"name":"proxy","is_enabled":true,"settings":{"scheme":"http","port":80,"path":"/","host":"httpbin.org"}}')
 PROXY_HOST=$(echo $PROXY | jq -r '.data.settings.host')
 
 if [ "$PROXY_HOST" != "httpbin.org" ]; then
@@ -21,7 +21,7 @@ if [ "$PROXY_HOST" != "httpbin.org" ]; then
 fi
 
 # Issue a real request to proxy
-REQUEST=$(curl --silent --request GET http://localhost:4000/get?my_param=my_value)
+REQUEST=$(curl --verbose --silent --request GET http://localhost:4000/get?my_param=my_value)
 REQUEST_VALUE=$(echo $REQUEST | jq -r '.args.my_param')
 
 if [ "$REQUEST_VALUE" != "my_value" ]; then
