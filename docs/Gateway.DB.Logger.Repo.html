@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.3">
-    <title>Gateway.DB.Logger.Repo – gateway v0.1.68</title>
+    <title>Gateway.DB.Logger.Repo – gateway v0.1.69</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -26,7 +26,7 @@
         gateway
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.1.68
+        v0.1.69
       </h2>
     </div>
     
@@ -58,7 +58,7 @@
 
 
       <h1>
-        <small class="visible-xs">gateway v0.1.68</small>
+        <small class="visible-xs">gateway v0.1.69</small>
         Gateway.DB.Logger.Repo
         
         
@@ -258,6 +258,24 @@ you can expect an additional read request.</p>
   </div>
   
     <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:one!/2"><code class="inline">Ecto.Repo.one!/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#page/3">page(queryable, paging, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Fetches all entries from the data store matching the given query with applied Pagging</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#paginate/2">paginate(queryable, paging)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Convert queriable to queryable with applied pagination rules from <code class="inline">paging</code></p>
 </div>
   
 </div>
@@ -699,6 +717,66 @@ you can expect an additional read request.</p>
   </div>
   <section class="docstring">
     <p>Callback implementation for <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#c:one!/2"><code class="inline">Ecto.Repo.one!/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="page/3">
+  
+    <span id="page/2" />
+  
+  <div class="detail-header">
+    <a href="#page/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">page(queryable, paging, opts \\ [])</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>page(queryable :: <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Query.html#t:t/0">Ecto.Query.t</a>, paging :: <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Paging.html#t:t/0">Ecto.Paging.t</a>, opts :: <a href="http://elixir-lang.org/docs/stable/elixir/Keyword.html#t:t/0">Keyword.t</a>) ::
+  {[<a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Schema.html#t:t/0">Ecto.Schema.t</a>], <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Paging.html#t:t/0">Ecto.Paging.t</a>} |
+  no_return</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Fetches all entries from the data store matching the given query with applied Pagging.</p>
+<p>May raise <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.QueryError.html"><code class="inline">Ecto.QueryError</code></a> if query validation fails.</p>
+<h2 id="page/3-options" class="section-heading">
+  <a href="#page/3-options" class="hover-link"><i class="icon-link"></i></a>
+  Options
+</h2>
+
+<p>See the “<a href="https://hexdocs.pm/ecto/Ecto.Repo.html#module-shared-options">Shared options</a>”
+section at the <a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html"><code class="inline">Ecto.Repo</code></a> module documentation.</p>
+<h2 id="page/3-example" class="section-heading">
+  <a href="#page/3-example" class="hover-link"><i class="icon-link"></i></a>
+  Example
+</h2>
+
+<pre><code class="elixir"># Fetch 50 post titles
+query = from p in Post,
+     select: p.title
+
+MyRepo.all(query, %Ecto.Paging{limit: 50})</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="paginate/2">
+  
+  <div class="detail-header">
+    <a href="#paginate/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">paginate(queryable, paging)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Convert queriable to queryable with applied pagination rules from <code class="inline">paging</code>.</p>
 
   </section>
 </div>

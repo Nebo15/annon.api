@@ -37,6 +37,7 @@ Gateway.DB.Schemas.Plugin.html
 Gateway.Factory.html
 Gateway.Helpers.CommonRouter.html
 Gateway.Helpers.IP.html
+Gateway.Helpers.Pagination.html
 Gateway.Helpers.Plugin.html
 Gateway.Helpers.Render.html
 Gateway.Helpers.Response.html
