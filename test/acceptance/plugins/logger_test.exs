@@ -79,8 +79,14 @@ defmodule Gateway.Acceptance.Plugins.LoggerTest do
     |> Map.get(:latencies)
     |> Map.from_struct
 
-    assert nil != Map.get(latencies_to_check, :client_request)
-    assert nil != Map.get(latencies_to_check, :gateway)
-    assert nil != Map.get(latencies_to_check, :upstream)
+    client_latency = Map.get(latencies_to_check, :client_request)
+    gateway_latency = Map.get(latencies_to_check, :gateway)
+    upstream_latency = Map.get(latencies_to_check, :upstream)
+
+    assert nil != client_latency
+    assert nil != gateway_latency
+    assert nil != upstream_latency
+
+    assert client_latency > gateway_latency + upstream_latency
   end
 end
