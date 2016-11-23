@@ -62,7 +62,7 @@ script:
   - if [ "${RUNNING_CONTAINERS//[[:space:]]/}" = "1" ]; then echo "[E] Container is not started\!"; docker logs gateway --details --since 5h; exit 1; fi;
   # Run acceptance tests on Docker container
   # TODO: Fix acceptance tests
-  - sudo ./bin/ci/sanity_test.sh
+  - sudo /bin/bash ./bin/ci/sanity_test.sh
   # Rebuild docs
   - "mix docs --output docs"
 after_success:
