@@ -87,6 +87,7 @@ defmodule Gateway.Acceptance.Plugins.LoggerTest do
     assert nil != gateway_latency
     assert nil != upstream_latency
 
-    assert client_latency > gateway_latency + upstream_latency
+    assert client_latency >= gateway_latency
+    assert client_latency >= upstream_latency
   end
 end
