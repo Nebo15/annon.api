@@ -10,10 +10,11 @@ defmodule Gateway.Controllers.API do
   use Gateway.Helpers.CommonRouter
   alias Gateway.DB.Schemas.API, as: APISchema
   alias Gateway.DB.Configs.Repo
+  alias Gateway.Helpers.Pagination
 
   get "/" do
     APISchema
-    |> Repo.all
+    |> Repo.page(Pagination.page_info_from(conn.query_params))
     |> render_collection(conn)
   end
 
