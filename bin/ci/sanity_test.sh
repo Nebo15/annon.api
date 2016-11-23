@@ -21,7 +21,7 @@ if [ "$PROXY_HOST" != "httpbin.org" ]; then
 fi
 
 # Issue a real request to proxy
-REQUEST=$(curl --verbose --silent --request GET http://localhost:4000/get?my_param=my_value)
+REQUEST=$(curl --verbose --silent --request GET http://localhost:4000/world/get?my_param=my_value)
 REQUEST_VALUE=$(echo $REQUEST | jq -r '.args.my_param')
 
 if [ "$REQUEST_VALUE" != "my_value" ]; then
