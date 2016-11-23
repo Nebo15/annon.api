@@ -11,7 +11,7 @@ defmodule Gateway.PublicRouter do
   plug :match
 
   # Plugin that traces request start time
-  plug Gateway.Plugins.Latency
+  plug Gateway.Plugins.ClientLatency
 
   plug Plug.RequestId
   plug Plug.Parsers, parsers: [:multipart, :json],

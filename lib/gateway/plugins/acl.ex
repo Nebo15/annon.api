@@ -66,16 +66,17 @@ defmodule Gateway.Plugins.ACL do
         rules: []
       }]
     })
-    |> Response.send(conn, 403, :halt)
+    |> Response.send(conn, 403)
+    |> Response.halt()
   end
   defp send_response({:error, :no_scopes_is_set}, conn) do
     Logger.error("Scopes are empty!")
     conn
-    |> Response.send_error(:internal_error, :halt)
+    |> Response.send_error(:internal_error)
   end
   defp send_response({:error, :invalid_scopes_type}, conn) do
     Logger.error("Scopes must be a list!")
     conn
-    |> Response.send_error(:internal_error, :halt)
+    |> Response.send_error(:internal_error)
   end
 end

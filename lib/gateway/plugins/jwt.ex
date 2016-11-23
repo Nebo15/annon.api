@@ -35,13 +35,13 @@ defmodule Gateway.Plugins.JWT do
   defp execute(_plugin, conn) do
     Logger.error("JWT tokens decryption key is not set")
     conn
-    |> Response.send_error(:internal_error, :halt)
+    |> Response.send_error(:internal_error)
   end
 
   defp parse_auth(conn, _, :error) do
     Logger.error("Your JWT token secret MUST be base64 encoded")
     conn
-    |> Response.send_error(:internal_error, :halt)
+    |> Response.send_error(:internal_error)
   end
   defp parse_auth(conn, ["Bearer " <> incoming_token | _], {:ok, signature}) do
     incoming_token
@@ -68,6 +68,7 @@ defmodule Gateway.Plugins.JWT do
         rules: []
       }]
     })
-    |> Response.send(conn, 401, :halt)
+    |> Response.send(conn, 401)
+    |> Response.halt()
   end
 end

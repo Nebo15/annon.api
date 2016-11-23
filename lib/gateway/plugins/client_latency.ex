@@ -1,4 +1,4 @@
-defmodule Gateway.Plugins.Latency do
+defmodule Gateway.Plugins.ClientLatency do
   @moduledoc """
   This plugin writes request start time to conn.assigns.
   """

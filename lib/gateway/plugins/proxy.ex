@@ -50,7 +50,7 @@ defmodule Gateway.Plugins.Proxy do
       {header_key, header_value}, conn ->
         conn |> Conn.put_resp_header(header_key, header_value)
     end)
-    |> Conn.resp(response.status_code, response.body)
+    |> Conn.send_resp(response.status_code, response.body)
     |> Conn.halt
 
     client_req_start_time = Map.get(conn.assigns, :client_req_start_time)
