@@ -11,13 +11,16 @@ defmodule Gateway.Plugins.Logger do
   alias Plug.Conn
   alias Gateway.DB.Schemas.Log
   alias Gateway.DB.Schemas.API, as: APISchema
+  import Gateway.Helpers.Latency
   require Logger
 
   @doc false
   def call(conn, _opts) do
     conn
     |> Conn.register_before_send(fn conn ->
+      client_req_start_time = Map.get(conn.assigns, :client_req_start_time)
       conn
+      |> write_latency(:latencies_client, client_req_start_time)
       |> log_request()
     end)
   end
