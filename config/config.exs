@@ -40,6 +40,6 @@ config :gateway,
   sql_sandbox: {:system, :boolean, "SQL_SANDBOX", false}
 
 config :gateway,
-  cache_adapter: {:system, :module, "CACHE_ADAPTER", Gateway.Cache.EtsAdapter}
+  cache_storage: {:system, :module, "CACHE_STORAGE", Gateway.Cache.EtsAdapter}
 
 import_config "#{Mix.env}.exs"
