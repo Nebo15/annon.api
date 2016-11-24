@@ -45,7 +45,7 @@ defmodule Gateway.Acceptance.Smoke.FileUploadingTest do
 
     response =
       path
-      |> HTTPoison.post!({:multipart, parts}, [{"X-Custom-Header", "custom-value"}])
+      |> HTTPoison.post!({:multipart, parts}, [{"X-Custom-Header", "custom-value"}, magic_cookie()])
       |> Map.get(:body)
       |> Poison.decode!
 
