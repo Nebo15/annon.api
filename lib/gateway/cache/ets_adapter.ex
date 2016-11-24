@@ -1,4 +1,7 @@
 defmodule Gateway.Cache.EtsAdapter do
+  @moduledoc """
+  Adapter to access cache using ETS.
+  """
   def find_api_by(scheme, host, port) do
     match_spec = %{
       request: %{

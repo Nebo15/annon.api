@@ -1,4 +1,7 @@
 defmodule Gateway.Cache.PostgresAdapter do
+  @moduledoc """
+  Adapter to access cache using RDBMS.
+  """
   import Ecto.Query
 
   alias Gateway.DB.Configs.Repo
