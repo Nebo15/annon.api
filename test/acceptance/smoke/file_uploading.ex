@@ -1,6 +1,6 @@
 defmodule Gateway.Acceptance.Smoke.FileUploadingTest do
   @moduledoc false
-  use Gateway.AcceptanceCase
+  use Gateway.AcceptanceCase, async: true
 
   setup do
     api = :api
