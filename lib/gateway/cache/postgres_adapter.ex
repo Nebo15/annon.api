@@ -1,4 +1,4 @@
-defmodule Gateway.CacheAdapters.Postgres do
+defmodule Gateway.Cache.PostgresAdapter do
   import Ecto.Query
 
   alias Gateway.DB.Configs.Repo

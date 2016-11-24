@@ -1,4 +1,4 @@
-defmodule Gateway.CacheAdapters.ETS do
+defmodule Gateway.Cache.EtsAdapter do
   def find_api_by(scheme, host, port) do
     match_spec = %{
       request: %{
