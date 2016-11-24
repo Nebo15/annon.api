@@ -25,14 +25,14 @@ defmodule Gateway.Plugins.Monitoring do
     |> metric_name("request_count")
     |> ExStatsD.increment
 
-    req_start_time = get_time()
-
     conn
-    |> Conn.register_before_send(&write_metrics(&1, req_start_time))
+    |> Conn.register_before_send(&write_metrics(&1))
   end
 
-  defp write_metrics(%Conn{request_path: request_path} = conn, req_start_time) do
-    request_duration = get_time() - req_start_time
+  defp write_metrics(%Conn{request_path: request_path} = conn) do
+    client_req_start_time = Map.get(conn.assigns, :client_req_start_time)
+    conn = write_latency(conn, :latencies_client, client_req_start_time)
+    request_duration = conn.assigns.latencies_client - Map.get(conn.assigns, :latencies_upstream, 0)
 
     metric_name = request_path
     |> metric_name("latency")

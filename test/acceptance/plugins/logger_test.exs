@@ -33,7 +33,7 @@ defmodule Gateway.Acceptance.Plugins.LoggerTest do
       scheme: "http",
       host: "localhost",
       port: 4040,
-      path: "/random_url"
+      path: "/latency"
     }})
 
     "apis/#{api_id}/plugins"
@@ -87,7 +87,7 @@ defmodule Gateway.Acceptance.Plugins.LoggerTest do
     assert nil != gateway_latency
     assert nil != upstream_latency
 
-    assert client_latency >= gateway_latency
-    assert client_latency >= upstream_latency
+    assert upstream_latency >= 200
+    assert client_latency == gateway_latency + upstream_latency
   end
 end
