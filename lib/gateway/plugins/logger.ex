@@ -11,7 +11,6 @@ defmodule Gateway.Plugins.Logger do
   alias Plug.Conn
   alias Gateway.DB.Schemas.Log
   alias Gateway.DB.Schemas.API, as: APISchema
-  import Gateway.Helpers.Latency
   require Logger
 
   @doc false
