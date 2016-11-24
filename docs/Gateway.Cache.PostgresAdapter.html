@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.3">
-    <title>Gateway.Helpers.Response – gateway v0.1.74</title>
+    <title>Gateway.Cache.PostgresAdapter – gateway v0.1.74</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -59,15 +59,14 @@
 
       <h1>
         <small class="visible-xs">gateway v0.1.74</small>
-        Gateway.Helpers.Response
+        Gateway.Cache.PostgresAdapter
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>This is a helper module for dispatching requests.</p>
-<p>It’s used by <a href="Gateway.Helpers.Render.html"><code class="inline">Gateway.Helpers.Render</code></a> helpers and places where we want to return an error.</p>
+          <p>Adapter to access cache using RDBMS.</p>
 
         </section>
       
@@ -89,35 +88,7 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#halt/1">halt(conn)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Halt the connection</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#send/3">send(resource, conn, status)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Send request to a API consumer</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#send_error/2">send_error(conn, arg2)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Send error by a <a href="https://github.com/Nebo15/eview/blob/master/lib/eview/views/error_view.ex">EView.ErrorView</a>
-template to a API consumer and halt connection</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#send_validation_error/2">send_validation_error(conn, invalid)</a>
+    <a href="#find_api_by/3">find_api_by(scheme, host, port)</a>
   </div>
   
 </div>
@@ -142,65 +113,13 @@ template to a API consumer and halt connection</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="halt/1">
+          <div class="detail" id="find_api_by/3">
   
   <div class="detail-header">
-    <a href="#halt/1" class="detail-link" title="Link to this function">
+    <a href="#find_api_by/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">halt(conn)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    <p>Halt the connection.</p>
-<p>Delegates to a <a href="https://hexdocs.pm/plug/1.2.2/Plug.Conn.html#halt/1"><code class="inline">Plug.Conn.halt/1</code></a> function.</p>
-
-  </section>
-</div>
-<div class="detail" id="send/3">
-  
-  <div class="detail-header">
-    <a href="#send/3" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">send(resource, conn, status)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    <p>Send request to a API consumer.</p>
-<p>You may need to halt connection after calling it,
-if you want to stop rest of plugins from processing rests.</p>
-
-  </section>
-</div>
-<div class="detail" id="send_error/2">
-  
-  <div class="detail-header">
-    <a href="#send_error/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">send_error(conn, arg2)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    <p>Send error by a <a href="https://github.com/Nebo15/eview/blob/master/lib/eview/views/error_view.ex">EView.ErrorView</a>
-template to a API consumer and halt connection.</p>
-
-  </section>
-</div>
-<div class="detail" id="send_validation_error/2">
-  
-  <div class="detail-header">
-    <a href="#send_validation_error/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">send_validation_error(conn, invalid)</span>
+    <span class="signature">find_api_by(scheme, host, port)</span>
     
     
     

@@ -11,6 +11,8 @@ dist/sidebar_items.js
 Gateway.html
 Gateway.AcceptanceCase.html
 Gateway.AutoClustering.html
+Gateway.Cache.EtsAdapter.html
+Gateway.Cache.PostgresAdapter.html
 Gateway.Changeset.Validator.JsonSchema.html
 Gateway.Changeset.Validator.Settings.html
 Gateway.ConfigReloader.html
