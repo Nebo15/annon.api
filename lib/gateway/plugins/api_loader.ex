@@ -16,7 +16,7 @@ defmodule Gateway.Plugins.APILoader do
     host = get_host(conn)
     port = conn.port
 
-    apis = Gateway.CacheAdapters.Postgres.find_api_by(scheme, host, port)
+    apis = Gateway.Cache.PostgresAdapter.find_api_by(scheme, host, port)
 
     apis
     |> find_matching_method(conn.method)
