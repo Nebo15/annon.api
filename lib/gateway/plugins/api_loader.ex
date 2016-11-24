@@ -16,10 +16,9 @@ defmodule Gateway.Plugins.APILoader do
     host = get_host(conn)
     port = conn.port
 
-    apis = Gateway.CacheAdapters.ETS.find_api_by(scheme, host, port)
+    apis = Gateway.CacheAdapters.Postgres.find_api_by(scheme, host, port)
 
     apis
-    |> Enum.map(&elem(&1, 1))
     |> find_matching_method(conn.method)
     |> find_matching_path(conn.request_path)
   end

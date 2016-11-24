@@ -8,6 +8,8 @@ defmodule Gateway.CacheAdapters.ETS do
       }
     }
 
-    :ets.match_object(:config, {:_, match_spec})
+    :config
+    |> :ets.match_object({:_, match_spec})
+    |> Enum.map(&elem(&1, 1))
   end
 end
