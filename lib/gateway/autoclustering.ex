@@ -57,15 +57,7 @@ defmodule Gateway.AutoClustering do
   end
 
   def do_reload_config do
-    query = from a in Gateway.DB.Schemas.API,
-            join: Gateway.DB.Schemas.Plugin,
-            preload: [:plugins]
-
-    apis = query
-    |> Gateway.DB.Configs.Repo.all()
-    |> Enum.map(fn api -> {{:api, api.id}, api} end)
-
-    :ets.insert(:config, apis)
+    Confex.get(:gateway, :cache_storage).warm_up()
 
     Logger.debug("Node #{node()}: config cache was warmed up.")
   end

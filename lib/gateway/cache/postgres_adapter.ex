@@ -18,4 +18,6 @@ defmodule Gateway.Cache.PostgresAdapter do
 
     Repo.all(query)
   end
+
+  def warm_up, do: :nothing
 end
