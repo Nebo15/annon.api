@@ -33,8 +33,6 @@ defmodule Gateway.Acceptance.Smoke.FileUploadingTest do
     |> post!(proxy_plugin)
     |> assert_status(201)
 
-    Gateway.AutoClustering.do_reload_config()
-
     :ok
   end
 

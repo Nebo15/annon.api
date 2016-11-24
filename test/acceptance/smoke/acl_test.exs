@@ -63,8 +63,6 @@ defmodule Gateway.Acceptance.Smoke.AclTest do
     |> post!(jwt_plugin)
     |> assert_status(201)
 
-    Gateway.AutoClustering.do_reload_config()
-
     %{api_path: api_path}
   end
 

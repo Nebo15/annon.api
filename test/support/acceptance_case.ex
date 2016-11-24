@@ -62,8 +62,6 @@ defmodule Gateway.AcceptanceCase do
         |> post!(data)
         |> assert_status(201)
 
-        Gateway.AutoClustering.do_reload_config()
-
         api
       end
 
@@ -73,8 +71,6 @@ defmodule Gateway.AcceptanceCase do
         |> put!(data)
         |> assert_status(200)
 
-        Gateway.AutoClustering.do_reload_config()
-
         api
       end
 
@@ -83,8 +79,6 @@ defmodule Gateway.AcceptanceCase do
         |> put_management_url()
         |> put!(params)
         |> assert_status(200)
-
-        Gateway.AutoClustering.do_reload_config()
 
         plugin
       end
@@ -109,8 +103,6 @@ defmodule Gateway.AcceptanceCase do
         |> put_management_url()
         |> post!(params)
         |> assert_status(201)
-
-        Gateway.AutoClustering.do_reload_config() # TODO: Why this should be called even when conf updated via API?!
 
         proxy
       end

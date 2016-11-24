@@ -29,8 +29,6 @@ defmodule Gateway.Plugins.MonitoringTest do
       }
     })
 
-    Gateway.AutoClustering.do_reload_config()
-
     "/apis"
     |> call_public_router()
   end

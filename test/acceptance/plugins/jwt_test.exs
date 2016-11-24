@@ -33,8 +33,6 @@ defmodule Gateway.Acceptance.Plugins.JWTTest do
     |> post!(jwt_plugin)
     |> assert_status(201)
 
-    Gateway.AutoClustering.do_reload_config()
-
     auth_token = build_jwt_token(%{"scopes" => ["httpbin:read"]}, "a_secret_signature")
 
     assert %{

@@ -8,8 +8,6 @@ defmodule Gateway.Plugins.APILoaderTest do
       Gateway.Factory.insert(:jwt_plugin, api: api)
       Gateway.Factory.insert(:acl_plugin, api: api)
 
-      Gateway.AutoClustering.do_reload_config()
-
       %{private: %{api_config: %{} = config}} =
         :get
         |> conn(request.path, Poison.encode!(%{}))
@@ -26,8 +24,6 @@ defmodule Gateway.Plugins.APILoaderTest do
 
     test "without plugins" do
       %{request: request} = Gateway.Factory.insert(:api)
-
-      Gateway.AutoClustering.do_reload_config()
 
       %{private: %{api_config: nil}} =
         :get
@@ -67,8 +63,6 @@ defmodule Gateway.Plugins.APILoaderTest do
         }
       })
 
-      Gateway.AutoClustering.do_reload_config()
-
       assert 404 == call_public_router("/some_path").status
       assert 200 == call_public_router("/mockbin").status
       assert 200 == call_public_router("/mockbin/path").status
@@ -107,8 +101,6 @@ defmodule Gateway.Plugins.APILoaderTest do
           path: "/apis"
         }
       })
-
-      Gateway.AutoClustering.do_reload_config()
 
       resp = :get
       |> conn("/mockbin")
