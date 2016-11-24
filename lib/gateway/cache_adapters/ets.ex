@@ -8,7 +8,6 @@ defmodule Gateway.CacheAdapters.ETS do
       }
     }
 
-    :config
-    |> :ets.match_object({:_, match_spec})
+    :ets.match_object(:config, {:_, match_spec})
   end
 end
