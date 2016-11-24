@@ -37,6 +37,7 @@ Gateway.DB.Schemas.Plugin.html
 Gateway.Factory.html
 Gateway.Helpers.CommonRouter.html
 Gateway.Helpers.IP.html
+Gateway.Helpers.Latency.html
 Gateway.Helpers.Pagination.html
 Gateway.Helpers.Plugin.html
 Gateway.Helpers.Render.html
@@ -47,6 +48,7 @@ Gateway.ManagementRouter.html
 Gateway.PCMMockServer.html
 Gateway.Plugins.ACL.html
 Gateway.Plugins.APILoader.html
+Gateway.Plugins.ClientLatency.html
 Gateway.Plugins.Consumers.html
 Gateway.Plugins.IPRestriction.html
 Gateway.Plugins.Idempotency.html
