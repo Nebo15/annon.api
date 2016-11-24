@@ -36,8 +36,6 @@ config :gateway, :management_http,
 config :skycluster,
   strategy: {:system, :module, "SKYCLUSTER_STRATEGY", Cluster.Strategy.Epmd}
 
-config :gateway, sql_sandbox: false
-
 config :gateway,
   cache_storage: {:system, :module, "CACHE_STORAGE", Gateway.Cache.EtsAdapter}
 
