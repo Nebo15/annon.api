@@ -32,8 +32,6 @@ defmodule Gateway.Acceptance.Plugins.IdempotencyTest do
     |> post!(idempotency_plugin)
     |> assert_status(201)
 
-    Gateway.AutoClustering.do_reload_config()
-
     %{api_id: api_id, api_path: api_path, api: api}
   end
 

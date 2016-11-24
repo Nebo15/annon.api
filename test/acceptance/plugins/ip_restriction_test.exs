@@ -34,8 +34,6 @@ defmodule Gateway.Acceptance.Plugins.IPRestrictionTest do
     |> post!(ip_restriction_plugin)
     |> assert_status(201)
 
-    Gateway.AutoClustering.do_reload_config
-
     assert %{
       "error" => %{"message" => "You has been blocked from accessing this resource.", "type" => "forbidden"}
     } = api_path
@@ -56,8 +54,6 @@ defmodule Gateway.Acceptance.Plugins.IPRestrictionTest do
     |> put_management_url()
     |> post!(ip_restriction_plugin)
     |> assert_status(201)
-
-    Gateway.AutoClustering.do_reload_config
 
     api_path
     |> put_public_url()
