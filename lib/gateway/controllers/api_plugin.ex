@@ -8,12 +8,15 @@ defmodule Gateway.Controllers.API.Plugin do
   You can find full description in [REST API documentation](http://docs.annon.apiary.io/#reference/apis/plugins).
   """
   use Gateway.Helpers.CommonRouter
+  alias Gateway.DB.Configs.Repo
+  alias Gateway.Helpers.Pagination
 
   alias Gateway.DB.Schemas.Plugin, as: PluginSchema
 
   get "/:api_id/plugins" do
     [api_id: api_id]
-    |> PluginSchema.get_by(conn.query_params)
+    |> PluginSchema.get_by()
+    |> Repo.page(Pagination.page_info(conn))
     |> render_collection(conn)
   end
 

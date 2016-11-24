@@ -14,7 +14,7 @@ defmodule Gateway.DB.Schemas.ConsumerPluginSettings do
     field :is_enabled, :boolean
     belongs_to :consumer, Gateway.DB.Schemas.Consumer,
       references: :external_id, foreign_key: :external_id, type: :string
-    belongs_to :plugin, Gateway.DB.Schemas.Plugin
+    belongs_to :plugin, PluginSchema
 
     timestamps()
   end

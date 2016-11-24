@@ -13,6 +13,8 @@ defmodule Gateway.Helpers.Pagination do
     %Ecto.Paging{limit: limit, cursors: cursors}
   end
 
+  def page_info(%Plug.Conn{query_params: query_params}), do: page_info_from(query_params)
+
   def extract_integer(map, key) do
     case Map.get(map, key) do
       nil ->

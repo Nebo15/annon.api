@@ -9,7 +9,6 @@ defmodule Gateway.DB.Schemas.Plugin do
   alias Gateway.DB.Configs.Repo
   alias Gateway.DB.Schemas.Plugin, as: PluginSchema
   alias Gateway.DB.Schemas.API, as: APISchema
-  alias Gateway.Helpers.Pagination
 
   @type t :: %PluginSchema{
     name: atom,
@@ -24,7 +23,7 @@ defmodule Gateway.DB.Schemas.Plugin do
     field :name, :string
     field :is_enabled, :boolean, default: false
     field :settings, :map
-    belongs_to :api, Gateway.DB.Schemas.API
+    belongs_to :api, APISchema
 
     timestamps()
   end
@@ -48,12 +47,8 @@ defmodule Gateway.DB.Schemas.Plugin do
       limit: 1
   end
 
-  def get_by(selector, query_params) do
-    query = from PluginSchema, where: ^selector
-
-    query
-    |> Repo.page(Pagination.page_info_from(query_params))
-    |> elem(0)
+  def get_by(selector) do
+    from PluginSchema, where: ^selector
   end
 
   def create(api_id, params) when is_map(params) do
