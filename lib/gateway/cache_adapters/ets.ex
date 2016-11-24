@@ -25,12 +25,12 @@ defmodule Gateway.CacheAdapters.ETS do
   defp normalize_scheme(scheme) when is_atom(scheme), do: Atom.to_string(scheme)
   defp normalize_scheme(scheme), do: scheme
 
-  def find_matching_method(apis, method) do
+  defp find_matching_method(apis, method) do
     apis
     |> Enum.filter(&Enum.member?(&1.request.methods, method))
   end
 
-  def find_matching_path(apis, path) do
+  defp find_matching_path(apis, path) do
     apis
     |> Enum.filter(&String.starts_with?(path, &1.request.path))
     |> Enum.sort_by(&String.length(&1.request.path))
