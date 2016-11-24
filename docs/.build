@@ -58,6 +58,5 @@ Gateway.Plugins.Scopes.html
 Gateway.Plugins.Validator.html
 Gateway.PublicRouter.html
 Gateway.UnitCase.html
-Phoenix.Ecto.SQL.Sandbox.html
 gateway_tasks.html
 api-reference.html
