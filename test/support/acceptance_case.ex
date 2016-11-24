@@ -26,23 +26,8 @@ defmodule Gateway.AcceptanceCase do
         |> Poison.decode!
       end
 
-      if opts[:async] do
-        defp process_request_headers(headers) when is_list(headers) do
-          meta = Phoenix.Ecto.SQL.Sandbox.metadata_for([Gateway.DB.Configs.Repo, Gateway.DB.Logger.Repo], self())
-          encoded_meta = {:v1, meta}
-          |> :erlang.term_to_binary
-          |> Base.url_encode64
-
-          [{"content-type", "application/json"},
-           {"user-agent", "BeamMetadata (#{encoded_meta})"}] ++ headers
-        end
-
-        defp build_metadata(repo) do
-        end
-      else
-        defp process_request_headers(headers) when is_list(headers) do
-          [{"content-type", "application/json"}] ++ headers
-        end
+      defp process_request_headers(headers) when is_list(headers) do
+        [{"content-type", "application/json"}] ++ headers
       end
 
       def get_public_url do
