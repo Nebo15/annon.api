@@ -3,6 +3,11 @@ defmodule Gateway.ManagementRouter do
   Router for a [Annons Management API](http://docs.annon.apiary.io/#reference/apis).
   """
   use Plug.Router
+
+  if Application.get_env(:gateway, :sql_sandbox) do
+    plug Phoenix.Ecto.SQL.Sandbox
+  end
+
   use Plug.ErrorHandler
 
   plug :match

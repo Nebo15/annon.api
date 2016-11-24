@@ -5,7 +5,13 @@ defmodule Gateway.PublicRouter do
   It has all available plugins assigned (in a specific order),
   but witch of them should process request will be resolved in run-time.
   """
+
   use Plug.Router
+
+  if Application.get_env(:gateway, :sql_sandbox) do
+    plug Phoenix.Ecto.SQL.Sandbox
+  end
+
   use Plug.ErrorHandler
 
   plug :match

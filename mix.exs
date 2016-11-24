@@ -64,6 +64,7 @@ defmodule Gateway.Mixfile do
      {:ex_statsd, ">= 0.5.1"},
      {:eview,  ">= 0.0.0"},
      {:ecto_paging, ">= 0.0.0"},
+     {:phoenix_ecto, ">= 0.0.0"},
      {:ex_machina, ">= 1.0.0", only: [:dev, :test]},
      {:faker, "~> 0.7.0", only: [:dev, :test]},
      {:dogma, "> 0.1.0", only: [:dev, :test]},
