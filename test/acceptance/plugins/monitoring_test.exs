@@ -1,38 +1,41 @@
 defmodule Gateway.Plugins.MonitoringTest do
   @moduledoc false
-  use Gateway.UnitCase
-
-  @apis "apis"
+  use Gateway.AcceptanceCase
 
   test "metrics work properly" do
     make_connection()
-    assert check_statsd("counters", "os.gateway.apis_request_count")
-    assert check_statsd("counters", "os.gateway.apis_status_count_200")
-    assert check_statsd("timers", "os.gateway.apis_latency")
+    assert check_statsd("counters", "os.gateway.get_request_count")
+    assert check_statsd("counters", "os.gateway.get_status_count_200")
+    assert check_statsd("timers", "os.gateway.get_latency")
   end
 
   defp make_connection do
     api = Gateway.Factory.insert(:api, %{
       name: "Montoring Test api",
-      request: Gateway.Factory.build(:request, %{host: "www.example.com", path: "/apis"})
+      request: %{
+        methods: ["GET"],
+        host: "localhost",
+        port: 5000,
+        scheme: "http",
+        path: "/"
+      }
     })
 
     Gateway.Factory.insert(:proxy_plugin, %{
+      api: api,
       name: "proxy",
       is_enabled: true,
-      api: api,
       settings: %{
         scheme: "http",
-        host: "localhost",
-        port: 4040,
-        path: "/apis"
+        host: "httpbin.org",
+        port: 80,
+        path: "/"
       }
     })
 
     Gateway.AutoClustering.do_reload_config()
 
-    "/apis"
-    |> call_public_router()
+    HTTPoison.get("#{get_public_url()}/get")
   end
 
   defp check_statsd(metric_type, metric_name) do
