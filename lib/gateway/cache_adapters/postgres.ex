@@ -9,6 +9,7 @@ defmodule Gateway.CacheAdapters.Postgres do
       where: fragment("request->'scheme' = ?", ^scheme),
       where: fragment("request->'host' = ?", ^host),
       where: fragment("request->'port' = ?", ^port),
+      join: Gateway.DB.Schemas.Plugin,
       preload: [:plugins]
 
     Repo.all(query)
