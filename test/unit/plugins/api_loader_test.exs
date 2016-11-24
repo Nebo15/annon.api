@@ -2,6 +2,40 @@ defmodule Gateway.Plugins.APILoaderTest do
   @moduledoc false
   use Gateway.UnitCase
 
+  describe "ETS adapter is working" do
+    setup do
+      saved_config = Application.get_env(:gateway, :cache_storage)
+      Application.put_env(:gateway, :cache_storage, {:system, :module, "CACHE_STORAGE", Gateway.Cache.EtsAdapter})
+
+      on_exit fn ->
+        Application.put_env(:gateway, :cache_storage, saved_config)
+      end
+
+      :ok
+    end
+
+    test "succesffully reads from ETS storage" do
+      %{request: request} = api = Gateway.Factory.insert(:api)
+      Gateway.Factory.insert(:jwt_plugin, api: api)
+      Gateway.Factory.insert(:acl_plugin, api: api)
+
+      Gateway.AutoClustering.do_reload_config()
+
+      %{private: %{api_config: %{} = config}} =
+        :get
+        |> conn(request.path, Poison.encode!(%{}))
+        |> Map.put(:host, request.host)
+        |> Map.put(:port, request.port)
+        |> Map.put(:method, request.methods |> hd())
+        |> Map.put(:scheme, request.scheme)
+        |> Gateway.Plugins.APILoader.call([])
+
+      assert config.id == api.id
+      assert config.request == request
+      assert length(config.plugins) == 2
+    end
+  end
+
   describe "writes config to conn.private" do
     test "with plugins" do
       %{request: request} = api = Gateway.Factory.insert(:api)
