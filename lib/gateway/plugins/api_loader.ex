@@ -16,7 +16,7 @@ defmodule Gateway.Plugins.APILoader do
     host = get_host(conn)
     port = conn.port
 
-    apis = Gateway.Cache.PostgresAdapter.find_api_by(scheme, host, port)
+    apis = Confex.get(:gateway, :cache_adapter).find_api_by(scheme, host, port)
 
     apis
     |> find_matching_method(conn.method)

@@ -39,3 +39,6 @@ config :logger, level: :debug
 config :ex_unit, capture_log: true
 
 config :gateway, sql_sandbox: true
+
+config :gateway,
+  cache_adapter: {:system, :module, "CACHE_ADAPTER", Gateway.Cache.PostgresAdapter}
