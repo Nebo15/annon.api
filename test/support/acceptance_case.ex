@@ -108,8 +108,6 @@ defmodule Gateway.AcceptanceCase do
       end
 
       setup tags do
-        :ets.delete_all_objects(:config)
-
         opts =
           case tags[:cluster] do
             true -> [sandbox: false]
