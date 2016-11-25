@@ -44,12 +44,14 @@ defmodule Gateway.Acceptance.Cluster.ConfigReloaderTest do
     test ":nodeup event" do
       assert capture_log(fn ->
         send(Gateway.AutoClustering, {:nodeup, :'node2@127.0.0.1'})
+        :timer.sleep(100)
       end) =~ "config cache was warmed up"
     end
 
     test ":reload_config event" do
       assert capture_log(fn ->
         send(Gateway.AutoClustering, :reload_config)
+        :timer.sleep(100)
       end) =~ "config cache was warmed up"
     end
   end
