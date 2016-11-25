@@ -19,7 +19,12 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> create_api()
       |> get_body()
 
+      get_in(api, ["data", "name"]) |> IO.inspect
+
       api_id = get_in(api, ["data", "id"])
+
+      require Logger
+      Logger.debug("Test process #{inspect self()} sees API_id=#{api_id}")
 
       jwt_plugin = build_factory_params(:jwt_plugin, %{settings: %{signature: build_jwt_signature("secret")}})
 

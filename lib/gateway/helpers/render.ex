@@ -53,6 +53,7 @@ defmodule Gateway.Helpers.Render do
   end
 
   def render_change({:ok, resource}, conn, status) when is_map(resource) do
+    # todo - add logger here
     resource
     |> send(conn, status)
   end

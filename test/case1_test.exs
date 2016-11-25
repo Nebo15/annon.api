@@ -8,6 +8,11 @@ defmodule Gateway.Acceptance.Controllers.APITest do
 
       id = get_in(body, ["data", "id"])
 
+      get_in(body, ["data", "name"]) |> IO.inspect
+
+      require Logger
+      Logger.debug("Test process #{inspect self()} sees API_id=#{id}")
+
       "apis/#{id}"
       |> put_management_url()
       |> put!(%{name: "updated-name"})

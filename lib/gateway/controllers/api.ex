@@ -31,9 +31,13 @@ defmodule Gateway.Controllers.API do
   end
 
   post "/" do
-    conn.body_params
+    x = conn.body_params
     |> APISchema.create
-    |> render_change(conn, 201)
+
+    require Logger
+    Logger.debug("#{inspect self()} is just got API_ID=#{elem(x, 1).id}. Preparing to send it to client...")
+
+    x |> render_change(conn, 201)
   end
 
   delete "/:api_id" do
