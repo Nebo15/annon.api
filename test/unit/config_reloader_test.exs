@@ -4,6 +4,17 @@ defmodule Gateway.ConfigReloaderTest do
 
   import ExUnit.CaptureLog
 
+  setup do
+    saved_config = Application.get_env(:gateway, :cache_storage)
+    Application.put_env(:gateway, :cache_storage, {:system, :module, "CACHE_STORAGE", Gateway.Cache.EtsAdapter})
+
+    on_exit fn ->
+      Application.put_env(:gateway, :cache_storage, saved_config)
+    end
+
+    :ok
+  end
+
   test "reload the config cache if it changes" do
     api_model = Gateway.Factory.insert(:api)
     Gateway.Factory.insert(:acl_plugin, api: api_model)

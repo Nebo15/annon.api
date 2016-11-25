@@ -1,6 +1,6 @@
 defmodule Gateway.Plugins.MonitoringTest do
   @moduledoc false
-  use Gateway.UnitCase
+  use Gateway.UnitCase, async: true
 
   @apis "apis"
 
@@ -28,8 +28,6 @@ defmodule Gateway.Plugins.MonitoringTest do
         path: "/apis"
       }
     })
-
-    Gateway.AutoClustering.do_reload_config()
 
     "/apis"
     |> call_public_router()

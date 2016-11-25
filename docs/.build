@@ -11,6 +11,8 @@ dist/sidebar_items.js
 Gateway.html
 Gateway.AcceptanceCase.html
 Gateway.AutoClustering.html
+Gateway.Cache.EtsAdapter.html
+Gateway.Cache.PostgresAdapter.html
 Gateway.Changeset.Validator.JsonSchema.html
 Gateway.Changeset.Validator.Settings.html
 Gateway.ConfigReloader.html
@@ -37,6 +39,7 @@ Gateway.DB.Schemas.Plugin.html
 Gateway.Factory.html
 Gateway.Helpers.CommonRouter.html
 Gateway.Helpers.IP.html
+Gateway.Helpers.Latency.html
 Gateway.Helpers.Pagination.html
 Gateway.Helpers.Plugin.html
 Gateway.Helpers.Render.html
@@ -47,6 +50,7 @@ Gateway.ManagementRouter.html
 Gateway.PCMMockServer.html
 Gateway.Plugins.ACL.html
 Gateway.Plugins.APILoader.html
+Gateway.Plugins.ClientLatency.html
 Gateway.Plugins.Consumers.html
 Gateway.Plugins.IPRestriction.html
 Gateway.Plugins.Idempotency.html
@@ -58,6 +62,5 @@ Gateway.Plugins.Scopes.html
 Gateway.Plugins.Validator.html
 Gateway.PublicRouter.html
 Gateway.UnitCase.html
-Phoenix.Ecto.SQL.Sandbox.html
 gateway_tasks.html
 api-reference.html

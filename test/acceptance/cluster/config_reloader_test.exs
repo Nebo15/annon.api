@@ -17,7 +17,6 @@ defmodule Gateway.Acceptance.Cluster.ConfigReloaderTest do
     end
 
     @tag pending: true
-    @tag cluster: true
     test "correct communication between processes" do
       # spawns two nodes:
       # node1@127.0.0.1 and node2@127.0.0.1
@@ -47,7 +46,6 @@ defmodule Gateway.Acceptance.Cluster.ConfigReloaderTest do
         send(Gateway.AutoClustering, {:nodeup, :'node2@127.0.0.1'})
         :timer.sleep(100)
       end) =~ "config cache was warmed up"
-
     end
 
     test ":reload_config event" do

@@ -26,23 +26,8 @@ defmodule Gateway.AcceptanceCase do
         |> Poison.decode!
       end
 
-      if opts[:async] do
-        defp process_request_headers(headers) when is_list(headers) do
-          meta = Phoenix.Ecto.SQL.Sandbox.metadata_for([Gateway.DB.Configs.Repo, Gateway.DB.Logger.Repo], self())
-          encoded_meta = {:v1, meta}
-          |> :erlang.term_to_binary
-          |> Base.url_encode64
-
-          [{"content-type", "application/json"},
-           {"user-agent", "BeamMetadata (#{encoded_meta})"}] ++ headers
-        end
-
-        defp build_metadata(repo) do
-        end
-      else
-        defp process_request_headers(headers) when is_list(headers) do
-          [{"content-type", "application/json"}] ++ headers
-        end
+      defp process_request_headers(headers) when is_list(headers) do
+        [{"content-type", "application/json"}] ++ headers
       end
 
       def get_public_url do
@@ -77,8 +62,6 @@ defmodule Gateway.AcceptanceCase do
         |> post!(data)
         |> assert_status(201)
 
-        Gateway.AutoClustering.do_reload_config()
-
         api
       end
 
@@ -88,8 +71,6 @@ defmodule Gateway.AcceptanceCase do
         |> put!(data)
         |> assert_status(200)
 
-        Gateway.AutoClustering.do_reload_config()
-
         api
       end
 
@@ -98,8 +79,6 @@ defmodule Gateway.AcceptanceCase do
         |> put_management_url()
         |> put!(params)
         |> assert_status(200)
-
-        Gateway.AutoClustering.do_reload_config()
 
         plugin
       end
@@ -125,22 +104,12 @@ defmodule Gateway.AcceptanceCase do
         |> post!(params)
         |> assert_status(201)
 
-        Gateway.AutoClustering.do_reload_config() # TODO: Why this should be called even when conf updated via API?!
-
         proxy
       end
 
       setup tags do
-        :ets.delete_all_objects(:config)
-
-        opts =
-          case tags[:cluster] do
-            true -> [sandbox: false]
-            _ -> []
-          end
-
-        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Configs.Repo, opts)
-        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Logger.Repo, opts)
+        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Configs.Repo)
+        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Logger.Repo)
 
         unless tags[:async] do
           Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Configs.Repo, {:shared, self()})

@@ -35,8 +35,6 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
     |> post!(jwt_plugin)
     |> assert_status(201)
 
-    Gateway.AutoClustering.do_reload_config()
-
     %{api_id: api_id, api_path: api_path}
   end
 
@@ -59,8 +57,6 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> put_management_url()
       |> post!(scopes_plugin)
       |> assert_status(201)
-
-      Gateway.AutoClustering.do_reload_config()
 
       token_data = %{
         "app_metadata" => %{"scopes" => ["api:access"]},
@@ -98,8 +94,6 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> post!(scopes_plugin)
       |> assert_status(201)
 
-      Gateway.AutoClustering.do_reload_config()
-
       token_data = %{
         "app_metadata" => %{"scopes" => "api:access,api:delete"},
         "aud" => "wQjijHbg3UszGURQKIshwi03ho4NcVKl",
@@ -136,8 +130,6 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> post!(scopes_plugin)
       |> assert_status(201)
 
-      Gateway.AutoClustering.do_reload_config()
-
       token_without_scopes = build_jwt_token(%{"name" => "Alice"}, @jwt_secret)
       headers = [{"authorization", "Bearer #{token_without_scopes}"}]
 
@@ -167,8 +159,6 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> put_management_url()
       |> post!(scopes_plugin)
       |> assert_status(201)
-
-      Gateway.AutoClustering.do_reload_config()
 
       token = build_jwt_token(%{"scopes" => ["api:access"]}, @jwt_secret)
       headers = [{"authorization", "Bearer #{token}"}]
@@ -210,8 +200,6 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> post!(scopes_plugin)
       |> assert_status(201)
 
-      Gateway.AutoClustering.do_reload_config()
-
       token = build_jwt_token(%{"scopes" => ["api:access", "api:request"]}, @jwt_secret)
       headers = [{"authorization", "Bearer #{token}"}]
 
@@ -241,8 +229,6 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> post!(scopes_plugin)
       |> assert_status(201)
 
-      Gateway.AutoClustering.do_reload_config()
-
       token = build_jwt_token(%{"scopes" => ["api:access", "api:request"]}, @jwt_secret)
       headers = [{"authorization", "Bearer #{token}"}]
 
@@ -270,8 +256,6 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> put_management_url()
       |> post!(scopes_plugin)
       |> assert_status(201)
-
-      Gateway.AutoClustering.do_reload_config()
 
       token = build_jwt_token(%{"scopes" => ["super_scope"]}, @jwt_secret)
       headers = [{"authorization", "Bearer #{token}"}]
@@ -324,8 +308,6 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> put_management_url()
       |> post!(scopes_plugin)
       |> assert_status(201)
-
-      Gateway.AutoClustering.do_reload_config()
 
       token = build_jwt_token(%{"user_metadata" => %{"party_id" => "random_party_id"}}, @jwt_secret)
       headers = [{"authorization", "Bearer #{token}"}]
