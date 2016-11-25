@@ -50,7 +50,6 @@ defmodule Gateway.Controllers.RequestTest do
       assert expected_records == actual_records
     end
 
-    @tag pending: true
     test "GET /requests?ending_before=7&limit=4", %{logs: logs} do
       id = Enum.at(logs, 7).id
 
@@ -70,10 +69,8 @@ defmodule Gateway.Controllers.RequestTest do
       assert expected_records == actual_records
     end
 
-    @tag pending: true
     test "GET /requests?ending_before=3&limit=5", %{logs: logs} do
       id = Enum.at(logs, 3).id
-      IO.inspect id
 
       conn = "/requests?ending_before=#{id}&limit=4"
       |> call_get()
