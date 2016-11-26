@@ -10,12 +10,84 @@ defmodule Gateway.AcceptanceCase do
 
   using(opts) do
     quote location: :keep, bind_quoted: [opts: opts] do
+      use HTTPoison.Base
       import Gateway.AcceptanceCase
 
       # Load configuration from environment that allows to test Docker containers that run on another port
+      @config Confex.get_map(:gateway, :acceptance)
+
+      defp process_request_body(body) do
+        body
+        |> Poison.encode!
+      end
+
+      defp process_response_body(body) do
+        body
+        |> Poison.decode!
+      end
+
+      defp process_request_headers(headers) when is_list(headers) do
+        [{"content-type", "application/json"}, magic_header()] ++ headers
+      end
+
+      def get_public_url do
+        port = get_endpoint_port(:public)
+        host = get_endpoint_host(:public)
+
+        "http://#{host}:#{port}/"
+      end
+
+      def get_management_url do
+        port = get_endpoint_port(:management)
+        host = get_endpoint_host(:management)
+
+        "http://#{host}:#{port}/"
+      end
+
+      def put_public_url("/" <> url), do: get_public_url() <> url
+      def put_public_url(url), do: get_public_url() <> url
+
+      def put_management_url("/" <> url), do: get_management_url() <> url
+      def put_management_url(url), do: get_management_url() <> url
+
+      def create_api do
+        :api
+        |> build_factory_params()
+        |> create_api()
+      end
+
+      def create_api(data) do
+        api = "apis"
+        |> put_management_url()
+        |> post!(data)
+        |> assert_status(201)
+
+        api
+      end
+
+      def update_api(api_id, data) do
+        api = "apis/#{api_id}"
+        |> put_management_url()
+        |> put!(data)
+        |> assert_status(200)
+
+        api
+      end
+
+      def update_plugin(api_id, plugin_name, params) do
+        plugin = "apis/#{api_id}/plugins/proxy"
+        |> put_management_url()
+        |> put!(params)
+        |> assert_status(200)
+
+        plugin
+      end
 
       def get_mock_response(%{"data" => data}), do: data
       def get_mock_response(%{"error" => error}), do: error
+
+      def get_endpoint_port(endpoint_type), do: @config[endpoint_type][:port]
+      def get_endpoint_host(endpoint_type), do: @config[endpoint_type][:host]
 
       def create_proxy_to_mock(api_id, settings \\ %{}) do
         settings = %{
@@ -35,6 +107,22 @@ defmodule Gateway.AcceptanceCase do
         proxy
       end
 
+      def magic_header do
+        repos = [
+          Gateway.DB.Configs.Repo,
+          Gateway.DB.Logger.Repo
+        ]
+
+        metadata = Phoenix.Ecto.SQL.Sandbox.metadata_for(repos, self())
+
+        encoded_metadata =
+          {:v1, metadata}
+          |> :erlang.term_to_binary
+          |> Base.url_encode64
+
+        {"user-agent", "BeamMetadata (#{encoded_metadata})"}
+      end
+
       setup tags do
         :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Configs.Repo)
         :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Logger.Repo)
@@ -47,95 +135,6 @@ defmodule Gateway.AcceptanceCase do
         :ok
       end
     end
-  end
-
-  @config Confex.get_map(:gateway, :acceptance)
-
-  def magic_header do
-    repos = [
-      Gateway.DB.Configs.Repo,
-      Gateway.DB.Logger.Repo
-    ]
-
-    metadata = Phoenix.Ecto.SQL.Sandbox.metadata_for(repos, self())
-
-    encoded_metadata =
-      {:v1, metadata}
-      |> :erlang.term_to_binary
-      |> Base.url_encode64
-
-    {"user-agent", "BeamMetadata (#{encoded_metadata})"}
-  end
-
-  def put!(url, body) do
-    resp = HTTPoison.put!(url, Poison.encode!(body), [{"Content-Type", "application/json"}, magic_header()])
-    Map.put(resp, :body, Poison.decode!(resp.body))
-  end
-
-  def post!(url, body) do
-    resp = HTTPoison.post!(url, Poison.encode!(body), [{"Content-Type", "application/json"}, magic_header()])
-    Map.put(resp, :body, Poison.decode!(resp.body))
-  end
-
-  def get!(url) do
-    resp = HTTPoison.get!(url, [{"Content-Type", "application/json"}, magic_header()])
-    Map.put(resp, :body, Poison.decode!(resp.body))
-  end
-
-  def get_endpoint_port(endpoint_type), do: @config[endpoint_type][:port]
-  def get_endpoint_host(endpoint_type), do: @config[endpoint_type][:host]
-
-  def get_public_url do
-    port = get_endpoint_port(:public)
-    host = get_endpoint_host(:public)
-
-    "http://#{host}:#{port}/"
-  end
-
-  def get_management_url do
-    port = get_endpoint_port(:management)
-    host = get_endpoint_host(:management)
-
-    "http://#{host}:#{port}/"
-  end
-
-  def put_public_url("/" <> url), do: get_public_url() <> url
-  def put_public_url(url), do: get_public_url() <> url
-
-  def put_management_url("/" <> url), do: get_management_url() <> url
-  def put_management_url(url), do: get_management_url() <> url
-
-  def create_api do
-    :api
-    |> build_factory_params()
-    |> create_api()
-  end
-
-  def create_api(data) do
-    api = "apis"
-    |> put_management_url()
-    |> post!(data)
-    |> assert_status(201)
-
-    api
-  end
-
-  def update_api(api_id, data) do
-    api = "apis/#{api_id}"
-    |> put_management_url()
-    |> put!(data)
-    |> assert_status(200)
-
-    api
-  end
-
-  def update_plugin(api_id, plugin_name, params) do
-    plugin = "apis/#{api_id}/plugins/proxy"
-    |> put_management_url()
-    |> put!(params)
-    |> assert_status(200)
-
-    plugin
   end
 
   def assert_status({:error, error}, _status) do
