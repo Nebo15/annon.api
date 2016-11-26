@@ -43,5 +43,7 @@ config :ex_unit, capture_log: true
 
 config :gateway, sql_sandbox: true
 
+config :hackney, use_default_pool: false
+
 config :gateway,
   cache_storage: {:system, :module, "CACHE_STORAGE", Gateway.Cache.PostgresAdapter}
