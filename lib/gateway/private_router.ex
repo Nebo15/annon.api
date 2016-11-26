@@ -4,7 +4,7 @@ defmodule Gateway.ManagementRouter do
   """
   use Plug.Router
 
-  if Application.get_env(:gateway, :sql_sandbox) do
+  if Confex.get(:gateway, :sql_sandbox) do
     plug Phoenix.Ecto.SQL.Sandbox
   end
 
