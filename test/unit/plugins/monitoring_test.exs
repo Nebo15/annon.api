@@ -1,6 +1,6 @@
 defmodule Gateway.Plugins.MonitoringTest do
   @moduledoc false
-  use Gateway.UnitCase
+  use Gateway.UnitCase, async: true
 
   @apis "apis"
 
