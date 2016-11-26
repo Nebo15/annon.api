@@ -34,10 +34,7 @@ config :gateway, :public_http,
 config :gateway, :management_http,
   port: {:system, :integer, "GATEWAY_MANAGEMENT_PORT", 5001}
 
-config :logger,
-  level: :debug,
-  backends: [:console],
-  compile_time_purge_level: :debug
+config :logger, level: :debug
 
 config :ex_unit, capture_log: true
 
