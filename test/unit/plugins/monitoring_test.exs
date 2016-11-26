@@ -44,16 +44,13 @@ defmodule Gateway.Plugins.MonitoringTest do
 
   def gather_result(socket, acc \\ "")
   def gather_result(socket, acc) do
-    case :gen_tcp.recv(socket, 0) do
-      {:ok, data} ->
-        string = to_string(data)
+    {:ok, data} = :gen_tcp.recv(socket, 0)
 
-        cond do
-          String.ends_with?(string, "END\n\n") -> acc <> string
-          true -> gather_result(socket, acc <> string)
-        end
-      {:error, :closed} ->
-        to_string(acc)
+    result = acc <> to_string(data)
+
+    cond do
+      String.ends_with?(result, "END\n\n") -> result
+      true -> gather_result(socket, result)
     end
   end
 end
