@@ -1,7 +1,7 @@
 defmodule Gateway.Acceptance.Plugins.LoggerTest do
   @moduledoc false
   use Plug.Test
-  use Gateway.AcceptanceCase
+  use Gateway.AcceptanceCase, async: true
 
   alias Gateway.DB.Schemas.Log
 
