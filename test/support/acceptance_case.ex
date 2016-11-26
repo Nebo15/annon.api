@@ -27,7 +27,7 @@ defmodule Gateway.AcceptanceCase do
       end
 
       defp process_request_headers(headers) when is_list(headers) do
-        [{"content-type", "application/json"}] ++ headers
+        [{"content-type", "application/json"}, magic_header()] ++ headers
       end
 
       def get_public_url do
@@ -105,6 +105,22 @@ defmodule Gateway.AcceptanceCase do
         |> assert_status(201)
 
         proxy
+      end
+
+      def magic_header do
+        repos = [
+          Gateway.DB.Configs.Repo,
+          Gateway.DB.Logger.Repo
+        ]
+
+        metadata = Phoenix.Ecto.SQL.Sandbox.metadata_for(repos, self())
+
+        encoded_metadata =
+          {:v1, metadata}
+          |> :erlang.term_to_binary
+          |> Base.url_encode64
+
+        {"user-agent", "BeamMetadata (#{encoded_metadata})"}
       end
 
       setup tags do

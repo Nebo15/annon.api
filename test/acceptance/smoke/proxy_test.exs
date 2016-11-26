@@ -1,6 +1,6 @@
 defmodule Gateway.Acceptance.Smoke.ProxyTest do
   @moduledoc false
-  use Gateway.AcceptanceCase
+  use Gateway.AcceptanceCase, async: true
 
   setup do
     api = :api
@@ -40,7 +40,7 @@ defmodule Gateway.Acceptance.Smoke.ProxyTest do
     response =
       "/httpbin?my_param=my_value"
       |> put_public_url()
-      |> HTTPoison.get!([{"my-custom-header", "some-value"}])
+      |> HTTPoison.get!([{"my-custom-header", "some-value"}, magic_header()])
       |> Map.get(:body)
       |> Poison.decode!
 

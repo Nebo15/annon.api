@@ -1,6 +1,6 @@
 defmodule Gateway.Acceptance.Smoke.AclTest do
   @moduledoc false
-  use Gateway.AcceptanceCase
+  use Gateway.AcceptanceCase, async: true
 
   setup do
     api_path = "/httpbin"
@@ -70,7 +70,7 @@ defmodule Gateway.Acceptance.Smoke.AclTest do
     response =
       "/httpbin?my_param=my_value"
       |> put_public_url()
-      |> HTTPoison.get!([{"authorization", "Bearer bad_token"}])
+      |> HTTPoison.get!([{"authorization", "Bearer bad_token"}, magic_header()])
       |> Map.get(:body)
       |> Poison.decode!
 
@@ -87,7 +87,7 @@ defmodule Gateway.Acceptance.Smoke.AclTest do
     response =
       "/httpbin?my_param=my_value"
       |> put_public_url()
-      |> HTTPoison.get!([{"authorization", "Bearer #{auth_token}"}])
+      |> HTTPoison.get!([{"authorization", "Bearer #{auth_token}"}, magic_header()])
       |> Map.get(:body)
       |> Poison.decode!
 
@@ -106,7 +106,7 @@ defmodule Gateway.Acceptance.Smoke.AclTest do
     response =
       "/httpbin?my_param=my_value"
       |> put_public_url()
-      |> HTTPoison.post!(Poison.encode!(%{}), headers)
+      |> HTTPoison.post!(Poison.encode!(%{}), headers ++ [magic_header()])
       |> Map.get(:body)
       |> Poison.decode!
 

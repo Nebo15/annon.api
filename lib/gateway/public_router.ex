@@ -6,6 +6,11 @@ defmodule Gateway.PublicRouter do
   but witch of them should process request will be resolved in run-time.
   """
   use Plug.Router
+
+  if Confex.get(:gateway, :sql_sandbox) do
+    plug Phoenix.Ecto.SQL.Sandbox
+  end
+
   use Plug.ErrorHandler
 
   plug :match
