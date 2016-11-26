@@ -37,12 +37,23 @@ defmodule Gateway.Plugins.MonitoringTest do
     {:ok, socket} = :gen_tcp.connect('localhost', 8126, [:list, {:active, false}])
     :ok = :gen_tcp.send(socket, metric_type)
 
-    :timer.sleep(100)
-
     socket
-    |> :gen_tcp.recv(0)
-    |> elem(1)
-    |> to_string
+    |> gather_result()
     |> String.contains?(metric_name)
+  end
+
+  def gather_result(socket, acc \\ "")
+  def gather_result(socket, acc) do
+    case :gen_tcp.recv(socket, 0) do
+      {:ok, data} ->
+        string = to_string(data)
+
+        cond do
+          String.ends_with?(string, "END\n\n") -> acc <> string
+          true -> gather_result(socket, acc <> string)
+        end
+      {:error, :closed} ->
+        to_string(acc)
+    end
   end
 end
