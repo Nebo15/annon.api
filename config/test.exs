@@ -3,8 +3,7 @@ use Mix.Config
 config :gateway, Gateway.DB.Configs.Repo,
   adapter: Ecto.Adapters.Postgres,
   database: System.get_env("MIX_TEST_DATABASE") || "gateway_test",
-  pool: Ecto.Adapters.SQL.Sandbox,
-  loggers: [{Gateway.DB.Configs.Repo, :log, []}]
+  pool: Ecto.Adapters.SQL.Sandbox
 
 config :gateway, Gateway.DB.Logger.Repo,
   adapter: Ecto.Adapters.Postgres,
@@ -35,7 +34,10 @@ config :gateway, :public_http,
 config :gateway, :management_http,
   port: {:system, :integer, "GATEWAY_MANAGEMENT_PORT", 5001}
 
-config :logger, level: :debug
+config :logger,
+  level: :debug,
+  backends: [:console],
+  compile_time_purge_level: :debug
 
 config :ex_unit, capture_log: true
 

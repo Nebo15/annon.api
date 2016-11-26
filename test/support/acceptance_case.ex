@@ -64,9 +64,6 @@ defmodule Gateway.AcceptanceCase do
       |> :erlang.term_to_binary
       |> Base.url_encode64
 
-    require Logger
-    Logger.info("Test #{inspect self()} just generated this in header: #{encoded_metadata}")
-
     {"user-agent", "BeamMetadata (#{encoded_metadata})"}
   end
 
@@ -81,7 +78,7 @@ defmodule Gateway.AcceptanceCase do
   end
 
   def get!(url) do
-    resp = HTTPoison.get!(url, [{"Content-Type", "application/json"}])
+    resp = HTTPoison.get!(url, [{"Content-Type", "application/json"}, magic_header()])
     Map.put(resp, :body, Poison.decode!(resp.body))
   end
 
