@@ -1,6 +1,6 @@
 defmodule Gateway.Plugins.MonitoringTest do
   @moduledoc false
-  use Gateway.UnitCase
+  use Gateway.UnitCase, async: true
 
   @apis "apis"
 
@@ -37,12 +37,20 @@ defmodule Gateway.Plugins.MonitoringTest do
     {:ok, socket} = :gen_tcp.connect('localhost', 8126, [:list, {:active, false}])
     :ok = :gen_tcp.send(socket, metric_type)
 
-    :timer.sleep(100)
-
     socket
-    |> :gen_tcp.recv(0)
-    |> elem(1)
-    |> to_string
+    |> gather_result()
     |> String.contains?(metric_name)
+  end
+
+  def gather_result(socket, acc \\ "")
+  def gather_result(socket, acc) do
+    {:ok, data} = :gen_tcp.recv(socket, 0)
+
+    result = acc <> to_string(data)
+
+    cond do
+      String.ends_with?(result, "END\n\n") -> result
+      true -> gather_result(socket, result)
+    end
   end
 end
