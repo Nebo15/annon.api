@@ -86,23 +86,4 @@ defmodule Gateway.Factory do
       settings: %{}
     }
   end
-
-  # Consumers
-
-  def consumer_factory do
-    %Gateway.DB.Schemas.Consumer{
-      external_id: Ecto.UUID.generate(),
-      metadata: %{}
-    }
-  end
-
-  # Consumer plugin settings
-
-  def consumer_plugin_settings_factory do
-    %Gateway.DB.Schemas.ConsumerPluginSettings{
-      is_enabled: true,
-      settings: %{},
-      consumer: build(:consumer),
-    }
-  end
 end
