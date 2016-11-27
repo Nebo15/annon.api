@@ -18,16 +18,12 @@ Gateway.Changeset.Validator.Settings.html
 Gateway.ConfigReloader.html
 Gateway.Controllers.API.html
 Gateway.Controllers.API.Plugin.html
-Gateway.Controllers.Consumer.html
-Gateway.Controllers.Consumer.PluginSettings.html
 Gateway.Controllers.Request.html
 Gateway.DB.Configs.Repo.html
 Gateway.DB.Logger.Repo.html
 Gateway.DB.Schema.html
 Gateway.DB.Schemas.API.html
 Gateway.DB.Schemas.API.Request.html
-Gateway.DB.Schemas.Consumer.html
-Gateway.DB.Schemas.ConsumerPluginSettings.html
 Gateway.DB.Schemas.Log.html
 Gateway.DB.Schemas.Log.API.html
 Gateway.DB.Schemas.Log.API.Request.html
@@ -51,7 +47,6 @@ Gateway.PCMMockServer.html
 Gateway.Plugins.ACL.html
 Gateway.Plugins.APILoader.html
 Gateway.Plugins.ClientLatency.html
-Gateway.Plugins.Consumers.html
 Gateway.Plugins.IPRestriction.html
 Gateway.Plugins.Idempotency.html
 Gateway.Plugins.JWT.html
