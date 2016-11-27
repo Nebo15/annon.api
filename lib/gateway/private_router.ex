@@ -22,7 +22,6 @@ defmodule Gateway.ManagementRouter do
   plug Gateway.ConfigReloader
 
   forward "/apis", to: Gateway.Controllers.API
-  forward "/consumers", to: Gateway.Controllers.Consumer
   forward "/requests", to: Gateway.Controllers.Request
 
   match _ do
