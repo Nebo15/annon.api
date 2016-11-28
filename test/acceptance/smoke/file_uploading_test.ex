@@ -58,7 +58,7 @@ defmodule Gateway.Acceptance.Smoke.FileUploadingTest do
     path = put_public_url("/httpbin")
 
     parts = [
-      {:file, __ENV__.file, {"form-data", [{"name", "\"loans[file]\""}, {"filename", "\"some-file-name.bson\""}]}, []}
+      {:file, __ENV__.file, {"form-data", [{"name", ~S("loans[file]")}, {"filename", ~S("some-file-name.bson")}]}, []}
     ]
 
     response =

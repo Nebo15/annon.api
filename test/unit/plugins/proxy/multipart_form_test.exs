@@ -28,7 +28,12 @@ defmodule Gateway.Plugins.Proxy.MultipartFormTest do
       }
 
       expected_file_part =
-        {:file, "/some/path/to/file", {"form-data", [{"name", "\"loans[file]\""}, {"filename", "\"some-file-name.bson\""}]}, [{"Content-Type", "some-mime-type"}]}
+        {
+          :file,
+          "/some/path/to/file",
+          {"form-data", [{"name", ~S("loans[file]")}, {"filename", ~S("some-file-name.bson")}]},
+          [{"Content-Type", "some-mime-type"}]
+        }
 
       expected_form = [
         expected_file_part,
