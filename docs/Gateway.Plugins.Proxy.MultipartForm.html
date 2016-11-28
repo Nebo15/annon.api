@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.3">
-    <title>Gateway.Plugins.Idempotency – gateway v0.1.80</title>
+    <title>Gateway.Plugins.Proxy.MultipartForm – gateway v0.1.80</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -59,14 +59,16 @@
 
       <h1>
         <small class="visible-xs">gateway v0.1.80</small>
-        Gateway.Plugins.Idempotency
+        Gateway.Plugins.Proxy.MultipartForm
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p><a href="http://docs.annon.apiary.io/#reference/plugins/idempotency">Request Idempotency plugin</a>.</p>
+          <p>Facilities to contstruct parts of a multipart form.</p>
+<p>Supports constructing parts in a format, expected by hackney.
+(and inherited by HTTPoison).</p>
 
         </section>
       
@@ -88,13 +90,7 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#find_plugin_settings/1">find_plugin_settings(plugins)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#init/1">init(opts)</a>
+    <a href="#reconstruct_using/1">reconstruct_using(params)</a>
   </div>
   
 </div>
@@ -119,28 +115,13 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="find_plugin_settings/1">
+          <div class="detail" id="reconstruct_using/1">
   
   <div class="detail-header">
-    <a href="#find_plugin_settings/1" class="detail-link" title="Link to this function">
+    <a href="#reconstruct_using/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">find_plugin_settings(plugins)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="init/1">
-  
-  <div class="detail-header">
-    <a href="#init/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">init(opts)</span>
+    <span class="signature">reconstruct_using(params)</span>
     
     
     

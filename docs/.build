@@ -53,6 +53,7 @@ Gateway.Plugins.JWT.html
 Gateway.Plugins.Logger.html
 Gateway.Plugins.Monitoring.html
 Gateway.Plugins.Proxy.html
+Gateway.Plugins.Proxy.MultipartForm.html
 Gateway.Plugins.Scopes.html
 Gateway.Plugins.Validator.html
 Gateway.PublicRouter.html
