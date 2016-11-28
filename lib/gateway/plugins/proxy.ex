@@ -67,34 +67,14 @@ defmodule Gateway.Plugins.Proxy do
     end
   end
 
-  defp do_fileupload_request_cont(link, conn, method) do
+  defp do_fileupload_request_cont(link, conn, _method) do
     req_headers = Enum.reject(conn.req_headers, fn {k, _} ->
       String.downcase(k) in ["content-type", "content-disposition", "content-length"]
     end)
 
-    {:ok, ref} = :hackney.request(method, link, req_headers, :stream_multipart, [])
+    multipart = Gateway.Plugins.Proxy.MultipartForm.reconstruct_using(conn.body_params)
 
-    stream_body_params(ref, conn.body_params)
-
-    {:ok, status, headers, ref} = :hackney.start_response(ref)
-    {:ok, body} = :hackney.body(ref)
-
-    :hackney.close(ref)
-
-    %{status_code: status, headers: headers, body: body}
-  end
-
-  defp stream_body_params(ref, body_params) do
-    Enum.each body_params, fn {key, value} ->
-      case value do
-        %Plug.Upload{path: path} ->
-          :ok = :hackney.send_multipart_body(ref, {:file, path})
-        _ ->
-          :ok = :hackney.send_multipart_body(ref, {:data, key, value})
-      end
-    end
-
-    :ok = :hackney.send_multipart_body(ref, :eof)
+    HTTPoison.post!(link, {:multipart, multipart}, req_headers)
   end
 
   defp do_request_cont(link, conn, method) do
