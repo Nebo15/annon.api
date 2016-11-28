@@ -12,17 +12,13 @@ defmodule Gateway.Plugins.APILoader do
   def call(conn, _opts), do: put_private(conn, :api_config, conn |> get_config)
 
   def get_config(conn) do
-    match_spec = %{
-      request: %{
-        host: get_host(conn),
-        port: conn.port,
-        scheme: normalize_scheme(conn.scheme)
-      }
-    }
+    scheme = normalize_scheme(conn.scheme)
+    host = get_host(conn)
+    port = conn.port
 
-    :config
-    |> :ets.match_object({:_, match_spec})
-    |> Enum.map(&elem(&1, 1))
+    apis = Confex.get(:gateway, :cache_storage).find_api_by(scheme, host, port)
+
+    apis
     |> find_matching_method(conn.method)
     |> find_matching_path(conn.request_path)
   end

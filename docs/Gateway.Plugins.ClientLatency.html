@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.3">
-    <title>Gateway.DB.Schemas.ConsumerPluginSettings – gateway v0.1.67</title>
+    <title>Gateway.Plugins.ClientLatency – gateway v0.1.78</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -26,7 +26,7 @@
         gateway
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.1.67
+        v0.1.78
       </h2>
     </div>
     
@@ -58,15 +58,15 @@
 
 
       <h1>
-        <small class="visible-xs">gateway v0.1.67</small>
-        Gateway.DB.Schemas.ConsumerPluginSettings
+        <small class="visible-xs">gateway v0.1.78</small>
+        Gateway.Plugins.ClientLatency
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>Schema for Consumer’s overrides for plugin settings.</p>
+          <p>This plugin writes request start time to conn.assigns.</p>
 
         </section>
       
@@ -88,34 +88,13 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#changeset/2">changeset(struct, params \\ %{})</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Builds a changeset based on the <code class="inline">struct</code> and <code class="inline">params</code></p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#create/2">create(external_id, params)</a>
+    <a href="#call/2">call(conn, opts)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#delete/2">delete(external_id, plugin_name)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#get_by_name/2">get_by_name(external_id, plugin_name)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#update/3">update(external_id, name, params)</a>
+    <a href="#init/1">init(opts)</a>
   </div>
   
 </div>
@@ -140,31 +119,13 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="changeset/2">
-  
-    <span id="changeset/1" />
+          <div class="detail" id="call/2">
   
   <div class="detail-header">
-    <a href="#changeset/2" class="detail-link" title="Link to this function">
+    <a href="#call/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">changeset(struct, params \\ %{})</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    <p>Builds a changeset based on the <code class="inline">struct</code> and <code class="inline">params</code>.</p>
-
-  </section>
-</div>
-<div class="detail" id="create/2">
-  
-  <div class="detail-header">
-    <a href="#create/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">create(external_id, params)</span>
+    <span class="signature">call(conn, opts)</span>
     
     
     
@@ -173,43 +134,13 @@
     
   </section>
 </div>
-<div class="detail" id="delete/2">
+<div class="detail" id="init/1">
   
   <div class="detail-header">
-    <a href="#delete/2" class="detail-link" title="Link to this function">
+    <a href="#init/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">delete(external_id, plugin_name)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="get_by_name/2">
-  
-  <div class="detail-header">
-    <a href="#get_by_name/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">get_by_name(external_id, plugin_name)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="update/3">
-  
-  <div class="detail-header">
-    <a href="#update/3" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">update(external_id, name, params)</span>
+    <span class="signature">init(opts)</span>
     
     
     

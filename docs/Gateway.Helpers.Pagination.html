@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.3">
-    <title>Phoenix.Ecto.SQL.Sandbox – gateway v0.1.67</title>
+    <title>Gateway.Helpers.Pagination – gateway v0.1.78</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -26,7 +26,7 @@
         gateway
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.1.67
+        v0.1.78
       </h2>
     </div>
     
@@ -58,39 +58,15 @@
 
 
       <h1>
-        <small class="visible-xs">gateway v0.1.67</small>
-        Phoenix.Ecto.SQL.Sandbox
+        <small class="visible-xs">gateway v0.1.78</small>
+        Gateway.Helpers.Pagination
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>A plug to allow concurrent, transactional acceptance tests with Ecto.Adapters.SQL.Sandbox.</p>
-<h2 id="module-example" class="section-heading">
-  <a href="#module-example" class="hover-link"><i class="icon-link"></i></a>
-  Example
-</h2>
-
-<p>This plug should only be used during tests. First, set a flag to
-enable it in <code class="inline">config/test.exs</code>:</p>
-<pre><code class="elixir">config :your_app, sql_sandbox: true</code></pre>
-<p>And use the flag to conditionally add the plug to <code class="inline">lib/your_app/endpoint.ex</code>:</p>
-<pre><code class="elixir">if Application.get_env(:your_app, :sql_sandbox) do
-  plug Phoenix.Ecto.SQL.Sandbox
-end</code></pre>
-<p>It’s important that this is at the top of <code class="inline">endpoint.ex</code>, before any other plugs.</p>
-<p>Then, within an acceptance test, checkout a sandboxed connection as before.
-Use <a href="#metadata_for/2"><code class="inline">metadata_for/2</code></a> helper to get the session metadata to that will allow access
-to the test’s connection.
-Here’s an example using <a href="https://hex.pm/packages/hound">Hound</a>:</p>
-<pre><code class="elixir">use Hound.Helpers
-
-setup do
-  :ok = Ecto.Adapters.SQL.Sandbox.checkout(YourApp.Repo)
-  metadata = Phoenix.Ecto.SQL.Sandbox.metadata_for(YourApp.Repo, self())
-  Hound.start_session(metadata: metadata)
-end</code></pre>
+          <p>Functions related to paging</p>
 
         </section>
       
@@ -112,25 +88,20 @@ end</code></pre>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#call/2">call(conn, sandbox)</a>
+    <a href="#extract_integer/2">extract_integer(map, key)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#init/1">init(opts \\ [])</a>
+    <a href="#page_info/1">page_info(conn)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#metadata_for/2">metadata_for(repo_or_repos, pid)</a>
+    <a href="#page_info_from/1">page_info_from(params)</a>
   </div>
-  
-    <div class="summary-synopsis"><p>Returns metadata to associate with the session
-to allow the endpoint to acces the database connection checked
-out by the test process</p>
-</div>
   
 </div>
 
@@ -154,13 +125,13 @@ out by the test process</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="call/2">
+          <div class="detail" id="extract_integer/2">
   
   <div class="detail-header">
-    <a href="#call/2" class="detail-link" title="Link to this function">
+    <a href="#extract_integer/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">call(conn, sandbox)</span>
+    <span class="signature">extract_integer(map, key)</span>
     
     
     
@@ -169,15 +140,13 @@ out by the test process</p>
     
   </section>
 </div>
-<div class="detail" id="init/1">
-  
-    <span id="init/0" />
+<div class="detail" id="page_info/1">
   
   <div class="detail-header">
-    <a href="#init/1" class="detail-link" title="Link to this function">
+    <a href="#page_info/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">init(opts \\ [])</span>
+    <span class="signature">page_info(conn)</span>
     
     
     
@@ -186,28 +155,19 @@ out by the test process</p>
     
   </section>
 </div>
-<div class="detail" id="metadata_for/2">
+<div class="detail" id="page_info_from/1">
   
   <div class="detail-header">
-    <a href="#metadata_for/2" class="detail-link" title="Link to this function">
+    <a href="#page_info_from/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">metadata_for(repo_or_repos, pid)</span>
+    <span class="signature">page_info_from(params)</span>
     
     
-    
-      <div class="specs">
-        
-          <pre>metadata_for(<a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#t:t/0">Ecto.Repo.t</a> | [<a href="https://hexdocs.pm/ecto/2.1.0-rc.3/Ecto.Repo.html#t:t/0">Ecto.Repo.t</a>], pid) :: map</pre>
-        
-      </div>
     
   </div>
   <section class="docstring">
-    <p>Returns metadata to associate with the session
-to allow the endpoint to acces the database connection checked
-out by the test process.</p>
-
+    
   </section>
 </div>
 

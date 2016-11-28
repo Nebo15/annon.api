@@ -1,6 +1,6 @@
 defmodule Gateway.Acceptance.Plugins.JWTTest do
   @moduledoc false
-  use Gateway.AcceptanceCase
+  use Gateway.AcceptanceCase, async: true
 
   @jwt_secret "secret"
 
@@ -32,8 +32,6 @@ defmodule Gateway.Acceptance.Plugins.JWTTest do
     |> put_management_url()
     |> post!(jwt_plugin)
     |> assert_status(201)
-
-    Gateway.AutoClustering.do_reload_config()
 
     auth_token = build_jwt_token(%{"scopes" => ["httpbin:read"]}, "a_secret_signature")
 

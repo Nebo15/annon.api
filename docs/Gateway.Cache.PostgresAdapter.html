@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.3">
-    <title>Gateway.DB.Schemas.Consumer – gateway v0.1.67</title>
+    <title>Gateway.Cache.PostgresAdapter – gateway v0.1.78</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -26,7 +26,7 @@
         gateway
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.1.67
+        v0.1.78
       </h2>
     </div>
     
@@ -58,15 +58,15 @@
 
 
       <h1>
-        <small class="visible-xs">gateway v0.1.67</small>
-        Gateway.DB.Schemas.Consumer
+        <small class="visible-xs">gateway v0.1.78</small>
+        Gateway.Cache.PostgresAdapter
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>Schema for Consumers entity.</p>
+          <p>Adapter to access cache using RDBMS.</p>
 
         </section>
       
@@ -88,25 +88,13 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#changeset/2">changeset(consumer, params \\ %{})</a>
+    <a href="#find_api_by/3">find_api_by(scheme, host, port)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#create/1">create(params)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#delete/1">delete(external_id)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#update/2">update(consumer_id, params)</a>
+    <a href="#warm_up/0">warm_up()</a>
   </div>
   
 </div>
@@ -131,15 +119,13 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="changeset/2">
-  
-    <span id="changeset/1" />
+          <div class="detail" id="find_api_by/3">
   
   <div class="detail-header">
-    <a href="#changeset/2" class="detail-link" title="Link to this function">
+    <a href="#find_api_by/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">changeset(consumer, params \\ %{})</span>
+    <span class="signature">find_api_by(scheme, host, port)</span>
     
     
     
@@ -148,43 +134,13 @@
     
   </section>
 </div>
-<div class="detail" id="create/1">
+<div class="detail" id="warm_up/0">
   
   <div class="detail-header">
-    <a href="#create/1" class="detail-link" title="Link to this function">
+    <a href="#warm_up/0" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">create(params)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="delete/1">
-  
-  <div class="detail-header">
-    <a href="#delete/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">delete(external_id)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="update/2">
-  
-  <div class="detail-header">
-    <a href="#update/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">update(consumer_id, params)</span>
+    <span class="signature">warm_up()</span>
     
     
     

@@ -1,6 +1,6 @@
 defmodule Gateway.Acceptance.Smoke.FileUploadingTest do
   @moduledoc false
-  use Gateway.AcceptanceCase
+  use Gateway.AcceptanceCase, async: true
 
   setup do
     api = :api
@@ -33,8 +33,6 @@ defmodule Gateway.Acceptance.Smoke.FileUploadingTest do
     |> post!(proxy_plugin)
     |> assert_status(201)
 
-    Gateway.AutoClustering.do_reload_config()
-
     :ok
   end
 
@@ -47,7 +45,7 @@ defmodule Gateway.Acceptance.Smoke.FileUploadingTest do
 
     response =
       path
-      |> HTTPoison.post!({:multipart, parts}, [{"X-Custom-Header", "custom-value"}])
+      |> HTTPoison.post!({:multipart, parts}, [{"X-Custom-Header", "custom-value"}, magic_cookie()])
       |> Map.get(:body)
       |> Poison.decode!
 

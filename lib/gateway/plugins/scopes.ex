@@ -46,4 +46,5 @@ defmodule Gateway.Plugins.Scopes do
     |> get_scopes(settings)
     |> save_scopes(conn)
   end
+  defp execute(%Plugin{settings: _}, %Conn{private: _} = conn), do: conn
 end

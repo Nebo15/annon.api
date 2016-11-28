@@ -10,4 +10,5 @@ defmodule Gateway.DB.Logger.Repo do
   """
 
   use Ecto.Repo, otp_app: :gateway
+  use Ecto.Pagging.Repo
 end

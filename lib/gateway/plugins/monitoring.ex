@@ -10,8 +10,7 @@ defmodule Gateway.Plugins.Monitoring do
     plugin_name: "monitoring"
 
   alias Plug.Conn
-
-  @unit :milli_seconds
+  import Gateway.Helpers.Latency
 
   @doc false
   def call(%Conn{path_info: path_info} = conn, _opts) do
@@ -26,14 +25,14 @@ defmodule Gateway.Plugins.Monitoring do
     |> metric_name("request_count")
     |> ExStatsD.increment
 
-    req_start_time = :erlang.monotonic_time(@unit)
-
     conn
-    |> Plug.Conn.register_before_send(&write_metrics(&1, req_start_time))
+    |> Conn.register_before_send(&write_metrics(&1))
   end
 
-  defp write_metrics(%Conn{request_path: request_path} = conn, req_start_time) do
-    request_duration = :erlang.monotonic_time(@unit) - req_start_time
+  defp write_metrics(%Conn{request_path: request_path} = conn) do
+    client_req_start_time = Map.get(conn.assigns, :client_req_start_time)
+    conn = write_latency(conn, :latencies_client, client_req_start_time)
+    request_duration = conn.assigns.latencies_client - Map.get(conn.assigns, :latencies_upstream, 0)
 
     metric_name = request_path
     |> metric_name("latency")

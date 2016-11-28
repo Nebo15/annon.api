@@ -23,7 +23,7 @@ defmodule Gateway.DB.Schemas.Plugin do
     field :name, :string
     field :is_enabled, :boolean, default: false
     field :settings, :map
-    belongs_to :api, Gateway.DB.Schemas.API
+    belongs_to :api, APISchema
 
     timestamps()
   end
@@ -47,10 +47,8 @@ defmodule Gateway.DB.Schemas.Plugin do
       limit: 1
   end
 
-  def get_by(selector, limit) do
-    Repo.all from PluginSchema,
-      where: ^selector,
-      limit: ^limit
+  def get_by(selector) do
+    from PluginSchema, where: ^selector
   end
 
   def create(api_id, params) when is_map(params) do

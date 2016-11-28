@@ -1,6 +1,6 @@
 defmodule Gateway.Acceptance.Plugins.ValidatorTest do
   @moduledoc false
-  use Gateway.AcceptanceCase
+  use Gateway.AcceptanceCase, async: true
 
   @schema %{"type" => "object",
             "properties" => %{"foo" => %{"type" => "number"}, "bar" => %{ "type" => "string"}},
@@ -37,8 +37,6 @@ defmodule Gateway.Acceptance.Plugins.ValidatorTest do
     |> post!(validator_plugin)
     |> assert_status(201)
 
-    Gateway.AutoClustering.do_reload_config()
-
     assert %{
       "error" => %{"type" => "validation_failed"}
     } = api_path
@@ -64,8 +62,6 @@ defmodule Gateway.Acceptance.Plugins.ValidatorTest do
     |> post!(validator_plugin)
     |> assert_status(201)
 
-    Gateway.AutoClustering.do_reload_config()
-
     api_path
     |> put_public_url()
     |> post!(%{data: "aaaa"})
@@ -87,8 +83,6 @@ defmodule Gateway.Acceptance.Plugins.ValidatorTest do
     |> post!(validator_plugin)
     |> assert_status(201)
 
-    Gateway.AutoClustering.do_reload_config()
-
     api_path
     |> put_public_url()
     |> post!(%{data: "aaaa"})
@@ -109,8 +103,6 @@ defmodule Gateway.Acceptance.Plugins.ValidatorTest do
     |> put_management_url()
     |> post!(validator_plugin)
     |> assert_status(201)
-
-    Gateway.AutoClustering.do_reload_config()
 
     api_path
     |> put_public_url()
@@ -134,8 +126,6 @@ defmodule Gateway.Acceptance.Plugins.ValidatorTest do
     |> post!(validator_plugin)
     |> assert_status(201)
 
-    Gateway.AutoClustering.do_reload_config()
-
     api_path
     |> put_public_url()
     |> post!(%{data: "aaaa"})
@@ -155,8 +145,6 @@ defmodule Gateway.Acceptance.Plugins.ValidatorTest do
       |> put_management_url()
       |> post!(validator_plugin)
       |> assert_status(201)
-
-      Gateway.AutoClustering.do_reload_config()
 
       "#{api_path}/foo"
       |> put_public_url()

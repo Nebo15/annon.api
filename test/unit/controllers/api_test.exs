@@ -2,6 +2,77 @@ defmodule Gateway.Controllers.APITest do
   @moduledoc false
   use Gateway.UnitCase, async: true
 
+  describe "/apis (pagination)" do
+    setup do
+      apis = Gateway.Factory.insert_list(10, :api)
+
+      {:ok, %{apis: apis}}
+    end
+
+    test "GET /apis?starting_after=2&limit=5", %{apis: apis} do
+      id = Enum.at(apis, 2).id
+
+      conn = "/apis?starting_after=#{id}&limit=5"
+      |> call_get()
+      |> assert_conn_status()
+
+      expected_records =
+        apis
+        |> Enum.slice(3, 5)
+        |> Enum.map(&Map.get(&1, :id))
+
+      actual_records =
+        Poison.decode!(conn.resp_body)["data"]
+        |> Enum.map(&Map.get(&1, "id"))
+
+      assert expected_records == actual_records
+      assert %{ "limit" => 5,
+                "cursors" => %{
+                  "starting_after" => _,
+                  "ending_before" => nil
+                },
+               "has_more" => true} = Poison.decode!(conn.resp_body)["paging"]
+    end
+
+    test "GET /apis?ending_before=7&limit=4", %{apis: apis} do
+      id = Enum.at(apis, 7).id
+
+      conn = "/apis?ending_before=#{id}&limit=4"
+      |> call_get()
+      |> assert_conn_status()
+
+      expected_records =
+        apis
+        |> Enum.slice(3, 4)
+        |> Enum.map(&Map.get(&1, :id))
+
+      actual_records =
+        Poison.decode!(conn.resp_body)["data"]
+        |> Enum.map(&Map.get(&1, "id"))
+
+      assert expected_records == actual_records
+    end
+
+    test "GET /apis?ending_before=3&limit=5", %{apis: apis} do
+      id = Enum.at(apis, 3).id
+
+      conn = "/apis?ending_before=#{id}&limit=4"
+      |> call_get()
+      |> assert_conn_status()
+
+      expected_records =
+        apis
+        |> Enum.slice(0, 3)
+        |> Enum.map(&Map.get(&1, :id))
+
+      actual_records =
+        Poison.decode!(conn.resp_body)["data"]
+        |> Enum.map(&Map.get(&1, "id"))
+
+      assert expected_records == actual_records
+    end
+  end
+
   describe "/apis" do
     test "GET empty list" do
       conn = "/apis"

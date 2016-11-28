@@ -1,6 +1,6 @@
 defmodule Gateway.Acceptance.Plugins.IdempotencyTest do
   @moduledoc false
-  use Gateway.AcceptanceCase
+  use Gateway.AcceptanceCase, async: true
 
   @idempotency_key Ecto.UUID.generate()
 
@@ -31,8 +31,6 @@ defmodule Gateway.Acceptance.Plugins.IdempotencyTest do
     |> put_management_url()
     |> post!(idempotency_plugin)
     |> assert_status(201)
-
-    Gateway.AutoClustering.do_reload_config()
 
     %{api_id: api_id, api_path: api_path, api: api}
   end

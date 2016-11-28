@@ -7,6 +7,7 @@ defmodule Gateway.Plugins.Proxy do
     plugin_name: "proxy"
 
   import Gateway.Helpers.IP
+  import Gateway.Helpers.Latency
 
   alias Plug.Conn
   alias Gateway.DB.Schemas.Plugin
@@ -34,16 +35,20 @@ defmodule Gateway.Plugins.Proxy do
   end
 
   defp do_proxy(settings, api_path, %Conn{method: method} = conn) do
+    req_start_time = get_time()
+
     response = settings
     |> make_link(api_path, conn)
     |> do_request(conn, method)
+
+    conn = write_latency(conn, :latencies_upstream, req_start_time)
 
     response.headers
     |> Enum.reduce(conn, fn
       {"x-request-id", _header_value}, conn ->
         conn
       {header_key, header_value}, conn ->
-        conn |> Conn.put_resp_header(header_key, header_value)
+        conn |> Conn.put_resp_header(String.downcase(header_key), header_value)
     end)
     |> Conn.send_resp(response.status_code, response.body)
     |> Conn.halt
@@ -84,7 +89,7 @@ defmodule Gateway.Plugins.Proxy do
       case value do
         %Plug.Upload{path: path} ->
           :ok = :hackney.send_multipart_body(ref, {:file, path})
-        other ->
+        _ ->
           :ok = :hackney.send_multipart_body(ref, {:data, key, value})
       end
     end

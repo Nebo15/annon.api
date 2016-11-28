@@ -6,9 +6,17 @@ defmodule Gateway.PublicRouter do
   but witch of them should process request will be resolved in run-time.
   """
   use Plug.Router
+
+  if Confex.get(:gateway, :sql_sandbox) do
+    plug Phoenix.Ecto.SQL.Sandbox
+  end
+
   use Plug.ErrorHandler
 
   plug :match
+
+  # Plugin that traces request start time
+  plug Gateway.Plugins.ClientLatency
 
   plug Plug.RequestId
   plug Plug.Parsers, parsers: [:multipart, :json],
@@ -26,7 +34,6 @@ defmodule Gateway.PublicRouter do
   # Security plugins that can halt connection immediately
   plug Gateway.Plugins.IPRestriction
   plug Gateway.Plugins.JWT
-  plug Gateway.Plugins.Consumers
   plug Gateway.Plugins.Scopes
   plug Gateway.Plugins.ACL
 

@@ -3,6 +3,11 @@ defmodule Gateway.ManagementRouter do
   Router for a [Annons Management API](http://docs.annon.apiary.io/#reference/apis).
   """
   use Plug.Router
+
+  if Confex.get(:gateway, :sql_sandbox) do
+    plug Phoenix.Ecto.SQL.Sandbox
+  end
+
   use Plug.ErrorHandler
 
   plug :match
@@ -17,7 +22,6 @@ defmodule Gateway.ManagementRouter do
   plug Gateway.ConfigReloader
 
   forward "/apis", to: Gateway.Controllers.API
-  forward "/consumers", to: Gateway.Controllers.Consumer
   forward "/requests", to: Gateway.Controllers.Request
 
   match _ do

@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.3">
-    <title>API Reference – gateway v0.1.67</title>
+    <title>API Reference – gateway v0.1.78</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -26,7 +26,7 @@
         gateway
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.1.67
+        v0.1.78
       </h2>
     </div>
     
@@ -57,7 +57,7 @@
     <div id="content" class="content-inner">
 
   <h1>
-    <small class="visible-xs">gateway v0.1.67</small>
+    <small class="visible-xs">gateway v0.1.78</small>
     API Reference
   </h1>
 
@@ -87,6 +87,20 @@ binded to a specific test</p>
     <div class="summary-synopsis"><p>This module implements
 <a href="http://docs.annon.apiary.io/#introduction/general-features/caching-and-perfomance">Annons cache invalidation</a>
 based on different cluster discovery strategies</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Cache.EtsAdapter.html">Gateway.Cache.EtsAdapter</a></div>
+  
+    <div class="summary-synopsis"><p>Adapter to access cache using ETS</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Cache.PostgresAdapter.html">Gateway.Cache.PostgresAdapter</a></div>
+  
+    <div class="summary-synopsis"><p>Adapter to access cache using RDBMS</p>
 </div>
   
 </div>
@@ -128,20 +142,6 @@ whenever there was change triggered by a management API</p>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="Gateway.Controllers.Consumer.html">Gateway.Controllers.Consumer</a></div>
-  
-    <div class="summary-synopsis"><p>REST interface that allows to manage Consumers and their settings overrides</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Gateway.Controllers.Consumer.PluginSettings.html">Gateway.Controllers.Consumer.PluginSettings</a></div>
-  
-    <div class="summary-synopsis"><p>REST interface that allows to manage overrides for Consumer plugin settings</p>
-</div>
-  
-</div>
-<div class="summary-row">
   <div class="summary-signature"><a href="Gateway.Controllers.Request.html">Gateway.Controllers.Request</a></div>
   
     <div class="summary-synopsis"><p>REST interface that allows to fetch and delete stored requests</p>
@@ -178,20 +178,6 @@ whenever there was change triggered by a management API</p>
 </div>
 <div class="summary-row">
   <div class="summary-signature"><a href="Gateway.DB.Schemas.API.Request.html">Gateway.DB.Schemas.API.Request</a></div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Gateway.DB.Schemas.Consumer.html">Gateway.DB.Schemas.Consumer</a></div>
-  
-    <div class="summary-synopsis"><p>Schema for Consumers entity</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Gateway.DB.Schemas.ConsumerPluginSettings.html">Gateway.DB.Schemas.ConsumerPluginSettings</a></div>
-  
-    <div class="summary-synopsis"><p>Schema for Consumer’s overrides for plugin settings</p>
-</div>
   
 </div>
 <div class="summary-row">
@@ -251,6 +237,20 @@ for tests that involve preparation of DB data</p>
   <div class="summary-signature"><a href="Gateway.Helpers.IP.html">Gateway.Helpers.IP</a></div>
   
     <div class="summary-synopsis"><p>Helpers for working with IP addresses</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Helpers.Latency.html">Gateway.Helpers.Latency</a></div>
+  
+    <div class="summary-synopsis"><p>Helper for tracing client latency</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Gateway.Helpers.Pagination.html">Gateway.Helpers.Pagination</a></div>
+  
+    <div class="summary-synopsis"><p>Functions related to paging</p>
 </div>
   
 </div>
@@ -319,9 +319,9 @@ because it’s used to fetch all settings and decide which ones should be applie
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="Gateway.Plugins.Consumers.html">Gateway.Plugins.Consumers</a></div>
+  <div class="summary-signature"><a href="Gateway.Plugins.ClientLatency.html">Gateway.Plugins.ClientLatency</a></div>
   
-    <div class="summary-synopsis"><p>This plugin reads consumer settings</p>
+    <div class="summary-synopsis"><p>This plugin writes request start time to conn.assigns</p>
 </div>
   
 </div>
@@ -395,13 +395,6 @@ set validation rules for a path relative to an API</p>
   <div class="summary-signature"><a href="Gateway.UnitCase.html">Gateway.UnitCase</a></div>
   
     <div class="summary-synopsis"><p>Gateway HTTP Test Helper</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Phoenix.Ecto.SQL.Sandbox.html">Phoenix.Ecto.SQL.Sandbox</a></div>
-  
-    <div class="summary-synopsis"><p>A plug to allow concurrent, transactional acceptance tests with Ecto.Adapters.SQL.Sandbox</p>
 </div>
   
 </div>

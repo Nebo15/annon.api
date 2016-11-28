@@ -32,6 +32,13 @@ defmodule Gateway.MockServer do
   defp modify_headers_list([]), do: []
   defp modify_headers_list([{key, value} | t]), do: [%{key => value}] ++ modify_headers_list(t)
 
+  match "/latency/*_" do
+    :timer.sleep(200)
+    conn
+    |> debug_conn
+    |> Response.send(conn, 200)
+  end
+
   match _ do
     conn
     |> debug_conn

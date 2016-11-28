@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.3">
-    <title>Gateway.Controllers.Consumer – gateway v0.1.67</title>
+    <title>Gateway.Cache.EtsAdapter – gateway v0.1.78</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -26,7 +26,7 @@
         gateway
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.1.67
+        v0.1.78
       </h2>
     </div>
     
@@ -58,19 +58,15 @@
 
 
       <h1>
-        <small class="visible-xs">gateway v0.1.67</small>
-        Gateway.Controllers.Consumer
+        <small class="visible-xs">gateway v0.1.78</small>
+        Gateway.Cache.EtsAdapter
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>REST interface that allows to manage Consumers and their settings overrides.</p>
-<p>Consumer is a authorization entity that can be accessed any unique external it.
-It stores scopes and metadata. Scopes can be used by authorization plugins.</p>
-<p>By overriding plugin settings for a consumer you can define personal rules for processing hes requests.</p>
-<p>You can find full description in <a href="http://docs.annon.apiary.io/#reference/consumers">REST API documentation</a>.</p>
+          <p>Adapter to access cache using ETS.</p>
 
         </section>
       
@@ -92,20 +88,14 @@ It stores scopes and metadata. Scopes can be used by authorization plugins.</p>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#call/2">call(conn, opts)</a>
+    <a href="#find_api_by/3">find_api_by(scheme, host, port)</a>
   </div>
-  
-    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/plug/1.2.2/Plug.html#c:call/2"><code class="inline">Plug.call/2</code></a></p>
-</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#init/1">init(opts)</a>
+    <a href="#warm_up/0">warm_up()</a>
   </div>
-  
-    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/plug/1.2.2/Plug.html#c:init/1"><code class="inline">Plug.init/1</code></a></p>
-</div>
   
 </div>
 
@@ -129,36 +119,34 @@ It stores scopes and metadata. Scopes can be used by authorization plugins.</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="call/2">
+          <div class="detail" id="find_api_by/3">
   
   <div class="detail-header">
-    <a href="#call/2" class="detail-link" title="Link to this function">
+    <a href="#find_api_by/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">call(conn, opts)</span>
+    <span class="signature">find_api_by(scheme, host, port)</span>
     
     
     
   </div>
   <section class="docstring">
-    <p>Callback implementation for <a href="https://hexdocs.pm/plug/1.2.2/Plug.html#c:call/2"><code class="inline">Plug.call/2</code></a>.</p>
-
+    
   </section>
 </div>
-<div class="detail" id="init/1">
+<div class="detail" id="warm_up/0">
   
   <div class="detail-header">
-    <a href="#init/1" class="detail-link" title="Link to this function">
+    <a href="#warm_up/0" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">init(opts)</span>
+    <span class="signature">warm_up()</span>
     
     
     
   </div>
   <section class="docstring">
-    <p>Callback implementation for <a href="https://hexdocs.pm/plug/1.2.2/Plug.html#c:init/1"><code class="inline">Plug.init/1</code></a>.</p>
-
+    
   </section>
 </div>
 

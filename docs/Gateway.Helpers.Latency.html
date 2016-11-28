@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.3">
-    <title>Gateway.Controllers.Consumer.PluginSettings – gateway v0.1.67</title>
+    <title>Gateway.Helpers.Latency – gateway v0.1.78</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -26,7 +26,7 @@
         gateway
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.1.67
+        v0.1.78
       </h2>
     </div>
     
@@ -58,18 +58,15 @@
 
 
       <h1>
-        <small class="visible-xs">gateway v0.1.67</small>
-        Gateway.Controllers.Consumer.PluginSettings
+        <small class="visible-xs">gateway v0.1.78</small>
+        Gateway.Helpers.Latency
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>REST interface that allows to manage overrides for Consumer plugin settings.</p>
-<p>By overriding them you can define personal rules for processing hes requests.</p>
-<p>You can find full description in
-<a href="http://docs.annon.apiary.io/#reference/consumers/consumer-settings-overrides-for-plugins">REST API documentation</a>.</p>
+          <p>Helper for tracing client latency.</p>
 
         </section>
       
@@ -91,20 +88,14 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#call/2">call(conn, opts)</a>
+    <a href="#get_time/0">get_time()</a>
   </div>
-  
-    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/plug/1.2.2/Plug.html#c:call/2"><code class="inline">Plug.call/2</code></a></p>
-</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#init/1">init(opts)</a>
+    <a href="#write_latency/3">write_latency(conn, key, start_time)</a>
   </div>
-  
-    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/plug/1.2.2/Plug.html#c:init/1"><code class="inline">Plug.init/1</code></a></p>
-</div>
   
 </div>
 
@@ -128,36 +119,34 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="call/2">
+          <div class="detail" id="get_time/0">
   
   <div class="detail-header">
-    <a href="#call/2" class="detail-link" title="Link to this function">
+    <a href="#get_time/0" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">call(conn, opts)</span>
+    <span class="signature">get_time()</span>
     
     
     
   </div>
   <section class="docstring">
-    <p>Callback implementation for <a href="https://hexdocs.pm/plug/1.2.2/Plug.html#c:call/2"><code class="inline">Plug.call/2</code></a>.</p>
-
+    
   </section>
 </div>
-<div class="detail" id="init/1">
+<div class="detail" id="write_latency/3">
   
   <div class="detail-header">
-    <a href="#init/1" class="detail-link" title="Link to this function">
+    <a href="#write_latency/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">init(opts)</span>
+    <span class="signature">write_latency(conn, key, start_time)</span>
     
     
     
   </div>
   <section class="docstring">
-    <p>Callback implementation for <a href="https://hexdocs.pm/plug/1.2.2/Plug.html#c:init/1"><code class="inline">Plug.init/1</code></a>.</p>
-
+    
   </section>
 </div>
 

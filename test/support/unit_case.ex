@@ -7,13 +7,10 @@ defmodule Gateway.UnitCase do
 
   using do
     quote do
-      use ExUnit.Case, async: true
       use Plug.Test
       import Gateway.UnitCase
 
       setup tags do
-        :ets.delete_all_objects(:config)
-
         :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Configs.Repo)
         :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Logger.Repo)
 
