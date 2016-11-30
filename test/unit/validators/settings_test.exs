@@ -68,9 +68,6 @@ defmodule Gateway.Changeset.Validator.SettingsTest do
         %Ecto.Changeset{changes: %{name: "proxy", settings: settings}}
         |> Gateway.Changeset.Validator.Settings.validate_settings()
 
-      changeset.errors
-      |> IO.inspect
-
       refute [] == changeset.errors
     end
   end
