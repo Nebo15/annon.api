@@ -38,8 +38,7 @@ defmodule Gateway.Changeset.Validator.Settings do
                 }
               },
               "path" => %{
-                "type" => "string",
-                "pattern": "^/.*$"
+                "type" => "string"
               },
               "scopes" => %{
                 "type" => "array",
