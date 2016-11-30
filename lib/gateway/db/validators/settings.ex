@@ -148,7 +148,7 @@ defmodule Gateway.Changeset.Validator.Settings do
         },
         "host" => %{
           "type" => "string",
-          "oneOf": [
+          "oneOf" => [
             %{"format" => "hostname"},
             %{"format" => "ipv4"}
           ]

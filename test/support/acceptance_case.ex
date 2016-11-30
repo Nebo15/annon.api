@@ -91,7 +91,7 @@ defmodule Gateway.AcceptanceCase do
 
       def create_proxy_to_mock(api_id, settings \\ %{}) do
         settings = %{
-          host: get_endpoint_host(:mock),
+          host: "127.0.0.1",
           port: get_endpoint_port(:mock)
         }
         |> Map.merge(settings)
