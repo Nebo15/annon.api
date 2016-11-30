@@ -158,7 +158,7 @@ defmodule Gateway.Changeset.Validator.Settings do
         },
         "path" => %{
           "type" => "string",
-          "pattern": "^/.*"
+          "pattern" => "^/.*"
         },
         "strip_api_path" => %{
           "type" => "boolean"

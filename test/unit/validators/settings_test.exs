@@ -58,4 +58,20 @@ defmodule Gateway.Changeset.Validator.SettingsTest do
       refute [] == changeset.errors
     end
   end
+
+  describe "Proxy plugin validation" do
+    test "Invalid settings" do
+      settings =
+        %{"host" => "some-host.com", "path" => "not-good"}
+
+      changeset =
+        %Ecto.Changeset{changes: %{name: "proxy", settings: settings}}
+        |> Gateway.Changeset.Validator.Settings.validate_settings()
+
+      changeset.errors
+      |> IO.inspect
+
+      refute [] == changeset.errors
+    end
+  end
 end
