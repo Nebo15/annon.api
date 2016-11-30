@@ -19,12 +19,6 @@ defmodule Gateway.DB.Schemas.Log do
       end
     end
 
-    embeds_one :consumer, Consumer, primary_key: false do
-      field :id, :string
-      field :external_id, :string
-      field :metadata, :map
-    end
-
     embeds_one :request, Request, primary_key: false do
       field :method, :string
       field :uri, :string
@@ -57,7 +51,6 @@ defmodule Gateway.DB.Schemas.Log do
     |> cast(params, [:id, :idempotency_key, :ip_address, :status_code])
     |> cast_embed(:request, with: &changeset_embeded_request/2)
     |> cast_embed(:api, with: &changeset_embeded_api/2)
-    |> cast_embed(:consumer, with: &changeset_embeded_consumer/2)
     |> cast_embed(:request, with: &changeset_embeded_request/2)
     |> cast_embed(:response, with: &changeset_embeded_response/2)
     |> cast_embed(:latencies, with: &changeset_embeded_latencies/2)
@@ -88,11 +81,6 @@ defmodule Gateway.DB.Schemas.Log do
   def changeset_embeded_api_request(data, params \\ %{}) do
     data
     |> cast(params, [:scheme, :host, :port, :path])
-  end
-
-  def changeset_embeded_consumer(data, params \\ %{}) do
-    data
-    |> cast(params, [:id, :external_id, :metadata])
   end
 
   def get_one_by(selector) do
