@@ -108,7 +108,7 @@ defmodule Gateway.Changeset.Validator.Settings do
           "items" => %{
             "type" => "string",
             "oneOf" => [
-              %{"pattern" => "[\d+|\*]\.[\d+|\*]\.[\d+|\*]\.[\d+|\*]"}
+              %{"pattern" => "^(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)$"}
             ]
           }
         },
@@ -117,7 +117,7 @@ defmodule Gateway.Changeset.Validator.Settings do
           "items" => %{
             "type" => "string",
             "oneOf" => [
-              %{"pattern" => "[\d+|\*]\.[\d+|\*]\.[\d+|\*]\.[\d+|\*]"}
+              %{"pattern" => "^(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)$"}
             ]
           }
         }
