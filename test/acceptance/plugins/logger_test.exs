@@ -31,7 +31,7 @@ defmodule Gateway.Acceptance.Plugins.LoggerTest do
 
     proxy_plugin = build_factory_params(:proxy_plugin, %{settings: %{
       scheme: "http",
-      host: "localhost",
+      host: "127.0.0.1",
       port: 4040,
       path: "/latency"
     }})

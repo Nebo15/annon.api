@@ -12,10 +12,10 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
   describe "partially update settings" do
     test "create", %{api_id: api_id} do
       proxy = :proxy_plugin
-      |> build_factory_params(%{settings: %{host: "localhost"}})
+      |> build_factory_params(%{settings: %{host: "host.com"}})
 
       assert  %{
-        "data" => %{"is_enabled" => true, "settings" => %{"host" => "localhost"}}
+        "data" => %{"is_enabled" => true, "settings" => %{"host" => "host.com"}}
       } = "apis/#{api_id}/plugins"
       |> put_management_url()
       |> post!(proxy)
@@ -26,7 +26,7 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
       |> build_factory_params(%{settings: %{port: 4040}})
 
       assert  %{
-        "data" => %{"is_enabled" => true, "settings" => %{"host" => "localhost", "port" => 4040}}
+        "data" => %{"is_enabled" => true, "settings" => %{"host" => "host.com", "port" => 4040}}
       } = "apis/#{api_id}/plugins/proxy"
       |> put_management_url()
       |> put!(proxy)
@@ -37,7 +37,7 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
       |> build_factory_params(%{is_enabled: false})
 
       assert  %{
-        "data" => %{"is_enabled" => false, "settings" => %{"host" => "localhost", "port" => 4040}}
+        "data" => %{"is_enabled" => false, "settings" => %{"host" => "host.com", "port" => 4040}}
       } = "apis/#{api_id}/plugins/proxy"
       |> put_management_url()
       |> put!(proxy)
@@ -286,7 +286,7 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
   describe "Proxy Plugin" do
     test "create", %{api_id: api_id} do
       proxy = :proxy_plugin
-      |> build_factory_params(%{settings: %{host: "localhost"}})
+      |> build_factory_params(%{settings: %{host: "host.com"}})
 
       "apis/#{api_id}/plugins"
       |> put_management_url()

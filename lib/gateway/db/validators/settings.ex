@@ -107,8 +107,8 @@ defmodule Gateway.Changeset.Validator.Settings do
           "type" => "array",
           "items" => %{
             "type" => "string",
-            "oneOf": [
-              %{"format" => "ipv4"}
+            "oneOf" => [
+              %{"pattern" => "^(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)$"}
             ]
           }
         },
@@ -116,8 +116,8 @@ defmodule Gateway.Changeset.Validator.Settings do
           "type" => "array",
           "items" => %{
             "type" => "string",
-            "oneOf": [
-              %{"format" => "ipv4"}
+            "oneOf" => [
+              %{"pattern" => "^(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)$"}
             ]
           }
         }
@@ -148,7 +148,7 @@ defmodule Gateway.Changeset.Validator.Settings do
         },
         "host" => %{
           "type" => "string",
-          "oneOf": [
+          "oneOf" => [
             %{"format" => "hostname"},
             %{"format" => "ipv4"}
           ]
