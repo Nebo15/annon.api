@@ -1,7 +1,7 @@
 defmodule Gateway.Mixfile do
   use Mix.Project
 
-  @version "0.1.78"
+  @version "0.1.83"
 
   def project do
     [app: :gateway,
@@ -26,7 +26,7 @@ defmodule Gateway.Mixfile do
   def application do
     [
       applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto, :timex, :joken, :nex_json_schema,
-                     :poison, :httpoison, :ex_statsd, :skycluster, :eview],
+                     :poison, :httpoison, :ex_statsd, :skycluster, :eview, :ecto_paging],
       mod: {Gateway, []}
     ]
   end

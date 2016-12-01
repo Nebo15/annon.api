@@ -38,8 +38,7 @@ defmodule Gateway.Changeset.Validator.Settings do
                 }
               },
               "path" => %{
-                "type" => "string",
-                "pattern": "^/.*$"
+                "type" => "string"
               },
               "scopes" => %{
                 "type" => "array",
@@ -107,8 +106,8 @@ defmodule Gateway.Changeset.Validator.Settings do
           "type" => "array",
           "items" => %{
             "type" => "string",
-            "oneOf": [
-              %{"format" => "ipv4"}
+            "oneOf" => [
+              %{"pattern" => "^(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)$"}
             ]
           }
         },
@@ -116,8 +115,8 @@ defmodule Gateway.Changeset.Validator.Settings do
           "type" => "array",
           "items" => %{
             "type" => "string",
-            "oneOf": [
-              %{"format" => "ipv4"}
+            "oneOf" => [
+              %{"pattern" => "^(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)$"}
             ]
           }
         }
@@ -148,7 +147,7 @@ defmodule Gateway.Changeset.Validator.Settings do
         },
         "host" => %{
           "type" => "string",
-          "oneOf": [
+          "oneOf" => [
             %{"format" => "hostname"},
             %{"format" => "ipv4"}
           ]
@@ -158,7 +157,7 @@ defmodule Gateway.Changeset.Validator.Settings do
         },
         "path" => %{
           "type" => "string",
-          "pattern": "^/.*"
+          "pattern" => "^/.*"
         },
         "strip_api_path" => %{
           "type" => "boolean"

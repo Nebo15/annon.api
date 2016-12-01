@@ -45,12 +45,28 @@ defmodule Gateway.Acceptance.Smoke.FileUploadingTest do
 
     response =
       path
-      |> HTTPoison.post!({:multipart, parts}, [{"X-Custom-Header", "custom-value"}, magic_cookie()])
+      |> HTTPoison.post!({:multipart, parts}, [{"X-Custom-Header", "custom-value"}, magic_header()])
       |> Map.get(:body)
       |> Poison.decode!
 
     assert String.starts_with?(response["files"]["file"], "defmodule")
     assert "some-value" == response["form"]["some-name"]
     assert "custom-value" == response["headers"]["X-Custom-Header"]
+  end
+
+  test "A POST request with file under a certain name" do
+    path = put_public_url("/httpbin")
+
+    parts = [
+      {:file, __ENV__.file, {"form-data", [{"name", ~S("loans[file]")}, {"filename", ~S("some-file-name.bson")}]}, []}
+    ]
+
+    response =
+      path
+      |> HTTPoison.post!({:multipart, parts}, [magic_header()])
+      |> Map.get(:body)
+      |> Poison.decode!
+
+    assert String.starts_with?(response["files"]["loans[file]"], "defmodule")
   end
 end

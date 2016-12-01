@@ -29,7 +29,6 @@ defmodule Gateway.Plugins.Logger do
       ip_address: conn.remote_ip |> Tuple.to_list |> Enum.join("."),
       request: get_request_data(conn),
       api: get_api_data(conn),
-      consumer: get_consumer_data(conn),
       response: get_response_data(conn),
       latencies: get_latencies_data(conn),
       status_code: conn.status
@@ -67,8 +66,6 @@ defmodule Gateway.Plugins.Logger do
       request: prepare_params(request)
     }
   end
-
-  defp get_consumer_data(_conn), do: %{} |> prepare_params
 
   defp get_request_data(conn) do
     %{
