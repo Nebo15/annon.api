@@ -95,7 +95,6 @@ TBD 2.0
 ### Authorization
 
 All authorization plugins work on top of [Consumers](#reference/consumers/get-all-requests) entity. Plugins can assign access scopes that can be reused in [ACL](#reference/plugins/acl/get-all-requests) plugin.
-Only one authorization plugin can be enabled at one time, because all of them override [Consumers](#reference/consumers/get-all-requests) collection logic.
 
 To authorize requests inside private platrom scope we can add `Authroization: Basic base64_token` headers, so services will know that request is sent from API Gateway. _In MVP release we will trust to all requests inside private zone, no API authorization is required._
 
@@ -544,91 +543,6 @@ Rules applied in a predicted order:
         + data (Plugin_IPRestriction)
           + name: ip_restriction (string)
 
-# Group Consumers
-
-You need to create `Consumer` whenever you want to apply individual plugin settings to a authorized API consumer.
-
-## Collection [/consumers]
-
-### Get Consumers [GET]
-
-+ Response 200 (application/json)
-    + Attributes (Response_Collection)
-        + data (array[Consumer])
-
-### Create Consumer [POST]
-
-+ Request (application/json)
-    + Attributes (Consumer)
-
-+ Response 201 (application/json)
-    + Attributes (Response_OK)
-        + meta (Response__Meta)
-            + code: 201 (number)
-        + data (Consumer)
-
-## Consumer [/consumers/{external_id}]
-
-### Update Consumer [PUT]
-
-You can omit any request parameters if you want to partially update Consumer.
-
-+ Parameters
-    + external_id: 56c31536a60ad644060041af (string) - your consumer ID.
-
-+ Request (application/json)
-    + Attributes (Consumer)
-
-+ Response 200 (application/json)
-    + Attributes (Response_OK)
-        + data (Consumer)
-
-### Delete Consumer [DELETE]
-
-+ Parameters
-    + external_id: 56c31536a60ad644060041af (string) - your consumer ID.
-
-+ Response 200 (application/json)
-    + Attributes (Response_OK)
-
-## Consumer settings overrides for Plugins [/consumers/{external_id}/plugins/{plugin_name}]
-
-Consumer can have overrides for different plugins, for example you can set different IP Restrictions `whitelist` and `blacklist` values to allow consumer make requests from specific IP's. Also if you plan to use [ACL](#reference/plugins/acl/get-all-requests) plugin, you can to set scopes that consumer owns in overrides.
-
-### Update Settings [PUT]
-
-+ Parameters
-    + external_id: 56c31536a60ad644060041af (string) - your consumer ID.
-    + plugin_name: acl (string) - name of a plugin, which settings you want to override.
-
-+ Request (application/json)
-    + Attributes
-        + name: acl (string)
-        + settings (object)
-            + scopes (array[string]) - list of scopes that is owned by consumer.
-                + request_api
-                + read_profile
-
-+ Response 200 (application/json)
-    + Attributes (Response_OK)
-        + data (object)
-            + name: acl (string)
-            + settings (object)
-                + scopes (array[string]) - list of scopes that is owned by consumer.
-                    + request_api
-                    + read_profile
-
-### Delete Settings Overrides [DELETE]
-
-This is equal to sending an empty object to `Update Settings` endpoint.
-
-+ Parameters
-    + external_id: 56c31536a60ad644060041af (string) - your consumer ID.
-    + plugin_name: acl (string) - name of a plugin, which settings overrides you want to remove.
-
-+ Response 200 (application/json)
-    + Attributes (Response_OK)
-
 # Group Requests
 
 ## Collection [/requests]
@@ -730,7 +644,7 @@ This is equal to sending an empty object to `Update Settings` endpoint.
 + settings (Plugin_Proxy__Settings, fixed-type)
 
 ### `Plugin_Proxy__Settings`
-+ upstream (Plugin_Proxy__Settings__Upstream, fixed-type)
++ Include Plugin_Proxy__Settings__Upstream
 + `strip_host`: false (boolean, optional) - Keep HTTP HOST host header when proxying request to an upstream.
 + `strip_api_path`: false (boolean, optional) - Strip API part of path when sending request to upstream.
 + `additional_headers` (object, optional)
@@ -802,12 +716,6 @@ This is equal to sending an empty object to `Update Settings` endpoint.
     + 255.255.255.1
     + 127.0.0.*
 
-## Consumers
-### Consumer
-+ external_id: 56c31536a60ad644060041af (string, required) - **Unique ID** for Consumer that can be used to update it.
-+ metadata (object) - Attach any metadata to a consumer. For Auth0 it will be written to `app_metadate` field.
-    + key: value (string) - Key-value data attached to a consumer.
-
 ## Requests
 ### Request
 + id: tl8nd5019bkendi1uadl2nqq38g69dbf (string) - unique request identifier.
@@ -820,7 +728,6 @@ This is equal to sending an empty object to `Update Settings` endpoint.
 ### `Request_Expanded`
 + Include Request
 + updated_at: 2016-11-04T16:16:20.875777 (string)
-+ consumer (Consumer, optional)
 + request (object, fixed-type)
     + method: GET (string)
     + uri: /mypath (string)
