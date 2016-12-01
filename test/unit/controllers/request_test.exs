@@ -2,6 +2,7 @@ defmodule Gateway.Controllers.RequestTest do
   @moduledoc false
   use Gateway.UnitCase, async: true
 
+
   @random_url "random_url"
   @random_data %{"data" => "random"}
 
