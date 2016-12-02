@@ -12,6 +12,7 @@ Gateway.html
 Gateway.AcceptanceCase.html
 Gateway.AutoClustering.html
 Gateway.Cache.EtsAdapter.html
+Gateway.Cache.FilterHelper.html
 Gateway.Cache.PostgresAdapter.html
 Gateway.Changeset.Validator.JsonSchema.html
 Gateway.Changeset.Validator.Settings.html

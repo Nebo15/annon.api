@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.3">
-    <title>Gateway.Plugins.JWT – gateway v0.1.84</title>
+    <title>Gateway.Cache.FilterHelper – gateway v0.1.84</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -59,16 +59,14 @@
 
       <h1>
         <small class="visible-xs">gateway v0.1.84</small>
-        Gateway.Plugins.JWT
+        Gateway.Cache.FilterHelper
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p><a href="http://docs.annon.apiary.io/#reference/plugins/jwt-authentification">JWT Tokens authorization</a> plugin.</p>
-<p>It’s implemented mainly to be used with <a href="https://auth0.com/">Auth0</a>,
-but it should support any JWT-based authentication providers.</p>
+          <p>Helper for filtering responses from adapters</p>
 
         </section>
       
@@ -90,13 +88,19 @@ but it should support any JWT-based authentication providers.</p>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#find_plugin_settings/1">find_plugin_settings(plugins)</a>
+    <a href="#do_filter/2">do_filter(response, host)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#init/1">init(opts)</a>
+    <a href="#make_response/1">make_response(arg)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#put_in_acc/3">put_in_acc(acc, api, needed_host)</a>
   </div>
   
 </div>
@@ -121,13 +125,13 @@ but it should support any JWT-based authentication providers.</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="find_plugin_settings/1">
+          <div class="detail" id="do_filter/2">
   
   <div class="detail-header">
-    <a href="#find_plugin_settings/1" class="detail-link" title="Link to this function">
+    <a href="#do_filter/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">find_plugin_settings(plugins)</span>
+    <span class="signature">do_filter(response, host)</span>
     
     
     
@@ -136,13 +140,28 @@ but it should support any JWT-based authentication providers.</p>
     
   </section>
 </div>
-<div class="detail" id="init/1">
+<div class="detail" id="make_response/1">
   
   <div class="detail-header">
-    <a href="#init/1" class="detail-link" title="Link to this function">
+    <a href="#make_response/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">init(opts)</span>
+    <span class="signature">make_response(arg)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="put_in_acc/3">
+  
+  <div class="detail-header">
+    <a href="#put_in_acc/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">put_in_acc(acc, api, needed_host)</span>
     
     
     
