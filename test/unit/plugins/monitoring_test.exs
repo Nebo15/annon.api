@@ -2,8 +2,6 @@ defmodule Gateway.Plugins.MonitoringTest do
   @moduledoc false
   use Gateway.UnitCase, async: true
 
-  @apis "apis"
-
   test "metrics work properly" do
     make_connection()
     assert check_statsd("counters", "os.gateway.apis_request_count")

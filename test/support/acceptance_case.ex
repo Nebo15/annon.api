@@ -16,17 +16,17 @@ defmodule Gateway.AcceptanceCase do
       # Load configuration from environment that allows to test Docker containers that run on another port
       @config Confex.get_map(:gateway, :acceptance)
 
-      defp process_request_body(body) do
+      def process_request_body(body) do
         body
         |> Poison.encode!
       end
 
-      defp process_response_body(body) do
+      def process_response_body(body) do
         body
         |> Poison.decode!
       end
 
-      defp process_request_headers(headers) when is_list(headers) do
+      def process_request_headers(headers) when is_list(headers) do
         [{"content-type", "application/json"}, magic_header()] ++ headers
       end
 
