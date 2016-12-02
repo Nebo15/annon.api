@@ -10,15 +10,14 @@ defmodule Gateway.Plugins.APILoaderTest do
       on_exit fn ->
         Application.put_env(:gateway, :cache_storage, saved_config)
       end
-
-      :ok
-    end
-
-    test "succesffully reads from ETS storage" do
       %{request: request} = api = Gateway.Factory.insert(:api)
       Gateway.Factory.insert(:jwt_plugin, api: api)
       Gateway.Factory.insert(:acl_plugin, api: api)
 
+      {:ok, %{request: request, api: api}}
+    end
+
+    test "succesffully reads from ETS storage", %{request: request, api: api} do
       Gateway.AutoClustering.do_reload_config()
 
       %{private: %{api_config: %{} = config}} =
@@ -33,6 +32,44 @@ defmodule Gateway.Plugins.APILoaderTest do
       assert config.id == api.id
       assert config.request == request
       assert length(config.plugins) == 2
+    end
+
+    test "succesffully reads from ETS storage when host is '*'", %{request: request, api: api} do
+      %{request: new_request} = new_api = Gateway.Factory.insert(:api, %{
+        request: Gateway.Factory.build(:request, %{
+          host: "*",
+        })
+      })
+      Gateway.Factory.insert(:jwt_plugin, api: new_api)
+
+      Gateway.AutoClustering.do_reload_config()
+
+      %{private: %{api_config: %{} = config}} =
+        :get
+        |> conn(request.path, Poison.encode!(%{}))
+        |> Map.put(:host, request.host)
+        |> Map.put(:port, new_request.port)
+        |> Map.put(:method, new_request.methods |> Kernel.hd())
+        |> Map.put(:scheme, new_request.scheme)
+        |> Gateway.Plugins.APILoader.call([])
+
+      assert config.id == api.id
+      assert config.request == request
+      assert length(config.plugins) == 2
+
+
+      %{private: %{api_config: %{} = config}} =
+        :get
+        |> conn(request.path, Poison.encode!(%{}))
+        |> Map.put(:host, "some_other_host")
+        |> Map.put(:port, new_request.port)
+        |> Map.put(:method, new_request.methods |> Kernel.hd())
+        |> Map.put(:scheme, new_request.scheme)
+        |> Gateway.Plugins.APILoader.call([])
+
+      assert config.id == new_api.id
+      assert config.request == new_request
+      assert length(config.plugins) == 1
     end
   end
 

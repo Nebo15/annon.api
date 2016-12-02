@@ -12,7 +12,6 @@ defmodule Gateway.Cache.EtsAdapter do
     match_spec = %{
       request: %{
         scheme: scheme,
-        host: host,
         port: port
       }
     }
@@ -20,6 +19,8 @@ defmodule Gateway.Cache.EtsAdapter do
     :config
     |> :ets.match_object({:_, match_spec})
     |> Enum.map(&elem(&1, 1))
+    |> Enum.filter(fn(api) -> host == api.request.host || "*" == api.request.host end)
+    |> Gateway.Cache.FilterHelper.do_filter(host)
   end
 
   def warm_up do
