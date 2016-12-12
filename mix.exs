@@ -54,7 +54,7 @@ defmodule Gateway.Mixfile do
      {:confex, ">= 0.0.0"},
      {:plug, ">= 0.0.0"},
      {:cowboy, ">= 0.0.0"},
-     {:postgrex, ">= 0.0.0", override: true},
+     {:postgrex, ">= 0.13.0-rc"},
      {:ecto, ">= 2.1.0-rc.3", override: true},
      {:timex, "~> 3.0"},
      {:poison, "~> 2.2"},
