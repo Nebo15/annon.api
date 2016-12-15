@@ -55,6 +55,7 @@ defmodule Gateway.Plugins.JWT do
   defp evaluate(%Token{error: nil} = token, conn) do
     conn
     |> Conn.put_private(:jwt_token, token)
+    |> Conn.put_private(:party_id, get_in(token, [:claims, "app_metadata", "party_id"]))
   end
   defp evaluate(%Token{error: message}, conn) do
     # TODO: Simply 422 error, because token is invalid

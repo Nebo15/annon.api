@@ -104,9 +104,25 @@ defmodule Gateway.Plugins.Proxy do
     [%{"x-request-id" => id}] ++ headers
   end
 
+  defp put_x_forwarded_for_header(headers, conn), do: headers ++ [%{"x-forwarded-for" => ip_to_string(conn.remote_ip)}]
+
+  defp put_x_consumer_scopes_header(headers, %Conn{private: %{scopes: nil}}), do: headers
+  defp put_x_consumer_scopes_header(headers, %Conn{private: %{scopes: scopes}}) do
+    headers ++ [%{"x-consumer-scopes" => Enum.join(scopes, "")}]
+  end
+  defp put_x_consumer_scopes_header(headers, _), do: headers
+
+  defp put_x_consumer_id_header(headers, %Conn{private: %{party_id: nil}}), do: headers
+  defp put_x_consumer_id_header(headers, %Conn{private: %{party_id: party_id}}) do
+    headers ++ [%{"x-consumer-id" => party_id}]
+  end
+  defp put_x_consumer_id_header(headers, _), do: headers
+
   def put_additional_headers(headers, conn) do
     headers
-    |> Kernel.++([%{"x-forwarded-for" => ip_to_string(conn.remote_ip)}])
+    |> put_x_forwarded_for_header(conn)
+    |> put_x_consumer_scopes_header(conn)
+    |> put_x_consumer_id_header(conn)
     |> Enum.reduce(conn, fn(header, conn) ->
       with {k, v} <- header |> Enum.at(0), do: Conn.put_req_header(conn, k, v)
     end)
