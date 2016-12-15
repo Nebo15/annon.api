@@ -52,10 +52,14 @@ defmodule Gateway.Plugins.JWT do
   end
   defp parse_auth(conn, _header, _signature), do: conn
 
+  defp extract_party_id(%Token{claims: token_claims}), do: extract_party_id(token_claims)
+  defp extract_party_id(%{"user_metadata" => %{"party_id" => party_id}}), do: party_id
+  defp extract_party_id(_), do: nil
+
   defp evaluate(%Token{error: nil} = token, conn) do
     conn
     |> Conn.put_private(:jwt_token, token)
-    |> Conn.put_private(:party_id, get_in(token, [:claims, "app_metadata", "party_id"]))
+    |> Conn.put_private(:party_id, extract_party_id(token))
   end
   defp evaluate(%Token{error: message}, conn) do
     # TODO: Simply 422 error, because token is invalid

@@ -30,8 +30,8 @@ defmodule Gateway.Plugins.Scopes do
     |> JWTStrategy.get_scopes()
   end
   defp get_scopes(conn, _token, %{"strategy" => "pcm", "url_template" => url_template}) do
-    conn
-    |> get_in([:private, "party_id"])
+    conn.private
+    |> Map.get("party_id")
     |> PCMStrategy.get_scopes(url_template)
   end
   defp get_scopes(_conn, _token, _), do: []
