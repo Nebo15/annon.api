@@ -309,7 +309,7 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> post!(scopes_plugin)
       |> assert_status(201)
 
-      token = build_jwt_token(%{"user_metadata" => %{"party_id" => "random_party_id"}}, @jwt_secret)
+      token = build_jwt_token(%{"app_metadata" => %{"party_id" => "random_party_id"}}, @jwt_secret)
       headers = [{"authorization", "Bearer #{token}"}]
 
       "#{api_path}/foo"

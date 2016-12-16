@@ -53,7 +53,7 @@ defmodule Gateway.Plugins.JWT do
   defp parse_auth(conn, _header, _signature), do: conn
 
   defp extract_party_id(%Token{claims: token_claims}), do: extract_party_id(token_claims)
-  defp extract_party_id(%{"user_metadata" => %{"party_id" => party_id}}), do: party_id
+  defp extract_party_id(%{"app_metadata" => %{"party_id" => party_id}}), do: party_id
   defp extract_party_id(_), do: nil
 
   defp evaluate(%Token{error: nil} = token, conn) do

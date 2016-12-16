@@ -108,7 +108,7 @@ defmodule Gateway.Plugins.Proxy do
 
   defp put_x_consumer_scopes_header(headers, %Conn{private: %{scopes: nil}}), do: headers
   defp put_x_consumer_scopes_header(headers, %Conn{private: %{scopes: scopes}}) do
-    headers ++ [%{"x-consumer-scopes" => Enum.join(scopes, "")}]
+    headers ++ [%{"x-consumer-scopes" => Enum.join(scopes, " ")}]
   end
   defp put_x_consumer_scopes_header(headers, _), do: headers
 
