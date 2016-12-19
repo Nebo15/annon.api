@@ -21,6 +21,7 @@ defmodule Gateway.AcceptanceCase do
         |> Poison.encode!
       end
 
+      def process_response_body(""), do: nil
       def process_response_body(body) do
         body
         |> Poison.decode!

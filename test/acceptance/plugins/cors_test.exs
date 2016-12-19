@@ -1,4 +1,4 @@
-defmodule Gateway.Acceptance.Plugins.LoggerTest do
+defmodule Gateway.Acceptance.Plugins.CORSTest do
   @moduledoc false
   use Plug.Test
   use Gateway.AcceptanceCase, async: true
@@ -13,7 +13,7 @@ defmodule Gateway.Acceptance.Plugins.LoggerTest do
     api_path = "/random_api-" <> Ecto.UUID.generate() <> "/"
     api_settings = %{
       request: %{
-        methods: ["GET"],
+        methods: ["GET", "OPTIONS"],
         scheme: "http",
         host: get_endpoint_host(:public),
         port: get_endpoint_port(:public),
@@ -42,12 +42,29 @@ defmodule Gateway.Acceptance.Plugins.LoggerTest do
   end
 
   test "cors_plugin", %{api_path: api_path} do
-    header_value = api_path
+    resp = api_path
+    |> put_public_url()
+    |> options!([{"origin", @origin}])
+
+    allow_origin_header = resp |> get_header("access-control-allow-origin") |> Enum.at(0)
+
+    assert @origin == allow_origin_header
+
+    assert 1 == length(get_header(resp, "access-control-expose-headers"))
+    assert 1 == length(get_header(resp, "access-control-allow-credentials"))
+    assert 1 == length(get_header(resp, "access-control-max-age"))
+    assert 1 == length(get_header(resp, "access-control-allow-headers"))
+    assert 1 == length(get_header(resp, "access-control-allow-methods"))
+
+    resp = api_path
     |> put_public_url()
     |> get!([{"origin", @origin}])
-    |> get_header("access-control-allow-origin")
-    |> Enum.at(0)
 
-    assert @origin == header_value
+    allow_origin_header = resp |> get_header("access-control-allow-origin") |> Enum.at(0)
+
+    assert @origin == allow_origin_header
+
+    assert 1 == length(get_header(resp, "access-control-expose-headers"))
+    assert 1 == length(get_header(resp, "access-control-allow-credentials"))
   end
 end
