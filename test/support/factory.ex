@@ -63,6 +63,16 @@ defmodule Gateway.Factory do
     }
   end
 
+  def cors_plugin_factory do
+    %Gateway.DB.Schemas.Plugin{
+      name: "cors",
+      is_enabled: true,
+      settings: %{
+        "origin" => ["*"]
+      }
+    }
+  end
+
   def idempotency_plugin_factory do
     %Gateway.DB.Schemas.Plugin{
       name: "idempotency",
