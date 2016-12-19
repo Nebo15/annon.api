@@ -112,9 +112,9 @@ defmodule Gateway.Plugins.Proxy do
   end
   defp put_x_consumer_scopes_header(headers, _), do: headers
 
-  defp put_x_consumer_id_header(headers, %Conn{private: %{party_id: nil}}), do: headers
-  defp put_x_consumer_id_header(headers, %Conn{private: %{party_id: party_id}}) do
-    headers ++ [%{"x-consumer-id" => party_id}]
+  defp put_x_consumer_id_header(headers, %Conn{private: %{consumer_id: nil}}), do: headers
+  defp put_x_consumer_id_header(headers, %Conn{private: %{consumer_id: consumer_id}}) do
+    headers ++ [%{"x-consumer-id" => consumer_id}]
   end
   defp put_x_consumer_id_header(headers, _), do: headers
 

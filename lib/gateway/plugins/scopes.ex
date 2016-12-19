@@ -31,7 +31,7 @@ defmodule Gateway.Plugins.Scopes do
   end
   defp get_scopes(conn, _token, %{"strategy" => "pcm", "url_template" => url_template}) do
     conn.private
-    |> Map.get(:party_id)
+    |> Map.get(:consumer_id)
     |> PCMStrategy.get_scopes(url_template)
   end
   defp get_scopes(_conn, _token, _), do: []
