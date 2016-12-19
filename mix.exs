@@ -70,6 +70,7 @@ defmodule Gateway.Mixfile do
      {:dogma, "> 0.1.0", only: [:dev, :test]},
      {:benchfella, "~> 0.3", only: [:dev, :test]},
      {:ex_doc, ">= 0.0.0", only: [:dev, :test]},
+     {:cors_plug, "~> 1.1"},
      {:excoveralls, "~> 0.5", only: [:dev, :test]},
      {:credo, ">= 0.4.8", only: [:dev, :test]},
     ]
