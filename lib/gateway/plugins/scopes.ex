@@ -20,30 +20,26 @@ defmodule Gateway.Plugins.Scopes do
   end
   def call(conn, _), do: conn
 
-  defp extract_party_id(%Token{claims: token_claims}), do: extract_party_id(token_claims)
-  defp extract_party_id(%{"user_metadata" => %{"party_id" => party_id}}), do: party_id
-  defp extract_party_id(_), do: nil
-
   defp save_scopes(scopes, conn) do
     conn
     |> Conn.put_private(:scopes, scopes)
   end
 
-  defp get_scopes(token, %{"strategy" => "jwt"}) do
+  defp get_scopes(_conn, token, %{"strategy" => "jwt"}) do
     token
     |> JWTStrategy.get_scopes()
   end
-  defp get_scopes(token, %{"strategy" => "pcm", "url_template" => url_template}) do
-    token
-    |> extract_party_id()
+  defp get_scopes(conn, _token, %{"strategy" => "pcm", "url_template" => url_template}) do
+    conn.private
+    |> Map.get(:consumer_id)
     |> PCMStrategy.get_scopes(url_template)
   end
-  defp get_scopes(_token, _), do: []
+  defp get_scopes(_conn, _token, _), do: []
 
   defp execute(nil, conn), do: conn
   defp execute(%Plugin{settings: settings}, %Conn{private: %{jwt_token: token}} = conn) do
-    token
-    |> get_scopes(settings)
+    conn
+    |> get_scopes(token, settings)
     |> save_scopes(conn)
   end
   defp execute(%Plugin{settings: _}, %Conn{private: _} = conn), do: conn
