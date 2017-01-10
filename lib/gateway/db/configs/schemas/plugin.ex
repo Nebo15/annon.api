@@ -54,10 +54,15 @@ defmodule Gateway.DB.Schemas.Plugin do
   def create(api_id, params) when is_map(params) do
     case Repo.get(APISchema, api_id) do
       %APISchema{} = api ->
-        api
+        changeset = api
         |> Ecto.build_assoc(:plugins)
         |> changeset(params)
-        |> Repo.insert()
+        case get_one_by([api_id: api_id, name: Map.get(params, "name", "")]) do
+          %PluginSchema{} = plugin ->
+            changeset = Map.put(changeset, :errors, [name: {"already exists", [validation: :duplicate]}])
+            {:error, changeset}
+          _ -> changeset |> Repo.insert()
+        end
       _ -> nil
     end
   end
