@@ -13,7 +13,7 @@ services:
       - "4000:4000"
       - "4001:4001"
   postgres:
-    image: "azukiapp/postgres"
+    image: "postgres:alpine"
     ports:
       - "5432"
     environment:
