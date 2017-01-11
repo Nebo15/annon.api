@@ -1,0 +1,34 @@
+version: '2'
+services:
+  api:
+    restart: "always"
+    build: ./
+    links:
+      - "postgres:postgres"
+    depends_on:
+      - postgres
+    environment:
+      - DB_NAME=gateway
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - GATEWAY_PUBLIC_PORT=4000
+      - GATEWAY_MANAGEMENT_PORT=4001
+      - ERLANG_COOKIE=c2VjcmV0X2VybGFuZ19jb29raWUK
+      - LISTEN_DIST_MIN=10000
+      - LISTEN_DIST_MAX=10100
+      - APP_MIGRATE=true
+      - POD_IP=127.0.0.1
+      - SKYCLUSTER_STRATEGY=Cluster.Strategy.Epmd
+    ports:
+      - "4000:4000"
+      - "4001:4001"
+  postgres:
+    image: "azukiapp/postgres"
+    ports:
+      - "5432"
+    environment:
+      - POSTGRES_DB=gateway
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
