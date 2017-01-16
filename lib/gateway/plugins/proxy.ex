@@ -110,13 +110,13 @@ defmodule Gateway.Plugins.Proxy do
   defp put_x_consumer_scopes_header(headers, %Conn{private: %{scopes: scopes}}) do
     headers ++ [%{"x-consumer-scopes" => Enum.join(scopes, " ")}]
   end
-  defp put_x_consumer_scopes_header(headers, _), do: headers
+  defp put_x_consumer_scopes_header(headers, _), do: headers ++ [%{"x-consumer-scopes" => ""}]
 
   defp put_x_consumer_id_header(headers, %Conn{private: %{consumer_id: nil}}), do: headers
   defp put_x_consumer_id_header(headers, %Conn{private: %{consumer_id: consumer_id}}) do
     headers ++ [%{"x-consumer-id" => consumer_id}]
   end
-  defp put_x_consumer_id_header(headers, _), do: headers
+  defp put_x_consumer_id_header(headers, _), do: headers ++ [%{"x-consumer-id" => ""}]
 
   def put_additional_headers(headers, conn) do
     headers
