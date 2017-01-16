@@ -106,9 +106,14 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
       |> get_body()
       |> get_in(["error", "invalid"])
 
-      expected_result = [%{"entry" => "$.name",
+      expected_result = [%{
+        "entry" => "$.name",
         "entry_type" => "json_data_property",
-        "rules" => [%{"description" => "already exists", "params" => [], "rule" => "duplicate"}]
+        "rules" => [%{
+          "description" => "already exists",
+          "params" => [],
+          "rule" => "duplicate"
+        }]
       }]
 
       assert expected_result == actual_result
