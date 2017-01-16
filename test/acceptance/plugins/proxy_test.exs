@@ -366,5 +366,40 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
 
       assert expected_party_id == actual_party_id
     end
+
+    test "x-consumer-id and x-consumer-scopes cannot be overriden", %{api_id: api_id, api_path: api_path} do
+      proxy_path = "/proxy"
+
+      api_id
+      |> create_proxy_to_mock(%{
+        path: proxy_path,
+        scheme: "http",
+        strip_api_path: true
+      })
+
+      expected_scopes = [""]
+      expected_party_id = ""
+
+      headers = [{"x-consumer-id", "111"}, {"x-consumer-scopes", "111"}]
+
+      headers = api_path
+      |> put_public_url()
+      |> get!(headers)
+      |> get_body()
+      |> get_in(["data", "request", "headers"])
+
+      actual_scopes = headers
+      |> Enum.filter_map(fn(x) -> Map.has_key?(x, "x-consumer-scopes") end, &(Map.get(&1, "x-consumer-scopes")))
+      |> Enum.at(0)
+      |> String.split(" ")
+
+      assert expected_scopes == actual_scopes
+
+      actual_party_id = headers
+      |> Enum.filter_map(fn(x) -> Map.has_key?(x, "x-consumer-id") end, &(Map.get(&1, "x-consumer-id")))
+      |> Enum.at(0)
+
+      assert expected_party_id == actual_party_id
+    end
   end
 end
