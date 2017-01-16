@@ -110,15 +110,22 @@ defmodule Gateway.Plugins.Proxy do
   defp put_x_consumer_scopes_header(headers, %Conn{private: %{scopes: scopes}}) do
     headers ++ [%{"x-consumer-scopes" => Enum.join(scopes, " ")}]
   end
-  defp put_x_consumer_scopes_header(headers, _), do: headers ++ [%{"x-consumer-scopes" => ""}]
+  defp put_x_consumer_scopes_header(headers, _), do: headers
 
   defp put_x_consumer_id_header(headers, %Conn{private: %{consumer_id: nil}}), do: headers
   defp put_x_consumer_id_header(headers, %Conn{private: %{consumer_id: consumer_id}}) do
     headers ++ [%{"x-consumer-id" => consumer_id}]
   end
-  defp put_x_consumer_id_header(headers, _), do: headers ++ [%{"x-consumer-id" => ""}]
+  defp put_x_consumer_id_header(headers, _), do: headers
+
+  defp remove_protected_headers(conn) do
+    :gateway
+    |> Confex.get(:protected_headers)
+    |> Enum.reduce(conn, fn(header, conn) -> Conn.put_req_header(conn, header, "") end)
+  end
 
   def put_additional_headers(headers, conn) do
+    conn = remove_protected_headers(conn)
     headers
     |> put_x_forwarded_for_header(conn)
     |> put_x_consumer_scopes_header(conn)

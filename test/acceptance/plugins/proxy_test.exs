@@ -367,7 +367,7 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
       assert expected_party_id == actual_party_id
     end
 
-    test "x-consumer-id and x-consumer-scopes cannot be overriden", %{api_id: api_id, api_path: api_path} do
+    test "x-consumer-id and x-consumer-scopes cannot be overridden", %{api_id: api_id, api_path: api_path} do
       proxy_path = "/proxy"
 
       api_id
