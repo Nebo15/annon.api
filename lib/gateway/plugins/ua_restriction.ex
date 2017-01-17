@@ -24,7 +24,7 @@ defmodule Gateway.Plugins.UARestriction do
   def call(conn, _), do: conn
 
   defp validate_plugin_settings(%Plugin{settings: settings}), do: validate_whitelist(settings)
-  defp validate_plugin_settings(_), do: {:error}
+  defp validate_plugin_settings(_), do: :ok
 
   defp validate_whitelist(settings) do
     settings
@@ -32,8 +32,8 @@ defmodule Gateway.Plugins.UARestriction do
     |> validate_blacklist(settings)
   end
 
-  defp validate_blacklist({:error}, _settings), do: {:error}
-  defp validate_blacklist({:ok}, settings) do
+  defp validate_blacklist(:error, _settings), do: :error
+  defp validate_blacklist(:ok, settings) do
     settings
     |> validate_list("blacklist")
   end
@@ -44,7 +44,7 @@ defmodule Gateway.Plugins.UARestriction do
     |> validate_regexp_list()
   end
 
-  defp validate_regexp_list(nil), do: {:ok}
+  defp validate_regexp_list(nil), do: :ok
   defp validate_regexp_list(list) do
     case Enum.all?(list, fn item ->
       case Regex.compile(item) do
@@ -52,8 +52,8 @@ defmodule Gateway.Plugins.UARestriction do
         _ -> false
       end
       end) do
-      true -> {:ok}
-      _ -> {:error}
+      true -> :ok
+      _ -> :error
     end
   end
 
@@ -63,8 +63,8 @@ defmodule Gateway.Plugins.UARestriction do
     |> Enum.at(0)
   end
 
-  defp execute(_plugin, conn, {:error}), do: Response.send_validation_error(conn, [{"settings", "invalid"}])
-  defp execute(%Plugin{} = plugin, conn, {:ok}) do
+  defp execute(_plugin, conn, :error), do: Response.send_validation_error(conn, [{"settings", "invalid"}])
+  defp execute(%Plugin{} = plugin, conn, :ok) do
     if check_user_agent(plugin, extract_user_agent(conn)) do
       conn
     else
@@ -74,7 +74,7 @@ defmodule Gateway.Plugins.UARestriction do
       |> Response.halt()
     end
   end
-  defp execute(_, conn, {:ok}), do: conn
+  defp execute(_, conn, :ok), do: conn
 
   defp check_user_agent(plugin, user_agent) do
     blacklisted = blacklisted?(plugin, user_agent)
