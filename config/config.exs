@@ -34,7 +34,7 @@ config :gateway, :management_http,
   port: {:system, :integer, "GATEWAY_MANAGEMENT_PORT", 4001}
 
 config :gateway,
-  protected_headers: {:system, :list, "GATEWAY_PROTECTED_HEADERS", ["x-consumer-id", "x-consumer-scopes"]}
+  protected_headers: ["x-consumer-id", "x-consumer-scopes"]
 
 config :skycluster,
   strategy: {:system, :module, "SKYCLUSTER_STRATEGY", Cluster.Strategy.Epmd}
