@@ -46,12 +46,7 @@ defmodule Gateway.Plugins.UARestriction do
 
   defp validate_regexp_list(nil), do: :ok
   defp validate_regexp_list(list) do
-    case Enum.all?(list, fn item ->
-      case Regex.compile(item) do
-        {:ok, _} -> true
-        _ -> false
-      end
-      end) do
+    case Enum.all?(list, fn item -> elem(Regex.compile(item), 0) == :ok end) do
       true -> :ok
       _ -> :error
     end
@@ -63,7 +58,7 @@ defmodule Gateway.Plugins.UARestriction do
     |> Enum.at(0)
   end
 
-  defp execute(_plugin, conn, :error), do: Response.send_validation_error(conn, [{"settings", "invalid"}])
+  defp execute(_plugin, conn, :error), do: Response.send_validation_error(conn, [{"invalid", "settings"}])
   defp execute(%Plugin{} = plugin, conn, :ok) do
     if check_user_agent(plugin, extract_user_agent(conn)) do
       conn
