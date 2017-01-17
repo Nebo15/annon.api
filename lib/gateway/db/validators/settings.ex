@@ -124,6 +124,34 @@ defmodule Gateway.Changeset.Validator.Settings do
     })
   end
 
+  # UARestriction
+  def validate_settings(%Changeset{changes: %{name: "ua_restriction"}} = ch) do
+    ch
+    |> validate_via_json_schema(:settings, %{
+      "type" => "object",
+      "anyOf" => [
+        %{"required" => ["whitelist", "blacklist"]},
+        %{"required" => ["whitelist"]},
+        %{"required" => ["blacklist"]}
+      ],
+      "additionalProperties" => false,
+      "properties" => %{
+        "whitelist" => %{
+          "type" => "array",
+          "items" => %{
+            "type" => "string"
+          }
+        },
+        "blacklist" => %{
+          "type" => "array",
+          "items" => %{
+            "type" => "string"
+          }
+        }
+      }
+    })
+  end
+
   # Proxy
   def validate_settings(%Changeset{changes: %{name: "proxy"}} = ch) do
     ch
