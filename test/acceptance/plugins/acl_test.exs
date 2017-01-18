@@ -169,7 +169,8 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> get_body()
 
       assert 403 == response["meta"]["code"]
-      assert "Your scopes does not allow to access this resource." = response["error"]["message"]
+      assert "Your scopes does not allow to access this resource. Missing scopes: api:request."
+        = response["error"]["message"]
 
       token = build_jwt_token(%{"scopes" => ["api:access", "api:request"]}, @jwt_secret)
       headers = [{"authorization", "Bearer #{token}"}]

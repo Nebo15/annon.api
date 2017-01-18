@@ -30,8 +30,8 @@ defmodule Gateway.Plugins.ACL do
     scopes
     |> validate_scopes(rules, api_path, Map.take(conn, [:request_path, :method]))
   end
-  defp execute(%Plugin{settings: %{"rules" => _}}, _api_path, _conn), do: {:error, :forbidden}
-  defp execute(_plugin, _api_path, _conn), do: {:error, :no_scopes_is_set}
+  defp execute(%Plugin{settings: %{"rules" => _}}, _api_path, _conn), do: {:error, :no_scopes_is_set}
+  defp execute(_plugin, _api_path, _conn), do: :ok
 
   defp validate_scopes(nil, _server_rules, _api_path, _conn_data),
     do: {:error, :no_scopes_is_set}
@@ -41,23 +41,34 @@ defmodule Gateway.Plugins.ACL do
     matching_fun = fn server_rules ->
       method_matches? = conn_data.method in server_rules["methods"]
       path_matches? = request_path =~ ~r"#{server_rules["path"]}"
-      acl_rule_matches? = Enum.all?(server_rules["scopes"], fn(server_scope) -> server_scope in client_scopes end)
 
-      method_matches? && acl_rule_matches? && path_matches?
+      method_matches? && path_matches?
     end
 
-    case Enum.any?(server_rules, matching_fun) do
+    result_fun = fn server_rules ->
+      Enum.filter(server_rules["scopes"], fn(server_scope) -> !(server_scope in client_scopes) end)
+    end
+
+    missing_scopes_result = Enum.filter_map(server_rules, matching_fun, result_fun)
+    case Enum.any?(missing_scopes_result, fn(x) -> x == [] end) do
       true -> :ok
-      false -> {:error, :forbidden}
+      false -> {:error, :forbidden, missing_scopes_result |> Enum.find(fn(x) -> x != [] end) |> Enum.at(0)}
     end
   end
   defp validate_scopes(_client_scope, _server_rules, _api_path, _conn_data), do: {:error, :invalid_scopes_type}
 
+  defp get_scopes_message([] = missing_scopes) do
+    "Your scopes does not allow to access this resource. Missing scopes: #{Enum.join(missing_scopes, ", ")}."
+  end
+  defp get_scopes_message(missing_scopes) do
+    "Your scopes does not allow to access this resource. Missing scopes: #{missing_scopes}."
+  end
+
   defp send_response(:ok, conn), do: conn
-  defp send_response({:error, :forbidden}, conn) do
+  defp send_response({:error, :forbidden, missing_scopes}, conn) do
     "403.json"
     |> ErrorView.render(%{
-      message: "Your scopes does not allow to access this resource.",
+      message: get_scopes_message(missing_scopes),
       invalid: [%{
         entry_type: "header",
         entry: "Authorization",
