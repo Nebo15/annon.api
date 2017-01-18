@@ -23,4 +23,18 @@ defmodule Gateway.PCMMockServer do
 
     send_resp(conn, 200, Poison.encode!(response_body))
   end
+
+  get "empty_scopes" do
+    response_body = %{
+      "meta" => %{
+        "code" => 200,
+        "description" => "Success"
+      },
+      "data" => %{
+        "scopes" => []
+      }
+    }
+
+    send_resp(conn, 200, Poison.encode!(response_body))
+  end
 end

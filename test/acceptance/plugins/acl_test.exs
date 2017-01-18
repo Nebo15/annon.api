@@ -317,5 +317,41 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       |> get!(headers)
       |> assert_status(404)
     end
+
+    test "Empty scopes", %{api_id: api_id, api_path: api_path} do
+      acl_plugin = build_factory_params(:acl_plugin, %{settings: %{
+        rules: [
+          %{methods: ["GET"], path: "^/foo$", scopes: ["api:access"]},
+        ]
+      }})
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(acl_plugin)
+      |> assert_status(201)
+
+      pcm_mock_host = Confex.get_map(:gateway, :acceptance)[:pcm_mock][:host]
+      pcm_mock_port = Confex.get_map(:gateway, :acceptance)[:pcm_mock][:port]
+
+      scopes_plugin = build_factory_params(:scopes_plugin, %{
+        settings: %{
+          "strategy": "pcm",
+          "url_template": "http://#{pcm_mock_host}:#{pcm_mock_port}/empty_scopes"
+        }
+      })
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(scopes_plugin)
+      |> assert_status(201)
+
+      token = build_jwt_token(%{"app_metadata" => %{"party_id" => "random_party_id"}}, @jwt_secret)
+      headers = [{"authorization", "Bearer #{token}"}]
+
+      "#{api_path}/foo"
+      |> put_public_url()
+      |> get!(headers)
+      |> assert_status(403)
+    end
   end
 end
