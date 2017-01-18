@@ -351,12 +351,14 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
 
       expected_result = "Your scopes does not allow to access this resource. Missing scopes: api:access."
 
-      "#{api_path}/foo"
+      actual_result = "#{api_path}/foo"
       |> put_public_url()
       |> get!(headers)
       |> assert_status(403)
       |> get_body()
       |> get_in(["error", "message"])
+
+      assert expected_result == actual_result
     end
   end
 end
