@@ -349,10 +349,14 @@ defmodule Gateway.Acceptance.Plugins.ACLTest do
       token = build_jwt_token(%{"app_metadata" => %{"party_id" => "random_party_id"}}, @jwt_secret)
       headers = [{"authorization", "Bearer #{token}"}]
 
+      expected_result = "Your scopes does not allow to access this resource. Missing scopes: api:access."
+
       "#{api_path}/foo"
       |> put_public_url()
       |> get!(headers)
       |> assert_status(403)
+      |> get_body()
+      |> get_in(["error", "message"])
     end
   end
 end
