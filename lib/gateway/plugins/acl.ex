@@ -35,8 +35,6 @@ defmodule Gateway.Plugins.ACL do
 
   defp validate_scopes(nil, _server_rules, _api_path, _conn_data),
     do: {:error, :no_scopes_is_set}
-  defp validate_scopes([], _server_rules, _api_path, _conn_data),
-    do: {:error, :no_scopes_is_set}
   defp validate_scopes(client_scopes, server_rules, api_path, conn_data) when is_list(client_scopes) do
     request_path = String.trim_leading(conn_data.request_path, api_path)
 
