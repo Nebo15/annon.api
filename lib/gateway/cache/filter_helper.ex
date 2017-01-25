@@ -13,10 +13,7 @@ defmodule Gateway.Cache.FilterHelper do
       when host == needed_host do
     Kernel.++(acc, [api])
   end
-
-  def put_in_acc(acc, api, needed_host) do
-    acc
-  end
+  def put_in_acc(acc, _api, _needed_host), do: acc
 
   def make_response({_list, filtered}) when length(filtered) > 0, do: filtered
   def make_response({list, _filtered}), do: list

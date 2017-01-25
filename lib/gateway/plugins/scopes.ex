@@ -6,7 +6,6 @@ defmodule Gateway.Plugins.Scopes do
     plugin_name: "scopes"
 
   alias Plug.Conn
-  alias Joken.Token
   alias Gateway.DB.Schemas.Plugin
   alias Gateway.DB.Schemas.API, as: APISchema
   alias Gateway.Helpers.Scopes.JWTStrategy
