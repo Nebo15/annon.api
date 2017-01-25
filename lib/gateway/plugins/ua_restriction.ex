@@ -12,11 +12,13 @@ defmodule Gateway.Plugins.UARestriction do
 
   @doc false
   def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
-    plugin = plugins
-    |> find_plugin_settings()
+    plugin =
+      plugins
+      |> find_plugin_settings()
 
-    validation_result = plugin
-    |> validate_plugin_settings()
+    validation_result =
+      plugin
+      |> validate_plugin_settings()
 
     plugin
     |> execute(conn, validation_result)
@@ -33,10 +35,7 @@ defmodule Gateway.Plugins.UARestriction do
   end
 
   defp validate_blacklist(:error, _settings), do: :error
-  defp validate_blacklist(:ok, settings) do
-    settings
-    |> validate_list("blacklist")
-  end
+  defp validate_blacklist(:ok, settings), do: validate_list(settings, "blacklist")
 
   defp validate_list(settings, key) do
     settings
@@ -60,16 +59,19 @@ defmodule Gateway.Plugins.UARestriction do
 
   defp execute(_plugin, conn, :error), do: Response.send_validation_error(conn, [{"invalid", "settings"}])
   defp execute(%Plugin{} = plugin, conn, :ok) do
-    if check_user_agent(plugin, extract_user_agent(conn)) do
-      conn
-    else
-      "403.json"
-      |> ErrorView.render(%{message: "You have been blocked from accessing this resource."})
-      |> Response.send(conn, 403)
-      |> Response.halt()
-    end
+    plugin
+    |> check_user_agent(extract_user_agent(conn))
+    |> process_check_result(conn)
   end
   defp execute(_, conn, :ok), do: conn
+
+  defp process_check_result(true, conn), do: conn
+  defp process_check_result(_, conn) do
+    "403.json"
+    |> ErrorView.render(%{message: "You have been blocked from accessing this resource."})
+    |> Response.send(conn, 403)
+    |> Response.halt()
+  end
 
   defp check_user_agent(plugin, user_agent) do
     blacklisted = blacklisted?(plugin, user_agent)
