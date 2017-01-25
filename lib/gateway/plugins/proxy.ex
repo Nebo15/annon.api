@@ -121,7 +121,7 @@ defmodule Gateway.Plugins.Proxy do
   defp remove_protected_headers(conn) do
     :gateway
     |> Confex.get(:protected_headers)
-    |> Enum.reduce(conn, fn(header, conn) -> Conn.put_req_header(conn, header, "") end)
+    |> Enum.reduce(conn, fn(header, conn) -> Conn.delete_req_header(conn, header) end)
   end
 
   def put_additional_headers(headers, conn) do
