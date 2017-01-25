@@ -5,10 +5,7 @@ defmodule Gateway.AutoClustering do
   based on different cluster discovery strategies.
   """
   use GenServer
-
   require Logger
-
-  import Ecto.Query, only: [from: 2]
 
   def start_link do
     GenServer.start_link(__MODULE__, [], [name: __MODULE__])

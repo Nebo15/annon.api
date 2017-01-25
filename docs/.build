@@ -1,13 +1,14 @@
-/home/travis/build/Nebo15/os.gateway/docs/dist/app-091c05798a.css
-/home/travis/build/Nebo15/os.gateway/docs/dist/app-574613960f.js
-/home/travis/build/Nebo15/os.gateway/docs/fonts/icomoon.eot
-/home/travis/build/Nebo15/os.gateway/docs/fonts/icomoon.svg
-/home/travis/build/Nebo15/os.gateway/docs/fonts/icomoon.ttf
-/home/travis/build/Nebo15/os.gateway/docs/fonts/icomoon.woff
-index.html
+dist/app-4aef34ad5f.js
+dist/app-a07cea761b.css
+fonts/icomoon.eot
+fonts/icomoon.svg
+fonts/icomoon.ttf
+fonts/icomoon.woff
+dist/sidebar_items-0c99faed7a.js
+api-reference.html
 readme.html
+index.html
 404.html
-dist/sidebar_items.js
 Gateway.html
 Gateway.AcceptanceCase.html
 Gateway.AutoClustering.html
@@ -60,4 +61,3 @@ Gateway.Plugins.Validator.html
 Gateway.PublicRouter.html
 Gateway.UnitCase.html
 gateway_tasks.html
-api-reference.html
