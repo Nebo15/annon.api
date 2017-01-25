@@ -14,7 +14,7 @@ defmodule Gateway.Helpers.Scopes.JWTStrategy do
   defp extract_token_scopes(%{"app_metadata" => %{"scopes" => scopes}}) when is_binary(scopes),
     do: String.split(scopes, ",")
   defp extract_token_scopes(_),
-    do: []
+    do: nil
 
   def get_scopes(token) do
     token
