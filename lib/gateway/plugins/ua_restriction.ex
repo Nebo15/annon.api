@@ -12,13 +12,8 @@ defmodule Gateway.Plugins.UARestriction do
 
   @doc false
   def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
-    plugin =
-      plugins
-      |> find_plugin_settings()
-
-    validation_result =
-      plugin
-      |> validate_plugin_settings()
+    plugin = find_plugin_settings(plugins)
+    validation_result = validate_plugin_settings(plugin)
 
     plugin
     |> execute(conn, validation_result)
