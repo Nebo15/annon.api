@@ -35,6 +35,7 @@ defmodule Gateway.PublicRouter do
 
   # Security plugins that can halt connection immediately
   plug Gateway.Plugins.IPRestriction
+  plug Gateway.Plugins.UARestriction
   plug Gateway.Plugins.JWT
   plug Gateway.Plugins.Scopes
   plug Gateway.Plugins.ACL

@@ -89,6 +89,14 @@ defmodule Gateway.Factory do
     }
   end
 
+  def ua_restriction_plugin_factory do
+    %Gateway.DB.Schemas.Plugin{
+      name: "ua_restriction",
+      is_enabled: true,
+      settings: %{}
+    }
+  end
+
   def validator_plugin_factory do
     %Gateway.DB.Schemas.Plugin{
       name: "validator",
