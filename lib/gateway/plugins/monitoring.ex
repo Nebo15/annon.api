@@ -33,14 +33,16 @@ defmodule Gateway.Plugins.Monitoring do
     api_tags = tags(conn)
 
     ExStatsD.timer(request_duration, "latency", tags: api_tags)
-    ExStatsD.increment("status_count", tags: api_tags ++ ["http_" <> to_string(conn.status)])
+    ExStatsD.increment("response_count", tags: api_tags ++ ["http_status:#{to_string conn.status}"])
 
     conn
     |> Conn.assign(:latencies_gateway, request_duration)
   end
 
   defp tags(%Conn{host: host, method: method, port: port} = conn),
-    do: ["host:#{to_string host}", "method:#{to_string method}", "port:#{to_string port}"] ++ api_tags(conn)
+    do: ["http_host:#{to_string host}",
+         "http_method:#{to_string method}",
+         "http_port:#{to_string port}"] ++ api_tags(conn)
 
   defp api_tags(%Conn{private: %{api_config: api_name, id: api_id}}),
     do: ["api_name:#{to_string api_name}", "api_id:#{to_string api_id}"]
