@@ -46,48 +46,75 @@ defmodule Gateway.Acceptance.Plugins.LoggerTest do
     %{api_path: api_path}
   end
 
-  test "logger_plugin", %{api_path: api_path} do
-    response = "#{api_path}?key=value"
-    |> put_public_url()
-    |> post!(@random_data)
-    |> assert_status(200)
+  describe "logger_plugin" do
+    test "logger_plugin", %{api_path: api_path} do
+      response = "#{api_path}?key=value"
+      |> put_public_url()
+      |> post!(@random_data)
+      |> assert_status(200)
 
-    id = response
-    |> get_header("x-request-id")
-    |> Enum.at(0)
+      id = response
+      |> get_header("x-request-id")
+      |> Enum.at(0)
 
-    assert(id !== nil, "Plug RequestId is missing or has invalid position")
-    result = Log.get_one_by([id: id])
+      assert(id !== nil, "Plug RequestId is missing or has invalid position")
+      result = Log.get_one_by([id: id])
 
-    assert(result !== nil, "Logs are missing")
+      assert(result !== nil, "Logs are missing")
 
-    uri_to_check = result.request
-    |> Map.from_struct
-    |> Map.get(:uri)
+      uri_to_check = result.request
+      |> Map.from_struct
+      |> Map.get(:uri)
 
-    assert(uri_to_check === api_path, "Invalid uri has been logged")
+      assert(uri_to_check === api_path, "Invalid uri has been logged")
 
-    assert result.request.query == %{"key" => "value"}
+      assert result.request.query == %{"key" => "value"}
 
-    body_to_check = result.request
-    |> Map.from_struct
-    |> Map.get(:body)
+      body_to_check = result.request
+      |> Map.from_struct
+      |> Map.get(:body)
 
-    assert(body_to_check === @random_data, "Invalid body has been logged")
+      assert(body_to_check === @random_data, "Invalid body has been logged")
 
-    latencies_to_check = result
-    |> Map.get(:latencies)
-    |> Map.from_struct
+      latencies_to_check = result
+      |> Map.get(:latencies)
+      |> Map.from_struct
 
-    client_latency = Map.get(latencies_to_check, :client_request)
-    gateway_latency = Map.get(latencies_to_check, :gateway)
-    upstream_latency = Map.get(latencies_to_check, :upstream)
+      client_latency = Map.get(latencies_to_check, :client_request)
+      gateway_latency = Map.get(latencies_to_check, :gateway)
+      upstream_latency = Map.get(latencies_to_check, :upstream)
 
-    assert nil != client_latency
-    assert nil != gateway_latency
-    assert nil != upstream_latency
+      assert nil != client_latency
+      assert nil != gateway_latency
+      assert nil != upstream_latency
 
-    assert upstream_latency >= 200
-    assert client_latency == gateway_latency + upstream_latency
+      assert upstream_latency >= 200
+      assert client_latency == gateway_latency + upstream_latency
+    end
+
+    test "file body should not be logged", %{api_path: api_path} do
+      response =
+        api_path
+        |> put_public_url()
+        |> post!(@random_data, [{"content-disposition", "inline; filename=111.txt"}])
+        |> assert_status(200)
+
+      id =
+        response
+        |> get_header("x-request-id")
+        |> Enum.at(0)
+
+      assert(id !== nil, "Plug RequestId is missing or has invalid position")
+      result = Log.get_one_by([id: id])
+
+      body_to_check =
+        result.response
+        |> Map.from_struct
+        |> Map.get(:body)
+        |> Poison.decode!()
+        |> get_in(["data", "response", "body"])
+
+      assert(body_to_check === nil, "Invalid body has been logged")
+    end
   end
 end
