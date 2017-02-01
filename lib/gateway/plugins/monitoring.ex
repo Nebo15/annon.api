@@ -39,7 +39,7 @@ defmodule Gateway.Plugins.Monitoring do
     |> Conn.assign(:latencies_gateway, request_duration)
   end
 
-  defp tags(%Conn{host: host, method: method, port: port, } = conn),
+  defp tags(%Conn{host: host, method: method, port: port} = conn),
     do: ["http_host:#{to_string host}",
          "http_method:#{to_string method}",
          "http_port:#{to_string port}"] ++ api_tags(conn) ++ get_request_id(conn)
