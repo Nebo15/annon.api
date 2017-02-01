@@ -25,7 +25,7 @@ defmodule Gateway.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [
-      applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto, :timex, :joken, :nex_json_schema,
+      applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto, :joken, :nex_json_schema,
                      :poison, :httpoison, :ex_statsd, :skycluster, :eview, :ecto_paging],
       mod: {Gateway, []}
     ]
@@ -49,14 +49,13 @@ defmodule Gateway.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:distillery, "~> 1.0"},
+    [{:distillery, "~> 1.1"},
      {:skycluster, ">= 0.0.0"},
      {:confex, ">= 0.0.0"},
      {:plug, ">= 0.0.0"},
      {:cowboy, ">= 0.0.0"},
      {:postgrex, "~> 0.13"},
      {:ecto, "~> 2.1"},
-     {:timex, "~> 3.0"},
      {:poison, "~> 3.1", override: true},
      {:joken, "~> 1.4"},
      {:nex_json_schema, "~> 0.5.1"},
@@ -65,12 +64,11 @@ defmodule Gateway.Mixfile do
      {:eview,  ">= 0.0.0"},
      {:ecto_paging, ">= 0.0.0"},
      {:phoenix_ecto, ">= 0.0.0"},
+     {:cors_plug, "~> 1.1"},
      {:ex_machina, ">= 1.0.0", only: [:dev, :test]},
-     {:faker, ">= 0.0.0", only: [:dev, :test]},
      {:dogma, ">= 0.0.0", only: [:dev, :test]},
      {:benchfella, "~> 0.3", only: [:dev, :test]},
      {:ex_doc, ">= 0.0.0", only: [:dev, :test]},
-     {:cors_plug, "~> 1.1"},
      {:excoveralls, ">= 0.0.0", only: [:dev, :test]},
      {:credo, ">= 0.0.0", only: [:dev, :test]},
     ]
