@@ -1,6 +1,12 @@
 defmodule Gateway.Plugins.MonitoringTest do
   @moduledoc false
-  use Gateway.UnitCase, async: true
+  use Gateway.UnitCase
+
+  setup do
+    :sys.replace_state ExStatsD, fn state ->
+      Map.update!(state, :sink, fn _prev_state -> [] end)
+    end
+  end
 
   test "metrics work properly" do
     make_connection()
