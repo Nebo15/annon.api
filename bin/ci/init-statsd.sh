@@ -6,7 +6,6 @@ sudo sh -c "echo 'dogstatsd_port: 8125' >> /etc/dd-agent/datadog.conf"
 
 cat /etc/dd-agent/datadog.conf
 
-sudo /etc/init.d/datadog-agent stop
-sudo /etc/init.d/datadog-agent start
+sudo service datadog-agent start
 
 exit 1
