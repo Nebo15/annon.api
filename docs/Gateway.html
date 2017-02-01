@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.5">
-    <title>Gateway – gateway v0.2.7</title>
+    <title>Gateway – gateway v0.2.8</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items-621a2b1c22.js"></script>
@@ -26,7 +26,7 @@
         gateway
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.7
+        v0.2.8
       </h2>
     </div>
     
@@ -58,7 +58,7 @@
 
 
       <h1>
-        <small class="visible-xs">gateway v0.2.7</small>
+        <small class="visible-xs">gateway v0.2.8</small>
         Gateway
         
         
@@ -153,10 +153,10 @@ application specification key <code class="inline">:start_phases</code> is not <
 <p><code class="inline">start_args</code> are the arguments passed to the application in the <code class="inline">:mod</code>
 specification key (e.g., <code class="inline">mod: {MyApp, [:my_args]}</code>).</p>
 <p>This function should either return <code class="inline">{:ok, pid}</code> or <code class="inline">{:ok, pid, state}</code> if
-startup is successful. <code class="inline">pid</code> should be the pid of the top supervisor. <code class="inline">state</code>
+startup is successful. <code class="inline">pid</code> should be the PID of the top supervisor. <code class="inline">state</code>
 can be an arbitrary term, and if omitted will default to <code class="inline">[]</code>; if the
 application is later stopped, <code class="inline">state</code> is passed to the <code class="inline">stop/1</code> callback (see
-the documentation for the <code class="inline">stop/2</code> callback for more information).</p>
+the documentation for the <code class="inline">c:stop/1</code> callback for more information).</p>
 <p><code class="inline">use Application</code> provides no default implementation for the <a href="#start/2"><code class="inline">start/2</code></a>
 callback.</p>
 <p>Callback implementation for <a href="https://hexdocs.pm/elixir/Application.html#c:start/2"><code class="inline">Application.start/2</code></a>.</p>
