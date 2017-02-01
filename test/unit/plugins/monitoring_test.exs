@@ -12,7 +12,8 @@ defmodule Gateway.Plugins.MonitoringTest do
     make_connection()
 
     assert [
-      "test.response_count:1|c|#http_host:www.example.com,http_method:GET,http_port:80,api_name:unknown,api_id:unknown,http_status:200",
+      "test.response_count:1|c|#http_host:www.example.com,http_method:GET,http_port:80"
+        <> ",api_name:unknown,api_id:unknown,http_status:200",
       "test.latency:" <> _,
       "test.request_count:1|c|#http_host:www.example.com,http_method:GET,http_port:80,api_name:unknown,api_id:unknown",
       "test.request_size:28|h|#http_host:www.example.com,http_method:GET,http_port:80,api_name:unknown,api_id:unknown"
