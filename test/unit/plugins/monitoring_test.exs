@@ -4,9 +4,9 @@ defmodule Gateway.Plugins.MonitoringTest do
 
   test "metrics work properly" do
     make_connection()
-    assert check_statsd("counters", "os.gateway.apis_request_count")
-    assert check_statsd("counters", "os.gateway.apis_status_count_200")
-    assert check_statsd("timers", "os.gateway.apis_latency")
+    assert check_statsd("counters", "os.gateway.request_count")
+    assert check_statsd("counters", "os.gateway.status_count")
+    assert check_statsd("timers", "os.gateway.latency")
   end
 
   defp make_connection do
