@@ -39,15 +39,23 @@ defmodule Gateway.Plugins.Monitoring do
     |> Conn.assign(:latencies_gateway, request_duration)
   end
 
-  defp tags(%Conn{host: host, method: method, port: port} = conn),
+  defp tags(%Conn{host: host, method: method, port: port, } = conn),
     do: ["http_host:#{to_string host}",
          "http_method:#{to_string method}",
-         "http_port:#{to_string port}"] ++ api_tags(conn)
+         "http_port:#{to_string port}"] ++ api_tags(conn) ++ get_request_id(conn)
 
   defp api_tags(%Conn{private: %{api_config: api_name, id: api_id}}),
     do: ["api_name:#{to_string api_name}", "api_id:#{to_string api_id}"]
   defp api_tags(_),
     do: ["api_name:unknown", "api_id:unknown"]
+
+  defp get_request_id(conn) do
+    id = conn
+    |> Conn.get_resp_header("x-request-id")
+    |> Enum.at(0)
+
+    ["request_id:#{to_string id}"]
+  end
 
   defp get_request_size(conn) do
     get_headers_size(conn) + get_body_size(conn) + get_query_string_size(conn)
