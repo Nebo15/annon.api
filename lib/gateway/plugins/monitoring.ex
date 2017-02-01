@@ -30,10 +30,10 @@ defmodule Gateway.Plugins.Monitoring do
     client_req_start_time = Map.get(conn.assigns, :client_req_start_time)
     conn = write_latency(conn, :latencies_client, client_req_start_time)
     request_duration = conn.assigns.latencies_client - Map.get(conn.assigns, :latencies_upstream, 0)
-    api_tags = tags(conn)
+    api_tags = tags(conn) ++ ["http_status:#{to_string conn.status}"]
 
     ExStatsD.timer(request_duration, "latency", tags: api_tags)
-    ExStatsD.increment("response_count", tags: api_tags ++ ["http_status:#{to_string conn.status}"])
+    ExStatsD.increment("response_count", tags: api_tags)
 
     conn
     |> Conn.assign(:latencies_gateway, request_duration)
