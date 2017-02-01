@@ -44,7 +44,7 @@ defmodule Gateway.Plugins.Monitoring do
          "http_method:#{to_string method}",
          "http_port:#{to_string port}"] ++ api_tags(conn) ++ get_request_id(conn)
 
-  defp api_tags(%Conn{private: %{api_config: api_name, id: api_id}}),
+  defp api_tags(%Conn{private: %{api_config: %{name: api_name, id: api_id}}}),
     do: ["api_name:#{to_string api_name}", "api_id:#{to_string api_id}"]
   defp api_tags(_),
     do: ["api_name:unknown", "api_id:unknown"]
