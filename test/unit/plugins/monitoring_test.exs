@@ -4,9 +4,13 @@ defmodule Gateway.Plugins.MonitoringTest do
 
   test "metrics work properly" do
     make_connection()
-    assert check_statsd("counters", "os.gateway.request_count")
-    assert check_statsd("counters", "os.gateway.status_count")
-    assert check_statsd("timers", "os.gateway.latency")
+
+    assert [
+      "test.response_count:1|c|#http_host:www.example.com,http_method:GET,http_port:80,api_name:unknown,api_id:unknown,http_status:200",
+      "test.latency:" <> _,
+      "test.request_count:1|c|#http_host:www.example.com,http_method:GET,http_port:80,api_name:unknown,api_id:unknown",
+      "test.request_size:28|h|#http_host:www.example.com,http_method:GET,http_port:80,api_name:unknown,api_id:unknown"
+    ] = sent()
   end
 
   defp make_connection do
@@ -31,24 +35,9 @@ defmodule Gateway.Plugins.MonitoringTest do
     |> call_public_router()
   end
 
-  defp check_statsd(metric_type, metric_name) do
-    {:ok, socket} = :gen_tcp.connect('localhost', 8126, [:list, {:active, false}])
-    :ok = :gen_tcp.send(socket, metric_type)
+  defp sent(name \\ExStatsD),
+    do: state(name).sink
 
-    socket
-    |> gather_result()
-    |> String.contains?(metric_name)
-  end
-
-  def gather_result(socket, acc \\ "")
-  def gather_result(socket, acc) do
-    {:ok, data} = :gen_tcp.recv(socket, 0)
-
-    result = acc <> to_string(data)
-
-    cond do
-      String.ends_with?(result, "END\n\n") -> result
-      true -> gather_result(socket, result)
-    end
-  end
+  defp state(name),
+    do: :sys.get_state(name)
 end

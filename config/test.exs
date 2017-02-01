@@ -10,6 +10,11 @@ config :gateway, Gateway.DB.Logger.Repo,
   database: System.get_env("MIX_LOGGER_TEST_DATABASE") || "gateway_logger_test",
   pool: Ecto.Adapters.SQL.Sandbox
 
+config :ex_statsd,
+  sink: [],
+  namespace: "test",
+  test_mode: true
+
 config :gateway, :acceptance,
   management: [
     port: {:system, :integer, "MIX_TEST_MANAGEMENT_PORT", 5001},
