@@ -1,7 +1,7 @@
 defmodule Gateway.Mixfile do
   use Mix.Project
 
-  @version "0.2.12"
+  @version "0.2.13"
 
   def project do
     [app: :gateway,

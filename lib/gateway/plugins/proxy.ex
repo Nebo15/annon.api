@@ -30,16 +30,18 @@ defmodule Gateway.Plugins.Proxy do
     |> put_additional_headers(conn)
     |> skip_filtered_headers(settings)
 
-    settings
-    |> do_proxy(api_path, conn)
+    do_proxy(settings, api_path, conn)
   end
 
   defp do_proxy(settings, api_path, %Conn{method: method} = conn) do
     req_start_time = get_time()
 
+    log({settings, api_path, conn.request_path}, "request settings")
     response = settings
     |> make_link(api_path, conn)
+    |> log("make_link")
     |> do_request(conn, method)
+    |> log("do_request")
 
     conn = write_latency(conn, :latencies_upstream, req_start_time)
 
@@ -52,6 +54,12 @@ defmodule Gateway.Plugins.Proxy do
     end)
     |> Conn.send_resp(response.status_code, response.body)
     |> Conn.halt
+  end
+
+  def log(data, type) do
+    require Logger
+    Logger.info(inspect {type, data})
+    data
   end
 
   def do_request(link, conn, method) do
