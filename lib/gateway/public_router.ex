@@ -21,7 +21,10 @@ defmodule Gateway.PublicRouter do
   plug Plug.RequestId
   plug Plug.Parsers, parsers: [:multipart, :json],
                      pass: ["*/*"],
-                     json_decoder: Poison
+                     json_decoder: Poison,
+                     length: 4_294_967_296,
+                     read_length: 2_000_000,
+                     read_timeout: 108_000
 
   plug Gateway.Plugins.APILoader
 
