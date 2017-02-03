@@ -4,7 +4,7 @@ fonts/icomoon.eot
 fonts/icomoon.svg
 fonts/icomoon.ttf
 fonts/icomoon.woff
-dist/sidebar_items-4e939542e8.js
+dist/sidebar_items-37c7a18e01.js
 api-reference.html
 readme.html
 index.html
@@ -59,6 +59,7 @@ Gateway.Plugins.Proxy.MultipartForm.html
 Gateway.Plugins.Scopes.html
 Gateway.Plugins.UARestriction.html
 Gateway.Plugins.Validator.html
+Gateway.PrivateRouter.html
 Gateway.PublicRouter.html
 Gateway.UnitCase.html
 gateway_tasks.html
