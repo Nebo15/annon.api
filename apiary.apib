@@ -11,8 +11,8 @@ It's free. Source code is available on [GitHub](https://github.com/Nebo15/os.gat
 
 Annon consist of three main parts:
 - Annon API Gateway.
-- Annon Dashboard - manage API Gateway settings, review and replay requests from history.
-- EView - hex package that allows to receive and modify client responses from Elixir application to match [Nebo #15 API Manifest](http://docs.apimanifest.apiary.io/). So your back-ends will respond in a same way as Annon does.
+- [Annon Dashboard](https://github.com/Nebo15/gateway.web) - manage API Gateway settings, review and replay requests from history.
+- [EView](https://hex.pm/packages/eview) - hex package that allows to receive and modify client responses from Elixir application to match [Nebo #15 API Manifest](http://docs.apimanifest.apiary.io/). So your back-ends will respond in a same way as Annon does.
 - Annon Doc - auto-generated documentation based on request history of your API.
 - Annon Status Page - auto-generated status pages on API's. (See: [status.gndf.io](http://status.gndf.io/) for example).
 
@@ -55,15 +55,14 @@ Also, idempotency plug is relies on this logs to send same result for duplicate 
 
 ### Monitoring
 
-To monitor services status we will use StatsD integration, that will receive following metrics:
+To monitor services status we will use DogStatsD integration, that will receive following metrics:
 
-- `request_count` - [API](#reference/apis) hit rate.
-- `request_size` - HTTP request size.
-- `response_size` - HTTP response size.
-- `latency_gateway` - Latency added by API Gateway.
-- `latency_upstream` - Latency of upstream API.
-- `latency_client_request` - Time elapsed between the first bytes were read from the client and after the last bytes were sent to the client. Useful for detecting slow clients..
-- `status_{:http_status_code}_count` - Count of responses grouped by HTTP status code.
+- `request_count` - (counter) [API](#reference/apis) hit rate.
+- `request_size` - (histogram) HTTP request size.
+- `response_count` - (counter) same as `request_count` but sent after request dispatch and additionally tagged with `http_status`.
+- `latency` (counter) - total request latency for a API consumer, additionally tagged with `http_status`.
+
+All metrics have tags: `http_host`, `http_port`, `http_method`, `api_name` and `api_id` (if matches any), `request_id`. This allows to set different aggregated views on counter data.
 
 <!--
 #### HTTPRelay
@@ -90,7 +89,6 @@ Add plugin settings of [API](#reference/apis) to `X-Settings-Cache: json_encode(
 #### Circout Breaker
 
 TBD 2.0
--->
 
 ### Authorization
 
@@ -98,7 +96,6 @@ All authorization plugins work on top of [Consumers](#reference/consumers/get-al
 
 To authorize requests inside private platrom scope we can add `Authroization: Basic base64_token` headers, so services will know that request is sent from API Gateway. _In MVP release we will trust to all requests inside private zone, no API authorization is required._
 
-<!--
 #### -oAuth-
 
 _This module will be used only in target architecture releases._
@@ -147,7 +144,7 @@ Notice that even truough we trying to protect you from creating interlapped API'
     + Attributes (Response_OK)
         + meta (Response__Meta)
             + code: 201 (number)
-        + data (API)
+        + data (API_Full)
 
 + Response 409 (application/json)
     + Attributes (Response_Error)
@@ -166,7 +163,7 @@ Notice that even truough we trying to protect you from creating interlapped API'
     + Attributes (Response_OK)
         + meta (Response__Meta)
             + code: 200
-        + data (API)
+        + data (API_Full)
 
 ### Configure API [PUT]
 
@@ -182,7 +179,7 @@ You can omit any request parameters if you want to parially update API settings.
     + Attributes (Response_OK)
         + meta (Response__Meta)
             + code: 200
-        + data (API)
+        + data (API_Full)
 
 ### Delete API [DELETE]
 
@@ -297,22 +294,15 @@ Request Path | Proxy Path | API Path | `strip_api_path` | Upstream Request
         + data (Plugin_Proxy)
           + name: proxy (string)
 
-## oAuth Auntenficiation [/apis/{api_id}/plugins/oauth]
-
-This plugin sends request to an oAuth server that should return scopes that is valid for consumer.
-
-This plugin **DOES NOT** authorize API resources, for this purposes use [ACL](#reference/plugins/acl/get-all-requests) plugin.
-
-But if token is invalid, appropriate error response will be send back to api consumer.
 
 ## JWT Authrozation [/apis/{api_id}/plugins/jwt]
 
 ### General Information
-JWT is a authroization plugin that decodes JWT tokens received from api consumer (with a `signature` field that is set in settings) and extacts `scopes` field from it.
+JWT is a authroization plugin that decodes JWT tokens received from api consumer (with a `signature` field that is set in settings).
 
-This plugin **DOES NOT** authorize API resources, for this purposes use [ACL](#reference/plugins/acl/get-all-requests) plugin.
+This plugin **NEITHER** authorize API resources, **NOR** apply consumer scopes to request. For this purposes use [Scopes Resolver](#reference/plugins/scopes-resolver) and [ACL](#reference/plugins/acl/get-all-requests) plugins.
 
-But if token is invalid, appropriate error response will be send back to api consumer.
+If token is invalid, appropriate error response will be send back to api consumer.
 
 **Warning!** JWT signature should be Base64 encoded. Some providers (for example, Auth0) already encode it for you.
 
@@ -328,17 +318,29 @@ To configure Annon copy-paste your `Client Secret` from `Clients` -> `Settings` 
 #### Issuing a Token
 
 To receive an valid JWT with scopes token you must:
-1. Set `app_metadata` for all your users, it should have AT LEAST one array with scopes:
+1. Set `app_metadata` for all your users, it should have AT LEAST one array with consumer ID:
+    
     ```
     {
+      "party_id": "my_consumer_id"
+    }
+    ```
+    
+2. (Optional) If you prefer to receive scopes from Auth0 `app_metadata` should also have scopes array:
+
+    ```
+    {
+      "party_id": "my_consumer_id",
       "scopes": [
         "read:email"
       ]
     }
     ```
+
     You can set default scopes in `Client` -> `Settings` -> `Advanced` -> `App Metadata`.
-2. When authorizing consumers set correct scope to receive JWT token with `app_metadata`: `scope=openid app_metadata`.
-3. Whenever you make requests to Annon, use `id_token` from Auth0 response (it's a JWT token that we need) in a `Authorization: Bearer <id_token>` header.
+    
+3. When authorizing consumers set correct scope to receive JWT token with `app_metadata`: `scope=openid app_metadata`.
+4. Whenever you make requests to Annon, use `id_token` from Auth0 response (it's a JWT token that we need) in a `Authorization: Bearer <id_token>` header.
 
 ### Bind JWT Plugin [POST /apis/{api_id}/plugins]
 
@@ -369,11 +371,75 @@ To receive an valid JWT with scopes token you must:
         + data (Plugin_JWT)
           + name: jwt (string)
 
+## Scopes Resolver [/apis/{api_id}/plugins/scopes]
+
+This plugin resolves scopes based on JWT token contents or by sending upstream request to authorization service.
+
+Right now it supports two strategies:
+
+- `jwt`
+- `pcm`
+
+#### JWT Strategy
+
+Scopes should be part of `app_metadata` in a JWT token. See [JWT Authorization](#reference/plugins/jwt-authrozation) plugin description.
+
+#### PCM Strategy
+
+Resolves token by sending request to authorization service. `url_template` setting is required. 
+
+Remote API service should return HTTP 200 status code and following json structure:
+
+```
+{
+  "meta": {
+    "code": 200
+  },
+  "data": {
+    "scopes": [
+      "originator_loans:upload", ...
+    ]
+  }
+}
+```
+
+Inside `url_template` you can use `{party_id}` to substitle consumer ID in a request path, ie.: `http://ec2-52-58-60-8.eu-central-1.compute.amazonaws.com:8081/0/api.svc/party/{party_id}/scopes`.
+
+### Bind Scopes Plugin [POST /apis/{api_id}/plugins]
+
++ Parameters
+    + api_id: 1 (string) - API ID.
+
++ Request (application/json)
+    + Attributes (Plugin_Scopes)
+      + name: scopes (string, required)
+
++ Response 201 (application/json)
+    + Attributes (Response_OK)
+        + meta (Response__Meta)
+            + code: 201 (number)
+        + data (Plugin_Scopes)
+          + name: scopes (string)
+
+### Change Scopes Config [PUT]
+
++ Parameters
+    + api_id: 1 (string) - API ID.
+
++ Request (application/json)
+    + Attributes (Plugin_Scopes)
+
++ Response 200 (application/json)
+    + Attributes (Response_OK)
+        + data (Plugin_Scopes)
+          + name: scopes (string)
+
+
 ## ACL [/apis/{api_id}/plugins/acl]
 
 ACL allows to protect your API's (or proxy `upstreams`) by a scope-based authorization.
 
-Once enabled it will read `scopes` from any authorization plugin (eg. `JWT`). If there are no scopes, it will send responses with `unathorized` status.
+Once enabled it will read `scopes` that is exposed by Scopes Resolver plugin. If there are no scopes, it will send responses with `unathorized` status.
 
 If path is not defined (gateway can not extract list of scopes needed for path), unathorized response is sent.
 
@@ -619,7 +685,6 @@ Rules applied in a predicted order:
 + has_more: false (boolean) - Is this collection have more data to load in the same style as last request loaded it.
 
 ## API
-+ id: 56c31536a60ad644060041af (string) - Unique ID for API.
 + name: my_api (string) - Unique name for API.
 + request (object, fixed-type) - Request description.
     + methods (array[enum], required) - HTTP request method.
@@ -631,6 +696,10 @@ Rules applied in a predicted order:
     + host: `os-dev-gateway.nebo15.com` (string) - DNS address of your API or its IP.
     + port: 80 (number) - Port on which your API recieves requests.
     + path: /andrew/ (string, required) - Public path to your API.
+
+## `API_Full`
++ id: 56c31536a60ad644060041af (string) - Unique ID for API.
++ Include API
 
 ## Plugin
 + name: myplugin (string) - Plugin name
@@ -679,9 +748,20 @@ Rules applied in a predicted order:
     + GET
     + DELETE
 + path: ^my_resource/ (string, required) - Regular expression on path. **Warning!** It's relative to API path.
-+ scopes (array[string], required)
++ scopes (array[string], required) - Scope can be any string.
     + request_api
     + read_profile
+
+## Scopes Plugin
+### `Plugin_Scopes`
++ is_enabled: true (boolean)
++ settings (Plugin_Scopes__Settings, fixed-type)
+
+### `Plugin_Scopes__Settings`
++ strategy (enum, required) - Strategy on which Annon should resolve user ID to scopes.
+    + pcm
+    + jwt
++ `url_template`: `http://ec2-52-58-60-8.eu-central-1.compute.amazonaws.com:8081/0/api.svc/party/{party_id}/scopes` (string) - Inside `url_template` you can use `{party_id}` to substitle consumer ID in a request path.
 
 ## Validator Plugin
 ### `Plugin_Validator`
@@ -695,6 +775,7 @@ Rules applied in a predicted order:
 + methods (array[enum], required)
     + POST
     + PUT
+    + PATCH
 + path: `^my_resource/` (string, required) - Regular expression on path. **Warning!** It's relative to API path.
 + schema: {} (string, required) - [JSON Schema](http://json-schema.org/) for validating request body.
 
@@ -721,7 +802,7 @@ Rules applied in a predicted order:
 + id: tl8nd5019bkendi1uadl2nqq38g69dbf (string) - unique request identifier.
 + idempotency_key: myidempotencykey (string) - Idempotency Key if consumer sent it, `null` otherwise.
 + inserted_at: 2016-11-04T16:16:20.875777 (string)
-+ api (API, optional)
++ api (API_Full, optional)
 + status_code: 200 (number) - HTTP status code.
 + ip_address: 10.2.87.0 (string) - Consumer IP address.
 
