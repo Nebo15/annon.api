@@ -24,6 +24,10 @@ config :gateway, :acceptance,
     port: {:system, :integer, "MIX_TEST_PUBLIC_PORT", 5000},
     host: {:system, "MIX_TEST_HOST", "localhost"}
   ],
+  private: [
+    port: {:system, :integer, "MIX_TEST_PUBLIC_PORT", 5002},
+    host: {:system, "MIX_TEST_HOST", "localhost"}
+  ],
   mock: [
     port: {:system, :integer, "TEST_MOCK_PORT", 4040},
     host: {:system, "TEST_MOCK_HOST", "127.0.0.1"}
@@ -35,6 +39,9 @@ config :gateway, :acceptance,
 
 config :gateway, :public_http,
   port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 5000}
+
+config :gateway, :private_http,
+  port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 5002}
 
 config :gateway, :management_http,
   port: {:system, :integer, "GATEWAY_MANAGEMENT_PORT", 5001}
