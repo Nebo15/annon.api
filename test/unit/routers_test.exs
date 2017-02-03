@@ -12,7 +12,7 @@ defmodule Gateway.RoutersTest do
       assert 404 == conn.status
     end
 
-    test "on private router" do
+    test "on management router" do
       conn = :get
       |> conn("/foo")
       |> put_req_header("content-type", "application/json")
@@ -20,10 +20,19 @@ defmodule Gateway.RoutersTest do
 
       assert 404 == conn.status
     end
+
+    test "on private router" do
+      conn = :get
+      |> conn("/foo")
+      |> put_req_header("content-type", "application/json")
+      |> Gateway.PrivateRouter.call([])
+
+      assert 404 == conn.status
+    end
   end
 
   describe "error match works" do
-    test "on private router" do
+    test "on management router" do
       conn = :get
       |> conn("/apis/binary_id")
       |> put_req_header("content-type", "application/bson")

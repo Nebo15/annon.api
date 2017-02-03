@@ -12,6 +12,7 @@ defmodule Gateway do
       supervisor(Gateway.DB.Logger.Repo, []),
       http_endpoint_spec(Gateway.ManagementRouter, :management_http),
       http_endpoint_spec(Gateway.PublicRouter, :public_http),
+      http_endpoint_spec(Gateway.PrivateRouter, :private_http),
       worker(Gateway.AutoClustering, [])
     ]
 
