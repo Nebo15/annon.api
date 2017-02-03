@@ -47,4 +47,15 @@ defmodule Gateway.Acceptance.Smoke.PrivateRouterTest do
     assert "my_value" == response["args"]["my_param"]
     assert "some-value" == response["headers"]["My-Custom-Header"]
   end
+
+  test "A request from public api does not reach upstream" do
+    response =
+      "/httpbin?my_param=my_value"
+      |> put_public_url()
+      |> HTTPoison.get!([{"my-custom-header", "some-value"}, magic_header()])
+      |> Map.get(:body)
+      |> Poison.decode!
+
+    assert %{"error" => %{"type" => "not_found"}} = response
+  end
 end
