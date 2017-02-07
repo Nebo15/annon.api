@@ -8,6 +8,7 @@ defmodule Gateway.DB.Schemas.API do
 
   @required_api_fields [:name]
   @required_request_fields [:scheme, :host, :port, :path, :methods]
+  @allowed_methods ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
 
   @derive {Poison.Encoder, except: [:__meta__, :plugins]}
   schema "apis" do
@@ -47,6 +48,7 @@ defmodule Gateway.DB.Schemas.API do
     api
     |> cast(params, @required_request_fields)
     |> validate_required(@required_request_fields)
+    |> validate_subset(:methods, @allowed_methods)
   end
 
   def create(params) when is_map(params) do
