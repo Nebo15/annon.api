@@ -10,6 +10,11 @@ config :gateway, Gateway.DB.Logger.Repo,
   database: System.get_env("MIX_LOGGER_TEST_DATABASE") || "gateway_logger_test",
   pool: Ecto.Adapters.SQL.Sandbox
 
+config :ex_statsd,
+  sink: [],
+  namespace: "test",
+  test_mode: true
+
 config :gateway, :acceptance,
   management: [
     port: {:system, :integer, "MIX_TEST_MANAGEMENT_PORT", 5001},
@@ -17,6 +22,10 @@ config :gateway, :acceptance,
   ],
   public: [
     port: {:system, :integer, "MIX_TEST_PUBLIC_PORT", 5000},
+    host: {:system, "MIX_TEST_HOST", "localhost"}
+  ],
+  private: [
+    port: {:system, :integer, "MIX_TEST_PUBLIC_PORT", 5002},
     host: {:system, "MIX_TEST_HOST", "localhost"}
   ],
   mock: [
@@ -30,6 +39,9 @@ config :gateway, :acceptance,
 
 config :gateway, :public_http,
   port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 5000}
+
+config :gateway, :private_http,
+  port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 5002}
 
 config :gateway, :management_http,
   port: {:system, :integer, "GATEWAY_MANAGEMENT_PORT", 5001}

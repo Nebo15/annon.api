@@ -14,6 +14,7 @@ WORKDIR ${HOME}
 
 # Install and compile project dependencies
 COPY mix.* ./
+COPY config ./config
 RUN mix do deps.get, deps.compile
 
 # Add project sources
@@ -33,7 +34,7 @@ RUN \
     mkdir -p /opt/$APP_NAME/uploads && \
     cp -R $HOME/priv /opt/$APP_NAME/ && \
     cp -R $HOME/bin/hooks /opt/$APP_NAME/ && \
-    APP_TARBALL=$(find $HOME/rel/$APP_NAME/releases -maxdepth 2 -name ${APP_NAME}.tar.gz) && \
+    APP_TARBALL=$(find $HOME/_build/$MIX_ENV/rel/$APP_NAME/releases -maxdepth 2 -name ${APP_NAME}.tar.gz) && \
     cp $APP_TARBALL /opt/$APP_NAME/ && \
     cd /opt/$APP_NAME && \
     tar -xzf $APP_NAME.tar.gz && \

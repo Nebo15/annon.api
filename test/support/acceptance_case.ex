@@ -38,6 +38,13 @@ defmodule Gateway.AcceptanceCase do
         "http://#{host}:#{port}/"
       end
 
+      def get_private_url do
+        port = get_endpoint_port(:private)
+        host = get_endpoint_host(:private)
+
+        "http://#{host}:#{port}/"
+      end
+
       def get_management_url do
         port = get_endpoint_port(:management)
         host = get_endpoint_host(:management)
@@ -47,6 +54,9 @@ defmodule Gateway.AcceptanceCase do
 
       def put_public_url("/" <> url), do: get_public_url() <> url
       def put_public_url(url), do: get_public_url() <> url
+
+      def put_private_url("/" <> url), do: get_private_url() <> url
+      def put_private_url(url), do: get_private_url() <> url
 
       def put_management_url("/" <> url), do: get_management_url() <> url
       def put_management_url(url), do: get_management_url() <> url

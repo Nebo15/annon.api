@@ -11,7 +11,7 @@ services:
 addons:
   postgresql: "9.5"
 elixir:
-  - 1.3.4
+  - 1.4.1
 otp_release:
   - 19.1
 env:
@@ -30,7 +30,6 @@ branches:
 before_install:
   # Expose DB to Docker container
   - sudo /bin/bash ./bin/ci/init-db.sh
-  - sudo /bin/bash ./bin/ci/init-statsd.sh
   # Load cached docker images
   # - if [[ -d $HOME/docker ]]; then ls $HOME/docker/*.tar.gz | xargs -I {file} sh -c "zcat {file} | docker load"; fi
 before_script:

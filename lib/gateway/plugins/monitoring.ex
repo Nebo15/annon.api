@@ -13,55 +13,48 @@ defmodule Gateway.Plugins.Monitoring do
   import Gateway.Helpers.Latency
 
   @doc false
-  def call(%Conn{path_info: path_info} = conn, _opts) do
-    request_size_metric_name = path_info
-    |> metric_name("request_size")
+  def call(%Conn{} = conn, _opts) do
+    api_tags = tags(conn)
 
     conn
     |> get_request_size()
-    |> ExStatsD.histogram(request_size_metric_name)
+    |> ExStatsD.histogram("request_size", tags: api_tags)
 
-    path_info
-    |> metric_name("request_count")
-    |> ExStatsD.increment
+    ExStatsD.increment("request_count", tags: api_tags)
 
     conn
     |> Conn.register_before_send(&write_metrics(&1))
   end
 
-  defp write_metrics(%Conn{request_path: request_path} = conn) do
+  defp write_metrics(%Conn{} = conn) do
     client_req_start_time = Map.get(conn.assigns, :client_req_start_time)
     conn = write_latency(conn, :latencies_client, client_req_start_time)
     request_duration = conn.assigns.latencies_client - Map.get(conn.assigns, :latencies_upstream, 0)
+    api_tags = tags(conn) ++ ["http_status:#{to_string conn.status}"]
 
-    metric_name = request_path
-    |> metric_name("latency")
-
-    request_duration
-    |> ExStatsD.timer(metric_name)
-
-    request_path
-    |> metric_name("status_count_" <> to_string(conn.status))
-    |> ExStatsD.increment
+    ExStatsD.timer(conn.assigns.latencies_client, "latency", tags: api_tags)
+    ExStatsD.increment("response_count", tags: api_tags)
 
     conn
     |> Conn.assign(:latencies_gateway, request_duration)
   end
 
-  defp metric_name(path, type) when is_list(path) do
-    data = path
-    |> Enum.join("_")
+  defp tags(%Conn{host: host, method: method, port: port} = conn),
+    do: ["http_host:#{to_string host}",
+         "http_method:#{to_string method}",
+         "http_port:#{to_string port}"] ++ api_tags(conn) ++ get_request_id(conn)
 
-    data <> "_" <> type
-  end
+  defp api_tags(%Conn{private: %{api_config: %{name: api_name, id: api_id}}}),
+    do: ["api_name:#{to_string api_name}", "api_id:#{to_string api_id}"]
+  defp api_tags(_),
+    do: ["api_name:unknown", "api_id:unknown"]
 
-  defp metric_name(path, type) when is_bitstring(path) do
-    data = path
-    |> String.split("/")
-    |> Enum.drop_while(fn(x) -> String.length(x) == 0 end)
-    |> Enum.join("_")
+  defp get_request_id(conn) do
+    id = conn
+    |> Conn.get_resp_header("x-request-id")
+    |> Enum.at(0)
 
-    data <> "_" <> type
+    ["request_id:#{to_string id}"]
   end
 
   defp get_request_size(conn) do

@@ -87,6 +87,12 @@ defmodule Gateway.Plugins.ProxyTest do
       assert "https://localhost/mockbin/foo" == Proxy.make_link(proxy_params, @api_path, incoming_request)
     end
 
+    test "strips request with collision in path" do
+      incoming_request = make_conn("/ap/api/loan/242653")
+      proxy_params = %{"host" => "localhost", "path" => "/", "strip_api_path" => true}
+      assert "https://localhost/api/loan/242653" == Proxy.make_link(proxy_params, "/ap", incoming_request)
+    end
+
     test "strips deep requests paths" do
       incoming_request = make_conn("#{@api_path}/some/path")
       proxy_params = %{"host" => "localhost", "path" => "/mockbin", "strip_api_path" => true}

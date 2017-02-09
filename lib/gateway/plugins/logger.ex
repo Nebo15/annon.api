@@ -78,11 +78,22 @@ defmodule Gateway.Plugins.Logger do
     |> prepare_params
   end
 
+  defp get_response_body(conn) do
+    conn
+    |> Conn.get_resp_header("content-disposition")
+    |> Enum.at(0)
+    |> process_content_disposition(conn)
+  end
+
+  defp process_content_disposition("inline; filename=" <> _, _conn), do: nil
+  defp process_content_disposition(nil, conn), do: conn.resp_body
+  defp process_content_disposition(_, conn), do: conn.resp_body
+
   defp get_response_data(conn) do
     %{
       status_code: conn.status,
       headers: modify_headers_list(conn.resp_headers),
-      body: conn.resp_body
+      body: get_response_body(conn)
     }
     |> prepare_params
   end
