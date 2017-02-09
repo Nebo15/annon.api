@@ -110,9 +110,9 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
         "entry" => "$.name",
         "entry_type" => "json_data_property",
         "rules" => [%{
-          "description" => "already exists",
+          "description" => "has already been taken",
           "params" => [],
-          "rule" => "duplicate"
+          "rule" => "unique"
         }]
       }]
 

@@ -59,7 +59,10 @@ defmodule Gateway.DB.Schemas.Plugin do
         |> changeset(params)
         case get_one_by([api_id: api_id, name: Map.get(params, "name", "")]) do
           %PluginSchema{} = plugin ->
-            changeset = Map.put(changeset, :errors, [name: {"already exists", [validation: :duplicate]}])
+            changeset =
+              plugin
+              |> Ecto.Changeset.change()
+              |> Ecto.Changeset.add_error(:name, "has already been taken", [validation: :unique])
             {:error, changeset}
           _ -> changeset |> Repo.insert()
         end
