@@ -41,16 +41,16 @@ defmodule Gateway.Acceptance.Smoke.FailedUpstreamTest do
       "/error?my_param=my_value"
       |> put_public_url()
       |> HTTPoison.get!([magic_header()])
-      
+
     assert_status(response, 502)
-    
+
     decoded_response =
       response
       |> Map.get(:body)
       |> Poison.decode!
 
     assert %{
-      "type" => "upstream_error", 
+      "type" => "upstream_error",
       "message" => "Upstream is unavailable with reason :nxdomain"
     } == decoded_response
   end

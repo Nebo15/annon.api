@@ -58,7 +58,7 @@ defmodule Gateway.Helpers.Response do
   def build_upstream_error(reason) do
     "500.json"
     |> EView.Views.Error.render(%{
-      type: :upstream_error, 
+      type: :upstream_error,
       message: "Upstream is unavailable with reason #{inspect reason}"
     })
     |> Poison.encode!()

@@ -92,14 +92,14 @@ defmodule Gateway.Plugins.Proxy do
 
     method = method
     |> String.to_atom
-    
+
     case HTTPoison.request(method, link, body, Map.get(conn, :req_headers)) do
       {:ok, response} ->
         response
       {:error, %{reason: reason}} ->
         %{
-          status_code: 502, 
-          body: Gateway.Helpers.Response.build_upstream_error(reason), 
+          status_code: 502,
+          body: Gateway.Helpers.Response.build_upstream_error(reason),
           headers: []
         }
     end
