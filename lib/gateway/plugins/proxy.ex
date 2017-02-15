@@ -90,9 +90,26 @@ defmodule Gateway.Plugins.Proxy do
     |> Map.get(:body_params)
     |> Poison.encode!()
 
-    method
+    method = method
     |> String.to_atom
-    |> HTTPoison.request!(link, body, Map.get(conn, :req_headers))
+    
+    case HTTPoison.request(method, link, body, Map.get(conn, :req_headers)) do
+      {:ok, response} ->
+        response
+      {:error, %{reason: reason}} ->
+        response_body = "500.json"
+        |> EView.Views.Error.render(%{
+          type: :upstream_error, 
+          message: "Upstream is unavailable with reason #{inspect reason}"
+        })
+        |> Poison.encode!()
+
+        %{
+          status_code: 502, 
+          body: response_body, 
+          headers: []
+        }
+    end
   end
 
   def make_link(proxy, api_path, conn) do
