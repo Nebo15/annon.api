@@ -93,7 +93,9 @@ defmodule Gateway.Plugins.Proxy do
     method = method
     |> String.to_atom
 
-    case HTTPoison.request(method, link, body, Map.get(conn, :req_headers)) do
+    timeout_opts = [connect_timeout: 30_000, recv_timeout: 30_000, timeout: 30_000]
+
+    case HTTPoison.request(method, link, body, Map.get(conn, :req_headers), timeout_opts) do
       {:ok, response} ->
         response
       {:error, %{reason: reason}} ->
