@@ -90,9 +90,19 @@ defmodule Gateway.Plugins.Proxy do
     |> Map.get(:body_params)
     |> Poison.encode!()
 
-    method
+    method = method
     |> String.to_atom
-    |> HTTPoison.request!(link, body, Map.get(conn, :req_headers))
+
+    case HTTPoison.request(method, link, body, Map.get(conn, :req_headers)) do
+      {:ok, response} ->
+        response
+      {:error, %{reason: reason}} ->
+        %{
+          status_code: 502,
+          body: Gateway.Helpers.Response.build_upstream_error(reason),
+          headers: []
+        }
+    end
   end
 
   def make_link(proxy, api_path, conn) do
