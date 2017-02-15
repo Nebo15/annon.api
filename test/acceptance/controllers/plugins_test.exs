@@ -89,6 +89,35 @@ defmodule Gateway.Acceptance.Controllers.PluginsTest do
       |> assert_status(422)
       |> get_body()
     end
+
+    test "create duplicates", %{api_id: api_id} do
+      jwt_plugin = :jwt_plugin
+      |> build_factory_params()
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(jwt_plugin)
+      |> assert_status(201)
+
+      actual_result = "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(jwt_plugin)
+      |> assert_status(422)
+      |> get_body()
+      |> get_in(["error", "invalid"])
+
+      expected_result = [%{
+        "entry" => "$.name",
+        "entry_type" => "json_data_property",
+        "rules" => [%{
+          "description" => "has already been taken",
+          "params" => [],
+          "rule" => "unique"
+        }]
+      }]
+
+      assert expected_result == actual_result
+    end
   end
 
   describe "Validator Plugin" do
