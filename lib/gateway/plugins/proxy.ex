@@ -97,16 +97,9 @@ defmodule Gateway.Plugins.Proxy do
       {:ok, response} ->
         response
       {:error, %{reason: reason}} ->
-        response_body = "500.json"
-        |> EView.Views.Error.render(%{
-          type: :upstream_error, 
-          message: "Upstream is unavailable with reason #{inspect reason}"
-        })
-        |> Poison.encode!()
-
         %{
           status_code: 502, 
-          body: response_body, 
+          body: Gateway.Helpers.Response.build_upstream_error(reason), 
           headers: []
         }
     end
