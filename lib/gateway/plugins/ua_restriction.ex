@@ -1,6 +1,8 @@
 defmodule Gateway.Plugins.UARestriction do
   @moduledoc """
   It allows to white/black-list consumers by user agent.
+
+  TODO: refactor validation from this file and pre-compile patterns for reuse
   """
   use Gateway.Helpers.Plugin,
     plugin_name: "ua_restriction"
@@ -24,13 +26,10 @@ defmodule Gateway.Plugins.UARestriction do
   defp validate_plugin_settings(_), do: :ok
 
   defp validate_whitelist(settings) do
-    settings
-    |> validate_list("whitelist")
-    |> validate_blacklist(settings)
+    with :ok <- validate_list(settings, "whitelist"),
+         :ok <- validate_list(settings, "blacklist"),
+     do: :ok
   end
-
-  defp validate_blacklist(:error, _settings), do: :error
-  defp validate_blacklist(:ok, settings), do: validate_list(settings, "blacklist")
 
   defp validate_list(settings, key) do
     settings

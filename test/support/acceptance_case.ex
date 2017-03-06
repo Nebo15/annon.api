@@ -28,7 +28,7 @@ defmodule Gateway.AcceptanceCase do
       end
 
       def process_request_headers(headers) when is_list(headers) do
-        [{"content-type", "application/json"}, magic_header()] ++ headers
+        headers ++ [{"content-type", "application/json"}, magic_header()]
       end
 
       def get_public_url do
