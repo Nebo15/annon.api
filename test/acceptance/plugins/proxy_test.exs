@@ -120,12 +120,14 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
     })
 
     assert %{"request" => %{
-      "headers" => [%{"hello" => "world"} | _]
+      "headers" => headers
     }} = api_path
     |> put_public_url()
     |> get!()
     |> get_body()
     |> get_mock_response()
+
+    assert %{"hello" => "world"} in headers
   end
 
   test "preserves original headers", %{api_id: api_id, api_path: api_path} do
@@ -133,12 +135,14 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
     |> create_proxy_to_mock()
 
     assert %{"request" => %{
-      "headers" => [%{"foo" => "bar"} | _] # There might be issues with headers order in here
+      "headers" => headers
     }} = api_path
     |> put_public_url()
     |> get!([{"foo", "bar"}])
     |> get_body()
     |> get_mock_response()
+
+    assert %{"foo" => "bar"} in headers
   end
 
   test "returns upstream headers", %{api_id: api_id, api_path: api_path} do

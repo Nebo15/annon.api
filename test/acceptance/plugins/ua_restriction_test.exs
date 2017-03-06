@@ -79,8 +79,6 @@ defmodule Gateway.Acceptance.Plugins.UARestrictionTest do
     |> post!(ua_restriction_plugin)
     |> assert_status(201)
 
-    expected_result = %{"message" => "You have been blocked from accessing this resource.", "type" => "forbidden"}
-
     actual_result = api_path
     |> put_public_url()
     |> get!([{"user-agent", @user_agent}])
@@ -88,6 +86,7 @@ defmodule Gateway.Acceptance.Plugins.UARestrictionTest do
     |> get_body()
     |> Map.get("error")
 
+    expected_result = %{"message" => "You have been blocked from accessing this resource.", "type" => "forbidden"}
     assert expected_result == actual_result
   end
 
