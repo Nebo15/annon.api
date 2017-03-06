@@ -1,13 +1,12 @@
-dist/app-4aef34ad5f.js
-dist/app-a07cea761b.css
+dist/app-372682077e.js
+dist/app-f7824c48e6.css
 fonts/icomoon.eot
 fonts/icomoon.svg
 fonts/icomoon.ttf
 fonts/icomoon.woff
-dist/sidebar_items-93476be0c3.js
+dist/sidebar_items-422fa51ef0.js
 api-reference.html
 readme.html
-index.html
 404.html
 Gateway.html
 Gateway.AcceptanceCase.html
@@ -63,3 +62,4 @@ Gateway.PrivateRouter.html
 Gateway.PublicRouter.html
 Gateway.UnitCase.html
 gateway_tasks.html
+index.html
