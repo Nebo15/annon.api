@@ -9,6 +9,8 @@ defmodule Gateway.Cache.EtsAdapter do
   alias Gateway.DB.Schemas.Plugin
 
   def find_api_by(scheme, host, port) do
+    warm_up()
+
     match_spec = %{
       request: %{
         scheme: scheme,

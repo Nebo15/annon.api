@@ -95,7 +95,12 @@ defmodule Gateway.Plugins.Proxy do
 
     timeout_opts = [connect_timeout: 30_000, recv_timeout: 30_000, timeout: 30_000]
 
-    case HTTPoison.request(method, link, body, Map.get(conn, :req_headers), timeout_opts) do
+    headers =
+      conn
+      |> Map.get(:req_headers)
+      |> Enum.reject(fn {a, _} -> a == "host" end)
+
+    case HTTPoison.request(method, link, body, headers, timeout_opts) do
       {:ok, response} ->
         response
       {:error, %{reason: reason}} ->
