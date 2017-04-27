@@ -41,7 +41,7 @@ set plugin_settings (
          {
            "methods": ["GET"],
            "path": "^.*",
-           "scopes": ["originator_loans:upload"]
+           "scopes": ["some_api:read", "some_api:write"]
          }
        ]
      }'
@@ -62,7 +62,7 @@ set plugin_settings (
 )
 set plugin_id (psql gateway -A -q -t -c "insert into plugins (name, api_id, is_enabled, settings, inserted_at, updated_at) values ('$plugin_name', $api_id, true, '$plugin_settings', now(), now()) returning id")
 
-curl -H "Authorization: Bearer SVVreTZkUUlDSExzRTduUmhtcjV3Zz09" http://localhost:1234/my_test_endpoint
+curl -H "Authorization: Bearer UzR4aUl1RURQUE80R3BEWGlYVzJtZz09" http://localhost:1234/my_test_endpoint
 
 # 1.3 Add acl rule to API endpoint
 # acl_params = %{
