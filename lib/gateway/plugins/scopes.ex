@@ -25,27 +25,26 @@ defmodule Gateway.Plugins.Scopes do
     |> Conn.put_private(:scopes, scopes)
   end
 
-  defp get_scopes(_conn, token, %{"strategy" => "jwt"}) do
-    token
+  defp get_scopes(conn, %{"strategy" => "jwt"}) do
+    conn.private[:jwt_token]
     |> JWTStrategy.get_scopes()
   end
-  defp get_scopes(conn, _token, %{"strategy" => "oauth2", "url_template" => url_template}) do
+  defp get_scopes(conn, %{"strategy" => "oauth2", "url_template" => url_template}) do
     Conn.get_req_header(conn, "authorization")
-    |> (fn("Bearer " <> string) -> string end).()
+    |> (fn(["Bearer " <> string]) -> string end).()
     |> OAuth2Strategy.get_scopes(url_template)
   end
-  defp get_scopes(conn, _token, %{"strategy" => "pcm", "url_template" => url_template}) do
+  defp get_scopes(conn, %{"strategy" => "pcm", "url_template" => url_template}) do
     conn.private
     |> Map.get(:consumer_id)
     |> PCMStrategy.get_scopes(url_template)
   end
-  defp get_scopes(_conn, _token, _), do: []
+  defp get_scopes(_, _), do: []
 
-  defp execute(nil, conn), do: conn
-  defp execute(%Plugin{settings: settings}, %Conn{private: %{jwt_token: token}} = conn) do
+  defp execute(%Plugin{settings: settings}, conn) do
     conn
-    |> get_scopes(token, settings)
+    |> get_scopes(settings)
     |> save_scopes(conn)
   end
-  defp execute(%Plugin{settings: _}, %Conn{private: _} = conn), do: conn
+  defp execute(_, conn), do: conn
 end

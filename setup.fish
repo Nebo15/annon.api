@@ -11,7 +11,7 @@ set api_request  (
        "scheme": "http",
        "host": "localhost",
        "port": 1234,
-       "path": "/yo"
+       "path": "/my_test_endpoint"
      }'
 )
 set api_id (psql gateway -A -q -t -c "insert into apis (name, request, inserted_at, updated_at) values ('$api_name', '$api_request', now(), now()) returning id")
@@ -31,7 +31,19 @@ set plugin_settings (
 )
 set plugin_id (psql gateway -A -q -t -c "insert into plugins (name, api_id, is_enabled, settings, inserted_at, updated_at) values ('$plugin_name', $api_id, true, '$plugin_settings', now(), now()) returning id")
 
-curl http://localhost:1234/yo
+set plugin_name 'scopes'
+set plugin_settings (
+  jq --monochrome-output \
+     --compact-output \
+     --null-input \
+     '{
+       "strategy": "oauth2",
+       "url_template": "http://localhost:4000/admin/tokens/{token}",
+     }'
+)
+set plugin_id (psql gateway -A -q -t -c "insert into plugins (name, api_id, is_enabled, settings, inserted_at, updated_at) values ('$plugin_name', $api_id, true, '$plugin_settings', now(), now()) returning id")
+
+curl -H "Authorization: Bearer SVVreTZkUUlDSExzRTduUmhtcjV3Zz09" http://localhost:1234/my_test_endpoint
 
 # 1.3 Add acl rule to API endpoint
 # acl_params = %{
