@@ -9,6 +9,7 @@ defmodule Gateway.Cache.EtsAdapter do
   alias Gateway.DB.Schemas.Plugin
 
   def find_api_by(scheme, host, port) do
+    :ets.delete_all_objects(:config)
     warm_up()
 
     match_spec = %{

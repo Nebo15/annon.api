@@ -10,6 +10,7 @@ defmodule Gateway.Plugins.Scopes do
   alias Gateway.DB.Schemas.API, as: APISchema
   alias Gateway.Helpers.Scopes.JWTStrategy
   alias Gateway.Helpers.Scopes.PCMStrategy
+  alias Gateway.Helpers.Scopes.OAuth2Strategy
 
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts)
     when is_list(plugins) do
@@ -27,6 +28,11 @@ defmodule Gateway.Plugins.Scopes do
   defp get_scopes(_conn, token, %{"strategy" => "jwt"}) do
     token
     |> JWTStrategy.get_scopes()
+  end
+  defp get_scopes(conn, _token, %{"strategy" => "oauth2", "url_template" => url_template}) do
+    Conn.get_req_header(conn, "authorization")
+    |> (fn("Bearer " <> string) -> string end).()
+    |> OAuth2Strategy.get_scopes(url_template)
   end
   defp get_scopes(conn, _token, %{"strategy" => "pcm", "url_template" => url_template}) do
     conn.private
