@@ -31,6 +31,25 @@ set plugin_settings (
 )
 set plugin_id (psql gateway -A -q -t -c "insert into plugins (name, api_id, is_enabled, settings, inserted_at, updated_at) values ('$plugin_name', $api_id, true, '$plugin_settings', now(), now()) returning id")
 
+set plugin_name 'acl'
+set plugin_settings (
+  jq --monochrome-output \
+     --compact-output \
+     --null-input \
+     '{
+       "rules": [
+         {
+           "methods": ["GET"],
+           "path": "^.*",
+           "scopes": ["originator_loans:upload"]
+         }
+       ]
+     }'
+)
+set plugin_id (psql gateway -A -q -t -c "insert into plugins (name, api_id, is_enabled, settings, inserted_at, updated_at) values ('$plugin_name', $api_id, true, '$plugin_settings', now(), now()) returning id")
+
+# rules: [%{}]
+
 set plugin_name 'scopes'
 set plugin_settings (
   jq --monochrome-output \
