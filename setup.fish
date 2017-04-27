@@ -38,7 +38,7 @@ set plugin_settings (
      --null-input \
      '{
        "strategy": "oauth2",
-       "url_template": "http://localhost:4000/admin/tokens/{token}",
+       "url_template": "http://localhost:4000/admin/tokens/{token}/verify",
      }'
 )
 set plugin_id (psql gateway -A -q -t -c "insert into plugins (name, api_id, is_enabled, settings, inserted_at, updated_at) values ('$plugin_name', $api_id, true, '$plugin_settings', now(), now()) returning id")
