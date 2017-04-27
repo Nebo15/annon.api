@@ -370,5 +370,31 @@ defmodule Gateway.Acceptance.Plugins.ProxyTest do
 
       assert expected_party_id == actual_party_id
     end
+
+    test "protected headers cannot be overridden", %{api_id: api_id, api_path: api_path} do
+      proxy_path = "/proxy"
+
+      api_id
+      |> create_proxy_to_mock(%{
+        path: proxy_path,
+        scheme: "http",
+        strip_api_path: true
+      })
+
+      protected_headers = Confex.get(:gateway, :protected_headers)
+
+      headers = Enum.map(protected_headers, fn x -> {x, "111"} end)
+
+      headers = api_path
+      |> put_public_url()
+      |> get!(headers)
+      |> get_body()
+      |> get_in(["data", "request", "headers"])
+
+      assert "" == headers
+      |> Enum.filter_map(fn x -> Enum.at(Map.keys(x), 0) in protected_headers end,
+        &(Map.get(&1, Enum.at(Map.keys(&1), 0))))
+      |> Enum.join("")
+    end
   end
 end
