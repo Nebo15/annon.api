@@ -95,12 +95,7 @@ defmodule Gateway.Plugins.Proxy do
 
     timeout_opts = [connect_timeout: 30_000, recv_timeout: 30_000, timeout: 30_000]
 
-    headers =
-      conn
-      |> Map.get(:req_headers)
-      |> Enum.reject(fn {a, _} -> a == "host" end)
-
-    case HTTPoison.request(method, link, body, headers, timeout_opts) do
+    case HTTPoison.request(method, link, body, Map.get(conn, :req_headers), timeout_opts) do
       {:ok, response} ->
         response
       {:error, %{reason: reason}} ->
@@ -143,14 +138,7 @@ defmodule Gateway.Plugins.Proxy do
   end
   defp put_x_consumer_id_header(headers, _), do: headers
 
-  defp remove_protected_headers(conn) do
-    :gateway
-    |> Confex.get(:protected_headers)
-    |> Enum.reduce(conn, fn(header, conn) -> Conn.delete_req_header(conn, header) end)
-  end
-
   def put_additional_headers(headers, conn) do
-    conn = remove_protected_headers(conn)
     headers
     |> put_x_forwarded_for_header(conn)
     |> put_x_consumer_scopes_header(conn)
