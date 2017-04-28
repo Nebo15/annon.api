@@ -77,7 +77,7 @@ defmodule Gateway.Plugins.Proxy do
 
   defp do_fileupload_request_cont(link, conn, _method) do
     req_headers = Enum.reject(conn.req_headers, fn {k, _} ->
-      String.downcase(k) in ["content-type", "content-disposition", "content-length"]
+      String.downcase(k) in ["content-type", "content-disposition", "content-length", "host"]
     end)
 
     multipart = Gateway.Plugins.Proxy.MultipartForm.reconstruct_using(conn.body_params)
@@ -95,7 +95,12 @@ defmodule Gateway.Plugins.Proxy do
 
     timeout_opts = [connect_timeout: 30_000, recv_timeout: 30_000, timeout: 30_000]
 
-    case HTTPoison.request(method, link, body, Map.get(conn, :req_headers), timeout_opts) do
+    headers =
+       conn
+       |> Map.get(:req_headers)
+       |> Enum.reject(fn {a, _} -> a == "host" end)
+
+    case HTTPoison.request(method, link, body, headers, timeout_opts) do
       {:ok, response} ->
         response
       {:error, %{reason: reason}} ->
