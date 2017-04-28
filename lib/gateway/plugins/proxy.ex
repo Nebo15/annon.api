@@ -138,7 +138,14 @@ defmodule Gateway.Plugins.Proxy do
   end
   defp put_x_consumer_id_header(headers, _), do: headers
 
+  defp remove_protected_headers(conn) do
+    :gateway
+    |> Confex.get(:protected_headers)
+    |> Enum.reduce(conn, fn(header, conn) -> Conn.delete_req_header(conn, header) end)
+  end
+
   def put_additional_headers(headers, conn) do
+    conn = remove_protected_headers(conn)
     headers
     |> put_x_forwarded_for_header(conn)
     |> put_x_consumer_scopes_header(conn)
