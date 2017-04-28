@@ -1,4 +1,6 @@
 defmodule Gateway.Helpers.Scopes.OAuth2Strategy do
+  @moduledoc false
+
   def get_scopes(nil, _), do: []
   def get_scopes(scope, url_template) do
     scope
