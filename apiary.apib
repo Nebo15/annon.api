@@ -87,7 +87,7 @@ Our containers are based on Alpine Linux wich is a security-oriented, lightweigh
 
 ### Kubernetes
 
-You can deploy it to Kubernetes using [example configs from Annon's repo](https://github.com/Nebo15/os.gateway/tree/master/_k8s).
+You can deploy it to Kubernetes using [example configs from Annon's Infra repo](https://github.com/Nebo15/annon.infra/blob/master/kubernetes).
 
 ### Docker Compose
 
@@ -780,6 +780,7 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 + updated_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
 
 ### `API_Status`
++ id: 56c31536a60ad644060041af (string) - Unique ID for API.
 + name: my_api (string, required) - Unique name for API.
 + description: `My API example` (string, optional) - Description of an API.
 + docs_url: `http://docs.annon.apiary.io/` (string, optional) - Link to the API documentation page.
