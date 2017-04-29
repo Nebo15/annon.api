@@ -3,24 +3,24 @@ HOST: http://os-dev-gateway.nebo15.com:8080/
 
 # Annon API Gateway
 
-Annon - configurable API gateway that allows to pass requests to upstream back-ends and remove from them typical boilerplate that must be re-done everywhere. Inspired by [Kong](https://getkong.org/).
+Annon is a configurable API gateway that acts as a reverse proxy with a plugin system. Plugins allow to reduce boilerplate that must be done in each service, making overall development faster. Also it stores all requests, responses and key metrics, making it easy to debug your application. Inspired by [Kong](https://getkong.org/).
 
-It's free. Source code is available on [GitHub](https://github.com/Nebo15/os.gateway).
+It's free. Source code is available on [GitHub](https://github.com/Nebo15/annon.api).
 
 > "Annon" translates from the Sindarin word for 'Great Door or Gate'. Sindarin is one of the many languages spoken by the immortal Elves.
 
-Annon consist of three main parts:
-- Annon API Gateway.
-- [Annon Dashboard](https://github.com/Nebo15/gateway.web) - manage API Gateway settings, review and replay requests from history.
+Annon consist of multiple main parts:
+
+- [Annon API Gateway](https://github.com/Nebo15/annon.api).
+- [Annon Dashboard](https://github.com/Nebo15/annon.web) - UI that allows to manage Annon settings, review and analyze Requests.
 - [EView](https://hex.pm/packages/eview) - hex package that allows to receive and modify client responses from Elixir application to match [Nebo #15 API Manifest](http://docs.apimanifest.apiary.io/). So your back-ends will respond in a same way as Annon does.
-- Annon Doc - auto-generated documentation based on request history of your API.
-- Annon Status Page - auto-generated status pages on API's. (See: [status.gndf.io](http://status.gndf.io/) for example).
+- [Mithril](https://github.com/Nebo15/mithril.api) - authentication and role management service.
 
 ## Goals of the Project
 
 - Provide single management/monitoring system for medium-to-large scale applications.
 - Reduce amount of work needed in other componens by orchestrating common functionalities.
-- Control response time and get answer "what happened" even in a single request perspective.
+- Control response time and get answer "what happened" even in a single request perspective. Provide data for in-deepth service analysis.
 - Improve platform scalability.
 
 ## General Features
@@ -29,15 +29,16 @@ Annon consist of three main parts:
 
 For perfomance issues Annon has build-in cache manager, it will load data from DB only once, all futher work will be based on this cached data.
 
-Whenever a single node receives request that cache has been changed, it's responsible to notify all other nodes in cluster about change, and they should reload configurations from DB.
+Whenever a single node receives request that changes cached data, it's responsible to notify all other nodes in cluster about change, and they should reload configurations from DB.
 
-Whenever new node joins cluster, all other nodes should drop their cache, to resolve consistency issues.
+Whenever new node joins to a cluster, all other nodes should drop their cache, to resolve consistency issues.
 
-This feature is done via [skycluster](https://github.com/Nebo15/skycluster) package. All gateway nodes is connected via Erlang distribution protocol. It support different discovery strategies: kubernetes, gossip and epmd.
+This feature is done via [skycluster](https://github.com/Nebo15/skycluster) package. All gateway nodes is connected via Erlang distribution protocol. 
+It support different discovery strategies: 
 
-### Requests Idempotency
-
-Annon guarantess that replayed requests with same `X-Idempotency-Key: <key>` and same request will get permanent response. This is useful in a financial application, where you need good protection from duplicate user actions.
+- `kubernetes` - selecting pods via Kubernetes API;
+- `gossip` - multicast UDP gossip, using a configurable port/multicast address;
+- `epmd` - using standart Erlang Port Mapper Daemon.
 
 ### Request ID's
 
@@ -45,91 +46,70 @@ When receiving request gateway will generate unique `request_id`. It is used to 
 
 Optionally, you can send `X-Request-ID` header with your own request id, but you need to make sure that its length not less than 20 characters. Also, if should be unique, or you will receive error response.
 
-## Default Plugins
-
 ### Request Logger
 
-By-default, gateway will log all requests and responses by their unique request-id's. You can view find them later in [Requests](#reference/requests/collection/get-all-requests).
+Annon stores all requests and responses by their unique Request ID's in a Cassandra database. You use this information to query requests and get base analytics via [Requests API](#reference/requests/collection/get-all-requests).
 
-Also, idempotency plug is relies on this logs to send same result for duplicate requests with same `X-Idempotency-Key` headers.
+API consumers may provide a custom request ID by sending `X-Request-ID: <request_id>` header. Thus, your Front-End and upstream back-ends can log information with a single unique ID.
+
+Also, idempotency plug is relying on this logs to privide idempotency guaratees for requests with same `X-Idempotency-Key: <idempotency_key>` headers.
 
 ### Monitoring
 
 To monitor services status we will use DogStatsD integration, that will receive following metrics:
 
 - `request_count` - (counter) [API](#reference/apis) hit rate.
-- `request_size` - (histogram) HTTP request size.
+- `request_size` - (gauge) HTTP request size.
 - `response_count` - (counter) same as `request_count` but sent after request dispatch and additionally tagged with `http_status`.
-- `latency` (counter) - total request latency for a API consumer, additionally tagged with `http_status`.
+- `latency` (gauge) - total request latency for a API consumer, additionally tagged with `http_status`.
 
 All metrics have tags: `http_host`, `http_port`, `http_method`, `api_name` and `api_id` (if matches any), `request_id`. This allows to set different aggregated views on counter data.
 
-<!--
-#### HTTPRelay
+We recommend you to try [DataDog](https://www.datadoghq.com/) for collecting and displaying perfomance metrics. But this is not a hard containt, instead you can use any StatsD collector.
 
-_TBD v2.0_
+### Requests Idempotency
 
-Send notification to a multiple upstreams, that is interested in perfoming async workload.
+Annon guarantess that replayed requests with same `X-Idempotency-Key: <key>` and same request will get permanent response. This is useful in a financial application, where you need good protection from duplicate user actions.
 
-There are several use cases for EventEmitters:
+### Requests Tracing
 
-- Notify marketing servervices on customer change/revenue events.
-- Notify services about data change, so they can take according actions. (Like sell offer remove.)
-
-Relay request to a multiple back-ends. Useful when you want to send multiple notifications when proxying request itself.
-
-Subsequent requests will
-
-#### Cache
-
-_TBD v2.0_
-
-Add plugin settings of [API](#reference/apis) to `X-Settings-Cache: json_encode(cache_plugin_setting)` header in all requests to upstream.
-
-#### Circout Breaker
-
-TBD 2.0
-
-### Authorization
-
-All authorization plugins work on top of [Consumers](#reference/consumers/get-all-requests) entity. Plugins can assign access scopes that can be reused in [ACL](#reference/plugins/acl/get-all-requests) plugin.
-
-To authorize requests inside private platrom scope we can add `Authroization: Basic base64_token` headers, so services will know that request is sent from API Gateway. _In MVP release we will trust to all requests inside private zone, no API authorization is required._
-
-#### -oAuth-
-
-_This module will be used only in target architecture releases._
-
-Exchange `user_id` and `user_password` fields that is set in customer plugin settings to a oAuth access token, that can be re-used for futher requests.
-
-Other:
-
-- `user_agent_blacklist` - block requests by HTTP User Agent.
-- `cors` - _TBD 2.0_ allow to make requests from browser.
-- `ssl` - _TBD 2.0_ add SSL certificate for an API.
-- `ratelimit` - _TBD 2.0_ limit how many HTTP requests consumer can make.
-- `sizelimit` - _TBD 2.0_ block HTTP requests by body size.
--->
+Annon supports [OpenTracing](http://opentracing.io/) in Erlang via [Otter](https://github.com/Bluehouse-Technology/otter) libruary. This means that by implementing OpenTracing API in other services you can trace complete request impact for each of your services.
 
 ## Installation
 
-Most simple way to install it is to use pre-built docker container available on [Docker Hub](https://hub.docker.com/r/nebo15/gateway/).
+Annon can be installed by compiling it from sources, but we recommend you to use our pre-build Docker containers:
+
+- [Annon API Gateway](https://hub.docker.com/r/nebo15/annon.api/);
+- [Annon Dashboard](https://hub.docker.com/r/nebo15/annon.web/);
+- [Cassandra](https://hub.docker.com/r/nebo15/alpine-cassandra/).
+
+Our containers are based on Alpine Linux wich is a security-oriented, lightweight Linux distribution based on musl libc and busybox.
+
+### Kubernetes
 
 You can deploy it to Kubernetes using [example configs from Annon's repo](https://github.com/Nebo15/os.gateway/tree/master/_k8s).
 
+### Docker Compose
+
+For local environments we provide an example Docket Compose configuration, that will allow you to spin all containers in just a few commands.
+
 # Group APIs
 
-## Collection [/apis]
+API is a endpoint definition for any upstream back-end. They can be extended by Annons plugins.
 
-You should create a separate API for each of your upstream back-ends. API's are extended by plugins.
+## APIs [/apis]
 
-It is possible to use `api_name` instead `api_id` in any resource paths.
+### Get APIs [GET /apis{?name,limit,starting_after,ending_before}]
 
-### Get APIs [GET]
++ Parameters
+    + name: `My API` (string, optional) - Filter APIs by their names.
+    + limit: 20 (number, optional) - A limit on the number of objects to be returned, between 1 and 100. Default: 50.
+    + starting_after: 56c31536a60ad644060041af (string, optional) - A cursor to fetch next page. Taken from collection response.
+    + ending_before: 56c31536a60ad644060041aa (string, optional) - A cursor to fetch previous page. Taken from collection response.
 
 + Response 200 (application/json)
     + Attributes (Response_Collection)
-        + data (array[API])
+        + data (array[`API__Response`])
 
 ### Create API [POST]
 
@@ -138,106 +118,116 @@ It is possible to use `api_name` instead `api_id` in any resource paths.
 Notice that even truough we trying to protect you from creating interlapped API's, we can not guarantee that they always unique. In general, API that was defined earlier will always have higher priority.
 
 + Request (application/json)
-    + Attributes (API)
+    + Attributes 
+        + api (`API__Request`, required)
 
 + Response 201 (application/json)
     + Attributes (Response_OK)
         + meta (Response__Meta)
             + code: 201 (number)
-        + data (API_Full)
+        + data (`API__Response`)
 
 + Response 409 (application/json)
     + Attributes (Response_Error)
         + meta (Response__Meta)
-            + code: 409
-        + error (Response__Error_DuplicateEntity)
+            + code: 409 (number)
+        + error (`Response__Error_DuplicateEntity`)
 
-## API [/apis/{api_id}]
-
-### Get API [GET]
+### Get API [GET /apis/{id}]
 
 + Parameters
-    + api_id: 1 (string)
+    + id: 1 (string, required)
 
 + Response 200 (application/json)
     + Attributes (Response_OK)
-        + meta (Response__Meta)
-            + code: 200
-        + data (API_Full)
+        + data (`API__Response`)
 
-### Configure API [PUT]
-
-You can omit any request parameters if you want to parially update API settings.
+### Update or Create API [PUT /apis/{id}]
 
 + Parameters
-    + api_id: 1 (string)
+    + id: 1 (string, required)
 
 + Request (application/json)
-    + Attributes (API)
+    + Attributes 
+        + api (`API__Request`, required)
 
 + Response 200 (application/json)
+    + Attributes (Response_OK)
+        + data (`API__Response`)
+
++ Response 201 (application/json)
+    + Headers
+    
+            Location: /apis/1
+            
     + Attributes (Response_OK)
         + meta (Response__Meta)
-            + code: 200
-        + data (API_Full)
+            + code: 201 (number)
+        + data (`API__Response`)
 
-### Delete API [DELETE]
+### Configure API [PATCH /apis/{id}]
 
 + Parameters
-    + api_id: 1 (string)
+    + id: 1 (string, required)
+
++ Request (application/json)
+    + Attributes (object)
+        + api (object) - Any of API's fields.
+            + name: my_api (string, optional) - Unique name for API.
 
 + Response 200 (application/json)
     + Attributes (Response_OK)
+        + data (`API__Response`)
+
+### Delete API [DELETE /apis/{id}]
+
++ Parameters
+    + id: 1 (string, required)
+
++ Request (application/json)
++ Response 204 (application/json)
 
 ## Plugins [/apis/{api_id}/plugins]
 
-### Get all plugins binded to an API [GET]
+This is a general section that describes methods for managing API Plugins. Each plugin has it's own settings structure, their description is provided in sections below.
+
+### Get all Plugins binded to an API [GET]
 
 + Parameters
-    + api_id: 1 (string)
+    + api_id: 1 (string, required)
 
 + Response 200 (application/json)
     + Attributes (Response_Collection)
         + data (array[Plugin])
 
-### Bind plugin to an API [POST]
+### Update or Bind Plugin [PUT /apis/{api_id}/plugins/{plugin_name}]
 
 + Parameters
     + api_id: 1 (string)
+    + plugin_name: proxy (string)
 
 + Request (application/json)
-    + Attributes (Plugin)
-        + settings (Plugin_Proxy__Settings)
+    + Attributes 
+        + proxy (`Plugin_Proxy__Request`)
+
++ Response 200 (application/json)
+    + Attributes (Response_OK)
+        + data (`Plugin_Proxy__Response`)
 
 + Response 201 (application/json)
     + Attributes (Response_OK)
         + meta (Response__Meta)
             + code: 201 (number)
-        + data (Plugin_Proxy)
-
-### Update Plugin Settings [PUT /apis/{api_id}/plugins/{plugin_name}]
-
-To create plugin you should send whole `Plugin` object, but if plugin already exists you can pass any field to undate only them.
-
-+ Parameters
-    + api_id: 1 (string)
-    + plugin_name: proxy (string)
-
-+ Request (application/json)
-    + Attributes (Plugin_Proxy)
-
-+ Response 200 (application/json)
-    + Attributes (Response_OK)
-        + data (Plugin_Proxy)
+        + data (`Plugin_Proxy__Response`)
 
 ### Unbind Plugin [DELETE /apis/{api_id}/plugins/{plugin_name}]
 
 + Parameters
-    + api_id: 1 (string)
-    + plugin_name: proxy (string)
+    + api_id: 1 (string, required)
+    + plugin_name: proxy (string, required)
 
-+ Response 200 (application/json)
-    + Attributes (Response_OK)
++ Request (application/json)
++ Response 204 (application/json)
 
 # Group Plugins
 
@@ -265,34 +255,24 @@ Request Path | Proxy Path | API Path | `strip_api_path` | Upstream Request
 `/foo` | `/` | `/api` | `true` | `/foo`
 
 
-### Bind Proxy Plugin [POST /apis/{api_id}/plugins]
+### Bind or Update Proxy Plugin [PUT]
 
 + Parameters
-    + api_id: 1 (string) - API ID.
+    + api_id: 1 (string, required) - API ID.
 
 + Request (application/json)
-    + Attributes (Plugin_Proxy)
-      + name: proxy (string, required)
+    + Attributes
+        + proxy (`Plugin_Proxy__Request`)
+
++ Response 200 (application/json)
+    + Attributes (Response_OK)
+        + data (`Plugin_Proxy__Response`)
 
 + Response 201 (application/json)
     + Attributes (Response_OK)
         + meta (Response__Meta)
             + code: 201 (number)
-        + data (Plugin_Proxy)
-          + name: proxy (string)
-
-### Change Proxy Config [PUT]
-
-+ Parameters
-    + api_id: 1 (string) - API ID.
-
-+ Request (application/json)
-    + Attributes (Plugin_Proxy)
-
-+ Response 200 (application/json)
-    + Attributes (Response_OK)
-        + data (Plugin_Proxy)
-          + name: proxy (string)
+        + data (`Plugin_Proxy__Response`)
 
 
 ## JWT Authrozation [/apis/{api_id}/plugins/jwt]
@@ -319,15 +299,13 @@ To configure Annon copy-paste your `Client Secret` from `Clients` -> `Settings` 
 
 To receive an valid JWT with scopes token you must:
 1. Set `app_metadata` for all your users, it should have AT LEAST one array with consumer ID:
-    
-    ```
+    ``` 
     {
       "party_id": "my_consumer_id"
     }
     ```
     
 2. (Optional) If you prefer to receive scopes from Auth0 `app_metadata` should also have scopes array:
-
     ```
     {
       "party_id": "my_consumer_id",
@@ -342,34 +320,24 @@ To receive an valid JWT with scopes token you must:
 3. When authorizing consumers set correct scope to receive JWT token with `app_metadata`: `scope=openid app_metadata`.
 4. Whenever you make requests to Annon, use `id_token` from Auth0 response (it's a JWT token that we need) in a `Authorization: Bearer <id_token>` header.
 
-### Bind JWT Plugin [POST /apis/{api_id}/plugins]
+### Bind or Update JWT Plugin [PUT]
 
 + Parameters
-    + api_id: 1 (string) - API ID.
+    + api_id: 1 (string, required) - API ID.
 
 + Request (application/json)
-    + Attributes (Plugin_JWT)
-      + name: jwt (string, required)
+    + Attributes
+        + jwt (`Plugin_JWT__Request`)
+
++ Response 200 (application/json)
+    + Attributes (Response_OK)
+        + data (`Plugin_JWT__Response`)
 
 + Response 201 (application/json)
     + Attributes (Response_OK)
         + meta (Response__Meta)
             + code: 201 (number)
-        + data (Plugin_JWT)
-          + name: jwt (string)
-
-### Change JWT Config [PUT]
-
-+ Parameters
-    + api_id: 1 (string) - API ID.
-
-+ Request (application/json)
-    + Attributes (Plugin_JWT)
-
-+ Response 200 (application/json)
-    + Attributes (Response_OK)
-        + data (Plugin_JWT)
-          + name: jwt (string)
+        + data (`Plugin_JWT__Response`)
 
 ## Scopes Resolver [/apis/{api_id}/plugins/scopes]
 
@@ -405,35 +373,24 @@ Remote API service should return HTTP 200 status code and following json structu
 
 Inside `url_template` you can use `{party_id}` to substitle consumer ID in a request path, ie.: `http://ec2-52-58-60-8.eu-central-1.compute.amazonaws.com:8081/0/api.svc/party/{party_id}/scopes`.
 
-### Bind Scopes Plugin [POST /apis/{api_id}/plugins]
+### Bind or Update Scopes Plugin [PUT]
 
 + Parameters
-    + api_id: 1 (string) - API ID.
+    + api_id: 1 (string, required) - API ID.
 
 + Request (application/json)
-    + Attributes (Plugin_Scopes)
-      + name: scopes (string, required)
+    + Attributes
+        + scopes (`Plugin_Scopes__Request`)
+
++ Response 200 (application/json)
+    + Attributes (Response_OK)
+        + data (`Plugin_Scopes__Response`)
 
 + Response 201 (application/json)
     + Attributes (Response_OK)
         + meta (Response__Meta)
             + code: 201 (number)
-        + data (Plugin_Scopes)
-          + name: scopes (string)
-
-### Change Scopes Config [PUT]
-
-+ Parameters
-    + api_id: 1 (string) - API ID.
-
-+ Request (application/json)
-    + Attributes (Plugin_Scopes)
-
-+ Response 200 (application/json)
-    + Attributes (Response_OK)
-        + data (Plugin_Scopes)
-          + name: scopes (string)
-
+        + data (`Plugin_Scopes__Response`)
 
 ## ACL [/apis/{api_id}/plugins/acl]
 
@@ -458,34 +415,24 @@ Path is relative to API path, so you **don't need to specify API path prefix**!
 
 **All rules is applied in a order they were defined.**
 
-### Bind ACL Plugin [POST /apis/{api_id}/plugins]
+### Bind or Update ACL Plugin [PUT]
 
 + Parameters
-    + api_id: 1 (string) - API ID.
+    + api_id: 1 (string, required) - API ID.
 
 + Request (application/json)
-    + Attributes (Plugin_ACL)
-      + name: acl (string, required)
+    + Attributes
+        + acl (`Plugin_ACL__Request`)
+
++ Response 200 (application/json)
+    + Attributes (Response_OK)
+        + data (`Plugin_ACL__Response`)
 
 + Response 201 (application/json)
     + Attributes (Response_OK)
         + meta (Response__Meta)
             + code: 201 (number)
-        + data (Plugin_ACL)
-          + name: acl (string)
-
-### Change ACL Config [PUT]
-
-+ Parameters
-    + api_id: 1 (string) - API ID.
-
-+ Request (application/json)
-    + Attributes (Plugin_ACL)
-
-+ Response 200 (application/json)
-    + Attributes (Response_OK)
-        + data (Plugin_ACL)
-          + name: acl (string)
+        + data (`Plugin_ACL__Response`)
 
 ## Validator [/apis/{api_id}/plugins/validator]
 
@@ -502,71 +449,51 @@ Path is relative to API path, so you **don't need to specify API path prefix**!
 
 **All rules is applied in a order they were defined.**
 
-### Bind Validator Plugin [POST /apis/{api_id}/plugins]
+### Bind or Update Validator Plugin [PUT]
 
 + Parameters
-    + api_id: 1 (string) - API ID.
+    + api_id: 1 (string, required) - API ID.
 
 + Request (application/json)
-    + Attributes (Plugin_Validator)
-      + name: validator (string, required)
+    + Attributes
+        + validator (`Plugin_Validator__Request`)
+
++ Response 200 (application/json)
+    + Attributes (Response_OK)
+        + data (`Plugin_Validator__Response`)
 
 + Response 201 (application/json)
     + Attributes (Response_OK)
         + meta (Response__Meta)
             + code: 201 (number)
-        + data (Plugin_Validator)
-          + name: validator (string)
-
-### Change Validator Config [PUT]
-
-+ Parameters
-    + api_id: 1 (string) - API ID.
-
-+ Request (application/json)
-    + Attributes (Plugin_Validator)
-
-+ Response 200 (application/json)
-    + Attributes (Response_OK)
-        + data (Plugin_Validator)
-          + name: validator (string)
+        + data (`Plugin_Validator__Response`)
 
 ## Idempotency [/apis/{api_id}/plugins/idempotency]
 
-Gateway supports idempotency for safely retrying requests without accidentally performing the same operation twice.
+Gateway supports idempotency for safely retrying POST requests without accidentally duplicating entity.
 
-To perform an idempotent request, attach a unique key to any POST request made to the API via the `X-Idempotency-Key: <key>` header.
+To perform an idempotent request, attach a unique key to any POST request made to the API via the `X-Idempotency-Key: <idempotency_key>` header.
 
-Gateway always send back the same response for requests made with the same key. However, you cannot use the same key with different request parameters. <!-- The keys expire after 24 hours. -->
+Gateway always send back the same response for requests made with the same key. However, you cannot use the same key with different request parameters.
 
-### Bind Idempotency Plugin [POST /apis/{api_id}/plugins]
+### Bind or Update Idempotency Plugin [PUT]
 
 + Parameters
-    + api_id: 1 (string) - API ID.
+    + api_id: 1 (string, required) - API ID.
 
 + Request (application/json)
-    + Attributes (Plugin_Idempotency)
-      + name: idempotency (string, required)
+    + Attributes
+        + idempotency (`Plugin_Idempotency__Request`)
+
++ Response 200 (application/json)
+    + Attributes (Response_OK)
+        + data (`Plugin_Idempotency__Response`)
 
 + Response 201 (application/json)
     + Attributes (Response_OK)
         + meta (Response__Meta)
             + code: 201 (number)
-        + data (Plugin_Idempotency)
-          + name: idempotency (string)
-
-### Change Idempotency Config [PUT]
-
-+ Parameters
-    + api_id: 1 (string) - API ID.
-
-+ Request (application/json)
-    + Attributes (Plugin_Idempotency)
-
-+ Response 200 (application/json)
-    + Attributes (Response_OK)
-        + data (Plugin_Idempotency)
-          + name: idempotency (string)
+        + data (`Plugin_Idempotency__Response`)
 
 ## IP Restriction [/apis/{api_id}/plugins/ip_restriction]
 
@@ -580,57 +507,130 @@ Rules applied in a predicted order:
 * If IP is in blacklist and not in white list - block request.
 * If IP is in blacklist and in whitelist - allow request.
 
-### Bind IP Restriction Plugin [POST /apis/{api_id}/plugins]
+### Bind or Update IP Restriction Plugin [PUT]
 
 + Parameters
-    + api_id: 1 (string) - API ID.
+    + api_id: 1 (string, required) - API ID.
 
 + Request (application/json)
-    + Attributes (Plugin_IPRestriction)
-      + name: ip_restriction (string, required)
+    + Attributes
+        + `ip_restriction` (`Plugin_IP_Restriction__Request`)
+
++ Response 200 (application/json)
+    + Attributes (Response_OK)
+        + data (`Plugin_IP_Restriction__Response`)
 
 + Response 201 (application/json)
     + Attributes (Response_OK)
         + meta (Response__Meta)
             + code: 201 (number)
-        + data (Plugin_IPRestriction)
-          + name: ip_restriction (string)
+        + data (`Plugin_IP_Restriction__Response`)
 
-### Change IP Restriction Config [PUT]
+## User Agent Restriction [/apis/{api_id}/plugins/ua_restriction]
+
+Whitelist or blacklist User Agents from accessing an API.
+
+You can specify matches by replacing ranges with `*`.
+
+Rules applied in a predicted order:
+
+* If there is an User Agent whitelist - block requests from User Agents that not in this list.
+* If User Agent is in blacklist and not in white list - block request.
+* If User Agent is in blacklist and in whitelist - allow request.
+
+### Bind or Update User Agent Restriction Plugin [PUT]
 
 + Parameters
-    + api_id: 1 (string) - API ID.
+    + api_id: 1 (string, required) - API ID.
 
 + Request (application/json)
-    + Attributes (Plugin_IPRestriction)
+    + Attributes
+        + `ua_restriction` (`Plugin_UA_Restriction__Request`)
 
 + Response 200 (application/json)
     + Attributes (Response_OK)
-        + data (Plugin_IPRestriction)
-          + name: ip_restriction (string)
+        + data (`Plugin_UA_Restriction__Response`)
+
++ Response 201 (application/json)
+    + Attributes (Response_OK)
+        + meta (Response__Meta)
+            + code: 201 (number)
+        + data (`Plugin_UA_Restriction__Response`)
+
+## CORS [/apis/{api_id}/plugins/cors]
+
+Plugin allows to request your APIs with Cross-Origin Resource Sharing (CORS) mechanism.
+
+When enabled requests to API will return the following headers:
+
+On preflight (`OPTIONS`) requests:
+
+- `Access-Control-Allow-Origin`
+- `Access-Control-Allow-Credentials`
+- `Access-Control-Max-Age`
+- `Access-Control-Allow-Headers`
+- `Access-Control-Allow-Methods`
+
+On `GET`, `POST`, `PUT` and other requests:
+
+- `Access-Control-Allow-Origin`
+- `Access-Control-Expose-Headers`
+- `Access-Control-Allow-Credentials`
+
+### Bind or Update CORS [PUT]
+
++ Parameters
+    + api_id: 1 (string, required) - API ID.
+
++ Request (application/json)
+    + Attributes
+        + `cors` (`Plugin_CORS__Request`)
+
++ Response 200 (application/json)
+    + Attributes (Response_OK)
+        + data (`Plugin_CORS__Response`)
+
++ Response 201 (application/json)
+    + Attributes (Response_OK)
+        + meta (Response__Meta)
+            + code: 201 (number)
+        + data (`Plugin_CORS__Response`)
 
 # Group Requests
 
-## Collection [/requests]
+## Requests [/requests]
 
-### Get all Requests [GET]
+### Get all Requests [GET /requests{?idempotency_key,api_ids,status_codes,ip_addresses,limit,starting_after,ending_before}]
+
++ Parameters
+    + `idempotency_key`: `my_idemp_key` (string, optional) - Filter Requests by idempotency key.
+    + `api_ids`: `api_id1,api_id2` (string, optional) - List of API IDs to filter Requests, separated by comma.
+    + `status_codes`: `200,201` (string, optional) - List of HTTP response status codes to filter Requests, separated by comma.
+    + `ip_addresses`: `127.0.0.1,182.211.120.002` (string, optional) - List of IP Addresses to filter Requests, separated by comma.
+    + limit: 20 (number, optional) - A limit on the number of objects to be returned, between 1 and 100. Default: 50.
+    + starting_after: 56c31536a60ad644060041af (string, optional) - A cursor to fetch next page. Taken from collection response.
+    + ending_before: 56c31536a60ad644060041aa (string, optional) - A cursor to fetch previous page. Taken from collection response.
 
 + Response 200 (application/json)
     + Attributes (Response_Collection)
         + data (array[Request])
 
-## Request [/requests/{request_id}]
+### Get Request [GET /requests/{id}]
 
-### Get Request [GET]
++ Parameters
+    + id: `my_request-sfsdfjsdoqknjdnd` (string, required)
 
 + Response 200 (application/json)
     + Attributes (Response_Collection)
         + data (Request_Expanded)
 
-### Delete Request [DELETE]
+### Delete Request [DELETE /requests/{id}]
 
-+ Response 200 (application/json)
-    + Attributes (Response_OK)
++ Parameters
+    + id: `my_request-sfsdfjsdoqknjdnd` (string, required)
+
++ Request (application/json)
++ Response 204 (application/json)
 
 # Data Structures
 ## Responses
@@ -684,131 +684,264 @@ Rules applied in a predicted order:
 + size: 1000 (number) - Total number of objects in collection.
 + has_more: false (boolean) - Is this collection have more data to load in the same style as last request loaded it.
 
-## API
+## General
+### `HTTP_Verb` (enum)
+- POST (string)
+- PUT (string)
+- GET (string)
+- DELETE (string)
+
+## APIs
+### `API__Request`
 + name: my_api (string) - Unique name for API.
 + request (object, fixed-type) - Request description.
-    + methods (array[enum], required) - HTTP request method.
-        + POST
-        + PUT
-        + GET
-        + DELETE
+    + methods (array[`HTTP_Verb`], required) - HTTP request method.
     + scheme: http (string) - HTTP request scheme. May be: `http`, `https`.
     + host: `os-dev-gateway.nebo15.com` (string) - DNS address of your API or its IP.
     + port: 80 (number) - Port on which your API recieves requests.
-    + path: /andrew/ (string, required) - Public path to your API.
+    + path: /andrew/ (string, required) - Public path to your API. Must start with `/`.
 
-## `API_Full`
+### `API__Response`
 + id: 56c31536a60ad644060041af (string) - Unique ID for API.
-+ Include API
++ Include API__Request
++ created_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
++ updated_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
 
-## Plugin
+## Plugins
+### Plugin
 + name: myplugin (string) - Plugin name
 + is_enabled: true (boolean) - Flag that shows that plagin is enabled or disabled.
 + settings (object, fixed-type) - Object that describes API plugin settings.
   + key: value - A key-value storage for your API plugins.
 
+### `Plugin_Response`
++ Include Plugin
++ created_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
++ updated_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
+
 ## Proxy Plugin
-### `Plugin_Proxy`
+### `Plugin_Proxy__Request`
++ name: proxy (string, required)
 + is_enabled: true (boolean, required)
 + settings (Plugin_Proxy__Settings, fixed-type)
 
+### `Plugin_Proxy__Response`
++ Include Plugin_Proxy__Request
++ created_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
++ updated_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
+
 ### `Plugin_Proxy__Settings`
-+ Include Plugin_Proxy__Settings__Upstream
++ upstream (`Plugin_Proxy__Settings_Upstream`, required)
 + `strip_host`: false (boolean, optional) - Keep HTTP HOST host header when proxying request to an upstream.
 + `strip_api_path`: false (boolean, optional) - Strip API part of path when sending request to upstream.
-+ `additional_headers` (object, optional)
++ `additional_headers` (array[object], optional) - Additional headers that should be sent to upstream.
     + `X-Consumer-Header`: `header_value`
++ `stripped_headers` (array[string], optional) - Headers that should NOT be sent to upstream.
+    + `x-Unwanted-Header`
 
-### `Plugin_Proxy__Settings__Upstream`
+### `Plugin_Proxy__Settings_Upstream`
 + scheme: https (string) - HTTP request scheme. May be: `http`, `https`, `amqp`, `ws`.
 + host: binlist.net (string) - DNS address of your upstream or its IP.
 + port: 443 (number) - Port on which your upstream recieves requests.
 + path: /json/545708 (string) - Path to your upstream API. You can omit this parameter to preserve path from original request.
 
 ## JWT Plugin
-### `Plugin_JWT`
+### `Plugin_JWT__Request`
++ name: jwt (string, required)
 + is_enabled: true (boolean)
 + settings (Plugin_JWT__Settings, fixed-type)
 
+### `Plugin_JWT__Response`
++ Include Plugin_JWT__Request
++ created_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
++ updated_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
+
 ### `Plugin_JWT__Settings`
-+ signature: c3VwZXJfY29vbEhhY2tlcgo= (string, required) - Base64 encoded secret to decode JWT token.
++ secret: c3VwZXJfY29vbEhhY2tlcgo= (string, required) - Base64 encoded secret to decode JWT token.
++ algorythm (enum) - Algorithm that is used to generate signature.
+    - ES256 (string)
+    - ES384 (string)
+    - ES512 (string)
+    - HS256 (string)
+    - HS384 (string)
+    - HS512 (string)
+    - PS256 (string)
+    - PS384 (string)
+    - PS512 (string)
+    - RS256 (string)
+    - RS384 (string)
+    - RS512 (string)
+    - Ed25519 (string)
+    - Ed25519ph (string)
+    - Ed448ph (string)
+    - Ed448 (string)
 
 ## ACL Plugin
-### `Plugin_ACL`
+### `Plugin_ACL__Request`
++ name: acl (string, required)
 + is_enabled: true (boolean)
 + settings (Plugin_ACL__Settings, fixed-type)
 
-### `Plugin_ACL__Settings`
-+ rules (array[Plugin_ACL__Settings__Rule], fixed-type) - signature to decode JWT token.
+### `Plugin_ACL__Response`
++ Include Plugin_ACL__Request
++ created_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
++ updated_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
 
-### `Plugin_ACL__Settings__Rule`
-+ methods (array[enum], required)
-    + POST
-    + PUT
-    + GET
-    + DELETE
+### `Plugin_ACL__Settings`
++ rules (array[`Plugin_ACL__Settings_Rule`], fixed-type) - signature to decode JWT token.
+
+### `Plugin_ACL__Settings_Rule`
++ methods (array[`HTTP_Verb`], required)
 + path: ^my_resource/ (string, required) - Regular expression on path. **Warning!** It's relative to API path.
-+ scopes (array[string], required) - Scope can be any string.
-    + request_api
-    + read_profile
++ scope: `request_api profile:read` (string, required) - Requied scope to request API, delimited by space.
 
 ## Scopes Plugin
-### `Plugin_Scopes`
+### `Plugin_Scopes__Request`
++ name: scopes (string, required)
 + is_enabled: true (boolean)
 + settings (Plugin_Scopes__Settings, fixed-type)
 
+### `Plugin_Scopes__Response`
++ Include Plugin_Scopes__Request
++ created_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
++ updated_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
+
 ### `Plugin_Scopes__Settings`
-+ strategy (enum, required) - Strategy on which Annon should resolve user ID to scopes.
-    + pcm
-    + jwt
++ strategy (`Plugin_Scopes__Settings__Strategies`, required) - Strategy on which Annon should resolve user ID to scopes.
 + `url_template`: `http://ec2-52-58-60-8.eu-central-1.compute.amazonaws.com:8081/0/api.svc/party/{party_id}/scopes` (string) - Inside `url_template` you can use `{party_id}` to substitle consumer ID in a request path.
 
+### `Plugin_Scopes__Settings__Strategies` (enum)
+– pcm (string)
+- jwt (string)
+
 ## Validator Plugin
-### `Plugin_Validator`
+### `Plugin_Validator__Request`
++ name: validator (string, required)
 + is_enabled: true (boolean, required)
 + settings (Plugin_Validator__Settings, fixed-type)
 
-### `Plugin_Validator__Settings`
-+ rules (array[Plugin_Validator__Settings__Rule], fixed-type) - signature to decode JWT token.
+### `Plugin_Validator__Response`
++ Include Plugin_Validator__Request
++ created_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
++ updated_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
 
-### `Plugin_Validator__Settings__Rule`
+### `Plugin_Validator__Settings`
++ rules (array[`Plugin_Validator__Settings_Rule`], fixed-type)
+
+### `Plugin_Validator__Settings_Rule`
 + methods (array[enum], required)
-    + POST
-    + PUT
-    + PATCH
+    - POST (string)
+    - PUT (string)
+    - PATCH (string)
 + path: `^my_resource/` (string, required) - Regular expression on path. **Warning!** It's relative to API path.
-+ schema: {} (string, required) - [JSON Schema](http://json-schema.org/) for validating request body.
++ schema: `{}` (string, required) - [JSON Schema](http://json-schema.org/) for validating request body.
 
 ## Idempotency Plugin
-### `Plugin_Idempotency`
+### `Plugin_Idempotency__Request`
++ name: idempotency (string, required)
 + is_enabled: true (boolean, required)
-+ settings (object, required) - Settings is reserved for future use.
++ settings (`Plugin_Idempotency__Settings`, required)
+
+### `Plugin_Idempotency__Response`
++ Include Plugin_Idempotency__Request
++ created_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
++ updated_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
+
+### `Plugin_Idempotency__Settings`
++ key_ttl: 600 (number, required) - Time to live for idempotency keys. If set to `0` keys will never expire.
 
 ## IP Restrictions Plugin
-### `Plugin_IPRestriction`
-+ is_enabled: true (boolean)
-+ settings (Plugin_IPRestriction__Settings, fixed-type)
+### `Plugin_IP_Restriction__Request`
++ name: ip_restriction (string, required)
++ is_enabled: true (boolean, required)
++ settings (`Plugin_IP_Restriction__Settings`, fixed-type)
 
-### `Plugin_IPRestriction__Settings`
-+ whitelist (array[string], fixed-type, optional) - list of matching IP addresses to whitelist them.
-    + 255.255.255.1
-    + 127.0.0.*
-+ blacklist (array[string], fixed-type, optional) - list of matching IP addresses to blacklist them.
-    + 255.255.255.1
-    + 127.0.0.*
+### `Plugin_IP_Restriction__Response`
++ Include Plugin_IP_Restriction__Request
++ created_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
++ updated_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
+
+### `Plugin_IP_Restriction__Settings`
++ whitelist (array[string], fixed-type, optional) - Whitelist of IP addresses or their ranges.
+    + 255.255.255.1 (string)
+    + 127.0.0.* (string)
++ blacklist (array[string], fixed-type, optional) - Blacklist of IP addresses or their ranges.
+    + 255.255.255.1 (string)
+    + 127.0.0.* (string)
+
+## User Agent Restriction Plugin
+### `Plugin_UA_Restriction__Request`
++ name: ua_restriction (string, required)
++ is_enabled: true (boolean, required)
++ settings (`Plugin_UA_Restriction__Settings`, fixed-type)
+
+### `Plugin_UA_Restriction__Response`
++ Include Plugin_UA_Restriction__Request
++ created_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
++ updated_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
+
+### `Plugin_UA_Restriction__Settings`
++ whitelist (array[string], fixed-type, optional) - Whitelist of User Agents or patterns.
+    + `Chrome*` (string)
+    + `Mozilla Firefox` (string)
++ blacklist (array[string], fixed-type, optional) - Blacklist of User Agents or patterns.
+    + `Google*` (string)
+    + `MyBot (version 1.0)` (string)
+
+## CORS Plugin
+### `Plugin_CORS__Request`
++ name: cors (string, required)
++ is_enabled: true (boolean, required)
++ settings (`Plugin_CORS__Settings`, required)
+
+### `Plugin_CORS__Response`
++ Include Plugin_CORS__Request
++ created_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
++ updated_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
+
+### `Plugin_CORS__Settings`
++ One of
+    + origin: `*` (string, optional) - Allow all origins
+    + origin: `https?.*example\d?\.com$` (string, required) - Regular expression to whitelist request origins.
+    + origin (array[string], required) - List of allowed [request origins](https://www.w3.org/TR/cors/#access-control-allow-origin-response-header).
+        - http://example1.com (string)
+        - http://example2.com (string)
++ credentials: true (boolean, optional) - Indicates whether or not the actual request can be made using credentials. Credentials are cookies, authorization headers or TLS client certificates.
++ max_age: 1728000 (number, optional) - Indicates how long the results of a preflight request (that is the information contained in the `Access-Control-Allow-Methods` and `Access-Control-Allow-Headers` headers) can be cached.
++ headers (array[string], optional) - Whitelist of allowed request headers.
+    - `Authorization` (string)
+    - `Content-Type` (string)
+    - `Accept` (string)
+    - `Origin` (string)
+    - `User-Agent` (string)
+    - `DNT` (string)
+    - `Cache-Control` (string)
+    - `X-Mx-ReqToken` (string)
+    - `Keep-Alive` (string)
+    - `X-Requested-With` (string)
+    - `If-Modified-Since` (string)
+    - `X-CSRF-Token` (string)
++ expose (array[string], optional) - Indicates which headers can be exposed as part of the response by listing their names.
++ methods (array[string], optional) - List of allowed HTTP verbs.
+    - GET (string)
+    - POST (string)
+    - PUT (string)
+    - PATCH (string)
+    - DELETE (string)
+    - OPTIONS (string)
 
 ## Requests
 ### Request
-+ id: tl8nd5019bkendi1uadl2nqq38g69dbf (string) - unique request identifier.
-+ idempotency_key: myidempotencykey (string) - Idempotency Key if consumer sent it, `null` otherwise.
-+ inserted_at: 2016-11-04T16:16:20.875777 (string)
-+ api (API_Full, optional)
++ id: `tl8nd5019bkendi1uadl2nqq38g69dbf` (string) - unique request identifier.
++ idempotency_key: `myidempotencykey` (string) - Idempotency Key if consumer sent it, `null` otherwise.
++ inserted_at: `2016-11-04T16:16:20.875777` (string)
++ api (`API__Response`, optional)
 + status_code: 200 (number) - HTTP status code.
-+ ip_address: 10.2.87.0 (string) - Consumer IP address.
++ ip_address: `10.2.87.0` (string) - Consumer IP address.
 
 ### `Request_Expanded`
 + Include Request
-+ updated_at: 2016-11-04T16:16:20.875777 (string)
++ updated_at: `2016-11-04T16:16:20.875777` (string)
 + request (object, fixed-type)
     + method: GET (string)
     + uri: /mypath (string)
