@@ -2,7 +2,7 @@ use Mix.Config
 
 config :annon_api, Annon.DB.Configs.Repo,
   adapter: Ecto.Adapters.Postgres,
-  database: System.get_env("MIX_TEST_DATABASE") || "annon_api_test",
+  database: System.get_env("MIX_TEST_DATABASE") || "annon_api_configs_test",
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :annon_api, Annon.DB.Logger.Repo,

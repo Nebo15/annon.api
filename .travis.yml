@@ -32,7 +32,7 @@ before_script:
   - epmd -daemon
 script:
   # Increment version in mix.exs
-  - "./bin/ci/version-increment.sh"
+  - ./bin/ci/version-increment.sh
   # Install dependencies
   # - mix deps.get
   # Run all tests except pending ones
@@ -44,9 +44,9 @@ script:
   # Check code style
   - mix dogma
   # Build Docker container
-  - "./bin/build.sh"
+  - ./bin/build.sh
   # Initialize DB for Docker container
-  - MIX_ENV=dev mix ecto.setup
+  - source .env; PGPASSWORD="${DB_PASSWORD}"; psql -U ${DB_USER} -w -c"CREATE DATABASE ${DB_NAME}"
   # Run Docker container
   - sudo ./bin/start.sh
   - sleep 5
