@@ -26,7 +26,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
 
   if [[ "$MAIN_BRANCHES" =~ "$TRAVIS_BRANCH" ]]; then
     echo "Done. Pushing changes back to repo.";
-    git push upstream HEAD:$TRAVIS_BRANCH;
-    git push upstream HEAD:$TRAVIS_BRANCH --tags;
+    git push upstream HEAD:$TRAVIS_BRANCH &> /dev/null;
+    git push upstream HEAD:$TRAVIS_BRANCH --tags &> /dev/null;
   fi;
 fi;
