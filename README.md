@@ -14,6 +14,7 @@ Annon consist of multiple main parts:
 
 - [Annon API Gateway](https://github.com/Nebo15/annon.api).
 - [Annon Dashboard](https://github.com/Nebo15/annon.web) - UI that allows to manage Annon settings, review and analyze Requests.
+- [Annon Status Pages](https://github.com/Nebo15/annon.status.web) - UI that renders APIs status pages;
 - [EView](https://hex.pm/packages/eview) - hex package that allows to receive and modify client responses from Elixir application to match [Nebo #15 API Manifest](http://docs.apimanifest.apiary.io/). So your back-ends will respond in a same way as Annon does.
 - [Mithril](https://github.com/Nebo15/mithril.api) - authentication and role management service.
 
@@ -80,8 +81,9 @@ Annon supports [OpenTracing](http://opentracing.io/) in Erlang via [Otter](https
 
 Annon can be installed by compiling it from sources, but we recommend you to use our pre-build Docker containers:
 
-- [Annon API Gateway](https://hub.docker.com/r/nebo15/annon.api/);
+- [Annon API Gateway](https://hub.docker.com/r/nebo15/annon_api/);
 - [Annon Dashboard](https://hub.docker.com/r/nebo15/annon.web/);
+- [Annon Status Pages](https://hub.docker.com/r/nebo15/annon.status.web/);
 - [Cassandra](https://hub.docker.com/r/nebo15/alpine-cassandra/).
 
 Our containers are based on Alpine Linux wich is a security-oriented, lightweight Linux distribution based on musl libc and busybox.
