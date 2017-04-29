@@ -56,6 +56,6 @@ defmodule Gateway.AutoClustering do
   def do_reload_config do
     Confex.get(:gateway, :cache_storage).warm_up()
 
-    Logger.debug("Node #{node()}: config cache was warmed up.")
+    Logger.debug fn -> "Node #{node()}: config cache was warmed up." end
   end
 end

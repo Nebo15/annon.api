@@ -58,7 +58,7 @@ defmodule Gateway.Plugins.Proxy do
 
   def log(data, type) do
     require Logger
-    Logger.info(inspect {type, data})
+    Logger.debug(inspect {type, data})
     data
   end
 

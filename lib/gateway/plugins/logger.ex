@@ -38,7 +38,7 @@ defmodule Gateway.Plugins.Logger do
       {:ok, _} ->
         conn
       {:error, error} ->
-        Logger.warn("Can not save request information. Changeset: #{inspect error}")
+        Logger.warn fn -> "Can not save request information. Changeset: #{inspect error}" end
         conn
     end
   end
