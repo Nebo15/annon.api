@@ -1,6 +1,6 @@
 # Annon
 
-[![Coverage Status](https://coveralls.io/repos/github/Nebo15/annon.api/badge.svg?branch=master&t=y562b4)](https://coveralls.io/github/Nebo15/annon.api?branch=master) [![Build Status](https://travis-ci.com/Nebo15/annon.api.svg?token=zWpL5QGwyvH4Pcxi8Vav&branch=master)](https://travis-ci.org/Nebo15/annon.api)
+[![Coverage Status](https://coveralls.io/repos/github/Nebo15/annon.api/badge.svg?branch=master&t=y562b4)](https://coveralls.io/github/Nebo15/annon.api?branch=master) [![Build Status](https://travis-ci.org/Nebo15/annon.api.svg?branch=master)](https://travis-ci.org/Nebo15/annon.api)
 
 # Annon API Gateway
 
