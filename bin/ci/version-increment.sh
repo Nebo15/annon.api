@@ -22,4 +22,5 @@ NEW_PROJECT_VERSION="${a[0]}.${a[1]}.${a[2]}"
 
 echo "[I] Incrementing project version from '${PROJECT_VERSION}' to '${NEW_PROJECT_VERSION}' in 'mix.exs'."
 sed -i'' -e "s/@version \"${PROJECT_VERSION}\"/@version \"${NEW_PROJECT_VERSION}\"/g" "${PROJECT_DIR}/mix.exs"
+
 # Here you can modify other files (for eg. README.md) that contains version.
