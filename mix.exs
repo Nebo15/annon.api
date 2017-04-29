@@ -59,7 +59,7 @@ defmodule Gateway.Mixfile do
      {:ecto, "~> 2.1"},
      {:poison, "~> 3.1", override: true},
      {:joken, "~> 1.4"},
-     {:nex_json_schema, "~> 0.5.1"},
+     {:nex_json_schema, "~> 0.6.0"},
      {:httpoison, ">= 0.0.0"},
      {:ex_statsd, ">= 0.5.1"},
      {:eview,  ">= 0.0.0"},
