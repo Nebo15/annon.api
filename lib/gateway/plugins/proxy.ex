@@ -1,17 +1,17 @@
-defmodule Gateway.Plugins.Proxy do
+defmodule Annon.Plugins.Proxy do
   @moduledoc """
   [Proxy](http://docs.annon.apiary.io/#reference/plugins/proxy) - is a core plugin that
   sends incoming request to an upstream back-ends.
   """
-  use Gateway.Helpers.Plugin,
+  use Annon.Helpers.Plugin,
     plugin_name: "proxy"
 
-  import Gateway.Helpers.IP
-  import Gateway.Helpers.Latency
+  import Annon.Helpers.IP
+  import Annon.Helpers.Latency
 
   alias Plug.Conn
-  alias Gateway.DB.Schemas.Plugin
-  alias Gateway.DB.Schemas.API, as: APISchema
+  alias Annon.DB.Schemas.Plugin
+  alias Annon.DB.Schemas.API, as: APISchema
 
   @doc false
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins, request: %{path: api_path}}}} = conn, _opts)
@@ -80,7 +80,7 @@ defmodule Gateway.Plugins.Proxy do
       String.downcase(k) in ["content-type", "content-disposition", "content-length", "host"]
     end)
 
-    multipart = Gateway.Plugins.Proxy.MultipartForm.reconstruct_using(conn.body_params)
+    multipart = Annon.Plugins.Proxy.MultipartForm.reconstruct_using(conn.body_params)
 
     HTTPoison.post!(link, {:multipart, multipart}, req_headers)
   end
@@ -106,7 +106,7 @@ defmodule Gateway.Plugins.Proxy do
       {:error, %{reason: reason}} ->
         %{
           status_code: 502,
-          body: Gateway.Helpers.Response.build_upstream_error(reason),
+          body: Annon.Helpers.Response.build_upstream_error(reason),
           headers: []
         }
     end

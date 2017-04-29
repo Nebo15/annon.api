@@ -1,4 +1,4 @@
-defmodule Gateway.PCMMockServer do
+defmodule Annon.PCMMockServer do
   @moduledoc """
   Mock server that simulates gettings scopes from PCM.
   """

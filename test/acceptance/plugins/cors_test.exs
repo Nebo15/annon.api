@@ -1,7 +1,7 @@
-defmodule Gateway.Acceptance.Plugins.CORSTest do
+defmodule Annon.Acceptance.Plugins.CORSTest do
   @moduledoc false
   use Plug.Test
-  use Gateway.AcceptanceCase, async: true
+  use Annon.AcceptanceCase, async: true
 
   defp get_header(response, header) do
     for {k, v} <- response.headers, k === header, do: v
@@ -36,7 +36,7 @@ defmodule Gateway.Acceptance.Plugins.CORSTest do
     |> post!(cors_plugin)
     |> assert_status(201)
 
-    Gateway.AutoClustering.do_reload_config()
+    Annon.AutoClustering.do_reload_config()
 
     %{api_path: api_path}
   end

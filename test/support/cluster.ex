@@ -1,4 +1,4 @@
-defmodule Gateway.Cluster do
+defmodule Annon.Cluster do
   @moduledoc false
   # Holds a single public function spawn/0, that spawns a cluster
   # of two nodes: 'node1@127.0.0.1', 'node2@127.0.0.1'

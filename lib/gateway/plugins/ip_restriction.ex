@@ -1,4 +1,4 @@
-defmodule Gateway.Plugins.IPRestriction do
+defmodule Annon.Plugins.IPRestriction do
   @moduledoc """
   [IP Restriction plugin](http://docs.annon.apiary.io/#reference/plugins/ip-restriction).
 
@@ -6,15 +6,15 @@ defmodule Gateway.Plugins.IPRestriction do
   Also you can use it in Consumer plugin settings overrides to limit IP's from which specific consumer
   can request your API.
   """
-  use Gateway.Helpers.Plugin,
+  use Annon.Helpers.Plugin,
     plugin_name: "ip_restriction"
 
-  import Gateway.Helpers.IP
+  import Annon.Helpers.IP
 
-  alias Gateway.DB.Schemas.Plugin
-  alias Gateway.DB.Schemas.API, as: APISchema
+  alias Annon.DB.Schemas.Plugin
+  alias Annon.DB.Schemas.API, as: APISchema
   alias EView.Views.Error, as: ErrorView
-  alias Gateway.Helpers.Response
+  alias Annon.Helpers.Response
 
   @doc false
   def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opt) when is_list(plugins) do

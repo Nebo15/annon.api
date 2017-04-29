@@ -1,6 +1,6 @@
-defmodule Gateway.Acceptance.Smoke.ProxyTest do
+defmodule Annon.Acceptance.Smoke.ProxyTest do
   @moduledoc false
-  use Gateway.AcceptanceCase, async: true
+  use Annon.AcceptanceCase, async: true
 
   setup do
     api = :api

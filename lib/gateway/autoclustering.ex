@@ -1,4 +1,4 @@
-defmodule Gateway.AutoClustering do
+defmodule Annon.AutoClustering do
   @moduledoc """
   This module implements
   [Annons cache invalidation](http://docs.annon.apiary.io/#introduction/general-features/caching-and-perfomance)

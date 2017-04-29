@@ -1,8 +1,8 @@
-defmodule Gateway.Plugins.ProxyTest do
+defmodule Annon.Plugins.ProxyTest do
   @moduledoc false
-  use Gateway.UnitCase, async: true
-  alias Gateway.Plugins.Proxy
-  import Gateway.Helpers.IP
+  use Annon.UnitCase, async: true
+  alias Annon.Plugins.Proxy
+  import Annon.Helpers.IP
 
   @api_path "/my_api"
 
@@ -119,7 +119,7 @@ defmodule Gateway.Plugins.ProxyTest do
 
       headers_after_filter =
         conn
-        |> Gateway.Plugins.Proxy.skip_filtered_headers(plugin_settings)
+        |> Annon.Plugins.Proxy.skip_filtered_headers(plugin_settings)
         |> Map.get(:req_headers)
 
       assert [{"should", "remain"}] == headers_after_filter

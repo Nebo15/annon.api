@@ -1,4 +1,4 @@
-defmodule Gateway.Plugins.Proxy.MultipartForm do
+defmodule Annon.Plugins.Proxy.MultipartForm do
   @moduledoc """
   Facilities to contstruct parts of a multipart form.
 

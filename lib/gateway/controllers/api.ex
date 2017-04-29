@@ -1,4 +1,4 @@
-defmodule Gateway.Controllers.API do
+defmodule Annon.Controllers.API do
   @moduledoc """
   REST interface that allows to manage API's and their settings.
 
@@ -7,10 +7,10 @@ defmodule Gateway.Controllers.API do
 
   You can find full description in [REST API documentation](http://docs.annon.apiary.io/#reference/apis).
   """
-  use Gateway.Helpers.CommonRouter
-  alias Gateway.DB.Schemas.API, as: APISchema
-  alias Gateway.DB.Configs.Repo
-  alias Gateway.Helpers.Pagination
+  use Annon.Helpers.CommonRouter
+  alias Annon.DB.Schemas.API, as: APISchema
+  alias Annon.DB.Configs.Repo
+  alias Annon.Helpers.Pagination
 
   get "/" do
     APISchema
@@ -42,5 +42,5 @@ defmodule Gateway.Controllers.API do
     |> render_delete(conn)
   end
 
-  forward "/", to: Gateway.Controllers.API.Plugin
+  forward "/", to: Annon.Controllers.API.Plugin
 end

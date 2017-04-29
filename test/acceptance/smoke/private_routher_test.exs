@@ -1,6 +1,6 @@
-defmodule Gateway.Acceptance.Smoke.PrivateRouterTest do
+defmodule Annon.Acceptance.Smoke.PrivateRouterTest do
   @moduledoc false
-  use Gateway.AcceptanceCase, async: true
+  use Annon.AcceptanceCase, async: true
 
   setup do
     api = :api

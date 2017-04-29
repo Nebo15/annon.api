@@ -1,9 +1,9 @@
-defmodule Gateway.Acceptance.Plugins.LoggerTest do
+defmodule Annon.Acceptance.Plugins.LoggerTest do
   @moduledoc false
   use Plug.Test
-  use Gateway.AcceptanceCase, async: true
+  use Annon.AcceptanceCase, async: true
 
-  alias Gateway.DB.Schemas.Log
+  alias Annon.DB.Schemas.Log
 
   @random_data %{"data" => "random"}
 
@@ -41,7 +41,7 @@ defmodule Gateway.Acceptance.Plugins.LoggerTest do
     |> post!(proxy_plugin)
     |> assert_status(201)
 
-    Gateway.AutoClustering.do_reload_config()
+    Annon.AutoClustering.do_reload_config()
 
     %{api_path: api_path}
   end

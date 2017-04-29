@@ -1,10 +1,10 @@
-defmodule Gateway.Changeset.Validator.Settings do
+defmodule Annon.Changeset.Validator.Settings do
   @moduledoc """
   This module provides helpers to validate individual plugin settings via JSON Schema that is stored inside methods.
   """
   alias Ecto.Changeset
   import Ecto.Changeset
-  import Gateway.Changeset.Validator.JsonSchema
+  import Annon.Changeset.Validator.JsonSchema
 
   # JWT
   def validate_settings(%Changeset{changes: %{name: "jwt", settings: settings}} = ch) do

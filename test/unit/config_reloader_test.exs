@@ -1,12 +1,12 @@
-defmodule Gateway.ConfigReloaderTest do
+defmodule Annon.ConfigReloaderTest do
   @moduledoc false
-  use Gateway.UnitCase
+  use Annon.UnitCase
 
   import ExUnit.CaptureLog
 
   setup do
     saved_config = Application.get_env(:gateway, :cache_storage)
-    Application.put_env(:gateway, :cache_storage, {:system, :module, "CACHE_STORAGE", Gateway.Cache.EtsAdapter})
+    Application.put_env(:gateway, :cache_storage, {:system, :module, "CACHE_STORAGE", Annon.Cache.EtsAdapter})
 
     on_exit fn ->
       Application.put_env(:gateway, :cache_storage, saved_config)
@@ -16,8 +16,8 @@ defmodule Gateway.ConfigReloaderTest do
   end
 
   test "reload the config cache if it changes" do
-    api_model = Gateway.Factory.insert(:api)
-    Gateway.Factory.insert(:acl_plugin, api: api_model)
+    api_model = Annon.Factory.insert(:api)
+    Annon.Factory.insert(:acl_plugin, api: api_model)
 
     new_contents = %{
       "name" => "New name"
@@ -27,7 +27,7 @@ defmodule Gateway.ConfigReloaderTest do
       :put
       |> conn("/apis/#{api_model.id}", Poison.encode!(new_contents))
       |> put_req_header("content-type", "application/json")
-      |> Gateway.ManagementRouter.call([])
+      |> Annon.ManagementRouter.call([])
     end
 
     assert capture_log(update_config) =~ "config cache was warmed up"

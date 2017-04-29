@@ -1,4 +1,4 @@
-defmodule Gateway.DB.Schema do
+defmodule Annon.DB.Schema do
   @moduledoc """
   Shortener for Schemas definitions.
   """

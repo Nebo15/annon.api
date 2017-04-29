@@ -1,4 +1,4 @@
-defmodule Gateway.Plugins.Monitoring do
+defmodule Annon.Plugins.Monitoring do
   @moduledoc """
   This plugin measures or receives performance metrics from other parts of Annon and sends them to StatsD server.
 
@@ -6,11 +6,11 @@ defmodule Gateway.Plugins.Monitoring do
 
   It can be used with [DataDog agent](http://datadoghq.com).
   """
-  use Gateway.Helpers.Plugin,
+  use Annon.Helpers.Plugin,
     plugin_name: "monitoring"
 
   alias Plug.Conn
-  import Gateway.Helpers.Latency
+  import Annon.Helpers.Latency
 
   @doc false
   def call(%Conn{} = conn, _opts) do

@@ -1,9 +1,9 @@
-defmodule Gateway.Plugins.ClientLatency do
+defmodule Annon.Plugins.ClientLatency do
   @moduledoc """
   This plugin writes request start time to conn.assigns.
   """
   alias Plug.Conn
-  import Gateway.Helpers.Latency
+  import Annon.Helpers.Latency
 
   def init(opts), do: opts
 

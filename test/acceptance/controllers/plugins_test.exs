@@ -1,6 +1,6 @@
-defmodule Gateway.Acceptance.Controllers.PluginsTest do
+defmodule Annon.Acceptance.Controllers.PluginsTest do
   @moduledoc false
-  use Gateway.AcceptanceCase, async: true
+  use Annon.AcceptanceCase, async: true
 
   setup do
     api = create_api() |> get_body()

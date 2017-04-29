@@ -1,4 +1,4 @@
-defmodule Gateway.Helpers.Pagination do
+defmodule Annon.Helpers.Pagination do
   @moduledoc """
   Functions related to paging
   """

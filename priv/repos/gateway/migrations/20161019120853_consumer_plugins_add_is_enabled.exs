@@ -1,4 +1,4 @@
-defmodule Gateway.DB.Configs.Repo.Migrations.ConsumerPluginsAddIsEnabled do
+defmodule Annon.DB.Configs.Repo.Migrations.ConsumerPluginsAddIsEnabled do
   use Ecto.Migration
 
   def change do

@@ -1,8 +1,8 @@
-defmodule Gateway.MockServer do
+defmodule Annon.MockServer do
   @moduledoc false
   use Plug.Router
   require Logger
-  alias Gateway.Helpers.Response
+  alias Annon.Helpers.Response
 
   plug :match
 

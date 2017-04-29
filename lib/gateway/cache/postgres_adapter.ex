@@ -1,12 +1,12 @@
-defmodule Gateway.Cache.PostgresAdapter do
+defmodule Annon.Cache.PostgresAdapter do
   @moduledoc """
   Adapter to access cache using RDBMS.
   """
   import Ecto.Query
 
-  alias Gateway.DB.Configs.Repo
-  alias Gateway.DB.Schemas.API
-  alias Gateway.DB.Schemas.Plugin
+  alias Annon.DB.Configs.Repo
+  alias Annon.DB.Schemas.API
+  alias Annon.DB.Schemas.Plugin
 
   def find_api_by(scheme, host, port) do
     query = from a in API,
@@ -18,7 +18,7 @@ defmodule Gateway.Cache.PostgresAdapter do
 
     query
     |> Repo.all()
-    |> Gateway.Cache.FilterHelper.do_filter(host)
+    |> Annon.Cache.FilterHelper.do_filter(host)
   end
 
   def warm_up, do: :nothing

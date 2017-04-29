@@ -1,12 +1,12 @@
-defmodule Gateway.Acceptance.Plugins.ACLTest do
+defmodule Annon.Acceptance.Plugins.ACLTest do
   @moduledoc false
-  use Gateway.AcceptanceCase
+  use Annon.AcceptanceCase
 
   @jwt_secret "secret"
 
   setup_all do
     pcm_mock_port = Confex.get_map(:gateway, :acceptance)[:pcm_mock][:port]
-    {:ok, _} = Plug.Adapters.Cowboy.http Gateway.PCMMockServer, [], port: pcm_mock_port
+    {:ok, _} = Plug.Adapters.Cowboy.http Annon.PCMMockServer, [], port: pcm_mock_port
     :ok
   end
 

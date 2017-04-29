@@ -1,4 +1,4 @@
-defmodule Gateway.Cache.FilterHelper do
+defmodule Annon.Cache.FilterHelper do
   @moduledoc """
   Helper for filtering responses from adapters
   """
@@ -9,7 +9,7 @@ defmodule Gateway.Cache.FilterHelper do
     |> make_response()
   end
 
-  def put_in_acc(acc, %Gateway.DB.Schemas.API{request: %Gateway.DB.Schemas.API.Request{host: host}} = api, needed_host)
+  def put_in_acc(acc, %Annon.DB.Schemas.API{request: %Annon.DB.Schemas.API.Request{host: host}} = api, needed_host)
       when host == needed_host do
     Kernel.++(acc, [api])
   end

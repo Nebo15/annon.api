@@ -1,6 +1,6 @@
-defmodule Gateway.Acceptance.Plugins.IPRestrictionTest do
+defmodule Annon.Acceptance.Plugins.IPRestrictionTest do
   @moduledoc false
-  use Gateway.AcceptanceCase, async: true
+  use Annon.AcceptanceCase, async: true
 
   setup do
     api_path = "/my_ip_filtered_api-" <> Ecto.UUID.generate() <> "/"

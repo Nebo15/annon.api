@@ -1,11 +1,11 @@
 use Mix.Config
 
-config :gateway, Gateway.DB.Configs.Repo,
+config :gateway, Annon.DB.Configs.Repo,
   adapter: Ecto.Adapters.Postgres,
   database: System.get_env("MIX_TEST_DATABASE") || "gateway_test",
   pool: Ecto.Adapters.SQL.Sandbox
 
-config :gateway, Gateway.DB.Logger.Repo,
+config :gateway, Annon.DB.Logger.Repo,
   adapter: Ecto.Adapters.Postgres,
   database: System.get_env("MIX_LOGGER_TEST_DATABASE") || "gateway_logger_test",
   pool: Ecto.Adapters.SQL.Sandbox
@@ -53,7 +53,7 @@ config :ex_unit, capture_log: true
 config :hackney, use_default_pool: false
 
 config :gateway,
-  cache_storage: {:system, :module, "CACHE_STORAGE", Gateway.Cache.PostgresAdapter}
+  cache_storage: {:system, :module, "CACHE_STORAGE", Annon.Cache.PostgresAdapter}
 
 config :gateway,
   sql_sandbox: {:system, :boolean, "SQL_SANDBOX", true}

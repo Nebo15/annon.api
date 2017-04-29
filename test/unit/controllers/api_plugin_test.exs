@@ -1,18 +1,18 @@
-defmodule Gateway.Controllers.API.PluginTest do
+defmodule Annon.Controllers.API.PluginTest do
   @moduledoc false
-  use Gateway.UnitCase, async: true
+  use Annon.UnitCase, async: true
 
   describe "/apis/:api_id/plugins (pagination)" do
     setup do
-      api = Gateway.Factory.insert(:api)
+      api = Annon.Factory.insert(:api)
 
       plugins = [
-        Gateway.Factory.insert(:proxy_plugin, api: api),
-        Gateway.Factory.insert(:jwt_plugin, api: api),
-        Gateway.Factory.insert(:acl_plugin, api: api),
-        Gateway.Factory.insert(:idempotency_plugin, api: api),
-        Gateway.Factory.insert(:ip_restriction_plugin, api: api),
-        Gateway.Factory.insert(:validator_plugin, api: api)
+        Annon.Factory.insert(:proxy_plugin, api: api),
+        Annon.Factory.insert(:jwt_plugin, api: api),
+        Annon.Factory.insert(:acl_plugin, api: api),
+        Annon.Factory.insert(:idempotency_plugin, api: api),
+        Annon.Factory.insert(:ip_restriction_plugin, api: api),
+        Annon.Factory.insert(:validator_plugin, api: api)
       ]
 
       {:ok, %{api_id: api.id, plugins: plugins}}
@@ -78,7 +78,7 @@ defmodule Gateway.Controllers.API.PluginTest do
 
   describe "/apis/:api_id/plugins" do
     test "GET empty list" do
-      api_model = Gateway.Factory.insert(:api)
+      api_model = Annon.Factory.insert(:api)
 
       conn = "/apis/#{api_model.id}/plugins"
       |> call_get()
@@ -88,9 +88,9 @@ defmodule Gateway.Controllers.API.PluginTest do
     end
 
     test "GET" do
-      api_model = Gateway.Factory.insert(:api)
-      Gateway.Factory.insert(:acl_plugin, api: api_model)
-      Gateway.Factory.insert(:jwt_plugin, api: api_model)
+      api_model = Annon.Factory.insert(:api)
+      Annon.Factory.insert(:acl_plugin, api: api_model)
+      Annon.Factory.insert(:jwt_plugin, api: api_model)
 
       conn = "/apis/#{api_model.id}/plugins"
       |> call_get()
@@ -100,8 +100,8 @@ defmodule Gateway.Controllers.API.PluginTest do
     end
 
     test "POST" do
-      api_model = Gateway.Factory.insert(:api)
-      plugin_data = Gateway.Factory.build(:acl_plugin, api: api_model)
+      api_model = Annon.Factory.insert(:api)
+      plugin_data = Annon.Factory.build(:acl_plugin, api: api_model)
 
       conn = "/apis/#{api_model.id}/plugins"
       |> call_post(plugin_data)
@@ -116,8 +116,8 @@ defmodule Gateway.Controllers.API.PluginTest do
 
   describe "/apis/:api_id/plugins/:name" do
     test "GET with invalid id" do
-      api_model = Gateway.Factory.insert(:api)
-      Gateway.Factory.insert(:acl_plugin, api: api_model)
+      api_model = Annon.Factory.insert(:api)
+      Annon.Factory.insert(:acl_plugin, api: api_model)
 
       "/apis/#{api_model.id}/plugins/unknown_plugin"
       |> call_get()
@@ -125,9 +125,9 @@ defmodule Gateway.Controllers.API.PluginTest do
     end
 
     test "GET" do
-      api_model = Gateway.Factory.insert(:api)
-      p1 = Gateway.Factory.insert(:acl_plugin, api: api_model)
-      p2 = Gateway.Factory.insert(:jwt_plugin, api: api_model)
+      api_model = Annon.Factory.insert(:api)
+      p1 = Annon.Factory.insert(:acl_plugin, api: api_model)
+      p2 = Annon.Factory.insert(:jwt_plugin, api: api_model)
 
       conn = "/apis/#{api_model.id}/plugins/#{p1.name}"
       |> call_get()
@@ -143,8 +143,8 @@ defmodule Gateway.Controllers.API.PluginTest do
     end
 
     test "PUT" do
-      api_model = Gateway.Factory.insert(:api)
-      p1 = Gateway.Factory.insert(:validator_plugin, api: api_model)
+      api_model = Annon.Factory.insert(:api)
+      p1 = Annon.Factory.insert(:validator_plugin, api: api_model)
 
       settings = %{
         "rules" => [
@@ -183,8 +183,8 @@ defmodule Gateway.Controllers.API.PluginTest do
     end
 
     test "PUT (renaming a plugin)" do
-      api_model = Gateway.Factory.insert(:api)
-      p1 = Gateway.Factory.insert(:jwt_plugin, api: api_model)
+      api_model = Annon.Factory.insert(:api)
+      p1 = Annon.Factory.insert(:jwt_plugin, api: api_model)
 
       settings = %{
         "rules" => [
@@ -203,9 +203,9 @@ defmodule Gateway.Controllers.API.PluginTest do
     end
 
     test "DELETE" do
-      api_model = Gateway.Factory.insert(:api)
-      acl_plugin = Gateway.Factory.insert(:acl_plugin, api: api_model)
-      jwt_plugin = Gateway.Factory.insert(:jwt_plugin, api: api_model)
+      api_model = Annon.Factory.insert(:api)
+      acl_plugin = Annon.Factory.insert(:acl_plugin, api: api_model)
+      jwt_plugin = Annon.Factory.insert(:jwt_plugin, api: api_model)
 
       "/apis/#{api_model.id}/plugins/#{acl_plugin.name}"
       |> call_get()

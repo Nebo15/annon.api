@@ -1,17 +1,17 @@
-defmodule Gateway.Plugins.ACL do
+defmodule Annon.Plugins.ACL do
   @moduledoc """
   [Access Control Layer (ACL) plugin](http://docs.annon.apiary.io/#reference/plugins/acl).
 
   It allows to set list of scopes that is required for path relative to an API.
   """
-  use Gateway.Helpers.Plugin,
+  use Annon.Helpers.Plugin,
     plugin_name: "acl"
 
   alias Plug.Conn
-  alias Gateway.DB.Schemas.Plugin
-  alias Gateway.DB.Schemas.API, as: APISchema
+  alias Annon.DB.Schemas.Plugin
+  alias Annon.DB.Schemas.API, as: APISchema
   alias EView.Views.Error, as: ErrorView
-  alias Gateway.Helpers.Response
+  alias Annon.Helpers.Response
 
   @doc false
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins, request: %{path: api_path}}}} = conn, _opts)

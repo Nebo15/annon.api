@@ -1,4 +1,4 @@
-defmodule Gateway.Helpers.IP do
+defmodule Annon.Helpers.IP do
   @moduledoc """
   Helpers for working with IP addresses.
   """

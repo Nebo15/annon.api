@@ -1,4 +1,4 @@
-defmodule Gateway.PublicRouter do
+defmodule Annon.PublicRouter do
   @moduledoc """
   Router for a Annons public API.
 
@@ -16,7 +16,7 @@ defmodule Gateway.PublicRouter do
   plug :match
 
   # Plugin that traces request start time
-  plug Gateway.Plugins.ClientLatency
+  plug Annon.Plugins.ClientLatency
 
   plug Plug.RequestId
   plug Plug.Parsers, parsers: [:multipart, :json],
@@ -26,38 +26,38 @@ defmodule Gateway.PublicRouter do
                      read_length: 2_000_000,
                      read_timeout: 108_000
 
-  plug Gateway.Plugins.APILoader
+  plug Annon.Plugins.APILoader
 
-  plug Gateway.Plugins.CORS
+  plug Annon.Plugins.CORS
 
-  plug Gateway.Plugins.Idempotency # TODO: set plug after logger plug (and after acl/iprestiction, in others section)
+  plug Annon.Plugins.Idempotency # TODO: set plug after logger plug (and after acl/iprestiction, in others section)
 
   # Monitoring plugins that do not affect on request or response
-  plug Gateway.Plugins.Logger
-  plug Gateway.Plugins.Monitoring
+  plug Annon.Plugins.Logger
+  plug Annon.Plugins.Monitoring
 
   # Security plugins that can halt connection immediately
-  plug Gateway.Plugins.IPRestriction
-  plug Gateway.Plugins.UARestriction
-  plug Gateway.Plugins.JWT
-  plug Gateway.Plugins.Scopes
-  plug Gateway.Plugins.ACL
+  plug Annon.Plugins.IPRestriction
+  plug Annon.Plugins.UARestriction
+  plug Annon.Plugins.JWT
+  plug Annon.Plugins.Scopes
+  plug Annon.Plugins.ACL
 
   # Other helper plugins that can halt connection without proxy
-  plug Gateway.Plugins.Validator
+  plug Annon.Plugins.Validator
 
   # Proxy
-  plug Gateway.Plugins.Proxy
+  plug Annon.Plugins.Proxy
 
   plug :dispatch
 
   match _ do
     conn
-    |> Gateway.Helpers.Response.send_error(:not_found)
+    |> Annon.Helpers.Response.send_error(:not_found)
   end
 
   def handle_errors(%Plug.Conn{halted: false} = conn, error) do
     conn
-    |> Gateway.Helpers.Response.send_error(error)
+    |> Annon.Helpers.Response.send_error(error)
   end
 end

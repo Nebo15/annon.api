@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :gateway, Gateway.DB.Configs.Repo,
+config :gateway, Annon.DB.Configs.Repo,
   adapter: Ecto.Adapters.Postgres,
   priv: "priv/repos/gateway",
   database: "${DB_NAME}",
@@ -9,7 +9,7 @@ config :gateway, Gateway.DB.Configs.Repo,
   hostname: "${DB_HOST}",
   port: "${DB_PORT}"
 
-config :gateway, Gateway.DB.Logger.Repo,
+config :gateway, Annon.DB.Logger.Repo,
   adapter: Ecto.Adapters.Postgres,
   priv: "priv/repos/logger",
   database: "${DB_NAME}",

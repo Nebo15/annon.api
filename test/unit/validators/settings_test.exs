@@ -1,5 +1,5 @@
-defmodule Gateway.Changeset.Validator.SettingsTest do
-  use Gateway.UnitCase, async: true
+defmodule Annon.Changeset.Validator.SettingsTest do
+  use Annon.UnitCase, async: true
 
   describe "ACL plugin validation" do
     test "Valid settings" do
@@ -12,7 +12,7 @@ defmodule Gateway.Changeset.Validator.SettingsTest do
 
       changeset =
         %Ecto.Changeset{changes: %{name: "acl", settings: %{"rules" => rules}}}
-        |> Gateway.Changeset.Validator.Settings.validate_settings()
+        |> Annon.Changeset.Validator.Settings.validate_settings()
 
       assert [] == changeset.errors
     end
@@ -24,7 +24,7 @@ defmodule Gateway.Changeset.Validator.SettingsTest do
 
       changeset =
         %Ecto.Changeset{changes: %{name: "acl", settings: %{"rules" => rules}}}
-        |> Gateway.Changeset.Validator.Settings.validate_settings()
+        |> Annon.Changeset.Validator.Settings.validate_settings()
 
       refute [] == changeset.errors
     end
@@ -41,7 +41,7 @@ defmodule Gateway.Changeset.Validator.SettingsTest do
 
       changeset =
         %Ecto.Changeset{changes: %{name: "validator", settings: %{"rules" => rules}}}
-        |> Gateway.Changeset.Validator.Settings.validate_settings()
+        |> Annon.Changeset.Validator.Settings.validate_settings()
 
       assert [] == changeset.errors
     end
@@ -53,7 +53,7 @@ defmodule Gateway.Changeset.Validator.SettingsTest do
 
       changeset =
         %Ecto.Changeset{changes: %{name: "validator", settings: %{"rules" => rules}}}
-        |> Gateway.Changeset.Validator.Settings.validate_settings()
+        |> Annon.Changeset.Validator.Settings.validate_settings()
 
       refute [] == changeset.errors
     end
@@ -66,7 +66,7 @@ defmodule Gateway.Changeset.Validator.SettingsTest do
 
       changeset =
         %Ecto.Changeset{changes: %{name: "proxy", settings: settings}}
-        |> Gateway.Changeset.Validator.Settings.validate_settings()
+        |> Annon.Changeset.Validator.Settings.validate_settings()
 
       refute [] == changeset.errors
     end

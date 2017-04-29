@@ -1,4 +1,4 @@
-defmodule Gateway.Plugins.Validator do
+defmodule Annon.Plugins.Validator do
   @moduledoc """
   [JSON Schema Validation plugin](http://docs.annon.apiary.io/#reference/plugins/validator) allows you to
   set validation rules for a path relative to an API.
@@ -6,12 +6,12 @@ defmodule Gateway.Plugins.Validator do
   It's response structure described in
   our [API Manifest](http://docs.apimanifest.apiary.io/#introduction/interacting-with-api/errors).
   """
-  use Gateway.Helpers.Plugin,
+  use Annon.Helpers.Plugin,
     plugin_name: "validator"
 
-  alias Gateway.DB.Schemas.Plugin
-  alias Gateway.DB.Schemas.API, as: APISchema
-  alias Gateway.Helpers.Response
+  alias Annon.DB.Schemas.Plugin
+  alias Annon.DB.Schemas.API, as: APISchema
+  alias Annon.Helpers.Response
 
   @doc false
   def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins, request: %{path: api_path}}}} = conn, _opt)

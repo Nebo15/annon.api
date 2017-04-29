@@ -1,4 +1,4 @@
-defmodule Gateway.AcceptanceCase do
+defmodule Annon.AcceptanceCase do
   @moduledoc """
   This module defines the test case to be used by
   acceptance tests. It can allow run tests in async when each SQL.Sandbox connection will be
@@ -11,7 +11,7 @@ defmodule Gateway.AcceptanceCase do
   using(opts) do
     quote location: :keep, bind_quoted: [opts: opts] do
       use HTTPoison.Base
-      import Gateway.AcceptanceCase
+      import Annon.AcceptanceCase
 
       # Load configuration from environment that allows to test Docker containers that run on another port
       @config Confex.get_map(:gateway, :acceptance)
@@ -120,8 +120,8 @@ defmodule Gateway.AcceptanceCase do
 
       def magic_header do
         repos = [
-          Gateway.DB.Configs.Repo,
-          Gateway.DB.Logger.Repo
+          Annon.DB.Configs.Repo,
+          Annon.DB.Logger.Repo
         ]
 
         metadata = Phoenix.Ecto.SQL.Sandbox.metadata_for(repos, self())
@@ -135,12 +135,12 @@ defmodule Gateway.AcceptanceCase do
       end
 
       setup tags do
-        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Configs.Repo)
-        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Logger.Repo)
+        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Annon.DB.Configs.Repo)
+        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Annon.DB.Logger.Repo)
 
         unless tags[:async] do
-          Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Configs.Repo, {:shared, self()})
-          Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Logger.Repo, {:shared, self()})
+          Ecto.Adapters.SQL.Sandbox.mode(Annon.DB.Configs.Repo, {:shared, self()})
+          Ecto.Adapters.SQL.Sandbox.mode(Annon.DB.Logger.Repo, {:shared, self()})
         end
 
         :ok
@@ -177,7 +177,7 @@ defmodule Gateway.AcceptanceCase do
 
   def build_factory_params(factory, overrides \\ []) do
     factory
-    |> Gateway.Factory.build(overrides)
+    |> Annon.Factory.build(overrides)
     |> schema_to_map()
   end
 

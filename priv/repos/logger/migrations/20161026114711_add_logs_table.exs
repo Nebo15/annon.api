@@ -1,4 +1,4 @@
-defmodule Gateway.DB.Logger.Repo.Migrations.AddLogsTable do
+defmodule Annon.DB.Logger.Repo.Migrations.AddLogsTable do
   use Ecto.Migration
 
   def change do

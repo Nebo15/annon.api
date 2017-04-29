@@ -1,4 +1,4 @@
-defmodule Gateway.Controllers.Request do
+defmodule Annon.Controllers.Request do
   @moduledoc """
   REST interface that allows to fetch and delete stored requests.
 
@@ -9,10 +9,10 @@ defmodule Gateway.Controllers.Request do
 
   You can find full description in [REST API documentation](http://docs.annon.apiary.io/#reference/requests).
   """
-  use Gateway.Helpers.CommonRouter
-  alias Gateway.DB.Logger.Repo
-  alias Gateway.DB.Schemas.Log, as: LogSchema
-  alias Gateway.Helpers.Pagination
+  use Annon.Helpers.CommonRouter
+  alias Annon.DB.Logger.Repo
+  alias Annon.DB.Schemas.Log, as: LogSchema
+  alias Annon.Helpers.Pagination
 
   get "/" do
     LogSchema

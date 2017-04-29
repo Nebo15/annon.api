@@ -1,4 +1,4 @@
-defmodule Gateway.Helpers.Scopes.PCMStrategy do
+defmodule Annon.Helpers.Scopes.PCMStrategy do
   @moduledoc """
   Helper for retrieving scopes with PCM strategy - getting scopes from PCM by party_id.
   """

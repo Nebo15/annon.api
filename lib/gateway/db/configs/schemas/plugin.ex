@@ -1,14 +1,14 @@
-defmodule Gateway.DB.Schemas.Plugin do
+defmodule Annon.DB.Schemas.Plugin do
   @moduledoc """
   Schema for Plugins settings.
   """
-  use Gateway.DB.Schema
+  use Annon.DB.Schema
 
-  import Gateway.Changeset.Validator.Settings
+  import Annon.Changeset.Validator.Settings
 
-  alias Gateway.DB.Configs.Repo
-  alias Gateway.DB.Schemas.Plugin, as: PluginSchema
-  alias Gateway.DB.Schemas.API, as: APISchema
+  alias Annon.DB.Configs.Repo
+  alias Annon.DB.Schemas.Plugin, as: PluginSchema
+  alias Annon.DB.Schemas.API, as: APISchema
 
   @type t :: %PluginSchema{
     name: atom,

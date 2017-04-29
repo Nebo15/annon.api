@@ -1,18 +1,18 @@
-defmodule Gateway.Acceptance.Cluster.ConfigReloaderTest do
+defmodule Annon.Acceptance.Cluster.ConfigReloaderTest do
   @moduledoc false
   # Integration test to check that the config cache is reloaded across cluster after a config change
-  use Gateway.AcceptanceCase
+  use Annon.AcceptanceCase
   require Logger
   import ExUnit.CaptureLog
 
   describe "cluster communications" do
     setup do
-      Gateway.DB.Schemas.API
-      |> Gateway.DB.Configs.Repo.delete_all()
+      Annon.DB.Schemas.API
+      |> Annon.DB.Configs.Repo.delete_all()
 
       on_exit(fn ->
-        Gateway.DB.Schemas.API
-        |> Gateway.DB.Configs.Repo.delete_all()
+        Annon.DB.Schemas.API
+        |> Annon.DB.Configs.Repo.delete_all()
       end)
     end
 
@@ -20,7 +20,7 @@ defmodule Gateway.Acceptance.Cluster.ConfigReloaderTest do
     test "correct communication between processes" do
       # spawns two nodes:
       # node1@127.0.0.1 and node2@127.0.0.1
-      Gateway.Cluster.spawn()
+      Annon.Cluster.spawn()
 
       api_id = create_api() |> get_body() |> get_in(["data", "id"])
 
@@ -43,14 +43,14 @@ defmodule Gateway.Acceptance.Cluster.ConfigReloaderTest do
   describe "cluster events" do
     test ":nodeup event" do
       assert capture_log(fn ->
-        send(Gateway.AutoClustering, {:nodeup, :'node2@127.0.0.1'})
+        send(Annon.AutoClustering, {:nodeup, :'node2@127.0.0.1'})
         :timer.sleep(100)
       end) =~ "config cache was warmed up"
     end
 
     test ":reload_config event" do
       assert capture_log(fn ->
-        send(Gateway.AutoClustering, :reload_config)
+        send(Annon.AutoClustering, :reload_config)
         :timer.sleep(100)
       end) =~ "config cache was warmed up"
     end
@@ -60,7 +60,7 @@ defmodule Gateway.Acceptance.Cluster.ConfigReloaderTest do
   defp ensure_the_change_is_visible_on(_nodename, iteration) when iteration > 5,
     do: flunk "Changes is not distributed to other nodes"
   defp ensure_the_change_is_visible_on(nodename, iteration) do
-    case :rpc.block_call(nodename, Gateway.DB.Configs.Repo, :all, [Gateway.DB.Schemas.API]) do
+    case :rpc.block_call(nodename, Annon.DB.Configs.Repo, :all, [Annon.DB.Schemas.API]) do
       [] ->
         Logger.debug("Changes not visible, retry in 1 second..")
         :timer.sleep(1000)

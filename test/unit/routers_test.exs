@@ -1,13 +1,13 @@
-defmodule Gateway.RoutersTest do
+defmodule Annon.RoutersTest do
   @moduledoc false
-  use Gateway.UnitCase, async: true
+  use Annon.UnitCase, async: true
 
   describe "default match works" do
     test "on public router" do
       conn = :get
       |> conn("/foo")
       |> put_req_header("content-type", "application/json")
-      |> Gateway.PublicRouter.call([])
+      |> Annon.PublicRouter.call([])
 
       assert 404 == conn.status
     end
@@ -16,7 +16,7 @@ defmodule Gateway.RoutersTest do
       conn = :get
       |> conn("/foo")
       |> put_req_header("content-type", "application/json")
-      |> Gateway.ManagementRouter.call([])
+      |> Annon.ManagementRouter.call([])
 
       assert 404 == conn.status
     end
@@ -25,7 +25,7 @@ defmodule Gateway.RoutersTest do
       conn = :get
       |> conn("/foo")
       |> put_req_header("content-type", "application/json")
-      |> Gateway.PrivateRouter.call([])
+      |> Annon.PrivateRouter.call([])
 
       assert 404 == conn.status
     end
@@ -38,7 +38,7 @@ defmodule Gateway.RoutersTest do
       |> put_req_header("content-type", "application/bson")
 
       assert_raise Ecto.Query.CastError, fn ->
-        Gateway.ManagementRouter.call(conn, [])
+        Annon.ManagementRouter.call(conn, [])
       end
 
       assert {400, _headers, _body} = sent_resp(conn)

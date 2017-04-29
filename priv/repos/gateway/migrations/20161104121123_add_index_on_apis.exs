@@ -1,4 +1,4 @@
-defmodule Gateway.DB.Repo.Migrations.AddIndexOnApis do
+defmodule Annon.DB.Repo.Migrations.AddIndexOnApis do
   use Ecto.Migration
 
   def change do

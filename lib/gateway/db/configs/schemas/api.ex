@@ -1,10 +1,10 @@
-defmodule Gateway.DB.Schemas.API do
+defmodule Annon.DB.Schemas.API do
   @moduledoc """
   Schema for API's entity.
   """
-  use Gateway.DB.Schema
-  alias Gateway.DB.Configs.Repo
-  alias Gateway.DB.Schemas.API, as: APISchema
+  use Annon.DB.Schema
+  alias Annon.DB.Configs.Repo
+  alias Annon.DB.Schemas.API, as: APISchema
 
   @required_api_fields [:name]
   @required_request_fields [:scheme, :host, :port, :path, :methods]
@@ -22,7 +22,7 @@ defmodule Gateway.DB.Schemas.API do
       field :methods, {:array, :string}
     end
 
-    has_many :plugins, Gateway.DB.Schemas.Plugin
+    has_many :plugins, Annon.DB.Schemas.Plugin
 
     timestamps()
   end

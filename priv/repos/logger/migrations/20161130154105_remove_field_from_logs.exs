@@ -1,4 +1,4 @@
-defmodule Gateway.DB.Configs.Repo.Migrations.RemoveFieldFromLogs do
+defmodule Annon.DB.Configs.Repo.Migrations.RemoveFieldFromLogs do
   use Ecto.Migration
 
   def up do

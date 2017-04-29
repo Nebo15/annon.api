@@ -1,11 +1,11 @@
-defmodule Gateway.Plugins.JWT do
+defmodule Annon.Plugins.JWT do
   @moduledoc """
   [JWT Tokens authorization](http://docs.annon.apiary.io/#reference/plugins/jwt-authentification) plugin.
 
   It's implemented mainly to be used with [Auth0](https://auth0.com/),
   but it should support any JWT-based authentication providers.
   """
-  use Gateway.Helpers.Plugin,
+  use Annon.Helpers.Plugin,
     plugin_name: "jwt"
 
   require Logger
@@ -14,10 +14,10 @@ defmodule Gateway.Plugins.JWT do
 
   alias Plug.Conn
   alias Joken.Token
-  alias Gateway.DB.Schemas.Plugin
-  alias Gateway.DB.Schemas.API, as: APISchema
+  alias Annon.DB.Schemas.Plugin
+  alias Annon.DB.Schemas.API, as: APISchema
   alias EView.Views.Error, as: ErrorView
-  alias Gateway.Helpers.Response
+  alias Annon.Helpers.Response
 
   @doc false
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts) when is_list(plugins) do

@@ -1,6 +1,6 @@
-defmodule Gateway.Plugins.MonitoringTest do
+defmodule Annon.Plugins.MonitoringTest do
   @moduledoc false
-  use Gateway.UnitCase
+  use Annon.UnitCase
 
   setup do
     :sys.replace_state ExStatsD, fn state ->
@@ -23,12 +23,12 @@ defmodule Gateway.Plugins.MonitoringTest do
   end
 
   defp make_connection do
-    api = Gateway.Factory.insert(:api, %{
+    api = Annon.Factory.insert(:api, %{
       name: "Montoring Test api",
-      request: Gateway.Factory.build(:request, %{host: "www.example.com", path: "/apis"})
+      request: Annon.Factory.build(:request, %{host: "www.example.com", path: "/apis"})
     })
 
-    Gateway.Factory.insert(:proxy_plugin, %{
+    Annon.Factory.insert(:proxy_plugin, %{
       name: "proxy",
       is_enabled: true,
       api: api,

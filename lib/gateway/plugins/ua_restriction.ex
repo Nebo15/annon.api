@@ -1,16 +1,16 @@
-defmodule Gateway.Plugins.UARestriction do
+defmodule Annon.Plugins.UARestriction do
   @moduledoc """
   It allows to white/black-list consumers by user agent.
 
   TODO: refactor validation from this file and pre-compile patterns for reuse
   """
-  use Gateway.Helpers.Plugin,
+  use Annon.Helpers.Plugin,
     plugin_name: "ua_restriction"
 
-  alias Gateway.DB.Schemas.Plugin
-  alias Gateway.DB.Schemas.API, as: APISchema
+  alias Annon.DB.Schemas.Plugin
+  alias Annon.DB.Schemas.API, as: APISchema
   alias EView.Views.Error, as: ErrorView
-  alias Gateway.Helpers.Response
+  alias Annon.Helpers.Response
 
   @doc false
   def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opt) when is_list(plugins) do

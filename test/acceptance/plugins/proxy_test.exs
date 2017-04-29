@@ -1,6 +1,6 @@
-defmodule Gateway.Acceptance.Plugins.ProxyTest do
+defmodule Annon.Acceptance.Plugins.ProxyTest do
   @moduledoc false
-  use Gateway.AcceptanceCase, async: true
+  use Annon.AcceptanceCase, async: true
 
   setup do
     api_path = "/my_proxied_api-" <> Ecto.UUID.generate() <> "/"

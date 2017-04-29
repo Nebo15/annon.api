@@ -1,4 +1,4 @@
-defmodule Gateway.PrivateRouter do
+defmodule Annon.PrivateRouter do
   @moduledoc """
   Router for a private APIs inside you clusters.
   """
@@ -13,5 +13,5 @@ defmodule Gateway.PrivateRouter do
 
   plug :dispatch
 
-  forward "/", to: Gateway.PublicRouter
+  forward "/", to: Annon.PublicRouter
 end

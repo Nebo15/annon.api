@@ -1,12 +1,12 @@
-defmodule Gateway.Helpers.CommonRouter do
+defmodule Annon.Helpers.CommonRouter do
   @moduledoc """
   This router is used in controllers of Annons management API.
   """
   defmacro __using__(_) do
     quote location: :keep do
       use Plug.Router
-      import Gateway.Helpers.Response
-      import Gateway.Helpers.Render
+      import Annon.Helpers.Response
+      import Annon.Helpers.Render
 
       plug :match
 

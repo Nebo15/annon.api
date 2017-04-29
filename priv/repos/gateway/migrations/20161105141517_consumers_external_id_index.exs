@@ -1,4 +1,4 @@
-defmodule Gateway.DB.Configs.Repo.Migrations.ConsumersExternalIdIndex do
+defmodule Annon.DB.Configs.Repo.Migrations.ConsumersExternalIdIndex do
   use Ecto.Migration
 
   def change do

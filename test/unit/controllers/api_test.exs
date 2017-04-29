@@ -1,10 +1,10 @@
-defmodule Gateway.Controllers.APITest do
+defmodule Annon.Controllers.APITest do
   @moduledoc false
-  use Gateway.UnitCase, async: true
+  use Annon.UnitCase, async: true
 
   describe "/apis (pagination)" do
     setup do
-      apis = Gateway.Factory.insert_list(10, :api)
+      apis = Annon.Factory.insert_list(10, :api)
 
       {:ok, %{apis: apis}}
     end
@@ -83,7 +83,7 @@ defmodule Gateway.Controllers.APITest do
     end
 
     test "GET" do
-      api = Gateway.Factory.insert_pair(:api)
+      api = Annon.Factory.insert_pair(:api)
 
       "/apis"
       |> call_get()
@@ -92,7 +92,7 @@ defmodule Gateway.Controllers.APITest do
     end
 
     test "POST" do
-      api = Gateway.Factory.build(:api)
+      api = Annon.Factory.build(:api)
 
       conn = "/apis"
       |> call_post(api)
@@ -129,7 +129,7 @@ defmodule Gateway.Controllers.APITest do
     end
 
     test "GET" do
-      api = Gateway.Factory.insert(:api)
+      api = Annon.Factory.insert(:api)
 
       "/apis/#{api.id}"
       |> call_get()
@@ -138,7 +138,7 @@ defmodule Gateway.Controllers.APITest do
     end
 
     test "PUT" do
-      api = Gateway.Factory.insert(:api)
+      api = Annon.Factory.insert(:api)
       api_update = %{
         name: "New name",
         request: %{
@@ -177,7 +177,7 @@ defmodule Gateway.Controllers.APITest do
     end
 
     test "DELETE" do
-      data = Gateway.Factory.insert(:api)
+      data = Annon.Factory.insert(:api)
 
       "/apis/#{data.id}"
       |> call_delete()

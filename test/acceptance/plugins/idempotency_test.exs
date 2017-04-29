@@ -1,6 +1,6 @@
-defmodule Gateway.Acceptance.Plugins.IdempotencyTest do
+defmodule Annon.Acceptance.Plugins.IdempotencyTest do
   @moduledoc false
-  use Gateway.AcceptanceCase, async: true
+  use Annon.AcceptanceCase, async: true
 
   @idempotency_key Ecto.UUID.generate()
 

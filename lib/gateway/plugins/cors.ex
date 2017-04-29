@@ -1,13 +1,13 @@
-defmodule Gateway.Plugins.CORS do
+defmodule Annon.Plugins.CORS do
   @moduledoc """
   This plugin controls cross-origin resource sharing.
   """
-  use Gateway.Helpers.Plugin,
+  use Annon.Helpers.Plugin,
     plugin_name: "cors"
 
   alias Plug.Conn
-  alias Gateway.DB.Schemas.Plugin
-  alias Gateway.DB.Schemas.API, as: APISchema
+  alias Annon.DB.Schemas.Plugin
+  alias Annon.DB.Schemas.API, as: APISchema
 
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts)
     when is_list(plugins) do

@@ -1,4 +1,4 @@
-defmodule Gateway.ManagementRouter do
+defmodule Annon.ManagementRouter do
   @moduledoc """
   Router for a [Annons Management API](http://docs.annon.apiary.io/#reference/apis).
   """
@@ -19,18 +19,18 @@ defmodule Gateway.ManagementRouter do
 
   plug :dispatch
 
-  plug Gateway.ConfigReloader
+  plug Annon.ConfigReloader
 
-  forward "/apis", to: Gateway.Controllers.API
-  forward "/requests", to: Gateway.Controllers.Request
+  forward "/apis", to: Annon.Controllers.API
+  forward "/requests", to: Annon.Controllers.Request
 
   match _ do
     conn
-    |> Gateway.Helpers.Response.send_error(:not_found)
+    |> Annon.Helpers.Response.send_error(:not_found)
   end
 
   def handle_errors(conn, error) do
     conn
-    |> Gateway.Helpers.Response.send_error(error)
+    |> Annon.Helpers.Response.send_error(error)
   end
 end

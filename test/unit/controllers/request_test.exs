@@ -1,6 +1,6 @@
-defmodule Gateway.Controllers.RequestTest do
+defmodule Annon.Controllers.RequestTest do
   @moduledoc false
-  use Gateway.UnitCase, async: true
+  use Annon.UnitCase, async: true
 
   @random_url "random_url"
   @random_data %{"data" => "random"}
@@ -9,7 +9,7 @@ defmodule Gateway.Controllers.RequestTest do
     :post
     |> conn(@random_url, Poison.encode!(@random_data))
     |> put_req_header("content-type", "application/json")
-    |> Gateway.PublicRouter.call([])
+    |> Annon.PublicRouter.call([])
   end
 
   defp create_requests(1), do: create_request()
@@ -23,9 +23,9 @@ defmodule Gateway.Controllers.RequestTest do
       logs = for _ <- 1..10 do
         attributes = %{id: Ecto.UUID.generate(), response: %{}, status_code: 200}
 
-        %Gateway.DB.Schemas.Log{}
-        |> Gateway.DB.Schemas.Log.changeset(attributes)
-        |> Gateway.DB.Logger.Repo.insert!()
+        %Annon.DB.Schemas.Log{}
+        |> Annon.DB.Schemas.Log.changeset(attributes)
+        |> Annon.DB.Logger.Repo.insert!()
       end
 
       {:ok, %{logs: logs}}

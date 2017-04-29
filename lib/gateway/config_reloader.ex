@@ -1,10 +1,10 @@
-defmodule Gateway.ConfigReloader do
+defmodule Annon.ConfigReloader do
   @moduledoc """
   This plugin
   [invalidates Annons cache](http://docs.annon.apiary.io/#introduction/general-features/caching-and-perfomance)
   whenever there was change triggered by a management API.
   """
-  alias Gateway.AutoClustering
+  alias Annon.AutoClustering
 
   @destructive_methods ["POST", "PUT", "DELETE"]
   @successful_statuses [200, 201]

@@ -1,6 +1,6 @@
-defmodule Gateway.Acceptance.Plugins.JWTTest do
+defmodule Annon.Acceptance.Plugins.JWTTest do
   @moduledoc false
-  use Gateway.AcceptanceCase, async: true
+  use Annon.AcceptanceCase, async: true
 
   @jwt_secret "secret"
 

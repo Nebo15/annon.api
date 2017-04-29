@@ -1,4 +1,4 @@
-defmodule Gateway.Mixfile do
+defmodule Annon.Mixfile do
   use Mix.Project
 
   @version "0.2.23"
@@ -28,7 +28,7 @@ defmodule Gateway.Mixfile do
       applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto, :joken, :nex_json_schema,
                      :poison, :httpoison, :ex_statsd, :skycluster, :eview, :ecto_paging,
                      :runtime_tools],
-      mod: {Gateway, []}
+      mod: {Annon, []}
     ]
   end
 

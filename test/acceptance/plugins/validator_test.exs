@@ -1,6 +1,6 @@
-defmodule Gateway.Acceptance.Plugins.ValidatorTest do
+defmodule Annon.Acceptance.Plugins.ValidatorTest do
   @moduledoc false
-  use Gateway.AcceptanceCase, async: true
+  use Annon.AcceptanceCase, async: true
 
   @schema %{"type" => "object",
             "properties" => %{"foo" => %{"type" => "number"}, "bar" => %{ "type" => "string"}},

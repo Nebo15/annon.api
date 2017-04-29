@@ -1,6 +1,6 @@
-defmodule Gateway.UnitCase do
+defmodule Annon.UnitCase do
   @moduledoc """
-  Gateway HTTP Test Helper
+  Annon HTTP Test Helper
   """
   use ExUnit.CaseTemplate
   use Plug.Test
@@ -8,15 +8,15 @@ defmodule Gateway.UnitCase do
   using do
     quote do
       use Plug.Test
-      import Gateway.UnitCase
+      import Annon.UnitCase
 
       setup tags do
-        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Configs.Repo)
-        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Gateway.DB.Logger.Repo)
+        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Annon.DB.Configs.Repo)
+        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Annon.DB.Logger.Repo)
 
         unless tags[:async] do
-          Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Configs.Repo, {:shared, self()})
-          Ecto.Adapters.SQL.Sandbox.mode(Gateway.DB.Logger.Repo, {:shared, self()})
+          Ecto.Adapters.SQL.Sandbox.mode(Annon.DB.Configs.Repo, {:shared, self()})
+          Ecto.Adapters.SQL.Sandbox.mode(Annon.DB.Logger.Repo, {:shared, self()})
         end
 
         :ok
@@ -43,7 +43,7 @@ defmodule Gateway.UnitCase do
   def call_public_router(path) do
     :get
     |> conn(path)
-    |> call_router(Gateway.PublicRouter)
+    |> call_router(Annon.PublicRouter)
   end
 
   def call_delete(path) do
@@ -64,7 +64,7 @@ defmodule Gateway.UnitCase do
     |> call_router()
   end
 
-  defp call_router(conn, router \\ Gateway.ManagementRouter) do
+  defp call_router(conn, router \\ Annon.ManagementRouter) do
     conn
     |> put_req_header("content-type", "application/json")
     |> router.call([])

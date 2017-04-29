@@ -1,4 +1,4 @@
-defmodule Gateway.Helpers.Latency do
+defmodule Annon.Helpers.Latency do
   @moduledoc """
   Helper for tracing client latency.
   """

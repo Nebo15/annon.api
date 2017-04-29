@@ -1,12 +1,12 @@
-defmodule Gateway.Cache.EtsAdapter do
+defmodule Annon.Cache.EtsAdapter do
   @moduledoc """
   Adapter to access cache using ETS.
   """
   import Ecto.Query
 
-  alias Gateway.DB.Configs.Repo
-  alias Gateway.DB.Schemas.API
-  alias Gateway.DB.Schemas.Plugin
+  alias Annon.DB.Configs.Repo
+  alias Annon.DB.Schemas.API
+  alias Annon.DB.Schemas.Plugin
 
   def find_api_by(scheme, host, port) do
     match_spec = %{
@@ -20,7 +20,7 @@ defmodule Gateway.Cache.EtsAdapter do
     |> :ets.match_object({:_, match_spec})
     |> Enum.map(&elem(&1, 1))
     |> Enum.filter(fn(api) -> host == api.request.host || "*" == api.request.host end)
-    |> Gateway.Cache.FilterHelper.do_filter(host)
+    |> Annon.Cache.FilterHelper.do_filter(host)
   end
 
   def warm_up do

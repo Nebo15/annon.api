@@ -1,16 +1,16 @@
-defmodule Gateway.Plugins.Idempotency do
+defmodule Annon.Plugins.Idempotency do
   @moduledoc """
   [Request Idempotency plugin](http://docs.annon.apiary.io/#reference/plugins/idempotency).
   """
-  use Gateway.Helpers.Plugin,
+  use Annon.Helpers.Plugin,
     plugin_name: "idempotency"
 
   alias Plug.Conn
-  alias Gateway.DB.Schemas.Plugin
-  alias Gateway.DB.Schemas.API, as: APISchema
-  alias Gateway.DB.Schemas.Log
+  alias Annon.DB.Schemas.Plugin
+  alias Annon.DB.Schemas.API, as: APISchema
+  alias Annon.DB.Schemas.Log
   alias EView.Views.Error, as: ErrorView
-  alias Gateway.Helpers.Response
+  alias Annon.Helpers.Response
 
   @idempotent_methods ["POST"]
 
@@ -36,12 +36,12 @@ defmodule Gateway.Plugins.Idempotency do
   end
   defp load_log_request(_), do: nil
 
-  defp validate_request(%Gateway.DB.Schemas.Log{request: %{body: body}} = log_request, params) do
+  defp validate_request(%Annon.DB.Schemas.Log{request: %{body: body}} = log_request, params) do
     {Map.equal?(params, body), log_request}
   end
   defp validate_request(_, _params), do: nil
 
-  defp normalize_resp({true, %Gateway.DB.Schemas.Log{response: %{headers: headers, body: body},
+  defp normalize_resp({true, %Annon.DB.Schemas.Log{response: %{headers: headers, body: body},
                                                      status_code: status_code}}, conn) do
     conn
     |> Conn.merge_resp_headers(format_headers(headers))

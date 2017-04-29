@@ -1,9 +1,9 @@
-defmodule Gateway.Plugins.Proxy.MultipartFormTest do
+defmodule Annon.Plugins.Proxy.MultipartFormTest do
   @moduledoc false
 
-  use Gateway.UnitCase, async: true
+  use Annon.UnitCase, async: true
 
-  import Gateway.Plugins.Proxy.MultipartForm, only: [reconstruct_using: 1]
+  import Annon.Plugins.Proxy.MultipartForm, only: [reconstruct_using: 1]
 
   describe "reconstruct_using/1" do
     test "returns a list of tuples for multipart form" do

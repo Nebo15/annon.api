@@ -1,10 +1,10 @@
-defmodule Gateway.DB.Schemas.Log do
+defmodule Annon.DB.Schemas.Log do
   @moduledoc """
   Schema for saved requests and responses.
   """
-  use Gateway.DB.Schema
-  alias Gateway.DB.Logger.Repo
-  alias Gateway.DB.Schemas.Log, as: LogSchema
+  use Annon.DB.Schema
+  alias Annon.DB.Logger.Repo
+  alias Annon.DB.Schemas.Log, as: LogSchema
 
   @derive {Poison.Encoder, except: [:__meta__]}
   @primary_key {:id, :string, autogenerate: false}

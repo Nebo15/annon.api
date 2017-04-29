@@ -1,16 +1,16 @@
-defmodule Gateway.Plugins.Logger do
+defmodule Annon.Plugins.Logger do
   @moduledoc """
   This plugin stores reqests and responses in `Logger` database.
   It is enabled by default and can not be disabled without rebuilding Annon container.
 
   All stored records can be accessible via [management API](http://docs.annon.apiary.io/#reference/requests).
   """
-  use Gateway.Helpers.Plugin,
+  use Annon.Helpers.Plugin,
     plugin_name: "logger"
 
   alias Plug.Conn
-  alias Gateway.DB.Schemas.Log
-  alias Gateway.DB.Schemas.API, as: APISchema
+  alias Annon.DB.Schemas.Log
+  alias Annon.DB.Schemas.API, as: APISchema
   require Logger
 
   @doc false

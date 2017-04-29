@@ -1,4 +1,4 @@
-defmodule Gateway.DB.Configs.Repo.Migrations.RenameAPIRequestMethods do
+defmodule Annon.DB.Configs.Repo.Migrations.RenameAPIRequestMethods do
   use Ecto.Migration
 
   def change do

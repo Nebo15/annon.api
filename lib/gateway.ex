@@ -1,4 +1,4 @@
-defmodule Gateway do
+defmodule Annon do
   @moduledoc """
   This is an entry point of Annons application.
   """
@@ -8,15 +8,15 @@ defmodule Gateway do
     import Supervisor.Spec, warn: false
 
     children = [
-      supervisor(Gateway.DB.Configs.Repo, []),
-      supervisor(Gateway.DB.Logger.Repo, []),
-      http_endpoint_spec(Gateway.ManagementRouter, :management_http),
-      http_endpoint_spec(Gateway.PublicRouter, :public_http),
-      http_endpoint_spec(Gateway.PrivateRouter, :private_http),
-      worker(Gateway.AutoClustering, [])
+      supervisor(Annon.DB.Configs.Repo, []),
+      supervisor(Annon.DB.Logger.Repo, []),
+      http_endpoint_spec(Annon.ManagementRouter, :management_http),
+      http_endpoint_spec(Annon.PublicRouter, :public_http),
+      http_endpoint_spec(Annon.PrivateRouter, :private_http),
+      worker(Annon.AutoClustering, [])
     ]
 
-    opts = [strategy: :one_for_one, name: Gateway.Supervisor]
+    opts = [strategy: :one_for_one, name: Annon.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
