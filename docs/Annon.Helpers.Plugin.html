@@ -1,0 +1,178 @@
+    <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.15.1">
+    <title>Annon.Helpers.Plugin – annon_api v0.2.24</title>
+    <link rel="stylesheet" href="dist/app-091c05798a.css" />
+    
+    <script src="dist/sidebar_items-b4a4be7882.js"></script>
+  </head>
+  <body data-type="modules">
+    <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
+
+    <div class="main">
+<button class="sidebar-toggle">
+  <i class="icon-menu"></i>
+</button>
+<section class="sidebar">
+
+  
+  <a href="readme.html" class="sidebar-projectLink">
+    <div class="sidebar-projectDetails">
+      <h1 class="sidebar-projectName">
+        annon_api
+      </h1>
+      <h2 class="sidebar-projectVersion">
+        v0.2.24
+      </h2>
+    </div>
+    
+  </a>
+
+  <div class="sidebar-search">
+    <i class="icon-search"></i>
+    <input type="text" class="sidebar-searchInput" placeholder="search" autocomplete="off" />
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+    
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
+    
+
+    
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+
+      <h1>
+        <small class="visible-xs">annon_api v0.2.24</small>
+        Annon.Helpers.Plugin
+        
+          <small>behaviour</small>
+        
+        
+      </h1>
+
+      
+        <section id="moduledoc">
+          <p>This helper provides abstract interface to define plugin.</p>
+<p>Example:</p>
+<pre><code class="elixir">use Annon.Helpers.Plugin,
+  plugin_name: &quot;my_plugin&quot;</code></pre>
+<p>It will add</p>
+<ul>
+<li><code class="inline">init/1</code> settings required by Plug behavior, that will pass opts to <code class="inline">init/2</code> methods.
+</li>
+<li><code class="inline">find_plugin_settings/1</code> method that allows to find plugin settings and make sure that it’s enabled.
+</li>
+</ul>
+
+        </section>
+      
+
+      
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <i class="icon-link"></i>
+            </a>
+            Summary
+          </h1>
+          
+
+          
+
+          
+  <div class="summary-callbacks summary">
+    <h2>
+      <a href="#callbacks">Callbacks</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:find_plugin_settings/1">find_plugin_settings(list)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Find plugin settings in <code class="inline">plugins</code> list. Returns <code class="inline">nil</code> if plugin is not found</p>
+</div>
+  
+</div>
+
+  </div>
+
+
+        </section>
+      
+
+      
+
+      
+
+      
+        <section id="callbacks" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#callbacks">
+              <i class="icon-link"></i>
+            </a>
+            Callbacks
+          </h1>
+          <div class="detail" id="c:find_plugin_settings/1">
+  
+  <div class="detail-header">
+    <a href="#c:find_plugin_settings/1" class="detail-link" title="Link to this callback">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">find_plugin_settings(list)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>find_plugin_settings([<a href="Annon.DB.Schemas.Plugin.html#t:t/0">Annon.DB.Schemas.Plugin.t</a>]) ::
+  nil |
+  <a href="Annon.DB.Schemas.Plugin.html#t:t/0">Annon.DB.Schemas.Plugin.t</a></pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Find plugin settings in <code class="inline">plugins</code> list. Returns <code class="inline">nil</code> if plugin is not found.</p>
+
+  </section>
+</div>
+
+        </section>
+      
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.15.1),
+          </span>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+  <script src="dist/app-574613960f.js"></script>
+  </body>
+</html>
+

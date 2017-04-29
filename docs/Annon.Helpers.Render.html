@@ -1,0 +1,236 @@
+    <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.15.1">
+    <title>Annon.Helpers.Render – annon_api v0.2.24</title>
+    <link rel="stylesheet" href="dist/app-091c05798a.css" />
+    
+    <script src="dist/sidebar_items-b4a4be7882.js"></script>
+  </head>
+  <body data-type="modules">
+    <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
+
+    <div class="main">
+<button class="sidebar-toggle">
+  <i class="icon-menu"></i>
+</button>
+<section class="sidebar">
+
+  
+  <a href="readme.html" class="sidebar-projectLink">
+    <div class="sidebar-projectDetails">
+      <h1 class="sidebar-projectName">
+        annon_api
+      </h1>
+      <h2 class="sidebar-projectVersion">
+        v0.2.24
+      </h2>
+    </div>
+    
+  </a>
+
+  <div class="sidebar-search">
+    <i class="icon-search"></i>
+    <input type="text" class="sidebar-searchInput" placeholder="search" autocomplete="off" />
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+    
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
+    
+
+    
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+
+      <h1>
+        <small class="visible-xs">annon_api v0.2.24</small>
+        Annon.Helpers.Render
+        
+        
+      </h1>
+
+      
+        <section id="moduledoc">
+          <p>Use this helpers when you want to render result in a controllers.</p>
+
+        </section>
+      
+
+      
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <i class="icon-link"></i>
+            </a>
+            Summary
+          </h1>
+          
+
+          
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#render_change/3">render_change(tuple, conn, status \\ 200)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>This render should be used for <code class="inline">Repo.create</code> and <code class="inline">Repo.update</code> results</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#render_collection/2">render_collection(resources, conn)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>This render should be used for <code class="inline">Repo.all</code> results</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#render_delete/2">render_delete(arg, conn)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>This render should be used for <code class="inline">Repo.delete_all</code> results</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#render_schema/2">render_schema(resource, conn)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>This render should be used for <code class="inline">Repo.one</code> results</p>
+</div>
+  
+</div>
+
+  </div>
+
+
+          
+
+        </section>
+      
+
+      
+
+      
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <i class="icon-link"></i>
+            </a>
+            Functions
+          </h1>
+          <div class="detail" id="render_change/3">
+  
+    <span id="render_change/2" />
+  
+  <div class="detail-header">
+    <a href="#render_change/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">render_change(tuple, conn, status \\ 200)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>This render should be used for <code class="inline">Repo.create</code> and <code class="inline">Repo.update</code> results.</p>
+
+  </section>
+</div>
+<div class="detail" id="render_collection/2">
+  
+  <div class="detail-header">
+    <a href="#render_collection/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">render_collection(resources, conn)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>This render should be used for <code class="inline">Repo.all</code> results.</p>
+
+  </section>
+</div>
+<div class="detail" id="render_delete/2">
+  
+  <div class="detail-header">
+    <a href="#render_delete/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">render_delete(arg, conn)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>This render should be used for <code class="inline">Repo.delete_all</code> results.</p>
+<p>It will throw an error if you tried to delete more than one record in a DB.</p>
+
+  </section>
+</div>
+<div class="detail" id="render_schema/2">
+  
+  <div class="detail-header">
+    <a href="#render_schema/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">render_schema(resource, conn)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>This render should be used for <code class="inline">Repo.one</code> results.</p>
+
+  </section>
+</div>
+
+        </section>
+      
+
+      
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.15.1),
+          </span>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+  <script src="dist/app-574613960f.js"></script>
+  </body>
+</html>
+

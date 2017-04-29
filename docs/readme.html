@@ -4,14 +4,14 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.15.0">
-    <title>Gateway – gateway v0.2.23</title>
+    <meta name="generator" content="ExDoc v0.15.1">
+    <title>Annon – annon_api v0.2.24</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-422fa51ef0.js"></script>
+    <script src="dist/sidebar_items-b4a4be7882.js"></script>
   </head>
   <body data-type="extras">
-    <script>if(localStorage.getItem('night-mode')) document.body.className += ' night-mode';</script>
+    <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
 
 <div class="main">
 <button class="sidebar-toggle">
@@ -23,10 +23,10 @@
   <a href="readme.html" class="sidebar-projectLink">
     <div class="sidebar-projectDetails">
       <h1 class="sidebar-projectName">
-        gateway
+        annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.23
+        v0.2.24
       </h2>
     </div>
     
@@ -57,17 +57,121 @@
     <div id="content" class="content-inner">
 
 
-<h1>Gateway</h1>
-<p><a href="https://coveralls.io/github/Nebo15/os.gateway?branch=master"><img src="https://coveralls.io/repos/github/Nebo15/os.gateway/badge.svg?branch=master&amp;t=y562b4" alt="Coverage Status"/></a> <a href="https://travis-ci.com/Nebo15/os.gateway"><img src="https://travis-ci.com/Nebo15/os.gateway.svg?token=zWpL5QGwyvH4Pcxi8Vav&amp;branch=master" alt="Build Status"/></a></p>
-<p>API Gateway allows to pass requests to upstream back-ends and remove from them typical boilerplate that must be re-done everywhere.</p>
+<h1>Annon</h1>
+<p><a href="https://coveralls.io/github/Nebo15/annon.api?branch=master"><img src="https://coveralls.io/repos/github/Nebo15/annon.api/badge.svg?branch=master&amp;t=y562b4" alt="Coverage Status"/></a> <a href="https://travis-ci.org/Nebo15/annon.api"><img src="https://travis-ci.com/Nebo15/annon.api.svg?token=zWpL5QGwyvH4Pcxi8Vav&amp;branch=master" alt="Build Status"/></a></p>
+<h1>Annon API Gateway</h1>
+<p>Annon is a configurable API gateway that acts as a reverse proxy with a plugin system. Plugins allow to reduce boilerplate that must be done in each service, making overall development faster. Also it stores all requests, responses and key metrics, making it easy to debug your application. Inspired by <a href="https://getkong.org/">Kong</a>.</p>
+<p>It’s free. Source code is available on <a href="https://github.com/Nebo15/annon.api">GitHub</a>.</p>
+<blockquote><p>“Annon” translates from the Sindarin word for ‘Great Door or Gate’. Sindarin is one of the many languages spoken by the immortal Elves.</p>
+</blockquote>
+<p>Annon consist of multiple main parts:</p>
+<ul>
+<li><a href="https://github.com/Nebo15/annon.api">Annon API Gateway</a>.
+</li>
+<li><a href="https://github.com/Nebo15/annon.web">Annon Dashboard</a> - UI that allows to manage Annon settings, review and analyze Requests.
+</li>
+<li><a href="https://hex.pm/packages/eview">EView</a> - hex package that allows to receive and modify client responses from Elixir application to match <a href="http://docs.apimanifest.apiary.io/">Nebo #15 API Manifest</a>. So your back-ends will respond in a same way as Annon does.
+</li>
+<li><a href="https://github.com/Nebo15/mithril.api">Mithril</a> - authentication and role management service.
+</li>
+</ul>
+<h2 id="goals-of-the-project" class="section-heading">
+  <a href="#goals-of-the-project" class="hover-link"><i class="icon-link"></i></a>
+  Goals of the Project
+</h2>
+
+<ul>
+<li>Provide single management/monitoring system for medium-to-large scale applications.
+</li>
+<li>Reduce amount of work needed in other componens by orchestrating common functionalities.
+</li>
+<li>Control response time and get answer “what happened” even in a single request perspective. Provide data for in-deepth service analysis.
+</li>
+<li>Improve platform scalability.
+</li>
+</ul>
+<h2 id="general-features" class="section-heading">
+  <a href="#general-features" class="hover-link"><i class="icon-link"></i></a>
+  General Features
+</h2>
+
+<h3>Caching and Perfomance</h3>
+<p>For perfomance issues Annon has build-in cache manager, it will load data from DB only once, all futher work will be based on this cached data.</p>
+<p>Whenever a single node receives request that changes cached data, it’s responsible to notify all other nodes in cluster about change, and they should reload configurations from DB.</p>
+<p>Whenever new node joins to a cluster, all other nodes should drop their cache, to resolve consistency issues.</p>
+<p>This feature is done via <a href="https://github.com/Nebo15/skycluster">skycluster</a> package. All gateway nodes is connected via Erlang distribution protocol.
+It support different discovery strategies:</p>
+<ul>
+<li><code class="inline">kubernetes</code> - selecting pods via Kubernetes API;
+</li>
+<li><code class="inline">gossip</code> - multicast UDP gossip, using a configurable port/multicast address;
+</li>
+<li><code class="inline">epmd</code> - using standart Erlang Port Mapper Daemon.
+</li>
+</ul>
+<h3>Request ID’s</h3>
+<p>When receiving request gateway will generate unique <code class="inline">request_id</code>. It is used to log request and this request is sent to all upstream, so whole back-ends that is affected by a request will create logs with same request id’s.</p>
+<p>Optionally, you can send <code class="inline">X-Request-ID</code> header with your own request id, but you need to make sure that its length not less than 20 characters. Also, if should be unique, or you will receive error response.</p>
+<h3>Request Logger</h3>
+<p>Annon stores all requests and responses by their unique Request ID’s in a Cassandra database. You use this information to query requests and get base analytics via <a href="#reference/requests/collection/get-all-requests">Requests API</a>.</p>
+<p>API consumers may provide a custom request ID by sending <code class="inline">X-Request-ID: &lt;request_id&gt;</code> header. Thus, your Front-End and upstream back-ends can log information with a single unique ID.</p>
+<p>Also, idempotency plug is relying on this logs to privide idempotency guaratees for requests with same <code class="inline">X-Idempotency-Key: &lt;idempotency_key&gt;</code> headers.</p>
+<h3>Monitoring</h3>
+<p>To monitor services status we will use DogStatsD integration, that will receive following metrics:</p>
+<ul>
+<li><code class="inline">request_count</code> - (counter) <a href="#reference/apis">API</a> hit rate.
+</li>
+<li><code class="inline">request_size</code> - (gauge) HTTP request size.
+</li>
+<li><code class="inline">response_count</code> - (counter) same as <code class="inline">request_count</code> but sent after request dispatch and additionally tagged with <code class="inline">http_status</code>.
+</li>
+<li><code class="inline">latency</code> (gauge) - total request latency for a API consumer, additionally tagged with <code class="inline">http_status</code>.
+</li>
+</ul>
+<p>All metrics have tags: <code class="inline">http_host</code>, <code class="inline">http_port</code>, <code class="inline">http_method</code>, <code class="inline">api_name</code> and <code class="inline">api_id</code> (if matches any), <code class="inline">request_id</code>. This allows to set different aggregated views on counter data.</p>
+<p>We recommend you to try <a href="https://www.datadoghq.com/">DataDog</a> for collecting and displaying perfomance metrics. But this is not a hard containt, instead you can use any StatsD collector.</p>
+<h3>Requests Idempotency</h3>
+<p>Annon guarantess that replayed requests with same <code class="inline">X-Idempotency-Key: &lt;key&gt;</code> and same request will get permanent response. This is useful in a financial application, where you need good protection from duplicate user actions.</p>
+<h3>Requests Tracing</h3>
+<p>Annon supports <a href="http://opentracing.io/">OpenTracing</a> in Erlang via <a href="https://github.com/Bluehouse-Technology/otter">Otter</a> libruary. This means that by implementing OpenTracing API in other services you can trace complete request impact for each of your services.</p>
+<h2 id="installation" class="section-heading">
+  <a href="#installation" class="hover-link"><i class="icon-link"></i></a>
+  Installation
+</h2>
+
+<p>Annon can be installed by compiling it from sources, but we recommend you to use our pre-build Docker containers:</p>
+<ul>
+<li><a href="https://hub.docker.com/r/nebo15/annon.api/">Annon API Gateway</a>;
+</li>
+<li><a href="https://hub.docker.com/r/nebo15/annon.web/">Annon Dashboard</a>;
+</li>
+<li><a href="https://hub.docker.com/r/nebo15/alpine-cassandra/">Cassandra</a>.
+</li>
+</ul>
+<p>Our containers are based on Alpine Linux wich is a security-oriented, lightweight Linux distribution based on musl libc and busybox.</p>
+<h3>Kubernetes</h3>
+<p>You can deploy it to Kubernetes using <a href="https://github.com/Nebo15/annon.infra/blob/master/kubernetes">example configs from Annon’s Infra repo</a>.</p>
+<h3>Docker Compose</h3>
+<p>For local environments we provide an example Docket Compose configuration, that will allow you to spin all containers in just a few commands.</p>
+<h2 id="documentation" class="section-heading">
+  <a href="#documentation" class="hover-link"><i class="icon-link"></i></a>
+  Documentation
+</h2>
+
 <p>You can find full documentation on official <a href="http://docs.annon.apiary.io/">Apiary</a> page.</p>
-<p>Also there are auto-generated code documentation <a href="https://nebo15.github.io/os.gateway/api-reference.html#content">available here</a>.</p>
+<p>Also there are auto-generated code documentation <a href="https://nebo15.github.io/annon.api/api-reference.html#content">available here</a>.</p>
+<h2 id="license" class="section-heading">
+  <a href="#license" class="hover-link"><i class="icon-link"></i></a>
+  License
+</h2>
+
+<p>See <a href="LICENSE.md">LICENSE.md</a>.</p>
 
       <footer class="footer">
         <p>
           <span class="line">
             Built using
-            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.15.0),
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.15.1),
           </span>
           <span class="line">
             designed by
@@ -80,7 +184,7 @@
   </div>
 </section>
 </div>
-  <script src="dist/app-372682077e.js"></script>
+  <script src="dist/app-574613960f.js"></script>
   </body>
 </html>
 
