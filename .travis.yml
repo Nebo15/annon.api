@@ -58,7 +58,7 @@ script:
       exit 1;
     fi;
   # Run acceptance tests on Docker container
-  - sudo /bin/bash ./bin/ci/sanity_test.sh
+  - ./bin/ci/sanity_test.sh
   # Rebuild docs
   - "mix docs --output docs"
 after_failure:
