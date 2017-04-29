@@ -632,6 +632,28 @@ On `GET`, `POST`, `PUT` and other requests:
 + Request (application/json)
 + Response 204 (application/json)
 
+# Group Service Status
+
+## Cluster Status [/annon_status]
+
+### Get Cluster Status [GET]
+
++ Response 200 (application/json)
+    + Attributes (Response_OK)
+        + data (`Cluster_Status`)
+
+## Healthcheck [/apis_status]
+
+This endpoint can be publicly available (just configure API for it).
+
+### Get APIs Status [GET]
+
+This endpoint returns list of disclosed APIs statuses and can be used to render service status page.
+
++ Response 200 (application/json)
+    + Attributes (Response_Collection)
+        + data (array[`API_Status`])
+
 # Data Structures
 ## Responses
 ### `Response_Collection`
@@ -691,21 +713,51 @@ On `GET`, `POST`, `PUT` and other requests:
 - GET (string)
 - DELETE (string)
 
+### `Cluster_Status`
++ cluster_size: 3 (number) - Number of nodes joined to cluster.
++ cluster_strategy: `kubernetes` (enum) - Cluster formation strategy.
+    - `kubernetes` (string)
+    - `epmd` (string)
+    - `gossip` (string)
++ nodes (array[`Cluster_Node_Status`]) - List of nodes joined to a cluster and information about them.
+
+### `Cluster_Node_Status`
++ name
++ heap_sizes
++ otp_release
++ process_count
++ process_limit
++ stared_at
++ cpu_load
++ memory_usage
+
 ## APIs
 ### `API__Request`
-+ name: my_api (string) - Unique name for API.
++ name: my_api (string, required) - Unique name for API.
++ description: `My API example` (string, optional) - Description of an API.
++ docs_url: `http://docs.annon.apiary.io/` (string, optional) - Link to the API documentation page.
 + request (object, fixed-type) - Request description.
     + methods (array[`HTTP_Verb`], required) - HTTP request method.
     + scheme: http (string) - HTTP request scheme. May be: `http`, `https`.
-    + host: `os-dev-gateway.nebo15.com` (string) - DNS address of your API or its IP.
+    + host: `os-dev-gateway.nebo15.com` (string, required) - DNS address of your API or its IP.
     + port: 80 (number) - Port on which your API recieves requests.
     + path: /andrew/ (string, required) - Public path to your API. Must start with `/`.
++ disclose_status: false (boolean, optional) - If `true` API status will be publically available in API Status endpoint.
 
 ### `API__Response`
 + id: 56c31536a60ad644060041af (string) - Unique ID for API.
 + Include API__Request
 + created_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
 + updated_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
+
+### `API_Status`
++ name: my_api (string, required) - Unique name for API.
++ description: `My API example` (string, optional) - Description of an API.
++ docs_url: `http://docs.annon.apiary.io/` (string, optional) - Link to the API documentation page.
++ health (enum)
+    - `operational`
+    - `degradated_perfomance`
+    - `major_outage`
 
 ## Plugins
 ### Plugin
