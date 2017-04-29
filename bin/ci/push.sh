@@ -17,7 +17,7 @@ git remote add upstream $REPO_URL &> /dev/null
 
 if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   # Commit incremented version
-  git add mix.exs;
+  git add mix.exs docs;
   git commit -m "Increment version [ci skip]";
 
   if [ "$TRAVIS_BRANCH" == "$RELEASE_BRANCH" ]; then
