@@ -144,7 +144,7 @@ defmodule Annon.Plugins.Proxy do
   defp put_x_consumer_id_header(headers, _), do: headers
 
   defp remove_protected_headers(conn) do
-    :gateway
+    :annon_api
     |> Confex.get(:protected_headers)
     |> Enum.reduce(conn, fn(header, conn) -> Conn.delete_req_header(conn, header) end)
   end

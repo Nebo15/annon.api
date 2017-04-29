@@ -70,7 +70,7 @@ defmodule Annon.Cluster do
       end
 
     Enum.each(config, fn({key, val}) ->
-      rpc(new_node, Application, :put_env, [:gateway, key, val])
+      rpc(new_node, Application, :put_env, [:annon_api, key, val])
     end)
   end
 

@@ -5,7 +5,7 @@ defmodule Annon.Acceptance.Plugins.ACLTest do
   @jwt_secret "secret"
 
   setup_all do
-    pcm_mock_port = Confex.get_map(:gateway, :acceptance)[:pcm_mock][:port]
+    pcm_mock_port = Confex.get_map(:annon_api, :acceptance)[:pcm_mock][:port]
     {:ok, _} = Plug.Adapters.Cowboy.http Annon.PCMMockServer, [], port: pcm_mock_port
     :ok
   end
@@ -295,8 +295,8 @@ defmodule Annon.Acceptance.Plugins.ACLTest do
       |> post!(acl_plugin)
       |> assert_status(201)
 
-      pcm_mock_host = Confex.get_map(:gateway, :acceptance)[:pcm_mock][:host]
-      pcm_mock_port = Confex.get_map(:gateway, :acceptance)[:pcm_mock][:port]
+      pcm_mock_host = Confex.get_map(:annon_api, :acceptance)[:pcm_mock][:host]
+      pcm_mock_port = Confex.get_map(:annon_api, :acceptance)[:pcm_mock][:port]
 
       scopes_plugin = build_factory_params(:scopes_plugin, %{
         settings: %{
@@ -331,8 +331,8 @@ defmodule Annon.Acceptance.Plugins.ACLTest do
       |> post!(acl_plugin)
       |> assert_status(201)
 
-      pcm_mock_host = Confex.get_map(:gateway, :acceptance)[:pcm_mock][:host]
-      pcm_mock_port = Confex.get_map(:gateway, :acceptance)[:pcm_mock][:port]
+      pcm_mock_host = Confex.get_map(:annon_api, :acceptance)[:pcm_mock][:host]
+      pcm_mock_port = Confex.get_map(:annon_api, :acceptance)[:pcm_mock][:port]
 
       scopes_plugin = build_factory_params(:scopes_plugin, %{
         settings: %{

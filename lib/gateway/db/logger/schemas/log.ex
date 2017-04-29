@@ -34,7 +34,7 @@ defmodule Annon.DB.Schemas.Log do
     end
 
     embeds_one :latencies, Latencies, primary_key: false do
-      field :gateway, :integer
+      field :annon_api, :integer
       field :upstream, :integer
       field :client_request, :integer
     end
@@ -69,7 +69,7 @@ defmodule Annon.DB.Schemas.Log do
 
   def changeset_embeded_latencies(data, params \\ %{}) do
     data
-    |> cast(params, [:gateway, :upstream, :client_request])
+    |> cast(params, [:annon_api, :upstream, :client_request])
   end
 
   def changeset_embeded_api(data, params \\ %{}) do

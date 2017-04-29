@@ -4,7 +4,7 @@ defmodule Annon.Mixfile do
   @version "0.2.23"
 
   def project do
-    [app: :gateway,
+    [app: :annon_api,
      description: "Add description to your package.",
      package: package(),
      version: @version,

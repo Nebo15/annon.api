@@ -54,7 +54,7 @@ defmodule Annon.AutoClustering do
   end
 
   def do_reload_config do
-    Confex.get(:gateway, :cache_storage).warm_up()
+    Confex.get(:annon_api, :cache_storage).warm_up()
 
     Logger.debug fn -> "Node #{node()}: config cache was warmed up." end
   end

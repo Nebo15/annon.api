@@ -16,7 +16,7 @@ defmodule Annon.Plugins.APILoader do
     host = get_host(conn)
     port = conn.port
 
-    apis = Confex.get(:gateway, :cache_storage).find_api_by(scheme, host, port)
+    apis = Confex.get(:annon_api, :cache_storage).find_api_by(scheme, host, port)
 
     apis
     |> find_matching_method(conn.method)

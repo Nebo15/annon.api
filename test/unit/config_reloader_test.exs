@@ -5,11 +5,11 @@ defmodule Annon.ConfigReloaderTest do
   import ExUnit.CaptureLog
 
   setup do
-    saved_config = Application.get_env(:gateway, :cache_storage)
-    Application.put_env(:gateway, :cache_storage, {:system, :module, "CACHE_STORAGE", Annon.Cache.EtsAdapter})
+    saved_config = Application.get_env(:annon_api, :cache_storage)
+    Application.put_env(:annon_api, :cache_storage, {:system, :module, "CACHE_STORAGE", Annon.Cache.EtsAdapter})
 
     on_exit fn ->
-      Application.put_env(:gateway, :cache_storage, saved_config)
+      Application.put_env(:annon_api, :cache_storage, saved_config)
     end
 
     :ok

@@ -1,11 +1,11 @@
 use Mix.Config
 
-config :gateway, Annon.DB.Configs.Repo,
+config :annon_api, Annon.DB.Configs.Repo,
   adapter: Ecto.Adapters.Postgres,
   database: System.get_env("MIX_TEST_DATABASE") || "gateway_test",
   pool: Ecto.Adapters.SQL.Sandbox
 
-config :gateway, Annon.DB.Logger.Repo,
+config :annon_api, Annon.DB.Logger.Repo,
   adapter: Ecto.Adapters.Postgres,
   database: System.get_env("MIX_LOGGER_TEST_DATABASE") || "gateway_logger_test",
   pool: Ecto.Adapters.SQL.Sandbox
@@ -15,7 +15,7 @@ config :ex_statsd,
   namespace: "test",
   test_mode: true
 
-config :gateway, :acceptance,
+config :annon_api, :acceptance,
   management: [
     port: {:system, :integer, "MIX_TEST_MANAGEMENT_PORT", 5001},
     host: {:system, "MIX_TEST_HOST", "localhost"}
@@ -37,13 +37,13 @@ config :gateway, :acceptance,
     host: {:system, "TEST_PCM_MOCK_HOST", "localhost"}
   ]
 
-config :gateway, :public_http,
+config :annon_api, :public_http,
   port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 5000}
 
-config :gateway, :private_http,
+config :annon_api, :private_http,
   port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 5002}
 
-config :gateway, :management_http,
+config :annon_api, :management_http,
   port: {:system, :integer, "GATEWAY_MANAGEMENT_PORT", 5001}
 
 config :logger, level: :debug
@@ -52,8 +52,8 @@ config :ex_unit, capture_log: true
 
 config :hackney, use_default_pool: false
 
-config :gateway,
+config :annon_api,
   cache_storage: {:system, :module, "CACHE_STORAGE", Annon.Cache.PostgresAdapter}
 
-config :gateway,
+config :annon_api,
   sql_sandbox: {:system, :boolean, "SQL_SANDBOX", true}

@@ -9,6 +9,6 @@ defmodule Annon.DB.Logger.Repo do
   you can expect an additional read request.
   """
 
-  use Ecto.Repo, otp_app: :gateway
+  use Ecto.Repo, otp_app: :annon_api
   use Ecto.Pagging.Repo
 end

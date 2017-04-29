@@ -6,6 +6,6 @@ defmodule Annon.DB.Configs.Repo do
   [fetched once and cached in Annon](http://docs.annon.apiary.io/#introduction/general-features/caching-and-perfomance).
   """
 
-  use Ecto.Repo, otp_app: :gateway
+  use Ecto.Repo, otp_app: :annon_api
   use Ecto.Pagging.Repo
 end

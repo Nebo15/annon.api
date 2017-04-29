@@ -1,4 +1,4 @@
-defmodule :gateway_tasks do
+defmodule :annon_api_tasks do
   @moduledoc """
   Nice way to apply migrations inside a released application.
 
@@ -9,7 +9,7 @@ defmodule :gateway_tasks do
   """
   require Logger
 
-  @otp_app :gateway
+  @otp_app :annon_api
   @repos Confex.get(@otp_app, :ecto_repos)
   @default_repos_path Path.join(["priv", "repos"])
 
@@ -46,7 +46,7 @@ defmodule :gateway_tasks do
 
   defp load_app do
     start_applications([:logger, :postgrex, :ecto])
-    :ok = Application.load(:gateway)
+    :ok = Application.load(:annon_api)
   end
 
   defp start_applications(apps) do

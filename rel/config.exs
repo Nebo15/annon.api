@@ -12,8 +12,8 @@ environment :default do
   ]
 end
 
-release :gateway do
-  set version: current_version(:gateway)
+release :annon_api do
+  set version: current_version(:annon_api)
   set applications: [
     gateway: :permanent
   ]

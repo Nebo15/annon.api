@@ -21,6 +21,6 @@ defmodule Annon do
   end
 
   defp http_endpoint_spec(router, config) do
-    Plug.Adapters.Cowboy.child_spec(:http, router, [], Confex.get_map(:gateway, config))
+    Plug.Adapters.Cowboy.child_spec(:http, router, [], Confex.get_map(:annon_api, config))
   end
 end

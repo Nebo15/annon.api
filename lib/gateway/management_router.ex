@@ -4,7 +4,7 @@ defmodule Annon.ManagementRouter do
   """
   use Plug.Router
 
-  if Confex.get(:gateway, :sql_sandbox) do
+  if Confex.get(:annon_api, :sql_sandbox) do
     plug Phoenix.Ecto.SQL.Sandbox
   end
 
