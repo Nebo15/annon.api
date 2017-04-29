@@ -596,6 +596,31 @@ On `GET`, `POST`, `PUT` and other requests:
             + code: 201 (number)
         + data (`Plugin_CORS__Response`)
 
+## Rate Limiter [/apis/{api_id}/plugins/rate_limit]
+
+This plugin allows you to rate limit requests from API Consumers based on `X-Consumer-ID` header returned from authorization plugins.
+
+If consumer is not identified, rate limit won't apply to it, since it's up to you how to configure API access policy.
+
+### Bind or Update Rate Limiter Plugin [PUT]
+
++ Parameters
+    + api_id: 1 (string, required) - API ID.
+
++ Request (application/json)
+    + Attributes
+        + idempotency (`Plugin_Rate_Limiter__Request`)
+
++ Response 200 (application/json)
+    + Attributes (Response_OK)
+        + data (`Plugin_Rate_Limiter__Response`)
+
++ Response 201 (application/json)
+    + Attributes (Response_OK)
+        + meta (Response__Meta)
+            + code: 201 (number)
+        + data (`Plugin_Rate_Limiter__Response`)
+
 # Group Requests
 
 ## Requests [/requests]
@@ -642,7 +667,7 @@ On `GET`, `POST`, `PUT` and other requests:
     + Attributes (Response_OK)
         + data (`Cluster_Status`)
 
-## Healthcheck [/apis_status]
+## APIs Status [/apis_status]
 
 This endpoint can be publicly available (just configure API for it).
 
@@ -720,6 +745,9 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
     - `epmd` (string)
     - `gossip` (string)
 + nodes (array[`Cluster_Node_Status`]) - List of nodes joined to a cluster and information about them.
++ open_ports (array[number]) - List of all opened ports.
+    - 80
+    - 8080
 
 ### `Cluster_Node_Status`
 + name
@@ -736,6 +764,7 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 + name: my_api (string, required) - Unique name for API.
 + description: `My API example` (string, optional) - Description of an API.
 + docs_url: `http://docs.annon.apiary.io/` (string, optional) - Link to the API documentation page.
++ health (`API_Health`, optional)
 + request (object, fixed-type) - Request description.
     + methods (array[`HTTP_Verb`], required) - HTTP request method.
     + scheme: http (string) - HTTP request scheme. May be: `http`, `https`.
@@ -754,10 +783,13 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 + name: my_api (string, required) - Unique name for API.
 + description: `My API example` (string, optional) - Description of an API.
 + docs_url: `http://docs.annon.apiary.io/` (string, optional) - Link to the API documentation page.
-+ health (enum)
-    - `operational`
-    - `degradated_perfomance`
-    - `major_outage`
++ health (`API_Health`)
+
+### `API_Health` (enum)
+- `operational` (string)
+- `degradated_perfomance` (string)
+- `parial_outage` (string)
+- `major_outage` (string)
 
 ## Plugins
 ### Plugin
@@ -939,6 +971,29 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 + blacklist (array[string], fixed-type, optional) - Blacklist of User Agents or patterns.
     + `Google*` (string)
     + `MyBot (version 1.0)` (string)
+
+## Rate Limiter Plugin
+### `Plugin_Rate_Limiter__Request`
++ name: rate_limiter (string, required)
++ is_enabled: true (boolean)
++ settings (Plugin_Rate_Limiter__Settings, fixed-type)
+
+### `Plugin_Rate_Limiter__Response`
++ Include Plugin_Rate_Limiter__Request
++ created_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
++ updated_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
+
+### `Plugin_Rate_Limiter__Settings`
++ rules (array[`Plugin_Rate_Limiter_Rule`], fixed-type)
+
+### `Plugin_Rate_Limiter_Rule`
++ `max_request_count`: 1000 (number, required) - Maximum requests count for each API Consumer.
++ `time`: 600 (number, required) - Period time.
++ `time_unit` (enum, required) - Period time unit.
+    - minutes (string)
+    - hours (string)
+    - days (string)
+    - weeks (string)
 
 ## CORS Plugin
 ### `Plugin_CORS__Request`
