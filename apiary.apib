@@ -13,6 +13,7 @@ Annon consist of multiple main parts:
 
 - [Annon API Gateway](https://github.com/Nebo15/annon.api).
 - [Annon Dashboard](https://github.com/Nebo15/annon.web) - UI that allows to manage Annon settings, review and analyze Requests.
+- [Annon Status Pages](https://github.com/Nebo15/annon.status.web) - UI that renders APIs status pages;
 - [EView](https://hex.pm/packages/eview) - hex package that allows to receive and modify client responses from Elixir application to match [Nebo #15 API Manifest](http://docs.apimanifest.apiary.io/). So your back-ends will respond in a same way as Annon does.
 - [Mithril](https://github.com/Nebo15/mithril.api) - authentication and role management service.
 
@@ -81,6 +82,7 @@ Annon can be installed by compiling it from sources, but we recommend you to use
 
 - [Annon API Gateway](https://hub.docker.com/r/nebo15/annon.api/);
 - [Annon Dashboard](https://hub.docker.com/r/nebo15/annon.web/);
+- [Annon Status Pages](https://hub.docker.com/r/nebo15/annon.status.web/);
 - [Cassandra](https://hub.docker.com/r/nebo15/alpine-cassandra/).
 
 Our containers are based on Alpine Linux wich is a security-oriented, lightweight Linux distribution based on musl libc and busybox.
@@ -92,6 +94,14 @@ You can deploy it to Kubernetes using [example configs from Annon's Infra repo](
 ### Docker Compose
 
 For local environments we provide an example Docket Compose configuration, that will allow you to spin all containers in just a few commands.
+
+## Source Code Documentation
+
+Also there are auto-generated code documentation [available here](https://nebo15.github.io/annon.api/api-reference.html#content).
+
+## License
+
+See [LICENSE.md](https://github.com/Nebo15/annon.api/blob/master/LICENSE.md).
 
 # Group APIs
 
@@ -789,7 +799,7 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 ### `API_Health` (enum)
 - `operational` (string)
 - `degradated_perfomance` (string)
-- `parial_outage` (string)
+- `partial_outage` (string)
 - `major_outage` (string)
 
 ## Plugins
