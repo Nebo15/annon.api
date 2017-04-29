@@ -2,7 +2,7 @@ use Mix.Config
 
 config :annon_api, Annon.DB.Configs.Repo,
   adapter: Ecto.Adapters.Postgres,
-  priv: "priv/repos/annon_api",
+  priv: "priv/repos/configs",
   database: "annon_api",
   username: "postgres",
   password: "postgres",

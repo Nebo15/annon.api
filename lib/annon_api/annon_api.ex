@@ -1,6 +1,6 @@
 defmodule Annon do
   @moduledoc """
-  This is an entry point of Annons application.
+  This is an entry point of Annon application.
   """
   use Application
 

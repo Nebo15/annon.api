@@ -81,7 +81,7 @@ defmodule Annon.Acceptance.Plugins.LoggerTest do
       |> Map.from_struct
 
       client_latency = Map.get(latencies_to_check, :client_request)
-      gateway_latency = Map.get(latencies_to_check, :annon_api)
+      gateway_latency = Map.get(latencies_to_check, :gateway)
       upstream_latency = Map.get(latencies_to_check, :upstream)
 
       assert nil != client_latency
