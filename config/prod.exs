@@ -2,7 +2,7 @@ use Mix.Config
 
 config :annon_api, Annon.DB.Configs.Repo,
   adapter: Ecto.Adapters.Postgres,
-  priv: "priv/repos/gateway",
+  priv: "priv/repos/annon_api",
   database: "${DB_NAME}",
   username: "${DB_USER}",
   password: "${DB_PASSWORD}",
@@ -25,5 +25,5 @@ config :ex_statsd,
 
 config :skycluster,
   strategy: {:system, :module, "SKYCLUSTER_STRATEGY", Cluster.Strategy.Kubernetes},
-  kubernetes_selector: {:system, "SKYCLUSTER_KUBERNATES_SELECTOR", "app=gateway"},
+  kubernetes_selector: {:system, "SKYCLUSTER_KUBERNATES_SELECTOR", "app=annon,component=api"},
   kubernetes_node_basename: {:system, "SKYCLUSTER_KUBERNATES_NODE_BASENAME", "gateway"}

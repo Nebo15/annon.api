@@ -1,8 +1,7 @@
 {
   "skip_files": [
     "test/*",
-    "lib/gateway/db/tasks.ex",
-    "lib/gateway/db/enums.ex"
+    "lib/annon_api/db/tasks.ex"
   ],
   "custom_stop_words": [
     "field",

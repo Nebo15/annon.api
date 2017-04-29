@@ -2,8 +2,8 @@ use Mix.Config
 
 config :annon_api, Annon.DB.Configs.Repo,
   adapter: Ecto.Adapters.Postgres,
-  priv: "priv/repos/gateway",
-  database: "gateway",
+  priv: "priv/repos/annon_api",
+  database: "annon_api",
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
@@ -12,7 +12,7 @@ config :annon_api, Annon.DB.Configs.Repo,
 config :annon_api, Annon.DB.Logger.Repo,
   adapter: Ecto.Adapters.Postgres,
   priv: "priv/repos/logger",
-  database: "gateway_logger",
+  database: "annon_api_logger",
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
@@ -23,7 +23,7 @@ config :annon_api, ecto_repos: [Annon.DB.Configs.Repo, Annon.DB.Logger.Repo]
 config :ex_statsd,
        host: "localhost",
        port: 8125,
-       namespace: "os.gateway"
+       namespace: "annon"
 
 config :logger, level: :debug
 

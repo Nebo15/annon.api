@@ -5,7 +5,7 @@ defmodule :annon_api_tasks do
   For a containerized version of Annon you can set `APP_MIGRATE=true` environment variable to run this tasks.
 
   Example:
-      ./bin/$APP_NAME command "gateway_tasks" migrate!
+      ./bin/$APP_NAME command "annon_tasks" migrate!
   """
   require Logger
 

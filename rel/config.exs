@@ -15,6 +15,6 @@ end
 release :annon_api do
   set version: current_version(:annon_api)
   set applications: [
-    gateway: :permanent
+    annon: :permanent
   ]
 end

@@ -2,12 +2,12 @@ use Mix.Config
 
 config :annon_api, Annon.DB.Configs.Repo,
   adapter: Ecto.Adapters.Postgres,
-  database: System.get_env("MIX_TEST_DATABASE") || "gateway_test",
+  database: System.get_env("MIX_TEST_DATABASE") || "annon_api_test",
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :annon_api, Annon.DB.Logger.Repo,
   adapter: Ecto.Adapters.Postgres,
-  database: System.get_env("MIX_LOGGER_TEST_DATABASE") || "gateway_logger_test",
+  database: System.get_env("MIX_LOGGER_TEST_DATABASE") || "annon_api_logger_test",
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :ex_statsd,

@@ -6,7 +6,7 @@ MAINTAINER Nebo#15 support@nebo15.com
 # Configure environment variables and other settings
 ENV TERM=xterm \
     MIX_ENV=prod \
-    APP_NAME=gateway \
+    APP_NAME=annon_api \
     GATEWAY_PUBLIC_PORT=4000 \
     GATEWAY_MANAGEMENT_PORT=4001
 
@@ -64,7 +64,7 @@ RUN $APP_NAME/hooks/pre-run.sh
 
 # The command to run when this image starts up
 #  You can run it in one of the following ways:
-#    Interactive: gateway/bin/gateway console
-#    Foreground: gateway/bin/gateway foreground
-#    Daemon: gateway/bin/gateway start
+#    Interactive: annon_api/bin/annon_api console
+#    Foreground: annon_api/bin/annon_api foreground
+#    Daemon: annon_api/bin/annon_api start
 CMD $APP_NAME/bin/$APP_NAME foreground

@@ -55,7 +55,7 @@ script:
     - RUNNING_CONTAINERS=`docker ps | wc -l`;
     if [ "${RUNNING_CONTAINERS//[[:space:]]/}" == "1" ]; then
       echo "[E] Container is not started\!";
-      docker logs gateway --details --since 5h;
+      docker logs annon_api --details --since 5h;
       exit 1;
     fi;
   # Run acceptance tests on Docker container
@@ -63,7 +63,7 @@ script:
   # Rebuild docs
   - "mix docs --output docs"
 after_failure:
-  - docker logs gateway --details --since 5h
+  - docker logs annon_api --details --since 5h
 after_success:
   # Submit Docker container to Docker Hub and create GitHub Release by pushing tag with changelog
   - ./bin/ci/push.sh
