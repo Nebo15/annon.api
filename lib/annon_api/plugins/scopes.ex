@@ -41,5 +41,4 @@ defmodule Annon.Plugins.Scopes do
     |> get_scopes(token, settings)
     |> save_scopes(conn)
   end
-  defp execute(%Plugin{settings: _}, %Conn{private: _} = conn), do: conn
 end

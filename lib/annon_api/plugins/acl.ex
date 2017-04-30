@@ -57,12 +57,10 @@ defmodule Annon.Plugins.ACL do
   end
   defp validate_scopes(_client_scope, _server_rules, _api_path, _conn_data), do: {:error, :invalid_scopes_type}
 
-  defp get_scopes_message([] = missing_scopes) do
-    "Your scopes does not allow to access this resource. Missing scopes: #{Enum.join(missing_scopes, ", ")}."
-  end
-  defp get_scopes_message(missing_scopes) do
-    "Your scopes does not allow to access this resource. Missing scopes: #{missing_scopes}."
-  end
+  defp get_scopes_message(missing_scopes) when is_list(missing_scopes),
+    do: missing_scopes |> Enum.join(", ") |> get_scopes_message()
+  defp get_scopes_message(missing_scopes) when is_binary(missing_scopes),
+    do: "Your scopes does not allow to access this resource. Missing scopes: #{missing_scopes}."
 
   defp send_response(:ok, conn), do: conn
   defp send_response({:error, :forbidden, missing_scopes}, conn) do

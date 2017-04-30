@@ -131,7 +131,8 @@ defmodule Annon.Plugins.Proxy do
 
   defp put_x_forwarded_for_header(headers, conn), do: headers ++ [%{"x-forwarded-for" => ip_to_string(conn.remote_ip)}]
 
-  defp put_x_consumer_scopes_header(headers, %Conn{private: %{scopes: nil}}), do: headers
+  defp put_x_consumer_scopes_header(headers, %Conn{private: %{scopes: nil}}),
+    do: headers
   defp put_x_consumer_scopes_header(headers, %Conn{private: %{scopes: scopes}}) do
     headers ++ [%{"x-consumer-scopes" => Enum.join(scopes, " ")}]
   end
@@ -160,7 +161,8 @@ defmodule Annon.Plugins.Proxy do
     end)
   end
 
-  defp get_additional_headers(%Plugin{settings: %{"additional_headers" => headers}}), do: headers
+  defp get_additional_headers(%Plugin{settings: %{"additional_headers" => headers}}),
+    do: headers
   defp get_additional_headers(_), do: []
 
   def skip_filtered_headers(conn, %{"strip_headers" => true, "headers_to_strip" => headers}) do

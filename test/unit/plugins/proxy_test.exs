@@ -59,6 +59,15 @@ defmodule Annon.Plugins.ProxyTest do
       assert [ip_to_string(conn.remote_ip)] == x_forwarded_for_value
     end
 
+    test "puts consumer scopes headers when scopes", %{conn: conn} do
+      conn = %{conn | private: Map.put(conn.private, :scopes, nil)}
+      assert %Plug.Conn{private: %{scopes: nil}} = Proxy.put_additional_headers([], conn)
+
+      conn = %{conn | private: Map.put(conn.private, :scopes, ["app1", "app2"])}
+      conn = Proxy.put_additional_headers([], conn)
+      assert ["app1 app2"] = get_req_header(conn, "x-consumer-scopes")
+    end
+
     test "preserves query string" do
       conn = %Plug.Conn{request_path: "/some/path", query_string: "key=value"}
       assert Proxy.make_link(%{

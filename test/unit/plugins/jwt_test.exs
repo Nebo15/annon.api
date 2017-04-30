@@ -35,6 +35,51 @@ defmodule Annon.Plugins.JWTTest do
     assert @payload == jwt_token.claims
   end
 
+  test "jwt with not base64-encoded signature", %{api: api} do
+    jwt_plugin = Annon.Factory.build(:jwt_plugin, %{
+      api: api,
+      settings: %{"signature" => "teststring"}
+    })
+
+    :get
+    |> prepare_conn(jwt_plugin.api.request)
+    |> Map.put(:private, %{api_config: %{ jwt_plugin.api | plugins: [jwt_plugin]}})
+    |> Map.put(:req_headers, [ {"authorization", "Bearer #{jwt_token("super_coolHacker")}"}])
+    |> Annon.Plugins.JWT.call(%{})
+    |> assert_conn_status(501)
+  end
+
+  test "jwt without authorization header", %{api: api} do
+    jwt_plugin = Annon.Factory.build(:jwt_plugin, %{
+      api: api,
+      settings: %{"signature" => build_jwt_signature("super_coolHacker")}
+    })
+
+    %Plug.Conn{private: private} =
+      :get
+      |> prepare_conn(jwt_plugin.api.request)
+      |> Map.put(:private, %{api_config: %{ jwt_plugin.api | plugins: [jwt_plugin]}})
+      |> Annon.Plugins.JWT.call(%{})
+
+    refute Map.has_key?(private, :jwt_token)
+  end
+
+  test "jwt with invalid authorization type", %{api: api} do
+    jwt_plugin = Annon.Factory.build(:jwt_plugin, %{
+      api: api,
+      settings: %{"signature" => build_jwt_signature("super_coolHacker")}
+    })
+
+    %Plug.Conn{private: private} =
+      :get
+      |> prepare_conn(jwt_plugin.api.request)
+      |> Map.put(:private, %{api_config: %{ jwt_plugin.api | plugins: [jwt_plugin]}})
+      |> Map.put(:req_headers, [ {"authorization", "Unkown #{jwt_token("super_coolHacker")}"}])
+      |> Annon.Plugins.JWT.call(%{})
+
+    refute Map.has_key?(private, :jwt_token)
+  end
+
   test "jwt is disabled", %{api: api} do
     jwt_plugin = Annon.Factory.insert(:jwt_plugin, %{
       api: api,
