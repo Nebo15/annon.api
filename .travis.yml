@@ -7,7 +7,11 @@ services:
   - docker
   - cassandra
 addons:
-  postgresql: "9.5"
+  apt:
+    packages:
+      - oracle-java8-installer
+      - oracle-java8-set-default
+      - build-essential
 elixir:
   - 1.4.2
 otp_release:
@@ -27,7 +31,7 @@ branches:
     - /[0-9]*\.[0-9]*\.[0-9]*/
 before_install:
   # Expose DB to Docker container
-  - sudo /bin/bash ./bin/ci/init-db.sh
+  - /bin/bash ./bin/ci/init-db.sh
 before_script:
   - epmd -daemon
 script:
@@ -46,9 +50,9 @@ script:
   # Build Docker container
   - ./bin/build.sh
   # Initialize DB for Docker container
-  - source .env; PGPASSWORD="${DB_PASSWORD}"; psql -U ${DB_USER} -w -c"CREATE DATABASE ${DB_NAME}"
+  # - source .env; PGPASSWORD="${DB_PASSWORD}"; psql -U ${DB_USER} -w -c"CREATE DATABASE ${DB_NAME}"
   # Run Docker container
-  - sudo ./bin/start.sh
+  - ./bin/start.sh
   - sleep 5
   - docker ps
   - RUNNING_CONTAINERS=`docker ps | wc -l`;

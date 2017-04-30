@@ -1,9 +1,9 @@
 #!/bin/bash
 
-POSTGRES_VERSION=9.5
-
-echo "listen_addresses = '*'" >> /etc/postgresql/${POSTGRES_VERSION}/main/postgresql.conf
-echo "host all all 0.0.0.0/0 trust" >> /etc/postgresql/${POSTGRES_VERSION}/main/pg_hba.conf
-
-service postgresql stop
-service postgresql start ${POSTGRES_VERSION}
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+export MAX_HEAP_SIZE=128M
+export HEAP_NEWSIZE=24M
+java -version
+wget http://www.us.apache.org/dist/cassandra/3.9/apache-cassandra-3.9-bin.tar.gz
+tar -xzf apache-cassandra-3.9-bin.tar.gz
+sh ./apache-cassandra-3.9/bin/cassandra 2>&1 >/dev/null
