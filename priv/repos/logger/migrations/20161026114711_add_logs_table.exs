@@ -5,7 +5,6 @@ defmodule Annon.DB.Logger.Repo.Migrations.AddLogsTable do
     create table(:logs, primary_key: false) do
       add :id, :string, primary_key: true
       add :api, :map
-      add :consumer, :map
       add :idempotency_key, :string
       add :ip_address, :string
       add :request, :map
