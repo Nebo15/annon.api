@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon – annon_api v0.2.25</title>
+    <title>Annon – annon_api v0.2.26</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items-b4a4be7882.js"></script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.25
+        v0.2.26
       </h2>
     </div>
     
@@ -58,9 +58,9 @@
 
 
 <h1>Annon</h1>
-<p><a href="https://coveralls.io/github/Nebo15/annon.api?branch=master"><img src="https://coveralls.io/repos/github/Nebo15/annon.api/badge.svg?branch=master&amp;t=y562b4" alt="Coverage Status"/></a> <a href="https://travis-ci.org/Nebo15/annon.api"><img src="https://travis-ci.com/Nebo15/annon.api.svg?token=zWpL5QGwyvH4Pcxi8Vav&amp;branch=master" alt="Build Status"/></a></p>
+<p><a href="https://coveralls.io/github/Nebo15/annon.api?branch=master"><img src="https://coveralls.io/repos/github/Nebo15/annon.api/badge.svg?branch=master&amp;t=y562b4" alt="Coverage Status"/></a> <a href="https://travis-ci.org/Nebo15/annon.api"><img src="https://travis-ci.org/Nebo15/annon.api.svg?branch=master" alt="Build Status"/></a></p>
 <h1>Annon API Gateway</h1>
-<p>Annon is a configurable API gateway that acts as a reverse proxy with a plugin system. Plugins allow to reduce boilerplate that must be done in each service, making overall development faster. Also it stores all requests, responses and key metrics, making it easy to debug your application. Inspired by <a href="https://getkong.org/">Kong</a>.</p>
+<p>Annon is a configurable API gateway that acts as a reverse proxy with a plugin system. Plugins are reducing boilerplate that must be done in each service, making overall development faster. Also it stores all requests, responses and key metrics, making it easy to debug your application. Inspired by <a href="https://getkong.org/">Kong</a>.</p>
 <p>It’s free. Source code is available on <a href="https://github.com/Nebo15/annon.api">GitHub</a>.</p>
 <blockquote><p>“Annon” translates from the Sindarin word for ‘Great Door or Gate’. Sindarin is one of the many languages spoken by the immortal Elves.</p>
 </blockquote>
@@ -69,6 +69,8 @@
 <li><a href="https://github.com/Nebo15/annon.api">Annon API Gateway</a>.
 </li>
 <li><a href="https://github.com/Nebo15/annon.web">Annon Dashboard</a> - UI that allows to manage Annon settings, review and analyze Requests.
+</li>
+<li><a href="https://github.com/Nebo15/annon.status.web">Annon Status Pages</a> - UI that renders APIs status pages;
 </li>
 <li><a href="https://hex.pm/packages/eview">EView</a> - hex package that allows to receive and modify client responses from Elixir application to match <a href="http://docs.apimanifest.apiary.io/">Nebo #15 API Manifest</a>. So your back-ends will respond in a same way as Annon does.
 </li>
@@ -141,9 +143,11 @@ It support different discovery strategies:</p>
 
 <p>Annon can be installed by compiling it from sources, but we recommend you to use our pre-build Docker containers:</p>
 <ul>
-<li><a href="https://hub.docker.com/r/nebo15/annon.api/">Annon API Gateway</a>;
+<li><a href="https://hub.docker.com/r/nebo15/annon_api/">Annon API Gateway</a>;
 </li>
 <li><a href="https://hub.docker.com/r/nebo15/annon.web/">Annon Dashboard</a>;
+</li>
+<li><a href="https://hub.docker.com/r/nebo15/annon.status.web/">Annon Status Pages</a>;
 </li>
 <li><a href="https://hub.docker.com/r/nebo15/alpine-cassandra/">Cassandra</a>.
 </li>
