@@ -12,6 +12,9 @@ ENV TERM=xterm \
 
 WORKDIR ${HOME}
 
+# Install additional deps for elixir_make
+RUN apk add --update make g++
+
 # Install and compile project dependencies
 COPY mix.* ./
 COPY config ./config
