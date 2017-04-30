@@ -27,7 +27,7 @@ defmodule Annon.Mixfile do
     [
       applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto, :joken, :nex_json_schema,
                      :poison, :httpoison, :ex_statsd, :skycluster, :eview, :ecto_paging,
-                     :runtime_tools],
+                     :runtime_tools, :ecto_cassandra],
       mod: {Annon, []}
     ]
   end
@@ -55,6 +55,7 @@ defmodule Annon.Mixfile do
      {:confex, ">= 0.0.0"},
      {:plug, ">= 0.0.0"},
      {:cowboy, ">= 0.0.0"},
+     {:ecto_cassandra, "~> 1.0.0-beta.3"},
      {:postgrex, "~> 0.13"},
      {:ecto, "~> 2.1"},
      {:poison, "~> 3.1", override: true},

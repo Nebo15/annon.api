@@ -1,22 +1,24 @@
 use Mix.Config
 
 config :annon_api, Annon.DB.Configs.Repo,
-  adapter: Ecto.Adapters.Postgres,
+  adapter: EctoCassandra.Adapter,
   priv: "priv/repos/configs",
-  database: "annon_api_configs",
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  pool_size: 10
+  keyspace: "annon_api_configs",
+  contact_points: ["localhost"],
+  replication: [
+    class: "SimpleStrategy",
+    replication_factor: 1,
+  ]
 
 config :annon_api, Annon.DB.Logger.Repo,
-  adapter: Ecto.Adapters.Postgres,
+  adapter: EctoCassandra.Adapter,
   priv: "priv/repos/logger",
-  database: "annon_api_logger",
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  pool_size: 10
+  keyspace: "annon_api_logger",
+  contact_points: ["localhost"],
+  replication: [
+    class: "SimpleStrategy",
+    replication_factor: 1,
+  ]
 
 config :annon_api, ecto_repos: [Annon.DB.Configs.Repo, Annon.DB.Logger.Repo]
 
