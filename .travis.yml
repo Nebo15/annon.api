@@ -5,7 +5,6 @@ cache:
     - _build
 services:
   - docker
-  - cassandra
 addons:
   apt:
     packages:
