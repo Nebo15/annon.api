@@ -3,7 +3,7 @@ HOST: http://os-dev-gateway.nebo15.com:8080/
 
 # Annon API Gateway
 
-Annon is a configurable API gateway that acts as a reverse proxy with a plugin system. Plugins allow to reduce boilerplate that must be done in each service, making overall development faster. Also it stores all requests, responses and key metrics, making it easy to debug your application. Inspired by [Kong](https://getkong.org/).
+Annon is a configurable API gateway that acts as a reverse proxy with a plugin system. Plugins are reducing boilerplate that must be done in each service, making overall development faster. Also it stores all requests, responses and key metrics, making it easy to debug your application. Inspired by [Kong](https://getkong.org/).
 
 It's free. Source code is available on [GitHub](https://github.com/Nebo15/annon.api).
 
@@ -80,7 +80,7 @@ Annon supports [OpenTracing](http://opentracing.io/) in Erlang via [Otter](https
 
 Annon can be installed by compiling it from sources, but we recommend you to use our pre-build Docker containers:
 
-- [Annon API Gateway](https://hub.docker.com/r/nebo15/annon.api/);
+- [Annon API Gateway](https://hub.docker.com/r/nebo15/annon_api/);
 - [Annon Dashboard](https://hub.docker.com/r/nebo15/annon.web/);
 - [Annon Status Pages](https://hub.docker.com/r/nebo15/annon.status.web/);
 - [Cassandra](https://hub.docker.com/r/nebo15/alpine-cassandra/).
@@ -93,7 +93,9 @@ You can deploy it to Kubernetes using [example configs from Annon's Infra repo](
 
 ### Docker Compose
 
-For local environments we provide an example Docket Compose configuration, that will allow you to spin all containers in just a few commands.
+For local environments we provide an example Docket Compose configuration. You can use this one-liner to deploy all Annon components on a local machine:
+
+`curl -L http://bit.ly/annon_compose | bash`
 
 ## Source Code Documentation
 
