@@ -94,7 +94,9 @@ You can deploy it to Kubernetes using [example configs from Annon's Infra repo](
 
 ### Docker Compose
 
-For local environments we provide an example Docket Compose configuration, that will allow you to spin all containers in just a few commands.
+For local environments we provide an example Docket Compose configuration. You can use this one-liner to deploy all Annon components on a local machine:
+
+`curl -L http://bit.ly/annon_compose | bash`
 
 ## Documentation
 
