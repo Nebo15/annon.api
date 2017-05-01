@@ -1,4 +1,4 @@
-defmodule Annon.DB.Configs.Repo do
+defmodule Annon.Configuration.Repo do
   @moduledoc """
   Main repository for DB that stores configuration.
 

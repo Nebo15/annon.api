@@ -2,6 +2,8 @@ defmodule Annon.Cache.FilterHelper do
   @moduledoc """
   Helper for filtering responses from adapters
   """
+  alias Annon.Configuration.Schemas.API
+  alias Annon.Configuration.Schemas.API.Request
 
   def do_filter(response, host) do
     response
@@ -9,7 +11,7 @@ defmodule Annon.Cache.FilterHelper do
     |> make_response()
   end
 
-  def put_in_acc(acc, %Annon.DB.Schemas.API{request: %Annon.DB.Schemas.API.Request{host: host}} = api, needed_host)
+  def put_in_acc(acc, %API{request: %Request{host: host}} = api, needed_host)
       when host == needed_host do
     Kernel.++(acc, [api])
   end

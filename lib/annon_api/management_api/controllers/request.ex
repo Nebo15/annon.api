@@ -1,4 +1,4 @@
-defmodule Annon.Controllers.Request do
+defmodule Annon.ManagementAPI.Controllers.Request do
   @moduledoc """
   REST interface that allows to fetch and delete stored requests.
 
@@ -9,9 +9,9 @@ defmodule Annon.Controllers.Request do
 
   You can find full description in [REST API documentation](http://docs.annon.apiary.io/#reference/requests).
   """
-  use Annon.Helpers.CommonRouter
-  alias Annon.DB.Logger.Repo
-  alias Annon.DB.Schemas.Log, as: LogSchema
+  use Annon.ManagementAPI.CommonRouter
+  alias Annon.Logger.Repo
+  alias Annon.Logger.LogEntry, as: LogSchema
   alias Annon.Helpers.Pagination
 
   get "/" do

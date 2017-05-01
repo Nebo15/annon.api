@@ -1,4 +1,4 @@
-defmodule Annon.Controllers.API do
+defmodule Annon.ManagementAPI.Controllers.API do
   @moduledoc """
   REST interface that allows to manage API's and their settings.
 
@@ -7,9 +7,9 @@ defmodule Annon.Controllers.API do
 
   You can find full description in [REST API documentation](http://docs.annon.apiary.io/#reference/apis).
   """
-  use Annon.Helpers.CommonRouter
-  alias Annon.DB.Schemas.API, as: APISchema
-  alias Annon.DB.Configs.Repo
+  use Annon.ManagementAPI.CommonRouter
+  alias Annon.Configuration.Schemas.API, as: APISchema
+  alias Annon.Configuration.Repo
   alias Annon.Helpers.Pagination
 
   get "/" do
@@ -42,5 +42,5 @@ defmodule Annon.Controllers.API do
     |> render_delete(conn)
   end
 
-  forward "/", to: Annon.Controllers.API.Plugin
+  forward "/", to: Annon.ManagementAPI.Controllers.API.Plugin
 end

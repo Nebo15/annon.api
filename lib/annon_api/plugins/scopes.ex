@@ -2,14 +2,14 @@ defmodule Annon.Plugins.Scopes do
   @moduledoc """
   This plugin receives user scopes from PCM by party_id.
   """
-  use Annon.Helpers.Plugin,
+  use Annon.Plugin,
     plugin_name: "scopes"
 
   alias Plug.Conn
-  alias Annon.DB.Schemas.Plugin
-  alias Annon.DB.Schemas.API, as: APISchema
-  alias Annon.Helpers.Scopes.JWTStrategy
-  alias Annon.Helpers.Scopes.PCMStrategy
+  alias Annon.Configuration.Schemas.Plugin
+  alias Annon.Configuration.Schemas.API, as: APISchema
+  alias Annon.Plugins.Scopes.JWTStrategy
+  alias Annon.Plugins.Scopes.PCMStrategy
 
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts)
     when is_list(plugins) do

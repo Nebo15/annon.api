@@ -16,7 +16,7 @@ defmodule Annon.RoutersTest do
       conn = :get
       |> conn("/foo")
       |> put_req_header("content-type", "application/json")
-      |> Annon.ManagementRouter.call([])
+      |> Annon.ManagementAPI.Router.call([])
 
       assert 404 == conn.status
     end
@@ -38,7 +38,7 @@ defmodule Annon.RoutersTest do
       |> put_req_header("content-type", "application/bson")
 
       assert_raise Ecto.Query.CastError, fn ->
-        Annon.ManagementRouter.call(conn, [])
+        Annon.ManagementAPI.Router.call(conn, [])
       end
 
       assert {400, _headers, _body} = sent_resp(conn)

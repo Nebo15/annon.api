@@ -1,8 +1,8 @@
-defmodule Annon.Changeset.Validator.JsonSchema do
+defmodule Annon.Validators.JsonSchema do
   @moduledoc """
   This module provides [JSON Schema](http://json-schema.org/) validator for a plugin settings.
 
-  All rules is stored in `Annon.Changeset.Validator.Settings`.
+  All rules is stored in `Annon.Validators.Settings`.
   """
 
   import Ecto.Changeset, only: [get_change: 3]

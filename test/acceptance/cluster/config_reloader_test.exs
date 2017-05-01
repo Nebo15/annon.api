@@ -1,4 +1,4 @@
-defmodule Annon.Acceptance.Cluster.ConfigReloaderTest do
+defmodule Annon.Acceptance.Cluster.ConfigReloaderPlugTest do
   @moduledoc false
   # Integration test to check that the config cache is reloaded across cluster after a config change
   use Annon.AcceptanceCase
@@ -7,12 +7,12 @@ defmodule Annon.Acceptance.Cluster.ConfigReloaderTest do
 
   describe "cluster communications" do
     setup do
-      Annon.DB.Schemas.API
-      |> Annon.DB.Configs.Repo.delete_all()
+      Annon.Configuration.Schemas.API
+      |> Annon.Configuration.Repo.delete_all()
 
       on_exit(fn ->
-        Annon.DB.Schemas.API
-        |> Annon.DB.Configs.Repo.delete_all()
+        Annon.Configuration.Schemas.API
+        |> Annon.Configuration.Repo.delete_all()
       end)
     end
 
@@ -60,7 +60,7 @@ defmodule Annon.Acceptance.Cluster.ConfigReloaderTest do
   defp ensure_the_change_is_visible_on(_nodename, iteration) when iteration > 5,
     do: flunk "Changes is not distributed to other nodes"
   defp ensure_the_change_is_visible_on(nodename, iteration) do
-    case :rpc.block_call(nodename, Annon.DB.Configs.Repo, :all, [Annon.DB.Schemas.API]) do
+    case :rpc.block_call(nodename, Annon.Configuration.Repo, :all, [Annon.Configuration.Schemas.API]) do
       [] ->
         Logger.debug("Changes not visible, retry in 1 second..")
         :timer.sleep(1000)

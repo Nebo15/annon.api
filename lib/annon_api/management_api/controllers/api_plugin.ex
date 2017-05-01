@@ -1,4 +1,4 @@
-defmodule Annon.Controllers.API.Plugin do
+defmodule Annon.ManagementAPI.Controllers.API.Plugin do
   @moduledoc """
   REST interface that allows to manage Plugins and their settings.
 
@@ -7,11 +7,11 @@ defmodule Annon.Controllers.API.Plugin do
 
   You can find full description in [REST API documentation](http://docs.annon.apiary.io/#reference/apis/plugins).
   """
-  use Annon.Helpers.CommonRouter
-  alias Annon.DB.Configs.Repo
+  use Annon.ManagementAPI.CommonRouter
+  alias Annon.Configuration.Repo
   alias Annon.Helpers.Pagination
 
-  alias Annon.DB.Schemas.Plugin, as: PluginSchema
+  alias Annon.Configuration.Schemas.Plugin, as: PluginSchema
 
   get "/:api_id/plugins" do
     [api_id: api_id]

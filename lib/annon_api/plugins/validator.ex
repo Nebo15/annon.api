@@ -6,11 +6,11 @@ defmodule Annon.Plugins.Validator do
   It's response structure described in
   our [API Manifest](http://docs.apimanifest.apiary.io/#introduction/interacting-with-api/errors).
   """
-  use Annon.Helpers.Plugin,
+  use Annon.Plugin,
     plugin_name: "validator"
 
-  alias Annon.DB.Schemas.Plugin
-  alias Annon.DB.Schemas.API, as: APISchema
+  alias Annon.Configuration.Schemas.Plugin
+  alias Annon.Configuration.Schemas.API, as: APISchema
   alias Annon.Helpers.Response
 
   @doc false

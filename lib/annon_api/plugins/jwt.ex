@@ -5,7 +5,7 @@ defmodule Annon.Plugins.JWT do
   It's implemented mainly to be used with [Auth0](https://auth0.com/),
   but it should support any JWT-based authentication providers.
   """
-  use Annon.Helpers.Plugin,
+  use Annon.Plugin,
     plugin_name: "jwt"
 
   require Logger
@@ -14,8 +14,8 @@ defmodule Annon.Plugins.JWT do
 
   alias Plug.Conn
   alias Joken.Token
-  alias Annon.DB.Schemas.Plugin
-  alias Annon.DB.Schemas.API, as: APISchema
+  alias Annon.Configuration.Schemas.Plugin
+  alias Annon.Configuration.Schemas.API, as: APISchema
   alias EView.Views.Error, as: ErrorView
   alias Annon.Helpers.Response
 

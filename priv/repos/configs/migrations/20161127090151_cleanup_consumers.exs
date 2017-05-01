@@ -1,4 +1,4 @@
-defmodule Annon.DB.Configs.Repo.Migrations.CleanupConsumers do
+defmodule Annon.Configuration.Repo.Migrations.CleanupConsumers do
   use Ecto.Migration
 
   def up do

@@ -1,4 +1,4 @@
-defmodule Annon.ManagementRouter do
+defmodule Annon.ManagementAPI.Router do
   @moduledoc """
   Router for a [Annons Management API](http://docs.annon.apiary.io/#reference/apis).
   """
@@ -19,10 +19,10 @@ defmodule Annon.ManagementRouter do
 
   plug :dispatch
 
-  plug Annon.ConfigReloader
+  plug Annon.ManagementAPI.ConfigReloaderPlug
 
-  forward "/apis", to: Annon.Controllers.API
-  forward "/requests", to: Annon.Controllers.Request
+  forward "/apis", to: Annon.ManagementAPI.Controllers.API
+  forward "/requests", to: Annon.ManagementAPI.Controllers.Request
 
   match _ do
     conn

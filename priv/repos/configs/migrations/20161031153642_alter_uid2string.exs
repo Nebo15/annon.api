@@ -1,4 +1,4 @@
-defmodule Annon.DB.Configs.Repo.Migrations.AlterUid2string do
+defmodule Annon.Configuration.Repo.Migrations.AlterUid2string do
   use Ecto.Migration
 
   def change do

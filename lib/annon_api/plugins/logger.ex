@@ -5,12 +5,12 @@ defmodule Annon.Plugins.Logger do
 
   All stored records can be accessible via [management API](http://docs.annon.apiary.io/#reference/requests).
   """
-  use Annon.Helpers.Plugin,
+  use Annon.Plugin,
     plugin_name: "logger"
 
   alias Plug.Conn
-  alias Annon.DB.Schemas.Log
-  alias Annon.DB.Schemas.API, as: APISchema
+  alias Annon.Logger.LogEntry
+  alias Annon.Configuration.Schemas.API, as: APISchema
   require Logger
 
   @doc false
@@ -34,7 +34,7 @@ defmodule Annon.Plugins.Logger do
       status_code: conn.status
     }
 
-    case Log.create_request(log) do
+    case LogEntry.create_request(log) do
       {:ok, _} ->
         conn
       {:error, error} ->

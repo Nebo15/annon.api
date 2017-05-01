@@ -1,4 +1,4 @@
-defmodule Annon.ConfigReloader do
+defmodule Annon.ManagementAPI.ConfigReloaderPlug do
   @moduledoc """
   This plugin
   [invalidates Annons cache](http://docs.annon.apiary.io/#introduction/general-features/caching-and-perfomance)

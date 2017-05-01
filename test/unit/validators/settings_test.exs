@@ -1,4 +1,4 @@
-defmodule Annon.Changeset.Validator.SettingsTest do
+defmodule Annon.Validators.SettingsTest do
   use Annon.UnitCase, async: true
 
   describe "ACL plugin validation" do
@@ -12,7 +12,7 @@ defmodule Annon.Changeset.Validator.SettingsTest do
 
       changeset =
         %Ecto.Changeset{changes: %{name: "acl", settings: %{"rules" => rules}}}
-        |> Annon.Changeset.Validator.Settings.validate_settings()
+        |> Annon.Validators.Settings.validate_settings()
 
       assert [] == changeset.errors
     end
@@ -24,7 +24,7 @@ defmodule Annon.Changeset.Validator.SettingsTest do
 
       changeset =
         %Ecto.Changeset{changes: %{name: "acl", settings: %{"rules" => rules}}}
-        |> Annon.Changeset.Validator.Settings.validate_settings()
+        |> Annon.Validators.Settings.validate_settings()
 
       refute [] == changeset.errors
     end
@@ -41,7 +41,7 @@ defmodule Annon.Changeset.Validator.SettingsTest do
 
       changeset =
         %Ecto.Changeset{changes: %{name: "validator", settings: %{"rules" => rules}}}
-        |> Annon.Changeset.Validator.Settings.validate_settings()
+        |> Annon.Validators.Settings.validate_settings()
 
       assert [] == changeset.errors
     end
@@ -53,7 +53,7 @@ defmodule Annon.Changeset.Validator.SettingsTest do
 
       changeset =
         %Ecto.Changeset{changes: %{name: "validator", settings: %{"rules" => rules}}}
-        |> Annon.Changeset.Validator.Settings.validate_settings()
+        |> Annon.Validators.Settings.validate_settings()
 
       refute [] == changeset.errors
     end
@@ -66,7 +66,7 @@ defmodule Annon.Changeset.Validator.SettingsTest do
 
       changeset =
         %Ecto.Changeset{changes: %{name: "proxy", settings: settings}}
-        |> Annon.Changeset.Validator.Settings.validate_settings()
+        |> Annon.Validators.Settings.validate_settings()
 
       refute [] == changeset.errors
     end

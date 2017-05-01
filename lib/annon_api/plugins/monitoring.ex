@@ -6,7 +6,7 @@ defmodule Annon.Plugins.Monitoring do
 
   It can be used with [DataDog agent](http://datadoghq.com).
   """
-  use Annon.Helpers.Plugin,
+  use Annon.Plugin,
     plugin_name: "monitoring"
 
   alias Plug.Conn

@@ -3,15 +3,15 @@ defmodule Annon.Plugins.Proxy do
   [Proxy](http://docs.annon.apiary.io/#reference/plugins/proxy) - is a core plugin that
   sends incoming request to an upstream back-ends.
   """
-  use Annon.Helpers.Plugin,
+  use Annon.Plugin,
     plugin_name: "proxy"
 
   import Annon.Helpers.IP
   import Annon.Helpers.Latency
 
   alias Plug.Conn
-  alias Annon.DB.Schemas.Plugin
-  alias Annon.DB.Schemas.API, as: APISchema
+  alias Annon.Configuration.Schemas.Plugin
+  alias Annon.Configuration.Schemas.API, as: APISchema
 
   @doc false
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins, request: %{path: api_path}}}} = conn, _opts)

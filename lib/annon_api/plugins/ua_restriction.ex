@@ -4,11 +4,11 @@ defmodule Annon.Plugins.UARestriction do
 
   TODO: refactor validation from this file and pre-compile patterns for reuse
   """
-  use Annon.Helpers.Plugin,
+  use Annon.Plugin,
     plugin_name: "ua_restriction"
 
-  alias Annon.DB.Schemas.Plugin
-  alias Annon.DB.Schemas.API, as: APISchema
+  alias Annon.Configuration.Schemas.Plugin
+  alias Annon.Configuration.Schemas.API, as: APISchema
   alias EView.Views.Error, as: ErrorView
   alias Annon.Helpers.Response
 

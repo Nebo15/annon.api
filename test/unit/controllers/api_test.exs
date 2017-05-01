@@ -1,4 +1,4 @@
-defmodule Annon.Controllers.APITest do
+defmodule Annon.ManagementAPI.Controllers.APITest do
   @moduledoc false
   use Annon.UnitCase, async: true
 

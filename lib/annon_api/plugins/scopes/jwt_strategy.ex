@@ -1,4 +1,4 @@
-defmodule Annon.Helpers.Scopes.JWTStrategy do
+defmodule Annon.Plugins.Scopes.JWTStrategy do
   @moduledoc """
   Helper for retrieving scopes with JWT strategy - getting scopes from token.
   """

@@ -1,4 +1,4 @@
-defmodule Annon.Controllers.RequestTest do
+defmodule Annon.ManagementAPI.Controllers.RequestTest do
   @moduledoc false
   use Annon.UnitCase, async: true
 
@@ -23,9 +23,9 @@ defmodule Annon.Controllers.RequestTest do
       logs = for _ <- 1..10 do
         attributes = %{id: Ecto.UUID.generate(), response: %{}, status_code: 200}
 
-        %Annon.DB.Schemas.Log{}
-        |> Annon.DB.Schemas.Log.changeset(attributes)
-        |> Annon.DB.Logger.Repo.insert!()
+        %Annon.Logger.LogEntry{}
+        |> Annon.Logger.LogEntry.changeset(attributes)
+        |> Annon.Logger.Repo.insert!()
       end
 
       {:ok, %{logs: logs}}

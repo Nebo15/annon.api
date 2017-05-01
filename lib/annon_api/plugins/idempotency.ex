@@ -2,13 +2,13 @@ defmodule Annon.Plugins.Idempotency do
   @moduledoc """
   [Request Idempotency plugin](http://docs.annon.apiary.io/#reference/plugins/idempotency).
   """
-  use Annon.Helpers.Plugin,
+  use Annon.Plugin,
     plugin_name: "idempotency"
 
   alias Plug.Conn
-  alias Annon.DB.Schemas.Plugin
-  alias Annon.DB.Schemas.API, as: APISchema
-  alias Annon.DB.Schemas.Log
+  alias Annon.Configuration.Schemas.Plugin
+  alias Annon.Configuration.Schemas.API, as: APISchema
+  alias Annon.Logger.LogEntry
   alias EView.Views.Error, as: ErrorView
   alias Annon.Helpers.Response
 
@@ -32,16 +32,16 @@ defmodule Annon.Plugins.Idempotency do
   defp execute(_, conn), do: conn
 
   defp load_log_request([key|_]) when is_binary(key) do
-    Log.get_one_by([idempotency_key: key])
+    LogEntry.get_one_by([idempotency_key: key])
   end
   defp load_log_request(_), do: nil
 
-  defp validate_request(%Annon.DB.Schemas.Log{request: %{body: body}} = log_request, params) do
+  defp validate_request(%Annon.Logger.LogEntry{request: %{body: body}} = log_request, params) do
     {Map.equal?(params, body), log_request}
   end
   defp validate_request(_, _params), do: nil
 
-  defp normalize_resp({true, %Annon.DB.Schemas.Log{response: %{headers: headers, body: body},
+  defp normalize_resp({true, %Annon.Logger.LogEntry{response: %{headers: headers, body: body},
                                                      status_code: status_code}}, conn) do
     conn
     |> Conn.merge_resp_headers(format_headers(headers))

@@ -1,14 +1,16 @@
-defmodule Annon.DB.Schemas.Plugin do
+defmodule Annon.Configuration.Schemas.Plugin do
   @moduledoc """
   Schema for Plugins settings.
   """
-  use Annon.DB.Schema
+  use Ecto.Schema
+  import Ecto.Changeset
+  import Ecto.Query
 
-  import Annon.Changeset.Validator.Settings
+  import Annon.Validators.Settings
 
-  alias Annon.DB.Configs.Repo
-  alias Annon.DB.Schemas.Plugin, as: PluginSchema
-  alias Annon.DB.Schemas.API, as: APISchema
+  alias Annon.Configuration.Repo
+  alias Annon.Configuration.Schemas.Plugin, as: PluginSchema
+  alias Annon.Configuration.Schemas.API, as: APISchema
 
   @type t :: %PluginSchema{
     name: atom,

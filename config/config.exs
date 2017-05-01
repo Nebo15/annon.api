@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :annon_api, Annon.DB.Configs.Repo,
+config :annon_api, Annon.Configuration.Repo,
   adapter: Ecto.Adapters.Postgres,
   priv: "priv/repos/configs",
   database: "annon_api_configs",
@@ -9,7 +9,7 @@ config :annon_api, Annon.DB.Configs.Repo,
   hostname: "localhost",
   pool_size: 10
 
-config :annon_api, Annon.DB.Logger.Repo,
+config :annon_api, Annon.Logger.Repo,
   adapter: Ecto.Adapters.Postgres,
   priv: "priv/repos/logger",
   database: "annon_api_logger",
@@ -18,7 +18,7 @@ config :annon_api, Annon.DB.Logger.Repo,
   hostname: "localhost",
   pool_size: 10
 
-config :annon_api, ecto_repos: [Annon.DB.Configs.Repo, Annon.DB.Logger.Repo]
+config :annon_api, ecto_repos: [Annon.Configuration.Repo, Annon.Logger.Repo]
 
 config :ex_statsd,
        host: "localhost",

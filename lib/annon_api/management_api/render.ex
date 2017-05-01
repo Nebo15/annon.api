@@ -1,4 +1,4 @@
-defmodule Annon.Helpers.Render do
+defmodule Annon.ManagementAPI.Render do
   @moduledoc """
   Use this helpers when you want to render result in a controllers.
   """

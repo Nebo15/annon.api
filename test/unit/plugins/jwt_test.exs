@@ -110,7 +110,7 @@ defmodule Annon.Plugins.JWTTest do
 
   test "jwt required signature in settings" do
     params = %{name: "jwt", settings: %{"some" => "value"}}
-    changeset = Annon.DB.Schemas.Plugin.changeset(%Annon.DB.Schemas.Plugin{}, params)
+    changeset = Annon.Configuration.Schemas.Plugin.changeset(%Annon.Configuration.Schemas.Plugin{}, params)
 
     assert %Ecto.Changeset{valid?: false, errors: [signature: {"can't be blank", _}]} = changeset
   end

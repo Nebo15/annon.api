@@ -119,7 +119,7 @@ defmodule Annon.Acceptance.Smoke.AclTest do
   end
 
   defp assert_logs_are_written(response) do
-    log_entry = Annon.DB.Logger.Repo.one(Annon.DB.Schemas.Log)
+    log_entry = Annon.Logger.Repo.one(Annon.Logger.LogEntry)
     logged_response = Poison.decode!(log_entry.response.body)
 
     assert logged_response == response

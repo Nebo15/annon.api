@@ -2,12 +2,12 @@ defmodule Annon.Plugins.CORS do
   @moduledoc """
   This plugin controls cross-origin resource sharing.
   """
-  use Annon.Helpers.Plugin,
+  use Annon.Plugin,
     plugin_name: "cors"
 
   alias Plug.Conn
-  alias Annon.DB.Schemas.Plugin
-  alias Annon.DB.Schemas.API, as: APISchema
+  alias Annon.Configuration.Schemas.Plugin
+  alias Annon.Configuration.Schemas.API, as: APISchema
 
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts)
     when is_list(plugins) do

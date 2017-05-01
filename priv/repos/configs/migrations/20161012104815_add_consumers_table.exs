@@ -1,4 +1,4 @@
-defmodule Annon.DB.Configs.Repo.Migrations.AddConsumersTable do
+defmodule Annon.Configuration.Repo.Migrations.AddConsumersTable do
   use Ecto.Migration
 
   def change do

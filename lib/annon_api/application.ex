@@ -8,9 +8,9 @@ defmodule Annon do
     import Supervisor.Spec, warn: false
 
     children = [
-      supervisor(Annon.DB.Configs.Repo, []),
-      supervisor(Annon.DB.Logger.Repo, []),
-      http_endpoint_spec(Annon.ManagementRouter, :management_http),
+      supervisor(Annon.Configuration.Repo, []),
+      supervisor(Annon.Logger.Repo, []),
+      http_endpoint_spec(Annon.ManagementAPI.Router, :management_http),
       http_endpoint_spec(Annon.PublicRouter, :public_http),
       http_endpoint_spec(Annon.PrivateRouter, :private_http),
       worker(Annon.AutoClustering, [])

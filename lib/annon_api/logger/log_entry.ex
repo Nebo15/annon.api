@@ -1,10 +1,12 @@
-defmodule Annon.DB.Schemas.Log do
+defmodule Annon.Logger.LogEntry do
   @moduledoc """
   Schema for saved requests and responses.
   """
-  use Annon.DB.Schema
-  alias Annon.DB.Logger.Repo
-  alias Annon.DB.Schemas.Log, as: LogSchema
+  use Ecto.Schema
+  import Ecto.Changeset
+  import Ecto.Query
+  alias Annon.Logger.Repo
+  alias Annon.Logger.LogEntry, as: LogSchema
 
   @derive {Poison.Encoder, except: [:__meta__]}
   @primary_key {:id, :string, autogenerate: false}

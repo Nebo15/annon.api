@@ -4,9 +4,9 @@ defmodule Annon.Cache.PostgresAdapter do
   """
   import Ecto.Query
 
-  alias Annon.DB.Configs.Repo
-  alias Annon.DB.Schemas.API
-  alias Annon.DB.Schemas.Plugin
+  alias Annon.Configuration.Repo
+  alias Annon.Configuration.Schemas.API
+  alias Annon.Configuration.Schemas.Plugin
 
   def find_api_by(scheme, host, port) do
     query = from a in API,

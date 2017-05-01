@@ -1,7 +1,7 @@
 {
   "skip_files": [
     "test/*",
-    "lib/annon_api/db/tasks.ex"
+    "lib/annon_api/release_tasks.ex"
   ],
   "custom_stop_words": [
     "field",

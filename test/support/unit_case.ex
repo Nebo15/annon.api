@@ -11,12 +11,12 @@ defmodule Annon.UnitCase do
       import Annon.UnitCase
 
       setup tags do
-        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Annon.DB.Configs.Repo)
-        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Annon.DB.Logger.Repo)
+        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Annon.Configuration.Repo)
+        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Annon.Logger.Repo)
 
         unless tags[:async] do
-          Ecto.Adapters.SQL.Sandbox.mode(Annon.DB.Configs.Repo, {:shared, self()})
-          Ecto.Adapters.SQL.Sandbox.mode(Annon.DB.Logger.Repo, {:shared, self()})
+          Ecto.Adapters.SQL.Sandbox.mode(Annon.Configuration.Repo, {:shared, self()})
+          Ecto.Adapters.SQL.Sandbox.mode(Annon.Logger.Repo, {:shared, self()})
         end
 
         :ok
@@ -64,7 +64,7 @@ defmodule Annon.UnitCase do
     |> call_router()
   end
 
-  defp call_router(conn, router \\ Annon.ManagementRouter) do
+  defp call_router(conn, router \\ Annon.ManagementAPI.Router) do
     conn
     |> put_req_header("content-type", "application/json")
     |> router.call([])

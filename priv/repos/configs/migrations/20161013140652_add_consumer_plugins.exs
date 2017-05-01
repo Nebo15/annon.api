@@ -1,4 +1,4 @@
-defmodule Annon.DB.Configs.Repo.Migrations.AddConsumerPluginSettings do
+defmodule Annon.Configuration.Repo.Migrations.AddConsumerPluginSettings do
   use Ecto.Migration
 
   def change do

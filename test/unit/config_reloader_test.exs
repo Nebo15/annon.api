@@ -1,4 +1,4 @@
-defmodule Annon.ConfigReloaderTest do
+defmodule Annon.ManagementAPI.ConfigReloaderPlugTest do
   @moduledoc false
   use Annon.UnitCase
 
@@ -27,7 +27,7 @@ defmodule Annon.ConfigReloaderTest do
       :put
       |> conn("/apis/#{api_model.id}", Poison.encode!(new_contents))
       |> put_req_header("content-type", "application/json")
-      |> Annon.ManagementRouter.call([])
+      |> Annon.ManagementAPI.Router.call([])
     end
 
     assert capture_log(update_config) =~ "config cache was warmed up"

@@ -1,4 +1,4 @@
-defmodule Annon.Helpers.CommonRouter do
+defmodule Annon.ManagementAPI.CommonRouter do
   @moduledoc """
   This router is used in controllers of Annons management API.
   """
@@ -6,7 +6,7 @@ defmodule Annon.Helpers.CommonRouter do
     quote location: :keep do
       use Plug.Router
       import Annon.Helpers.Response
-      import Annon.Helpers.Render
+      import Annon.ManagementAPI.Render
 
       plug :match
 

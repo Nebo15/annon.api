@@ -1,26 +1,26 @@
-defmodule Annon.Helpers.Plugin do
+defmodule Annon.Plugin do
   @moduledoc """
   This helper provides abstract interface to define plugin.
 
   Example:
 
-      use Annon.Helpers.Plugin,
+      use Annon.Plugin,
         plugin_name: "my_plugin"
 
   It will add
     * `init/1` settings required by Plug behavior, that will pass opts to `init/2` methods.
     * `find_plugin_settings/1` method that allows to find plugin settings and make sure that it's enabled.
   """
-  alias Annon.DB.Schemas.Plugin, as: PluginSchema
+  alias Annon.Configuration.Schemas.Plugin, as: PluginSchema
 
   defmacro __using__(compile_time_opts) do
     quote bind_quoted: [compile_time_opts: compile_time_opts], location: :keep do
       require Logger
-      import Annon.Helpers.Plugin
-      alias Annon.DB.Schemas.Plugin
+      import Annon.Plugin
+      alias Annon.Configuration.Schemas.Plugin
 
       unless compile_time_opts[:plugin_name] do
-        throw "You need to pass `:plugin_name` when using Annon.Helpers.Plugin"
+        throw "You need to pass `:plugin_name` when using Annon.Plugin"
       end
 
       @plugin_name compile_time_opts[:plugin_name]

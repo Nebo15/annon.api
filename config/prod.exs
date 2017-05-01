@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :annon_api, Annon.DB.Configs.Repo,
+config :annon_api, Annon.Configuration.Repo,
   adapter: Ecto.Adapters.Postgres,
   priv: "priv/repos/configs",
   database: "${DB_NAME}",
@@ -9,7 +9,7 @@ config :annon_api, Annon.DB.Configs.Repo,
   hostname: "${DB_HOST}",
   port: "${DB_PORT}"
 
-config :annon_api, Annon.DB.Logger.Repo,
+config :annon_api, Annon.Logger.Repo,
   adapter: Ecto.Adapters.Postgres,
   priv: "priv/repos/logger",
   database: "${DB_NAME}",

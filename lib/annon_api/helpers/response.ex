@@ -2,7 +2,7 @@ defmodule Annon.Helpers.Response do
   @moduledoc """
   This is a helper module for dispatching requests.
 
-  It's used by `Annon.Helpers.Render` helpers and places where we want to return an error.
+  It's used by `Annon.ManagementAPI.Render` helpers and places where we want to return an error.
   """
 
   @doc """
