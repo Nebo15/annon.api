@@ -58,9 +58,9 @@ defmodule Annon.Requests.LogTest do
     end
 
     test "paginates results" do
-      _request1 = RequestsFactory.insert(:request, id: "1")
-      _request2 = RequestsFactory.insert(:request, id: "2")
-      _request3 = RequestsFactory.insert(:request, id: "3")
+      request1 = RequestsFactory.insert(:request, id: "1")
+      request2 = RequestsFactory.insert(:request, id: "2")
+      request3 = RequestsFactory.insert(:request, id: "3")
       request4 = RequestsFactory.insert(:request, id: "4")
       request5 = RequestsFactory.insert(:request, id: "5")
 
