@@ -2,28 +2,32 @@ use Mix.Config
 
 config :annon_api, Annon.Configuration.Repo,
   adapter: Ecto.Adapters.Postgres,
-  database: "annon_api_configs",
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
   priv: "priv/repos/configuration",
+  database: {:system, "DB_NAME", "annon_api_configs"},
+  username: {:system, "DB_USER", "postgres"},
+  password: {:system, "DB_PASSWORD", "postgres"},
+  hostname: {:system, "DB_HOST", "localhost"},
+  port: {:system, :integer, "DB_PORT", 5432},
   pool_size: 10
 
 config :annon_api, Annon.Requests.Repo,
   adapter: Ecto.Adapters.Postgres,
-  database: "annon_api_logger",
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
   priv: "priv/repos/requests",
-  pool_size: 10
+  database: {:system, "DB_NAME", "annon_api_logger"},
+  username: {:system, "DB_USER", "postgres"},
+  password: {:system, "DB_PASSWORD", "postgres"},
+  hostname: {:system, "DB_HOST", "localhost"},
+  port: {:system, :integer, "DB_PORT", 5432},
+  pool_size: 50
 
-config :annon_api, ecto_repos: [Annon.Configuration.Repo, Annon.Requests.Repo]
+config :annon_api,
+  ecto_repos: [Annon.Configuration.Repo, Annon.Requests.Repo]
 
+# TODO: Replace with statix
 config :ex_statsd,
-       host: "localhost",
-       port: 8125,
-       namespace: "annon"
+  host: "localhost",
+  port: 8125,
+  namespace: "annon"
 
 config :logger, level: :debug
 

@@ -1,21 +1,5 @@
 use Mix.Config
 
-config :annon_api, Annon.Configuration.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  database: "${DB_NAME}",
-  username: "${DB_USER}",
-  password: "${DB_PASSWORD}",
-  hostname: "${DB_HOST}",
-  port: "${DB_PORT}"
-
-config :annon_api, Annon.Requests.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  database: "${DB_NAME}",
-  username: "${DB_USER}",
-  password: "${DB_PASSWORD}",
-  hostname: "${DB_HOST}",
-  port: "${DB_PORT}"
-
 config :ex_statsd,
   host: "${STATSD_HOST}",
   port: 8125,
