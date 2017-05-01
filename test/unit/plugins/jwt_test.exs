@@ -6,11 +6,11 @@ defmodule Annon.Plugins.JWTTest do
   @payload %{"name" => "John Doe"}
 
   setup do
-    {:ok, api: Annon.Factory.insert(:api)}
+    {:ok, api: Annon.ConfigurationFactory.insert(:api)}
   end
 
   test "jwt invalid auth", %{api: api} do
-    jwt_plugin = Annon.Factory.insert(:jwt_plugin, api: api)
+    jwt_plugin = Annon.ConfigurationFactory.insert(:jwt_plugin, api: api)
 
     :get
     |> prepare_conn(api.request)
@@ -21,7 +21,7 @@ defmodule Annon.Plugins.JWTTest do
   end
 
   test "jwt sucessful auth", %{api: api} do
-    jwt_plugin = Annon.Factory.build(:jwt_plugin, %{
+    jwt_plugin = Annon.ConfigurationFactory.build(:jwt_plugin, %{
       api: api,
       settings: %{"signature" => build_jwt_signature("super_coolHacker")}
     })
@@ -36,7 +36,7 @@ defmodule Annon.Plugins.JWTTest do
   end
 
   test "jwt with not base64-encoded signature", %{api: api} do
-    jwt_plugin = Annon.Factory.build(:jwt_plugin, %{
+    jwt_plugin = Annon.ConfigurationFactory.build(:jwt_plugin, %{
       api: api,
       settings: %{"signature" => "teststring"}
     })
@@ -50,7 +50,7 @@ defmodule Annon.Plugins.JWTTest do
   end
 
   test "jwt without authorization header", %{api: api} do
-    jwt_plugin = Annon.Factory.build(:jwt_plugin, %{
+    jwt_plugin = Annon.ConfigurationFactory.build(:jwt_plugin, %{
       api: api,
       settings: %{"signature" => build_jwt_signature("super_coolHacker")}
     })
@@ -65,7 +65,7 @@ defmodule Annon.Plugins.JWTTest do
   end
 
   test "jwt with invalid authorization type", %{api: api} do
-    jwt_plugin = Annon.Factory.build(:jwt_plugin, %{
+    jwt_plugin = Annon.ConfigurationFactory.build(:jwt_plugin, %{
       api: api,
       settings: %{"signature" => build_jwt_signature("super_coolHacker")}
     })
@@ -81,7 +81,7 @@ defmodule Annon.Plugins.JWTTest do
   end
 
   test "jwt is disabled", %{api: api} do
-    jwt_plugin = Annon.Factory.insert(:jwt_plugin, %{
+    jwt_plugin = Annon.ConfigurationFactory.insert(:jwt_plugin, %{
       api: api,
       is_enabled: false,
       settings: %{"signature" => build_jwt_signature("super_coolHacker")}
@@ -95,7 +95,7 @@ defmodule Annon.Plugins.JWTTest do
   end
 
   test "jwt without signature", %{api: api} do
-    jwt_plugin = Annon.Factory.build(:jwt_plugin, %{
+    jwt_plugin = Annon.ConfigurationFactory.build(:jwt_plugin, %{
       api: api,
       settings: %{}
     })
@@ -116,7 +116,7 @@ defmodule Annon.Plugins.JWTTest do
   end
 
   test "apis model don't have plugins" do
-    api = Annon.Factory.build(:api)
+    api = Annon.ConfigurationFactory.build(:api)
 
     :get
     |> prepare_conn(api.request)

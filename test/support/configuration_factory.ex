@@ -1,9 +1,8 @@
-defmodule Annon.Factory do
+defmodule Annon.ConfigurationFactory do
   @moduledoc """
-  This module lists factories, a mean suitable
-  for tests that involve preparation of DB data
+  This module lists Configuration-related factories, a mean suitable
+  for tests that involve preparation of DB data.
   """
-
   use ExMachina.Ecto, repo: Annon.Configuration.Repo
 
   # APIs
@@ -25,7 +24,7 @@ defmodule Annon.Factory do
     }
   end
 
-  # Plugin
+  # Plugins
 
   def proxy_plugin_factory do
     %Annon.Configuration.Schemas.Plugin{

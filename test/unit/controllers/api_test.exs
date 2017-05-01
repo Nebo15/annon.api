@@ -4,7 +4,7 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
 
   describe "/apis (pagination)" do
     setup do
-      apis = Annon.Factory.insert_list(10, :api)
+      apis = Annon.ConfigurationFactory.insert_list(10, :api)
 
       {:ok, %{apis: apis}}
     end
@@ -83,7 +83,7 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
     end
 
     test "GET" do
-      api = Annon.Factory.insert_pair(:api)
+      api = Annon.ConfigurationFactory.insert_pair(:api)
 
       "/apis"
       |> call_get()
@@ -92,7 +92,7 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
     end
 
     test "POST" do
-      api = Annon.Factory.build(:api)
+      api = Annon.ConfigurationFactory.build(:api)
 
       conn = "/apis"
       |> call_post(api)
@@ -129,7 +129,7 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
     end
 
     test "GET" do
-      api = Annon.Factory.insert(:api)
+      api = Annon.ConfigurationFactory.insert(:api)
 
       "/apis/#{api.id}"
       |> call_get()
@@ -138,7 +138,7 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
     end
 
     test "PUT" do
-      api = Annon.Factory.insert(:api)
+      api = Annon.ConfigurationFactory.insert(:api)
       api_update = %{
         name: "New name",
         request: %{
@@ -177,7 +177,7 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
     end
 
     test "DELETE" do
-      data = Annon.Factory.insert(:api)
+      data = Annon.ConfigurationFactory.insert(:api)
 
       "/apis/#{data.id}"
       |> call_delete()

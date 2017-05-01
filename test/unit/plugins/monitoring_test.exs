@@ -23,12 +23,12 @@ defmodule Annon.Plugins.MonitoringTest do
   end
 
   defp make_connection do
-    api = Annon.Factory.insert(:api, %{
+    api = Annon.ConfigurationFactory.insert(:api, %{
       name: "Montoring Test api",
-      request: Annon.Factory.build(:api_request, %{host: "www.example.com", path: "/apis"})
+      request: Annon.ConfigurationFactory.build(:api_request, %{host: "www.example.com", path: "/apis"})
     })
 
-    Annon.Factory.insert(:proxy_plugin, %{
+    Annon.ConfigurationFactory.insert(:proxy_plugin, %{
       name: "proxy",
       is_enabled: true,
       api: api,

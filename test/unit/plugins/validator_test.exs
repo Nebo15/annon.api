@@ -17,9 +17,9 @@ defmodule Annon.Plugins.ValidatorTest do
       "required" => ["bar"]
     }
 
-    model = Annon.Factory.build(:api, %{
+    model = Annon.ConfigurationFactory.build(:api, %{
       plugins: [
-        Annon.Factory.build(:validator_plugin, %{
+        Annon.ConfigurationFactory.build(:validator_plugin, %{
           settings: %{
             "rules" => [%{"methods" => ["POST"], "path" => ".*", "schema" => schema}]
           }

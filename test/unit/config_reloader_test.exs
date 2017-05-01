@@ -16,8 +16,8 @@ defmodule Annon.ManagementAPI.ConfigReloaderPlugTest do
   end
 
   test "reload the config cache if it changes" do
-    api_model = Annon.Factory.insert(:api)
-    Annon.Factory.insert(:acl_plugin, api: api_model)
+    api_model = Annon.ConfigurationFactory.insert(:api)
+    Annon.ConfigurationFactory.insert(:acl_plugin, api: api_model)
 
     new_contents = %{
       "name" => "New name"

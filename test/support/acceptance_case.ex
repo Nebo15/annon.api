@@ -177,7 +177,7 @@ defmodule Annon.AcceptanceCase do
 
   def build_factory_params(factory, overrides \\ []) do
     factory
-    |> Annon.Factory.build(overrides)
+    |> Annon.ConfigurationFactory.build(overrides)
     |> schema_to_map()
   end
 
