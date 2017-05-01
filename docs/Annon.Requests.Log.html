@@ -1,0 +1,341 @@
+    <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.15.1">
+    <title>Annon.Requests.Log – annon_api v0.2.30</title>
+    <link rel="stylesheet" href="dist/app-091c05798a.css" />
+    
+    <script src="dist/sidebar_items-2c131f8676.js"></script>
+  </head>
+  <body data-type="modules">
+    <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
+
+    <div class="main">
+<button class="sidebar-toggle">
+  <i class="icon-menu"></i>
+</button>
+<section class="sidebar">
+
+  
+  <a href="readme.html" class="sidebar-projectLink">
+    <div class="sidebar-projectDetails">
+      <h1 class="sidebar-projectName">
+        annon_api
+      </h1>
+      <h2 class="sidebar-projectVersion">
+        v0.2.30
+      </h2>
+    </div>
+    
+  </a>
+
+  <div class="sidebar-search">
+    <i class="icon-search"></i>
+    <input type="text" class="sidebar-searchInput" placeholder="search" autocomplete="off" />
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+    
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
+    
+
+    
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+
+      <h1>
+        <small class="visible-xs">annon_api v0.2.30</small>
+        Annon.Requests.Log
+        
+        
+      </h1>
+
+      
+        <section id="moduledoc">
+          <p>The boundary for the Requests Log system.</p>
+
+        </section>
+      
+
+      
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <i class="icon-link"></i>
+            </a>
+            Summary
+          </h1>
+          
+
+          
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#change_request/1">change_request(request)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Returns an <code class="inline">%Ecto.Changeset{}</code> for tracking Request changes</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#create_request/1">create_request(attrs \\ %{})</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Creates a Request</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#delete_request!/1">delete_request!(id)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Deletes a Request or return <code class="inline">:ok</code> if Request is already deleted</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_request/1">get_request(id)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Gets a single Request</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_request_by/1">get_request_by(selector)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Gets a single Request by a selector</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#list_requests/2">list_requests(conditions \\ %{}, paging \\ %Ecto.Paging{limit: 50})</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Returns the list of Logs</p>
+</div>
+  
+</div>
+
+  </div>
+
+
+          
+
+        </section>
+      
+
+      
+
+      
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <i class="icon-link"></i>
+            </a>
+            Functions
+          </h1>
+          <div class="detail" id="change_request/1">
+  
+  <div class="detail-header">
+    <a href="#change_request/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">change_request(request)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Returns an <code class="inline">%Ecto.Changeset{}</code> for tracking Request changes.</p>
+<h2 id="change_request/1-examples" class="section-heading">
+  <a href="#change_request/1-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; change_request(request)
+%Ecto.Changeset{source: %Annon.Requests.Request{}}</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="create_request/1">
+  
+    <span id="create_request/0" />
+  
+  <div class="detail-header">
+    <a href="#create_request/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">create_request(attrs \\ %{})</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Creates a Request.</p>
+<h2 id="create_request/1-examples" class="section-heading">
+  <a href="#create_request/1-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; create_request(%{field: value})
+{:ok, %Annon.Requests.Request{}}
+
+iex&gt; create_request(%{field: bad_value})
+{:error, %Ecto.Changeset{}}</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="delete_request!/1">
+  
+  <div class="detail-header">
+    <a href="#delete_request!/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">delete_request!(id)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Deletes a Request or return <code class="inline">:ok</code> if Request is already deleted.</p>
+<h2 id="delete_request!/1-examples" class="section-heading">
+  <a href="#delete_request!/1-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; delete_request!(123)
+:ok</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="get_request/1">
+  
+  <div class="detail-header">
+    <a href="#get_request/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">get_request(id)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Gets a single Request.</p>
+<h2 id="get_request/1-examples" class="section-heading">
+  <a href="#get_request/1-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; get_request(123)
+{:ok, %Annon.Requests.Request{}}
+
+iex&gt; get_request(456)
+{:error, :not_found}</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="get_request_by/1">
+  
+  <div class="detail-header">
+    <a href="#get_request_by/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">get_request_by(selector)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Gets a single Request by a selector.</p>
+<h2 id="get_request_by/1-examples" class="section-heading">
+  <a href="#get_request_by/1-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; get_request_by([idempotency_key: &quot;my_key&quot;])
+{:ok, %Annon.Requests.Request{}}
+
+iex&gt; get_request_by([idempotency_key: &quot;bad_my_key&quot;])
+{:error, :not_found}</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="list_requests/2">
+  
+    <span id="list_requests/0" />
+  
+    <span id="list_requests/1" />
+  
+  <div class="detail-header">
+    <a href="#list_requests/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">list_requests(conditions \\ %{}, paging \\ %Ecto.Paging{limit: 50})</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Returns the list of Logs.</p>
+<p>Response can be filtered by title if there is a <code class="inline">&quot;title&quot;</code> filed in <code class="inline">conditions</code>.</p>
+<h2 id="list_requests/2-examples" class="section-heading">
+  <a href="#list_requests/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; list_requests()
+{[%Annon.Requests.Request{}, ...], %Ecto.Paging{}}</code></pre>
+
+  </section>
+</div>
+
+        </section>
+      
+
+      
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.15.1),
+          </span>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+  <script src="dist/app-574613960f.js"></script>
+  </body>
+</html>
+
