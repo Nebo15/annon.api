@@ -6,8 +6,6 @@
 
 Annon is a configurable API gateway that acts as a reverse proxy with a plugin system. Plugins are reducing boilerplate that must be done in each service, making overall development faster. Also it stores all requests, responses and key metrics, making it easy to debug your application. Inspired by [Kong](https://getkong.org/).
 
-It's free. Source code is available on [GitHub](https://github.com/Nebo15/annon.api).
-
 > "Annon" translates from the Sindarin word for 'Great Door or Gate'. Sindarin is one of the many languages spoken by the immortal Elves.
 
 Annon consist of multiple main parts:
@@ -20,16 +18,17 @@ Annon consist of multiple main parts:
 
 ## Goals of the Project
 
-- Provide single management/monitoring system for medium-to-large scale applications.
-- Reduce amount of work needed in other componens by orchestrating common functionalities.
-- Control response time and get answer "what happened" even in a single request perspective. Provide data for in-deepth service analysis.
+- Provide single easy to use API management system for medium-to-large scale applications.
+- Reduce amount of work needed in other components by orchestrating common functionalities.
+- Monitoring - control response time and get answer "what happened" even in a single request perspective. Provide data for in-depth analysis.
+- Authorization - set authentication and authorization requirements for each resource and reject requests that do not satisfy them.
 - Improve platform scalability.
 
 ## General Features
 
-### Caching and Perfomance
+### Caching and Performance
 
-For perfomance issues Annon has build-in cache manager, it will load data from DB only once, all futher work will be based on this cached data.
+For performance issues Annon has build-in cache manager, it will load data from DB only once, all further work will be based on this cached data.
 
 Whenever a single node receives request that changes cached data, it's responsible to notify all other nodes in cluster about change, and they should reload configurations from DB.
 
@@ -54,7 +53,7 @@ Annon stores all requests and responses by their unique Request ID's in a Cassan
 
 API consumers may provide a custom request ID by sending `X-Request-ID: <request_id>` header. Thus, your Front-End and upstream back-ends can log information with a single unique ID.
 
-Also, idempotency plug is relying on this logs to privide idempotency guaratees for requests with same `X-Idempotency-Key: <idempotency_key>` headers.
+Also, idempotency plug is relying on this logs to provide idempotency guarantees for requests with same `X-Idempotency-Key: <idempotency_key>` headers.
 
 ### Monitoring
 
@@ -67,15 +66,15 @@ To monitor services status we will use DogStatsD integration, that will receive 
 
 All metrics have tags: `http_host`, `http_port`, `http_method`, `api_name` and `api_id` (if matches any), `request_id`. This allows to set different aggregated views on counter data.
 
-We recommend you to try [DataDog](https://www.datadoghq.com/) for collecting and displaying perfomance metrics. But this is not a hard containt, instead you can use any StatsD collector.
+We recommend you to try [DataDog](https://www.datadoghq.com/) for collecting and displaying performance metrics. But this is not a hard constraint, instead you can use any StatsD collector.
 
 ### Requests Idempotency
 
-Annon guarantess that replayed requests with same `X-Idempotency-Key: <key>` and same request will get permanent response. This is useful in a financial application, where you need good protection from duplicate user actions.
+Annon guarantees that replayed requests with same `X-Idempotency-Key: <key>` and same request will get permanent response. This is useful in a financial application, where you need good protection from duplicate user actions.
 
 ### Requests Tracing
 
-Annon supports [OpenTracing](http://opentracing.io/) in Erlang via [Otter](https://github.com/Bluehouse-Technology/otter) libruary. This means that by implementing OpenTracing API in other services you can trace complete request impact for each of your services.
+Annon supports [OpenTracing](http://opentracing.io/) in Erlang via [Otter](https://github.com/Bluehouse-Technology/otter) library. This means that by implementing OpenTracing API in other services you can trace complete request impact for each of your services.
 
 ## Installation
 
@@ -94,7 +93,7 @@ You can deploy it to Kubernetes using [example configs from Annon's Infra repo](
 
 ### Docker Compose
 
-For local environments we provide an example Docket Compose configuration. You can use this one-liner to deploy all Annon components on a local machine:
+For local environments we provide an [example Docket Compose configuration](https://github.com/Nebo15/annon.infra/tree/master/docker-compose). You can use this one-liner to deploy all Annon components on a local machine:
 
 `curl -L http://bit.ly/annon_compose | bash`
 
