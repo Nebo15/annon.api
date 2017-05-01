@@ -6,7 +6,7 @@
 
 # Switch SQL sandbox to manual mode
 Ecto.Adapters.SQL.Sandbox.mode(Annon.Configuration.Repo, :manual)
-Ecto.Adapters.SQL.Sandbox.mode(Annon.Logger.Repo, :manual)
+Ecto.Adapters.SQL.Sandbox.mode(Annon.Requests.Repo, :manual)
 
 # Start tests
 ExUnit.start(exclude: [:pending])

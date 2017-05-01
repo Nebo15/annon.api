@@ -121,7 +121,7 @@ defmodule Annon.AcceptanceCase do
       def magic_header do
         repos = [
           Annon.Configuration.Repo,
-          Annon.Logger.Repo
+          Annon.Requests.Repo
         ]
 
         metadata = Phoenix.Ecto.SQL.Sandbox.metadata_for(repos, self())
@@ -136,11 +136,11 @@ defmodule Annon.AcceptanceCase do
 
       setup tags do
         :ok = Ecto.Adapters.SQL.Sandbox.checkout(Annon.Configuration.Repo)
-        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Annon.Logger.Repo)
+        :ok = Ecto.Adapters.SQL.Sandbox.checkout(Annon.Requests.Repo)
 
         unless tags[:async] do
           Ecto.Adapters.SQL.Sandbox.mode(Annon.Configuration.Repo, {:shared, self()})
-          Ecto.Adapters.SQL.Sandbox.mode(Annon.Logger.Repo, {:shared, self()})
+          Ecto.Adapters.SQL.Sandbox.mode(Annon.Requests.Repo, {:shared, self()})
         end
 
         :ok

@@ -9,7 +9,7 @@ config :annon_api, Annon.Configuration.Repo,
   hostname: "localhost",
   pool_size: 10
 
-config :annon_api, Annon.Logger.Repo,
+config :annon_api, Annon.Requests.Repo,
   adapter: Ecto.Adapters.Postgres,
   priv: "priv/repos/logger",
   database: "annon_api_logger",
@@ -18,7 +18,7 @@ config :annon_api, Annon.Logger.Repo,
   hostname: "localhost",
   pool_size: 10
 
-config :annon_api, ecto_repos: [Annon.Configuration.Repo, Annon.Logger.Repo]
+config :annon_api, ecto_repos: [Annon.Configuration.Repo, Annon.Requests.Repo]
 
 config :ex_statsd,
        host: "localhost",

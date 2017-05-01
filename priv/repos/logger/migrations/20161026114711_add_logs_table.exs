@@ -1,4 +1,4 @@
-defmodule Annon.Logger.Repo.Migrations.AddLogsTable do
+defmodule Annon.Requests.Repo.Migrations.AddLogsTable do
   use Ecto.Migration
 
   def change do

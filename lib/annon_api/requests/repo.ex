@@ -1,4 +1,4 @@
-defmodule Annon.Logger.Repo do
+defmodule Annon.Requests.Repo do
   @moduledoc """
   This repo is used to store request and responses.
 

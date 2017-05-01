@@ -10,8 +10,8 @@ defmodule Annon.ManagementAPI.Controllers.Request do
   You can find full description in [REST API documentation](http://docs.annon.apiary.io/#reference/requests).
   """
   use Annon.ManagementAPI.CommonRouter
-  alias Annon.Logger.Repo
-  alias Annon.Logger.LogEntry, as: LogSchema
+  alias Annon.Requests.Repo
+  alias Annon.Requests.Schemas.Log, as: LogSchema
   alias Annon.Helpers.Pagination
 
   get "/" do

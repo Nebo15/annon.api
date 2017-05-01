@@ -9,7 +9,7 @@ config :annon_api, Annon.Configuration.Repo,
   hostname: "${DB_HOST}",
   port: "${DB_PORT}"
 
-config :annon_api, Annon.Logger.Repo,
+config :annon_api, Annon.Requests.Repo,
   adapter: Ecto.Adapters.Postgres,
   priv: "priv/repos/logger",
   database: "${DB_NAME}",

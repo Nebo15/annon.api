@@ -9,7 +9,7 @@ defmodule Annon do
 
     children = [
       supervisor(Annon.Configuration.Repo, []),
-      supervisor(Annon.Logger.Repo, []),
+      supervisor(Annon.Requests.Repo, []),
       http_endpoint_spec(Annon.ManagementAPI.Router, :management_http),
       http_endpoint_spec(Annon.PublicRouter, :public_http),
       http_endpoint_spec(Annon.PrivateRouter, :private_http),
