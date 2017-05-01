@@ -137,18 +137,7 @@ defmodule Annon.Requests.Log do
     end
   end
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking Request changes.
-
-  ## Examples
-
-      iex> change_request(request)
-      %Ecto.Changeset{source: %Annon.Requests.Request{}}
-
-  """
-  def change_request(%Request{} = request) do
-    request_changeset(request, %{})
-  end
+  # Changesets
 
   defp request_changeset(%Request{} = request, attrs) do
     request
