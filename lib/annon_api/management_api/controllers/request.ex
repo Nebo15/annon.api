@@ -10,26 +10,29 @@ defmodule Annon.ManagementAPI.Controllers.Request do
   You can find full description in [REST API documentation](http://docs.annon.apiary.io/#reference/requests).
   """
   use Annon.ManagementAPI.CommonRouter
-  alias Annon.Requests.Repo
-  alias Annon.Requests.Request, as: RequestSchema
   alias Annon.Helpers.Pagination
+  alias Annon.Requests.Log
 
   get "/" do
-    RequestSchema
-    |> Repo.page(Pagination.page_info_from(conn.query_params))
-    |> elem(0)
-    |> render_collection(conn)
+    paging = Pagination.page_info_from(conn.query_params)
+
+    {request, paging} =
+      conn
+      |> Map.fetch!(:query_params)
+      |> Map.take(["idempotency_key", "api_ids", "status_codes", "ip_addresses"])
+      |> Log.list_requests(paging)
+
+    render_collection({request, paging}, conn)
   end
 
   get "/:request_id" do
-    [id: request_id]
-    |> RequestSchema.get_one_by()
+    request_id
+    |> Log.get_request()
     |> render_schema(conn)
   end
 
   delete "/:request_id" do
-    request_id
-    |> RequestSchema.delete()
-    |> render_delete(conn)
+    Log.delete_request!(request_id)
+    render_delete(conn)
   end
 end

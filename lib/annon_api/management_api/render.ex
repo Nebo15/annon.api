@@ -26,12 +26,16 @@ defmodule Annon.ManagementAPI.Render do
   @doc """
   This render should be used for `Repo.one` results.
   """
-  def render_schema(nil, conn) do
+  def render_schema(nil, conn),
+    do: render_schema({:error, :not_found}, conn)
+  def render_schema({:error, :not_found}, conn) do
     conn
     |> send_error(:not_found)
   end
 
-  def render_schema(resource, conn) when is_map(resource) do
+  def render_schema(resource, conn) when is_map(resource),
+    do: render_schema({:ok, resource}, conn)
+  def render_schema({:ok, resource}, conn) when is_map(resource) do
     resource
     |> send(conn, 200)
   end
@@ -70,5 +74,9 @@ defmodule Annon.ManagementAPI.Render do
   def render_delete({1, _}, conn) do
     %{}
     |> send(conn, 200)
+  end
+
+  def render_delete(conn) do
+    Annon.Helpers.Response.send(conn, :no_content)
   end
 end

@@ -55,6 +55,13 @@ defmodule Annon.Helpers.Response do
     |> Plug.Conn.send_resp(status, body)
   end
 
+  def send(conn, :no_content) do
+    conn
+    |> Plug.Conn.put_status(:no_content)
+    |> Plug.Conn.put_resp_content_type("application/json")
+    |> Plug.Conn.send_resp(:no_content, "")
+  end
+
   def build_upstream_error(reason) do
     "500.json"
     |> EView.Views.Error.render(%{

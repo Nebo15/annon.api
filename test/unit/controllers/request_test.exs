@@ -21,11 +21,8 @@ defmodule Annon.ManagementAPI.Controllers.RequestTest do
   describe "/requests (pagination)" do
     setup do
       logs = for _ <- 1..10 do
-        attributes = %{id: Ecto.UUID.generate(), response: %{}, status_code: 200}
-
-        %Annon.Requests.Request{}
-        |> Annon.Requests.Request.changeset(attributes)
-        |> Annon.Requests.Repo.insert!()
+        {:ok, request} = Annon.Requests.Log.create_request(%{id: Ecto.UUID.generate(), response: %{}, status_code: 200})
+        request
       end
 
       {:ok, %{logs: logs}}
@@ -141,8 +138,7 @@ defmodule Annon.ManagementAPI.Controllers.RequestTest do
 
       "/requests/#{id}"
       |> call_delete()
-      |> assert_conn_status()
-      |> assert_response_body(%{})
+      |> assert_conn_status(204)
 
       "/requests/#{id}"
       |> call_get()

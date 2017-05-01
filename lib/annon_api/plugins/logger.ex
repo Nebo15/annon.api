@@ -9,7 +9,7 @@ defmodule Annon.Plugins.Logger do
     plugin_name: "logger"
 
   alias Plug.Conn
-  alias Annon.Requests.Request
+  alias Annon.Requests.Log
   alias Annon.Configuration.Schemas.API, as: APISchema
   require Logger
 
@@ -23,7 +23,7 @@ defmodule Annon.Plugins.Logger do
   end
 
   defp log_request(conn) do
-    log = %{
+    request = %{
       id: get_request_id(conn),
       idempotency_key: get_idempotency_key(conn) || "",
       ip_address: conn.remote_ip |> Tuple.to_list |> Enum.join("."),
@@ -34,7 +34,7 @@ defmodule Annon.Plugins.Logger do
       status_code: conn.status
     }
 
-    case Request.create_request(log) do
+    case Log.create_request(request) do
       {:ok, _} ->
         conn
       {:error, error} ->

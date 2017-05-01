@@ -3,7 +3,7 @@ defmodule Annon.Acceptance.Plugins.LoggerTest do
   use Plug.Test
   use Annon.AcceptanceCase, async: true
 
-  alias Annon.Requests.Request
+  alias Annon.Requests.Log
 
   @random_data %{"data" => "random"}
 
@@ -58,7 +58,7 @@ defmodule Annon.Acceptance.Plugins.LoggerTest do
       |> Enum.at(0)
 
       assert(id !== nil, "Plug RequestId is missing or has invalid position")
-      result = Request.get_one_by([id: id])
+      {:ok, result} = Log.get_request(id)
 
       assert(result !== nil, "Logs are missing")
 
@@ -105,7 +105,7 @@ defmodule Annon.Acceptance.Plugins.LoggerTest do
         |> Enum.at(0)
 
       assert(id !== nil, "Plug RequestId is missing or has invalid position")
-      result = Request.get_one_by([id: id])
+      {:ok, result} = Log.get_request(id)
 
       body_to_check =
         result.response
