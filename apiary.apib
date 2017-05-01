@@ -590,7 +590,7 @@ On `GET`, `POST`, `PUT` and other requests:
 - `Access-Control-Expose-Headers`
 - `Access-Control-Allow-Credentials`
 
-### Bind or Update CORS [PUT]
+### Bind or Update CORS Plugin [PUT]
 
 + Parameters
     + api_id: 1 (string, required) - API ID.
@@ -642,7 +642,7 @@ This plugin allows to set requests rate limits for an API and drops requests tha
 
 **This plugin is in development.**
 
-### Bind or Update Rate Limiter Plugin [PUT]
+### Bind or Update Load Shedding Plugin [PUT]
 
 + Parameters
     + api_id: 1 (string, required) - API ID.
@@ -669,7 +669,7 @@ It can be used to mock service responses or to push common responses to the edge
 
 **This plugin is in development.**
 
-### Bind or Update Rate Limiter Plugin [PUT]
+### Bind or Update Static Responses Plugin [PUT]
 
 + Parameters
     + api_id: 1 (string, required) - API ID.
@@ -1140,7 +1140,7 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 + updated_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
 
 ### `Plugin_Static_Responses__Settings`
-+ rules (array[`Plugin_Load_Shedding_Rule`], fixed-type)
++ rules (array[`Plugin_Static_Responses_Rule`], fixed-type)
 
 ### `Plugin_Static_Responses_Rule`
 + methods (array[enum], required)
@@ -1150,6 +1150,11 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 + path: `^my_resource/` (string, required) - Regular expression on path. **Warning!** It's relative to API path.
 + content: `{"hello": "world"}` (string, required) - Response content.
 + content_type: `application/json` (string, required) - HTTP Content-Type for response.
++ `additional_response_headers` (array[`Plugin_Static_Responses_Rule__Response_Header`], optional) - Additional response headers. They will override default value is it's present.
+
+### `Plugin_Static_Responses_Rule__Response_Header`
++ name: `x-my-header` (string, required)
++ value: `my_value` (string, required)
 
 ## Requests
 ### Request
