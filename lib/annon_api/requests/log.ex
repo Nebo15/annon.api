@@ -32,6 +32,7 @@ defmodule Annon.Requests.Log do
     |> maybe_filter_api_ids(conditions)
     |> maybe_filter_status_codes(conditions)
     |> maybe_filter_ip_addresses(conditions)
+    |> order_by(desc: :inserted_at)
     |> Repo.page(paging)
   end
 

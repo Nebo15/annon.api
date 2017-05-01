@@ -28,6 +28,8 @@ defmodule Annon.ManagementAPI.Controllers.RequestTest do
       {:ok, %{logs: logs}}
     end
 
+    # TODO: https://github.com/Nebo15/ecto_paging/issues/14
+    @tag :pending
     test "GET /requests?starting_after=2&limit=5", %{logs: logs} do
       id = Enum.at(logs, 2).id
 
@@ -37,6 +39,7 @@ defmodule Annon.ManagementAPI.Controllers.RequestTest do
 
       expected_records =
         logs
+        |> Enum.reverse()
         |> Enum.slice(3, 5)
         |> Enum.map(&Map.get(&1, :id))
 
