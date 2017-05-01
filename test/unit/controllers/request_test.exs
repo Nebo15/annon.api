@@ -23,8 +23,8 @@ defmodule Annon.ManagementAPI.Controllers.RequestTest do
       logs = for _ <- 1..10 do
         attributes = %{id: Ecto.UUID.generate(), response: %{}, status_code: 200}
 
-        %Annon.Requests.Schemas.Log{}
-        |> Annon.Requests.Schemas.Log.changeset(attributes)
+        %Annon.Requests.Request{}
+        |> Annon.Requests.Request.changeset(attributes)
         |> Annon.Requests.Repo.insert!()
       end
 

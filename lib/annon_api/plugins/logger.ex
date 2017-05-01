@@ -9,7 +9,7 @@ defmodule Annon.Plugins.Logger do
     plugin_name: "logger"
 
   alias Plug.Conn
-  alias Annon.Requests.Schemas.Log, as: LogSchema
+  alias Annon.Requests.Request
   alias Annon.Configuration.Schemas.API, as: APISchema
   require Logger
 
@@ -34,7 +34,7 @@ defmodule Annon.Plugins.Logger do
       status_code: conn.status
     }
 
-    case LogSchema.create_request(log) do
+    case Request.create_request(log) do
       {:ok, _} ->
         conn
       {:error, error} ->

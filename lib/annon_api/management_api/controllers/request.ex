@@ -11,11 +11,11 @@ defmodule Annon.ManagementAPI.Controllers.Request do
   """
   use Annon.ManagementAPI.CommonRouter
   alias Annon.Requests.Repo
-  alias Annon.Requests.Schemas.Log, as: LogSchema
+  alias Annon.Requests.Request, as: RequestSchema
   alias Annon.Helpers.Pagination
 
   get "/" do
-    LogSchema
+    RequestSchema
     |> Repo.page(Pagination.page_info_from(conn.query_params))
     |> elem(0)
     |> render_collection(conn)
@@ -23,13 +23,13 @@ defmodule Annon.ManagementAPI.Controllers.Request do
 
   get "/:request_id" do
     [id: request_id]
-    |> LogSchema.get_one_by()
+    |> RequestSchema.get_one_by()
     |> render_schema(conn)
   end
 
   delete "/:request_id" do
     request_id
-    |> LogSchema.delete()
+    |> RequestSchema.delete()
     |> render_delete(conn)
   end
 end

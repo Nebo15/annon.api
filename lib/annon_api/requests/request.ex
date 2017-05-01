@@ -1,4 +1,4 @@
-defmodule Annon.Requests.Schemas.Log do
+defmodule Annon.Requests.Request do
   @moduledoc """
   Schema for saved requests and responses.
   """
@@ -6,7 +6,7 @@ defmodule Annon.Requests.Schemas.Log do
   import Ecto.Changeset
   import Ecto.Query
   alias Annon.Requests.Repo
-  alias Annon.Requests.Schemas.Log, as: LogSchema
+  alias Annon.Requests.Request
 
   @derive {Poison.Encoder, except: [:__meta__]}
   @primary_key {:id, :string, autogenerate: false}
@@ -86,19 +86,19 @@ defmodule Annon.Requests.Schemas.Log do
   end
 
   def get_one_by(selector) do
-    Repo.one from LogSchema,
+    Repo.one from Request,
       where: ^selector,
       limit: 1
   end
 
   def create_request(params) when is_map(params) do
-    %LogSchema{}
+    %Request{}
     |> changeset(params)
     |> Repo.insert
   end
 
   def delete(request_id) do
-    Repo.delete_all from a in LogSchema,
+    Repo.delete_all from a in Request,
       where: a.id == ^request_id
   end
 end

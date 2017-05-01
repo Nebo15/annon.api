@@ -8,7 +8,7 @@ defmodule Annon.Plugins.Idempotency do
   alias Plug.Conn
   alias Annon.Configuration.Schemas.Plugin
   alias Annon.Configuration.Schemas.API, as: APISchema
-  alias Annon.Requests.Schemas.Log, as: LogSchema
+  alias Annon.Requests.Request
   alias EView.Views.Error, as: ErrorView
   alias Annon.Helpers.Response
 
@@ -32,16 +32,16 @@ defmodule Annon.Plugins.Idempotency do
   defp execute(_, conn), do: conn
 
   defp load_log_request([key|_]) when is_binary(key) do
-    LogSchema.get_one_by([idempotency_key: key])
+    Request.get_one_by([idempotency_key: key])
   end
   defp load_log_request(_), do: nil
 
-  defp validate_request(%Annon.Requests.Schemas.Log{request: %{body: body}} = log_request, params) do
+  defp validate_request(%Annon.Requests.Request{request: %{body: body}} = log_request, params) do
     {Map.equal?(params, body), log_request}
   end
   defp validate_request(_, _params), do: nil
 
-  defp normalize_resp({true, %Annon.Requests.Schemas.Log{response: %{headers: headers, body: body},
+  defp normalize_resp({true, %Annon.Requests.Request{response: %{headers: headers, body: body},
                                                      status_code: status_code}}, conn) do
     conn
     |> Conn.merge_resp_headers(format_headers(headers))
