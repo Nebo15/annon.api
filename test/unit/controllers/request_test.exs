@@ -2,6 +2,7 @@ defmodule Annon.ManagementAPI.Controllers.RequestTest do
   @moduledoc false
   use Annon.UnitCase, async: true
 
+
   @random_url "random_url"
   @random_data %{"data" => "random"}
 
