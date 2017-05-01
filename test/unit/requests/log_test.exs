@@ -64,6 +64,8 @@ defmodule Annon.Requests.LogTest do
       request4 = RequestsFactory.insert(:request, id: "4")
       request5 = RequestsFactory.insert(:request, id: "5")
 
+      assert {[^request5, ^request4, ^request3, ^request2, ^request1], _paging} =
+        Log.list_requests(%{}, %Paging{limit: nil})
       assert {[^request5], _paging} =
         Log.list_requests(%{}, %Paging{limit: 1})
       assert {[^request5, ^request4], _paging} =
