@@ -2,20 +2,20 @@ use Mix.Config
 
 config :annon_api, Annon.Configuration.Repo,
   adapter: Ecto.Adapters.Postgres,
-  priv: "priv/repos/configs",
   database: "annon_api_configs",
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
+  priv: "priv/repos/configuration",
   pool_size: 10
 
 config :annon_api, Annon.Requests.Repo,
   adapter: Ecto.Adapters.Postgres,
-  priv: "priv/repos/logger",
   database: "annon_api_logger",
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
+  priv: "priv/repos/requests",
   pool_size: 10
 
 config :annon_api, ecto_repos: [Annon.Configuration.Repo, Annon.Requests.Repo]
