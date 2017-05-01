@@ -29,7 +29,15 @@ config :ex_statsd,
   port: 8125,
   namespace: "annon"
 
-config :logger, level: :debug
+# Configure Elixir logger
+config :logger,
+  level: :debug
+
+# Configure JSON Logger back-end
+config :logger_json, :backend,
+  on_init: {Annon, :load_from_system_env, []},
+  json_encoder: Poison,
+  metadata: :all
 
 config :annon_api, :public_http,
   port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 4000}

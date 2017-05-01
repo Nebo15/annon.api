@@ -25,7 +25,7 @@ defmodule Annon.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [
-      applications: [:logger, :confex, :cowboy, :plug, :postgrex, :ecto, :joken, :nex_json_schema,
+      applications: [:logger, :logger_json, :confex, :cowboy, :plug, :postgrex, :ecto, :joken, :nex_json_schema,
                      :poison, :httpoison, :ex_statsd, :skycluster, :eview, :ecto_paging,
                      :runtime_tools],
       mod: {Annon, []}
@@ -57,7 +57,7 @@ defmodule Annon.Mixfile do
      {:cowboy, ">= 0.0.0"},
      {:postgrex, "~> 0.13"},
      {:ecto, "~> 2.1"},
-     {:poison, "~> 3.1", override: true},
+     {:poison, "~> 3.1", override: true}, # TODO: Try jiffy for performance boost
      {:joken, "~> 1.4"},
      {:nex_json_schema, "~> 0.6.0"},
      {:httpoison, ">= 0.0.0"},
@@ -65,6 +65,7 @@ defmodule Annon.Mixfile do
      {:eview,  ">= 0.0.0"},
      {:ecto_paging, ">= 0.0.0"},
      {:phoenix_ecto, ">= 0.0.0"},
+     {:logger_json, "~> 0.4.0"},
      {:cors_plug, "~> 1.1"},
      {:ex_machina, ">= 1.0.0", only: [:dev, :test]},
      {:dogma, ">= 0.0.0", only: [:dev, :test]},
