@@ -1,7 +1,7 @@
 defmodule Annon.Mixfile do
   use Mix.Project
 
-  @version "0.2.33"
+  @version "0.2.34"
 
   def project do
     [app: :annon_api,
