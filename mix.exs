@@ -5,10 +5,10 @@ defmodule Annon.Mixfile do
 
   def project do
     [app: :annon_api,
-     description: "Add description to your package.",
+     description: "Configurable API gateway that acts as a reverse proxy with a plugin system.",
      package: package(),
      version: @version,
-     elixir: "~> 1.3",
+     elixir: "~> 1.4",
      elixirc_paths: elixirc_paths(Mix.env),
      compilers: [] ++ Mix.compilers,
      build_embedded: Mix.env == :prod,
@@ -25,9 +25,9 @@ defmodule Annon.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [
-      applications: [:logger, :logger_json, :confex, :cowboy, :plug, :postgrex, :ecto, :joken, :nex_json_schema,
-                     :poison, :httpoison, :ex_statsd, :skycluster, :eview, :ecto_paging,
-                     :runtime_tools],
+      extra_applications: [:logger, :logger_json, :confex, :cowboy, :plug, :postgrex, :ecto, :joken,
+                           :nex_json_schema, :poison, :httpoison, :ex_statsd, :skycluster, :eview,
+                           :ecto_paging, :runtime_tools],
       mod: {Annon, []}
     ]
   end
@@ -86,12 +86,8 @@ defmodule Annon.Mixfile do
   end
 
   defp aliases do
-    ["ecto.setup": ["ecto.create --quiet",
-                    "ecto.migrate",
-                    "run priv/repos/seeds.exs"],
+    ["ecto.setup": ["ecto.create --quiet", "ecto.migrate", "run priv/repos/seeds.exs"],
      "ecto.reset": ["ecto.drop", "ecto.setup"],
-     "test":       ["ecto.create --quiet",
-                    "ecto.migrate",
-                    "test"]]
+     "test":       ["ecto.create --quiet", "ecto.migrate", "test"]]
   end
 end
