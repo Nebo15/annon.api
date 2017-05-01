@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Helpers.Pagination – annon_api v0.2.31</title>
+    <title>Annon.DataCase – annon_api v0.2.31</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items-b9d2d3a2a1.js"></script>
@@ -59,14 +59,21 @@
 
       <h1>
         <small class="visible-xs">annon_api v0.2.31</small>
-        Annon.Helpers.Pagination
+        Annon.DataCase
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>Functions related to paging</p>
+          <p>This module defines the setup for tests requiring
+access to the application’s data layer.</p>
+<p>You may define functions here to be used as helpers in
+your tests.</p>
+<p>Finally, if the test case interacts with the database,
+it cannot be async. For this reason, every test runs
+inside a transaction which is reset at the beginning
+of the test unless the test case is marked as async.</p>
 
         </section>
       
@@ -88,20 +95,11 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#extract_integer/2">extract_integer(map, key)</a>
+    <a href="#errors_on/2">errors_on(struct, data)</a>
   </div>
   
+    <div class="summary-synopsis"><p>Helper for returning list of errors in a struct when given certain data</p>
 </div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#page_info/1">page_info(conn)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#page_info_from/1">page_info_from(params)</a>
-  </div>
   
 </div>
 
@@ -123,49 +121,31 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="extract_integer/2">
+          <div class="detail" id="errors_on/2">
   
   <div class="detail-header">
-    <a href="#extract_integer/2" class="detail-link" title="Link to this function">
+    <a href="#errors_on/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">extract_integer(map, key)</span>
+    <span class="signature">errors_on(struct, data)</span>
     
     
     
   </div>
   <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="page_info/1">
-  
-  <div class="detail-header">
-    <a href="#page_info/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">page_info(conn)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="page_info_from/1">
-  
-  <div class="detail-header">
-    <a href="#page_info_from/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">page_info_from(params)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
+    <p>Helper for returning list of errors in a struct when given certain data.</p>
+<h2 id="errors_on/2-examples" class="section-heading">
+  <a href="#errors_on/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<p>Given a User schema that lists <code class="inline">:name</code> as a required field and validates
+<code class="inline">:password</code> to be safe, it would return:</p>
+<pre><code class="iex elixir">iex&gt; errors_on(%User{}, %{password: &quot;password&quot;})
+[password: &quot;is unsafe&quot;, name: &quot;is blank&quot;]</code></pre>
+<p>You could then write your assertion like:</p>
+<pre><code class="elixir">assert {:password, &quot;is unsafe&quot;} in errors_on(%User{}, %{password: &quot;password&quot;})</code></pre>
+
   </section>
 </div>
 
