@@ -11,11 +11,11 @@ defmodule Annon.Factory do
   def api_factory do
     %Annon.Configuration.Schemas.API{
       name: sequence(:api_name, &"An API ##{&1}"),
-      request: build(:request)
+      request: build(:api_request)
     }
   end
 
-  def request_factory do
+  def api_request_factory do
     %Annon.Configuration.Schemas.API.Request{
       methods: ["GET"],
       scheme: "http",

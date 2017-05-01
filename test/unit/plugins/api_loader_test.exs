@@ -36,7 +36,7 @@ defmodule Annon.Plugins.APILoaderTest do
 
     test "succesffully reads from ETS storage when host is '*'", %{request: request, api: api} do
       %{request: new_request} = new_api = Annon.Factory.insert(:api, %{
-        request: Annon.Factory.build(:request, %{
+        request: Annon.Factory.build(:api_request, %{
           host: "*",
         })
       })
@@ -111,7 +111,7 @@ defmodule Annon.Plugins.APILoaderTest do
     test "with matching by path" do
       api = Annon.Factory.insert(:api, %{
         name: "API loader Test api",
-        request: Annon.Factory.build(:request, %{
+        request: Annon.Factory.build(:api_request, %{
           methods: ["GET"],
           scheme: "http",
           host: "www.example.com",
@@ -150,7 +150,7 @@ defmodule Annon.Plugins.APILoaderTest do
     test "with matching by overrided host" do
       api = Annon.Factory.insert(:api, %{
         name: "API loader Test api",
-        request: Annon.Factory.build(:request, %{
+        request: Annon.Factory.build(:api_request, %{
           methods: ["GET"],
           scheme: "http",
           host: "www.example.com",
