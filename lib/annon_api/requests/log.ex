@@ -12,7 +12,7 @@ defmodule Annon.Requests.Log do
   @http_request_fields [:method, :uri, :query, :headers, :body]
   @http_response_fields [:status_code, :headers, :body]
   @latencies_fields [:gateway, :upstream, :client_request]
-  @api_fields [:name]
+  @api_fields [:id, :name]
   @api_request_fields [:scheme, :host, :port, :path]
 
   @doc """
@@ -42,8 +42,12 @@ defmodule Annon.Requests.Log do
     do: query
 
   defp maybe_filter_api_ids(query, %{"api_ids" => api_ids}) when is_binary(api_ids) do
-    ids = String.split(api_ids, ",")
-    where(query, [r], r.api_id in ^ids)
+    ids =
+      api_ids
+      |> String.split(",")
+      |> Enum.map(&String.trim/1)
+
+    where(query, [r], fragment("?->'id' \\?| ?", r.api, ^ids))
   end
   defp maybe_filter_api_ids(query, _),
     do: query
@@ -123,17 +127,19 @@ defmodule Annon.Requests.Log do
 
   ## Examples
 
-      iex> delete_request!(123)
-      :ok
+      iex> delete_request(123)
+      {:ok, %Request{}}
+
+      iex> delete_request(007)
+      {:ok, %Request{}}
 
   """
-  def delete_request!(id) when is_binary(id) do
-    case get_request(id) do
+  def delete_request(%Request{} = request) do
+    case Repo.delete(request) do
       {:ok, %Request{} = request} ->
-        Repo.delete!(request)
-        :ok
-      {:error, :not_found} ->
-        :ok
+        {:ok, request}
+      {:error, _} ->
+        {:error, :not_found}
     end
   end
 

@@ -32,7 +32,12 @@ defmodule Annon.ManagementAPI.Controllers.Request do
   end
 
   delete "/:request_id" do
-    Log.delete_request!(request_id)
-    render_delete(conn)
+    case Log.get_request(request_id) do
+      {:ok, request} ->
+        Log.delete_request(request)
+        render_delete(conn)
+      {:error, :not_found} ->
+        render_delete(conn)
+    end
   end
 end

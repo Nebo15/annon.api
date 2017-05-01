@@ -61,7 +61,7 @@ defmodule Annon.Plugins.Logger do
   defp get_api_data(%Plug.Conn{private: %{api_config: nil}}), do: nil
   defp get_api_data(%Plug.Conn{private: %{api_config: %APISchema{id: id, name: name, request: request}}}) do
     %{
-      id: id,
+      id: to_string(id),
       name: name,
       request: prepare_params(request)
     }

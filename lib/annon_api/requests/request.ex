@@ -8,6 +8,7 @@ defmodule Annon.Requests.Request do
   @primary_key {:id, :string, autogenerate: false}
   schema "logs" do
     embeds_one :api, API, primary_key: false do
+      field :id, :string
       field :name, :string
 
       embeds_one :request, Request, primary_key: false do
