@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Controllers.API.Plugin – annon_api v0.2.27</title>
+    <title>Annon.Configuration.Schemas.API – annon_api v0.2.28</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-b4a4be7882.js"></script>
+    <script src="dist/sidebar_items-96333886e8.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.27
+        v0.2.28
       </h2>
     </div>
     
@@ -58,18 +58,15 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.27</small>
-        Annon.Controllers.API.Plugin
+        <small class="visible-xs">annon_api v0.2.28</small>
+        Annon.Configuration.Schemas.API
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>REST interface that allows to manage Plugins and their settings.</p>
-<p>API plugins allow you to perform certain operations on a request,
-most common of them is Proxy that send incoming requests to a upstream back-end.</p>
-<p>You can find full description in <a href="http://docs.annon.apiary.io/#reference/apis/plugins">REST API documentation</a>.</p>
+          <p>Schema for API’s entity.</p>
 
         </section>
       
@@ -91,20 +88,38 @@ most common of them is Proxy that send incoming requests to a upstream back-end.
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#call/2">call(conn, opts)</a>
+    <a href="#changeset/2">changeset(api, params \\ %{})</a>
   </div>
-  
-    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/plug/1.3.5/Plug.html#c:call/2"><code class="inline">Plug.call/2</code></a></p>
-</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#init/1">init(opts)</a>
+    <a href="#create/1">create(params)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/plug/1.3.5/Plug.html#c:init/1"><code class="inline">Plug.init/1</code></a></p>
 </div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#delete/1">delete(api_id)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_one_by/1">get_one_by(selector)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#request_changeset/2">request_changeset(api, params \\ %{})</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#update/2">update(api_id, params)</a>
+  </div>
   
 </div>
 
@@ -126,36 +141,98 @@ most common of them is Proxy that send incoming requests to a upstream back-end.
             </a>
             Functions
           </h1>
-          <div class="detail" id="call/2">
+          <div class="detail" id="changeset/2">
+  
+    <span id="changeset/1" />
   
   <div class="detail-header">
-    <a href="#call/2" class="detail-link" title="Link to this function">
+    <a href="#changeset/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">call(conn, opts)</span>
+    <span class="signature">changeset(api, params \\ %{})</span>
     
     
     
   </div>
   <section class="docstring">
-    <p>Callback implementation for <a href="https://hexdocs.pm/plug/1.3.5/Plug.html#c:call/2"><code class="inline">Plug.call/2</code></a>.</p>
-
+    
   </section>
 </div>
-<div class="detail" id="init/1">
+<div class="detail" id="create/1">
   
   <div class="detail-header">
-    <a href="#init/1" class="detail-link" title="Link to this function">
+    <a href="#create/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">init(opts)</span>
+    <span class="signature">create(params)</span>
     
     
     
   </div>
   <section class="docstring">
-    <p>Callback implementation for <a href="https://hexdocs.pm/plug/1.3.5/Plug.html#c:init/1"><code class="inline">Plug.init/1</code></a>.</p>
-
+    
+  </section>
+</div>
+<div class="detail" id="delete/1">
+  
+  <div class="detail-header">
+    <a href="#delete/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">delete(api_id)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="get_one_by/1">
+  
+  <div class="detail-header">
+    <a href="#get_one_by/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">get_one_by(selector)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="request_changeset/2">
+  
+    <span id="request_changeset/1" />
+  
+  <div class="detail-header">
+    <a href="#request_changeset/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">request_changeset(api, params \\ %{})</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="update/2">
+  
+  <div class="detail-header">
+    <a href="#update/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">update(api_id, params)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
   </section>
 </div>
 

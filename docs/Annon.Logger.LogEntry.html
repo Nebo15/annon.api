@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.DB.Schemas.Plugin – annon_api v0.2.27</title>
+    <title>Annon.Logger.LogEntry – annon_api v0.2.28</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-b4a4be7882.js"></script>
+    <script src="dist/sidebar_items-96333886e8.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.27
+        v0.2.28
       </h2>
     </div>
     
@@ -58,15 +58,15 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.27</small>
-        Annon.DB.Schemas.Plugin
+        <small class="visible-xs">annon_api v0.2.28</small>
+        Annon.Logger.LogEntry
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>Schema for Plugins settings.</p>
+          <p>Schema for saved requests and responses.</p>
 
         </section>
       
@@ -80,19 +80,6 @@
             Summary
           </h1>
           
-  <div class="summary-types summary">
-    <h2>
-      <a href="#types">Types</a>
-    </h2>
-    <div class="summary-row">
-  <div class="summary-signature">
-    <a href="#t:t/0">t()</a>
-  </div>
-  
-</div>
-
-  </div>
-
 
           
   <div class="summary-functions summary">
@@ -104,37 +91,52 @@
     <a href="#changeset/2">changeset(struct, params \\ %{})</a>
   </div>
   
-    <div class="summary-synopsis"><p>Builds a changeset based on the <code class="inline">struct</code> and <code class="inline">params</code></p>
-</div>
-  
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#create/2">create(api_id, params)</a>
+    <a href="#changeset_embeded_api/2">changeset_embeded_api(data, params \\ %{})</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#delete/2">delete(api_id, name)</a>
+    <a href="#changeset_embeded_api_request/2">changeset_embeded_api_request(data, params \\ %{})</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_by/1">get_by(selector)</a>
+    <a href="#changeset_embeded_latencies/2">changeset_embeded_latencies(data, params \\ %{})</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#changeset_embeded_request/2">changeset_embeded_request(data, params \\ %{})</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#changeset_embeded_response/2">changeset_embeded_response(data, params \\ %{})</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#create_request/1">create_request(params)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#delete/1">delete(request_id)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#get_one_by/1">get_one_by(selector)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#update/3">update(api_id, name, params)</a>
   </div>
   
 </div>
@@ -147,39 +149,6 @@
         </section>
       
 
-      
-        <section id="types" class="details-list">
-          <h1 class="section-heading">
-            <a class="hover-link" href="#types">
-              <i class="icon-link"></i>
-            </a>
-            Types
-          </h1>
-          <div class="types-list">
-            <div class="detail" id="t:t/0">
-  
-  <div class="detail-header">
-    <a href="#t:t/0" class="detail-link" title="Link to this type">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">t()</span>
-    
-    
-    
-      <div class="specs">
-        
-          <pre>t() :: %Annon.DB.Schemas.Plugin{__meta__: term, api: term, api_id: term, id: term, inserted_at: term, is_enabled: boolean, name: atom, settings: map, updated_at: term}</pre>
-        
-      </div>
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-
-          </div>
-        </section>
       
 
       
@@ -204,17 +173,18 @@
     
   </div>
   <section class="docstring">
-    <p>Builds a changeset based on the <code class="inline">struct</code> and <code class="inline">params</code>.</p>
-
+    
   </section>
 </div>
-<div class="detail" id="create/2">
+<div class="detail" id="changeset_embeded_api/2">
+  
+    <span id="changeset_embeded_api/1" />
   
   <div class="detail-header">
-    <a href="#create/2" class="detail-link" title="Link to this function">
+    <a href="#changeset_embeded_api/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">create(api_id, params)</span>
+    <span class="signature">changeset_embeded_api(data, params \\ %{})</span>
     
     
     
@@ -223,13 +193,15 @@
     
   </section>
 </div>
-<div class="detail" id="delete/2">
+<div class="detail" id="changeset_embeded_api_request/2">
+  
+    <span id="changeset_embeded_api_request/1" />
   
   <div class="detail-header">
-    <a href="#delete/2" class="detail-link" title="Link to this function">
+    <a href="#changeset_embeded_api_request/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">delete(api_id, name)</span>
+    <span class="signature">changeset_embeded_api_request(data, params \\ %{})</span>
     
     
     
@@ -238,13 +210,79 @@
     
   </section>
 </div>
-<div class="detail" id="get_by/1">
+<div class="detail" id="changeset_embeded_latencies/2">
+  
+    <span id="changeset_embeded_latencies/1" />
   
   <div class="detail-header">
-    <a href="#get_by/1" class="detail-link" title="Link to this function">
+    <a href="#changeset_embeded_latencies/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_by(selector)</span>
+    <span class="signature">changeset_embeded_latencies(data, params \\ %{})</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="changeset_embeded_request/2">
+  
+    <span id="changeset_embeded_request/1" />
+  
+  <div class="detail-header">
+    <a href="#changeset_embeded_request/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">changeset_embeded_request(data, params \\ %{})</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="changeset_embeded_response/2">
+  
+    <span id="changeset_embeded_response/1" />
+  
+  <div class="detail-header">
+    <a href="#changeset_embeded_response/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">changeset_embeded_response(data, params \\ %{})</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="create_request/1">
+  
+  <div class="detail-header">
+    <a href="#create_request/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">create_request(params)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="delete/1">
+  
+  <div class="detail-header">
+    <a href="#delete/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">delete(request_id)</span>
     
     
     
@@ -260,21 +298,6 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">get_one_by(selector)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="update/3">
-  
-  <div class="detail-header">
-    <a href="#update/3" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">update(api_id, name, params)</span>
     
     
     

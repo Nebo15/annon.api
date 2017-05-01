@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.ManagementRouter – annon_api v0.2.27</title>
+    <title>Annon.Plugin – annon_api v0.2.28</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-b4a4be7882.js"></script>
+    <script src="dist/sidebar_items-96333886e8.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.27
+        v0.2.28
       </h2>
     </div>
     
@@ -58,15 +58,27 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.27</small>
-        Annon.ManagementRouter
+        <small class="visible-xs">annon_api v0.2.28</small>
+        Annon.Plugin
+        
+          <small>behaviour</small>
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>Router for a <a href="http://docs.annon.apiary.io/#reference/apis">Annons Management API</a>.</p>
+          <p>This helper provides abstract interface to define plugin.</p>
+<p>Example:</p>
+<pre><code class="elixir">use Annon.Plugin,
+  plugin_name: &quot;my_plugin&quot;</code></pre>
+<p>It will add</p>
+<ul>
+<li><code class="inline">init/1</code> settings required by Plug behavior, that will pass opts to <code class="inline">init/2</code> methods.
+</li>
+<li><code class="inline">find_plugin_settings/1</code> method that allows to find plugin settings and make sure that it’s enabled.
+</li>
+</ul>
 
         </section>
       
@@ -82,33 +94,24 @@
           
 
           
-  <div class="summary-functions summary">
+
+          
+  <div class="summary-callbacks summary">
     <h2>
-      <a href="#functions">Functions</a>
+      <a href="#callbacks">Callbacks</a>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#call/2">call(conn, opts)</a>
+    <a href="#c:find_plugin_settings/1">find_plugin_settings(list)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/plug/1.3.5/Plug.html#c:call/2"><code class="inline">Plug.call/2</code></a></p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#init/1">init(opts)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/plug/1.3.5/Plug.html#c:init/1"><code class="inline">Plug.init/1</code></a></p>
+    <div class="summary-synopsis"><p>Find plugin settings in <code class="inline">plugins</code> list. Returns <code class="inline">nil</code> if plugin is not found</p>
 </div>
   
 </div>
 
   </div>
 
-
-          
 
         </section>
       
@@ -116,49 +119,41 @@
       
 
       
-        <section id="functions" class="details-list">
+
+      
+        <section id="callbacks" class="details-list">
           <h1 class="section-heading">
-            <a class="hover-link" href="#functions">
+            <a class="hover-link" href="#callbacks">
               <i class="icon-link"></i>
             </a>
-            Functions
+            Callbacks
           </h1>
-          <div class="detail" id="call/2">
+          <div class="detail" id="c:find_plugin_settings/1">
   
   <div class="detail-header">
-    <a href="#call/2" class="detail-link" title="Link to this function">
+    <a href="#c:find_plugin_settings/1" class="detail-link" title="Link to this callback">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">call(conn, opts)</span>
+    <span class="signature">find_plugin_settings(list)</span>
     
     
+    
+      <div class="specs">
+        
+          <pre>find_plugin_settings([<a href="Annon.Configuration.Schemas.Plugin.html#t:t/0">Annon.Configuration.Schemas.Plugin.t</a>]) ::
+  nil |
+  <a href="Annon.Configuration.Schemas.Plugin.html#t:t/0">Annon.Configuration.Schemas.Plugin.t</a></pre>
+        
+      </div>
     
   </div>
   <section class="docstring">
-    <p>Callback implementation for <a href="https://hexdocs.pm/plug/1.3.5/Plug.html#c:call/2"><code class="inline">Plug.call/2</code></a>.</p>
-
-  </section>
-</div>
-<div class="detail" id="init/1">
-  
-  <div class="detail-header">
-    <a href="#init/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">init(opts)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    <p>Callback implementation for <a href="https://hexdocs.pm/plug/1.3.5/Plug.html#c:init/1"><code class="inline">Plug.init/1</code></a>.</p>
+    <p>Find plugin settings in <code class="inline">plugins</code> list. Returns <code class="inline">nil</code> if plugin is not found.</p>
 
   </section>
 </div>
 
         </section>
-      
-
       
           <footer class="footer">
         <p>

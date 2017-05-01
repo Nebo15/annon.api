@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.AcceptanceCase – annon_api v0.2.28</title>
+    <title>Annon.ManagementAPI.Render – annon_api v0.2.28</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items-96333886e8.js"></script>
@@ -59,16 +59,14 @@
 
       <h1>
         <small class="visible-xs">annon_api v0.2.28</small>
-        Annon.AcceptanceCase
+        Annon.ManagementAPI.Render
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>This module defines the test case to be used by
-acceptance tests. It can allow run tests in async when each SQL.Sandbox connection will be
-binded to a specific test.</p>
+          <p>Use this helpers when you want to render result in a controllers.</p>
 
         </section>
       
@@ -90,32 +88,38 @@ binded to a specific test.</p>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#assert_status/2">assert_status(response, status)</a>
+    <a href="#render_change/3">render_change(tuple, conn, status \\ 200)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>This render should be used for <code class="inline">Repo.create</code> and <code class="inline">Repo.update</code> results</p>
+</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#build_factory_params/2">build_factory_params(factory, overrides \\ [])</a>
+    <a href="#render_collection/2">render_collection(resources, conn)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>This render should be used for <code class="inline">Repo.all</code> results</p>
+</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#build_jwt_signature/1">build_jwt_signature(signature)</a>
+    <a href="#render_delete/2">render_delete(arg, conn)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>This render should be used for <code class="inline">Repo.delete_all</code> results</p>
+</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#build_jwt_token/2">build_jwt_token(payload, signature)</a>
+    <a href="#render_schema/2">render_schema(resource, conn)</a>
   </div>
   
+    <div class="summary-synopsis"><p>This render should be used for <code class="inline">Repo.one</code> results</p>
 </div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#get_body/1">get_body(response)</a>
-  </div>
   
 </div>
 
@@ -137,81 +141,71 @@ binded to a specific test.</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="assert_status/2">
+          <div class="detail" id="render_change/3">
+  
+    <span id="render_change/2" />
   
   <div class="detail-header">
-    <a href="#assert_status/2" class="detail-link" title="Link to this function">
+    <a href="#render_change/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">assert_status(response, status)</span>
+    <span class="signature">render_change(tuple, conn, status \\ 200)</span>
     
     
     
   </div>
   <section class="docstring">
-    
+    <p>This render should be used for <code class="inline">Repo.create</code> and <code class="inline">Repo.update</code> results.</p>
+
   </section>
 </div>
-<div class="detail" id="build_factory_params/2">
-  
-    <span id="build_factory_params/1" />
+<div class="detail" id="render_collection/2">
   
   <div class="detail-header">
-    <a href="#build_factory_params/2" class="detail-link" title="Link to this function">
+    <a href="#render_collection/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">build_factory_params(factory, overrides \\ [])</span>
+    <span class="signature">render_collection(resources, conn)</span>
     
     
     
   </div>
   <section class="docstring">
-    
+    <p>This render should be used for <code class="inline">Repo.all</code> results.</p>
+
   </section>
 </div>
-<div class="detail" id="build_jwt_signature/1">
+<div class="detail" id="render_delete/2">
   
   <div class="detail-header">
-    <a href="#build_jwt_signature/1" class="detail-link" title="Link to this function">
+    <a href="#render_delete/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">build_jwt_signature(signature)</span>
+    <span class="signature">render_delete(arg, conn)</span>
     
     
     
   </div>
   <section class="docstring">
-    
+    <p>This render should be used for <code class="inline">Repo.delete_all</code> results.</p>
+<p>It will throw an error if you tried to delete more than one record in a DB.</p>
+
   </section>
 </div>
-<div class="detail" id="build_jwt_token/2">
+<div class="detail" id="render_schema/2">
   
   <div class="detail-header">
-    <a href="#build_jwt_token/2" class="detail-link" title="Link to this function">
+    <a href="#render_schema/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">build_jwt_token(payload, signature)</span>
+    <span class="signature">render_schema(resource, conn)</span>
     
     
     
   </div>
   <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="get_body/1">
-  
-  <div class="detail-header">
-    <a href="#get_body/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">get_body(response)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
+    <p>This render should be used for <code class="inline">Repo.one</code> results.</p>
+
   </section>
 </div>
 

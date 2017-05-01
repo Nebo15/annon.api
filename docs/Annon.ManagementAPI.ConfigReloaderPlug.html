@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Controllers.Request – annon_api v0.2.27</title>
+    <title>Annon.ManagementAPI.ConfigReloaderPlug – annon_api v0.2.28</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-b4a4be7882.js"></script>
+    <script src="dist/sidebar_items-96333886e8.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.27
+        v0.2.28
       </h2>
     </div>
     
@@ -58,19 +58,17 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.27</small>
-        Annon.Controllers.Request
+        <small class="visible-xs">annon_api v0.2.28</small>
+        Annon.ManagementAPI.ConfigReloaderPlug
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>REST interface that allows to fetch and delete stored requests.</p>
-<p>By-default, Annon will store all request and response structure in a persistent storage,
-and it’s completely up to you how do you manage data retention in it.</p>
-<p>This data is used by Idempotency plug and by dashboard that shows near-realtime metrics on Annons perfomance.</p>
-<p>You can find full description in <a href="http://docs.annon.apiary.io/#reference/requests">REST API documentation</a>.</p>
+          <p>This plugin
+<a href="http://docs.annon.apiary.io/#introduction/general-features/caching-and-perfomance">invalidates Annons cache</a>
+whenever there was change triggered by a management API.</p>
 
         </section>
       
@@ -95,17 +93,11 @@ and it’s completely up to you how do you manage data retention in it.</p>
     <a href="#call/2">call(conn, opts)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/plug/1.3.5/Plug.html#c:call/2"><code class="inline">Plug.call/2</code></a></p>
-</div>
-  
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#init/1">init(opts)</a>
   </div>
-  
-    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/plug/1.3.5/Plug.html#c:init/1"><code class="inline">Plug.init/1</code></a></p>
-</div>
   
 </div>
 
@@ -139,8 +131,7 @@ and it’s completely up to you how do you manage data retention in it.</p>
     
   </div>
   <section class="docstring">
-    <p>Callback implementation for <a href="https://hexdocs.pm/plug/1.3.5/Plug.html#c:call/2"><code class="inline">Plug.call/2</code></a>.</p>
-
+    
   </section>
 </div>
 <div class="detail" id="init/1">
@@ -155,8 +146,7 @@ and it’s completely up to you how do you manage data retention in it.</p>
     
   </div>
   <section class="docstring">
-    <p>Callback implementation for <a href="https://hexdocs.pm/plug/1.3.5/Plug.html#c:init/1"><code class="inline">Plug.init/1</code></a>.</p>
-
+    
   </section>
 </div>
 
