@@ -13,6 +13,7 @@ defmodule Annon.Configuration.Schemas.API do
   @allowed_methods ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
 
   @derive {Poison.Encoder, except: [:__meta__, :plugins]}
+  @primary_key {:id, :binary_id, autogenerate: true}
   schema "apis" do
     field :name, :string
 

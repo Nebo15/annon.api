@@ -27,7 +27,8 @@ defmodule Annon.Configuration.Schemas.Plugin do
     field :name, :string
     field :is_enabled, :boolean, default: false
     field :settings, :map
-    belongs_to :api, APISchema
+
+    belongs_to :api, APISchema, type: :binary_id
 
     timestamps()
   end

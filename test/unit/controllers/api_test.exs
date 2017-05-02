@@ -34,6 +34,7 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
                "has_more" => true} = Poison.decode!(conn.resp_body)["paging"]
     end
 
+    @tag :pending
     test "GET /apis?ending_before=7&limit=4", %{apis: apis} do
       id = Enum.at(apis, 7).id
 
@@ -123,7 +124,8 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
 
   describe "/apis/:api_id" do
     test "GET 404" do
-      "/apis/0"
+      id = Ecto.UUID.generate()
+      "/apis/#{id}"
       |> call_get()
       |> assert_conn_status(404)
     end

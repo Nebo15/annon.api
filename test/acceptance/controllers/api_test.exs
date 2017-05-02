@@ -23,7 +23,8 @@ defmodule Annon.Acceptance.Controllers.APITest do
     end
 
     test "PUT when model does not exist" do
-      "apis/1000"
+      id = Ecto.UUID.generate()
+      "apis/#{id}"
       |> put_management_url()
       |> put(%{name: "updated-name"})
       |> assert_status(404)
@@ -46,7 +47,8 @@ defmodule Annon.Acceptance.Controllers.APITest do
     end
 
     test "DELETE when model does not exist" do
-      "apis/1000"
+      id = Ecto.UUID.generate()
+      "apis/#{id}"
       |> put_management_url()
       |> delete()
       |> assert_status(204)
