@@ -42,4 +42,22 @@ defmodule Annon.Plugin do
   Find plugin settings in `plugins` list. Returns `nil` if plugin is not found.
   """
   @callback find_plugin_settings([PluginSchema.t]) :: nil | PluginSchema.t
+
+  def __plugins__ do
+    %{
+      "jwt" => Annon.Plugins.JWT,
+      "validator" => Annon.Plugins.Validator,
+      "acl" => Annon.Plugins.ACL,
+      "proxy" => Annon.Plugins.Proxy,
+      "idempotency" => Annon.Plugins.Idempotency,
+      "ip_restriction" => Annon.Plugins.IPRestriction,
+      "ua_restriction" => Annon.Plugins.UARestriction,
+      "scopes" => Annon.Plugins.Scopes,
+      "cors" => Annon.Plugins.CORS,
+    }
+  end
+
+  def __plugin_names__ do
+    Map.keys(__plugins__())
+  end
 end

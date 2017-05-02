@@ -27,7 +27,7 @@ defmodule Annon.Acceptance.Controllers.APITest do
       "apis/#{id}"
       |> put_management_url()
       |> put(%{name: "updated-name"})
-      |> assert_status(404)
+      |> assert_status(201)
     end
 
     test "DELETE" do

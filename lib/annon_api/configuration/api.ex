@@ -68,41 +68,38 @@ defmodule Annon.Configuration.API do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_api(attrs \\ %{}) do
+  def create_api(attrs) do
     %APISchema{}
+    |> api_changeset(attrs)
+    |> Repo.insert()
+  end
+  def create_api(id, attrs) do
+    %APISchema{id: id}
     |> api_changeset(attrs)
     |> Repo.insert()
   end
 
   @doc """
-  Create or Update a API.
+  Update a API.
 
   Update requires all fields to be present.
   Old API will be deleted, but `id` and `inserted_at` values will be persisted in new record.
 
   ## Examples
 
-      iex> create_or_update_api(api, %{field: new_value})
+      iex> update_api(api, %{field: new_value})
       {:ok, %Annon.Configuration.Schemas.API{}}
 
-      iex> create_or_update_api(api, %{field: bad_value})
+      iex> update_api(api, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_or_update_api(id, attrs) do
+  def update_api(%APISchema{id: id, inserted_at: inserted_at}, attrs) do
     api =
-      case get_api(id) do
-        {:ok, %APISchema{inserted_at: inserted_at}} ->
-          id
-          |> build_api_by_id()
-          |> api_changeset(attrs)
-          |> put_change(:inserted_at, inserted_at)
-
-        {:error, :not_found} ->
-          id
-          |> build_api_by_id()
-          |> api_changeset(attrs)
-      end
+      id
+      |> build_api_by_id()
+      |> api_changeset(attrs)
+      |> put_change(:inserted_at, inserted_at)
 
     multi =
       Multi.new()

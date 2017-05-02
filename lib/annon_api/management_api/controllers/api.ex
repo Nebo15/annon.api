@@ -31,14 +31,23 @@ defmodule Annon.ManagementAPI.Controllers.API do
   end
 
   put "/:api_id" do
-    api_id
-    |> APISchema.update(conn.body_params)
-    |> render_change(conn)
+    case ConfigurationAPI.get_api(api_id) do
+      {:ok, %APISchema{} = api} ->
+        api
+        |> ConfigurationAPI.update_api(conn.body_params)
+        |> render_change(conn, 200)
+
+      {:error, :not_found} ->
+        api_id
+        |> ConfigurationAPI.create_api(conn.body_params)
+        |> render_change(conn, 201)
+    end
   end
 
+  # TODO: deprecated
   post "/" do
     conn.body_params
-    |> APISchema.create
+    |> ConfigurationAPI.create_api()
     |> render_change(conn, 201)
   end
 

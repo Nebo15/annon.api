@@ -9,46 +9,6 @@ defmodule Annon.Acceptance.Controllers.PluginsTest do
     %{api: api, api_id: api_id}
   end
 
-  describe "partially update settings" do
-    test "create", %{api_id: api_id} do
-      proxy = :proxy_plugin
-      |> build_factory_params(%{settings: %{host: "host.com"}})
-
-      assert  %{
-        "data" => %{"is_enabled" => true, "settings" => %{"host" => "host.com"}}
-      } = "apis/#{api_id}/plugins"
-      |> put_management_url()
-      |> post!(proxy)
-      |> assert_status(201)
-      |> get_body()
-
-      proxy = :proxy_plugin
-      |> build_factory_params(%{settings: %{port: 4040}})
-
-      assert  %{
-        "data" => %{"is_enabled" => true, "settings" => %{"host" => "host.com", "port" => 4040}}
-      } = "apis/#{api_id}/plugins/proxy"
-      |> put_management_url()
-      |> put!(proxy)
-      |> assert_status(200)
-      |> get_body()
-
-      proxy = :proxy_plugin
-      |> build_factory_params(%{is_enabled: false, settings: %{"host" => "host2.com", "port" => 40}})
-
-      assert  %{
-        "data" => %{
-          "is_enabled" => false,
-          "settings" => %{"host" => "host2.com", "port" => 40}
-        }
-      } = "apis/#{api_id}/plugins/proxy"
-      |> put_management_url()
-      |> put!(proxy)
-      |> assert_status(200)
-      |> get_body()
-    end
-  end
-
   describe "JWT Plugin" do
     test "create", %{api_id: api_id} do
       jwt_plugin = :jwt_plugin

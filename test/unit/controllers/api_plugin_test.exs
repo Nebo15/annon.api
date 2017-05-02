@@ -91,7 +91,7 @@ defmodule Annon.ManagementAPI.Controllers.API.PluginTest do
       |> assert_conn_status()
 
       # Name can be read from uri params
-      plugin_data = %{settings: settings}
+      plugin_data = %{name: "validator", settings: settings}
       "/apis/#{api_model.id}/plugins/validator"
       |> call_put(plugin_data)
       |> assert_conn_status()

@@ -154,7 +154,7 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
 
       conn = "/apis/#{api.id}"
       |> call_put(api_update)
-      |> assert_conn_status()
+      |> assert_conn_status(200)
 
       assert %{
         "id" => _,

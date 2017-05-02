@@ -9,21 +9,10 @@ defmodule Annon.Configuration.Plugin do
   alias Ecto.Changeset
   alias Ecto.Multi
 
-  @plugins %{
-    "jwt" => Annon.Plugins.JWT,
-    "validator" => Annon.Plugins.Validator,
-    "acl" => Annon.Plugins.ACL,
-    "proxy" => Annon.Plugins.Proxy,
-    "idempotency" => Annon.Plugins.Idempotency,
-    "ip_restriction" => Annon.Plugins.IPRestriction,
-    "ua_restriction" => Annon.Plugins.UARestriction,
-    "scopes" => Annon.Plugins.Scopes,
-    "cors" => Annon.Plugins.CORS,
-  }
-
+  @plugins Annon.Plugin.__plugins__()
+  @plugin_names Annon.Plugin.__plugin_names__()
   @plugin_fields [:name, :settings, :is_enabled]
   @required_plugin_fields [:name, :is_enabled]
-  @known_plugins @plugins |> Map.keys()
 
   @doc """
   Returns the list of Plugins by API ID.
@@ -70,66 +59,58 @@ defmodule Annon.Configuration.Plugin do
   end
 
   @doc """
-  Create or Update a Plugin.
-  Name can be passed either in `attrs` map or as second argument.
-
-  Update requires all fields to be present.
-  Old Plugin will be deleted, but `id`, `api_id`, `name` and `inserted_at` values will be persisted in new record.
+  Creates a Plugin.
 
   ## Examples
 
-      iex> create_or_update_plugin(api, "jwt", %{field: new_value})
+      iex> create_plugin(api, "proxy", %{field: value})
       {:ok, %Annon.Configuration.Schemas.Plugin{}}
 
-      iex> create_or_update_plugin(api, "jwt", %{field: bad_value})
+      iex> create_plugin(api, "proxy", %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
-      iex> create_or_update_plugin(api, %{field: new_value, name: "jwt"})
-      {:ok, %Annon.Configuration.Schemas.Plugin{}}
-
-      iex> create_or_update_plugin(api, %{"field" => new_value, "name" => "jwt"})
-      {:ok, %Annon.Configuration.Schemas.Plugin{}}
+      iex> create_plugin(api, "proxy", %{field: value, name: "not_a_proxy"})
+      {:error, %Ecto.Changeset{}}
 
   """
-  def create_or_update_plugin(%APISchema{} = api, %{name: name} = attrs),
-    do: create_or_update_plugin(api, name, attrs)
-  def create_or_update_plugin(%APISchema{} = api, %{"name" => name} = attrs),
-    do: create_or_update_plugin(api, name, attrs)
-  def create_or_update_plugin(%APISchema{} = _api, attrs) do
-    %Changeset{valid?: false} = changeset = plugin_changeset(%PluginSchema{}, attrs)
-    {:error, changeset}
+  def create_plugin(%APISchema{} = api, name, attrs) do
+    %PluginSchema{api: api}
+    |> plugin_changeset(attrs)
+    |> validate_inclusion(:name, [name], message: "name conflicts with request parameters") # TODO: move to controller
+    |> Repo.insert()
   end
-  def create_or_update_plugin(%APISchema{} = api, name, attrs) do
-    plugin = build_plugin(api, name, attrs)
+
+  @doc """
+  Update a Plugin.
+
+  Update requires all fields to be present.
+  Old Plugin will be deleted, but `id`, `api_id` and `inserted_at` values will be persisted in new record.
+
+  ## Examples
+
+      iex> update_plugin(%PluginSchema{}, %{field: new_value})
+      {:ok, %Annon.Configuration.Schemas.Plugin{}}
+
+      iex> update_plugin(%PluginSchema{}, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_plugin(%PluginSchema{id: id, inserted_at: inserted_at, api_id: api_id, name: name}, attrs) do
+    plugin =
+      id
+      |> build_plugin_by_id()
+      |> plugin_changeset(attrs)
+      |> put_change(:inserted_at, inserted_at)
+      |> put_change(:api_id, api_id)
 
     multi =
       Multi.new()
-      |> Multi.delete_all(:delete, get_plugin_query(api.id, name))
+      |> Multi.delete_all(:delete, get_plugin_query(api_id, name))
       |> Multi.insert(:insert, plugin)
 
     case Repo.transaction(multi) do
       {:ok, %{insert: plugin}} -> {:ok, plugin}
       {:error, :insert, changeset, _} -> {:error, changeset}
-    end
-  end
-
-  defp build_plugin(api, name, attrs) do
-    case get_plugin(api.id, name) do
-      {:ok, %PluginSchema{inserted_at: inserted_at, id: id}} ->
-        id
-        |> build_plugin_by_id()
-        |> plugin_changeset(attrs)
-        |> validate_inclusion(:name, [name], message: "name conflicts with request parameters")
-        |> put_change(:name, name)
-        |> put_change(:inserted_at, inserted_at)
-        |> put_change(:api_id, api.id)
-
-      {:error, :not_found} ->
-        %PluginSchema{}
-        |> plugin_changeset(attrs)
-        |> validate_inclusion(:name, [name], message: "name conflicts with request parameters")
-        |> put_change(:name, name)
-        |> put_change(:api_id, api.id)
     end
   end
 
@@ -165,7 +146,7 @@ defmodule Annon.Configuration.Plugin do
     plugin
     |> cast(attrs, @plugin_fields)
     |> validate_required(@required_plugin_fields)
-    |> validate_inclusion(:name, @known_plugins)
+    |> validate_inclusion(:name, @plugin_names)
     |> assoc_constraint(:api)
     |> unique_constraint(:api_id_name)
     |> validate_settings()
@@ -175,7 +156,7 @@ defmodule Annon.Configuration.Plugin do
     do: changeset
   defp validate_settings(%Changeset{valid?: true} = changeset) do
     %{params: %{"name" => name}} = changeset
-    pligin_impl = Map.fetch!(@plugins, name)
-    pligin_impl.validate_settings(changeset)
+    plugin_impl = Map.fetch!(@plugins, name)
+    plugin_impl.validate_settings(changeset)
   end
 end

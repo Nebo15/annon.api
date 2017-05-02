@@ -102,15 +102,16 @@ defmodule Annon.Configuration.APITest do
       assert api.request.scheme == @create_attrs.request.scheme
     end
 
+
     test "with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = API.create_api(%{})
     end
   end
 
-  describe "create_or_update_api/2" do
-    test "with valid data creates a new api" do
+  describe "create_api/2" do
+    test "with valid data creates a api" do
       id = Ecto.UUID.generate()
-      assert {:ok, %APISchema{} = api} = API.create_or_update_api(id, @create_attrs)
+      assert {:ok, %APISchema{} = api} = API.create_api(id, @create_attrs)
 
       assert api.id == id
       assert api.name == @create_attrs.name
@@ -121,9 +122,30 @@ defmodule Annon.Configuration.APITest do
       assert api.request.scheme == @create_attrs.request.scheme
     end
 
+    test "with invalid data returns error changeset" do
+      id = Ecto.UUID.generate()
+      assert {:error, %Ecto.Changeset{}} = API.create_api(id, %{})
+    end
+  end
+
+  describe "update_api/2" do
+    # TODO: Move to controller test
+    # test "with valid data creates a new api" do
+    #   id = Ecto.UUID.generate()
+    #   assert {:ok, %APISchema{} = api} = API.update_api(id, @create_attrs)
+
+    #   assert api.id == id
+    #   assert api.name == @create_attrs.name
+    #   assert api.request.host == @create_attrs.request.host
+    #   assert api.request.methods == @create_attrs.request.methods
+    #   assert api.request.path == @create_attrs.request.path
+    #   assert api.request.port == @create_attrs.request.port
+    #   assert api.request.scheme == @create_attrs.request.scheme
+    # end
+
     test "updates existing api" do
       old_api = ConfigurationFactory.insert(:api)
-      assert {:ok, %APISchema{} = api} = API.create_or_update_api(old_api.id, @create_attrs)
+      assert {:ok, %APISchema{} = api} = API.update_api(old_api, @create_attrs)
 
       assert api.id == old_api.id
       assert api.inserted_at == old_api.inserted_at
@@ -138,7 +160,8 @@ defmodule Annon.Configuration.APITest do
     end
 
     test "with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = API.create_or_update_api(Ecto.UUID.generate(), %{})
+      old_api = ConfigurationFactory.insert(:api)
+      assert {:error, %Ecto.Changeset{}} = API.update_api(old_api, %{})
     end
   end
 
