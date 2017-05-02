@@ -10,7 +10,7 @@ defmodule Annon.Plugins.Scopes do
   alias Annon.Configuration.Schemas.API, as: APISchema
   alias Annon.Plugins.Scopes.JWTStrategy
   alias Annon.Plugins.Scopes.PCMStrategy
-  alias Annon.Helpers.Scopes.OAuth2Strategy
+  alias Annon.Plugins.Scopes.OAuth2Strategy
 
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts)
     when is_list(plugins) do
