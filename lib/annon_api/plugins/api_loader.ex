@@ -40,9 +40,15 @@ defmodule Annon.Plugins.APILoader do
 
   def find_matching_path(apis, path) do
     apis
-    |> Enum.filter(&String.starts_with?(path, &1.request.path))
+    |> Enum.filter(&find_using_regex(path, &1.request.path))
     |> Enum.sort_by(&String.length(&1.request.path))
     |> Enum.reverse
     |> List.first
+  end
+
+  defp find_using_regex(request_path, gateway_path) do
+    gateway_path
+    |> Regex.compile!
+    |> Regex.match?(request_path)
   end
 end
