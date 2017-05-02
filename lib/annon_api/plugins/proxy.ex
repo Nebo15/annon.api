@@ -101,9 +101,9 @@ defmodule Annon.Plugins.Proxy do
     timeout_opts = [connect_timeout: 30_000, recv_timeout: 30_000, timeout: 30_000]
 
     headers =
-       conn
-       |> Map.get(:req_headers)
-       |> Enum.reject(fn {a, _} -> a == "host" end)
+      conn
+      |> Map.get(:req_headers)
+      |> Enum.reject(fn {a, _} -> a == "host" end)
 
     case HTTPoison.request(method, link, body, headers, timeout_opts) do
       {:ok, response} ->
