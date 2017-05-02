@@ -3,14 +3,6 @@ defmodule Annon.Configuration.Schemas.API do
   Schema for API's entity.
   """
   use Ecto.Schema
-  import Ecto.Changeset
-  import Ecto.Query
-  alias Annon.Configuration.Repo
-  alias Annon.Configuration.Schemas.API, as: APISchema
-
-  @required_api_fields [:name]
-  @required_request_fields [:scheme, :host, :port, :path, :methods]
-  @allowed_methods ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
 
   @derive {Poison.Encoder, except: [:__meta__, :plugins]}
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -29,50 +21,5 @@ defmodule Annon.Configuration.Schemas.API do
 
     # TODO: UTC datetime
     timestamps()
-  end
-
-  def get_one_by(selector) do
-    Repo.one from APISchema,
-      where: ^selector,
-      limit: 1,
-      preload: [:plugins]
-  end
-
-  def changeset(api, params \\ %{}) do
-    api
-    |> cast(params, @required_api_fields)
-    |> validate_required(@required_api_fields)
-    |> cast_embed(:request, with: &request_changeset/2)
-    |> cast_assoc(:plugins)
-    |> unique_constraint(:name, name: :apis_name_index)
-    |> unique_constraint(:request, name: :api_unique_request_index)
-  end
-
-  def request_changeset(api, params \\ %{}) do
-    api
-    |> cast(params, @required_request_fields)
-    |> validate_required(@required_request_fields)
-    |> validate_subset(:methods, @allowed_methods)
-  end
-
-  def create(params) when is_map(params) do
-    %APISchema{}
-    |> changeset(params)
-    |> Repo.insert()
-  end
-
-  def update(api_id, params) when is_map(params) do
-    case get_one_by([id: api_id]) do
-      %APISchema{} = api ->
-        api
-        |> changeset(params)
-        |> Repo.update()
-      _ -> nil
-    end
-  end
-
-  def delete(api_id) do
-    Repo.delete_all from a in APISchema,
-      where: a.id == ^api_id
   end
 end

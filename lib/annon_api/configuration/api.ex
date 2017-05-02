@@ -143,7 +143,6 @@ defmodule Annon.Configuration.API do
     |> unique_constraint(:name, name: :apis_name_index)
     |> unique_constraint(:request, name: :api_unique_request_index)
     |> cast_embed(:request, with: &request_changeset/2)
-    |> cast_assoc(:plugins)
   end
 
   def request_changeset(%APISchema.Request{} = request, attrs) do
