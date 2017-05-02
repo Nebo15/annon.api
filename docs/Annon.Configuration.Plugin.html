@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Configuration.Plugin – annon_api v0.2.37</title>
+    <title>Annon.Configuration.Plugin – annon_api v0.2.38</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-b85d780d8e.js"></script>
+    <script src="dist/sidebar_items-55c44bdd3e.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.37
+        v0.2.38
       </h2>
     </div>
     
@@ -58,7 +58,7 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.37</small>
+        <small class="visible-xs">annon_api v0.2.38</small>
         Annon.Configuration.Plugin
         
         
@@ -88,18 +88,11 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#create_or_update_plugin/2">create_or_update_plugin(api, attrs)</a>
+    <a href="#create_plugin/3">create_plugin(api, name, attrs)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Create or Update a Plugin.
-Name can be passed either in <code class="inline">attrs</code> map or as second argument</p>
+    <div class="summary-synopsis"><p>Creates a Plugin</p>
 </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#create_or_update_plugin/3">create_or_update_plugin(api, name, attrs)</a>
-  </div>
   
 </div>
 <div class="summary-row">
@@ -129,6 +122,15 @@ Name can be passed either in <code class="inline">attrs</code> map or as second 
 </div>
   
 </div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#update_plugin/2">update_plugin(plugin, attrs)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Update a Plugin</p>
+</div>
+  
+</div>
 
   </div>
 
@@ -148,54 +150,33 @@ Name can be passed either in <code class="inline">attrs</code> map or as second 
             </a>
             Functions
           </h1>
-          <div class="detail" id="create_or_update_plugin/2">
+          <div class="detail" id="create_plugin/3">
   
   <div class="detail-header">
-    <a href="#create_or_update_plugin/2" class="detail-link" title="Link to this function">
+    <a href="#create_plugin/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">create_or_update_plugin(api, attrs)</span>
+    <span class="signature">create_plugin(api, name, attrs)</span>
     
     
     
   </div>
   <section class="docstring">
-    <p>Create or Update a Plugin.
-Name can be passed either in <code class="inline">attrs</code> map or as second argument.</p>
-<p>Update requires all fields to be present.
-Old Plugin will be deleted, but <code class="inline">id</code>, <code class="inline">api_id</code>, <code class="inline">name</code> and <code class="inline">inserted_at</code> values will be persisted in new record.</p>
-<h2 id="create_or_update_plugin/2-examples" class="section-heading">
-  <a href="#create_or_update_plugin/2-examples" class="hover-link"><i class="icon-link"></i></a>
+    <p>Creates a Plugin.</p>
+<h2 id="create_plugin/3-examples" class="section-heading">
+  <a href="#create_plugin/3-examples" class="hover-link"><i class="icon-link"></i></a>
   Examples
 </h2>
 
-<pre><code class="iex elixir">iex&gt; create_or_update_plugin(api, &quot;jwt&quot;, %{field: new_value})
+<pre><code class="iex elixir">iex&gt; create_plugin(api, &quot;proxy&quot;, %{field: value})
 {:ok, %Annon.Configuration.Schemas.Plugin{}}
 
-iex&gt; create_or_update_plugin(api, &quot;jwt&quot;, %{field: bad_value})
+iex&gt; create_plugin(api, &quot;proxy&quot;, %{field: bad_value})
 {:error, %Ecto.Changeset{}}
 
-iex&gt; create_or_update_plugin(api, %{field: new_value, name: &quot;jwt&quot;})
-{:ok, %Annon.Configuration.Schemas.Plugin{}}
+iex&gt; create_plugin(api, &quot;proxy&quot;, %{field: value, name: &quot;not_a_proxy&quot;})
+{:error, %Ecto.Changeset{}}</code></pre>
 
-iex&gt; create_or_update_plugin(api, %{&quot;field&quot; =&gt; new_value, &quot;name&quot; =&gt; &quot;jwt&quot;})
-{:ok, %Annon.Configuration.Schemas.Plugin{}}</code></pre>
-
-  </section>
-</div>
-<div class="detail" id="create_or_update_plugin/3">
-  
-  <div class="detail-header">
-    <a href="#create_or_update_plugin/3" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">create_or_update_plugin(api, name, attrs)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
   </section>
 </div>
 <div class="detail" id="delete_plugin/1">
@@ -270,6 +251,34 @@ iex&gt; get_plugin(123, &quot;jwt&quot;)
 
 <pre><code class="iex elixir">iex&gt; list_plugins(api_id)
 [%Annon.Configuration.Schemas.Plugin{}, ...]</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="update_plugin/2">
+  
+  <div class="detail-header">
+    <a href="#update_plugin/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">update_plugin(plugin, attrs)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Update a Plugin.</p>
+<p>Update requires all fields to be present.
+Old Plugin will be deleted, but <code class="inline">id</code>, <code class="inline">api_id</code> and <code class="inline">inserted_at</code> values will be persisted in new record.</p>
+<h2 id="update_plugin/2-examples" class="section-heading">
+  <a href="#update_plugin/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; update_plugin(%PluginSchema{}, %{field: new_value})
+{:ok, %Annon.Configuration.Schemas.Plugin{}}
+
+iex&gt; update_plugin(%PluginSchema{}, %{field: bad_value})
+{:error, %Ecto.Changeset{}}</code></pre>
 
   </section>
 </div>

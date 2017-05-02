@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.AcceptanceCase – annon_api v0.2.38</title>
+    <title>Annon.Plugins.Validator.SettingsValidator – annon_api v0.2.38</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items-55c44bdd3e.js"></script>
@@ -59,16 +59,14 @@
 
       <h1>
         <small class="visible-xs">annon_api v0.2.38</small>
-        Annon.AcceptanceCase
+        Annon.Plugins.Validator.SettingsValidator
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>This module defines the test case to be used by
-acceptance tests. It can allow run tests in async when each SQL.Sandbox connection will be
-binded to a specific test.</p>
+          <p>Validation rules for Validator plugin settings.</p>
 
         </section>
       
@@ -90,31 +88,7 @@ binded to a specific test.</p>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#assert_status/2">assert_status(response, status)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#build_factory_params/2">build_factory_params(factory, overrides \\ [])</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#build_jwt_signature/1">build_jwt_signature(signature)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#build_jwt_token/2">build_jwt_token(payload, signature)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#get_body/1">get_body(response)</a>
+    <a href="#validate_settings/1">validate_settings(changeset)</a>
   </div>
   
 </div>
@@ -137,75 +111,13 @@ binded to a specific test.</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="assert_status/2">
+          <div class="detail" id="validate_settings/1">
   
   <div class="detail-header">
-    <a href="#assert_status/2" class="detail-link" title="Link to this function">
+    <a href="#validate_settings/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">assert_status(response, status)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="build_factory_params/2">
-  
-    <span id="build_factory_params/1" />
-  
-  <div class="detail-header">
-    <a href="#build_factory_params/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">build_factory_params(factory, overrides \\ [])</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="build_jwt_signature/1">
-  
-  <div class="detail-header">
-    <a href="#build_jwt_signature/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">build_jwt_signature(signature)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="build_jwt_token/2">
-  
-  <div class="detail-header">
-    <a href="#build_jwt_token/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">build_jwt_token(payload, signature)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="get_body/1">
-  
-  <div class="detail-header">
-    <a href="#get_body/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">get_body(response)</span>
+    <span class="signature">validate_settings(changeset)</span>
     
     
     
