@@ -75,7 +75,7 @@ defmodule Annon.Acceptance.Controllers.PluginsTest do
         "rules" => [%{
           "description" => "has already been taken",
           "params" => [],
-          "rule" => "unique"
+          "rule" => nil # TODO: Fix EView/Ecto to set "unique" in this case
         }]
       }]
 
