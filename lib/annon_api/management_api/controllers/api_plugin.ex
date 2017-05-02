@@ -7,7 +7,7 @@ defmodule Annon.ManagementAPI.Controllers.API.Plugin do
 
   You can find full description in [REST API documentation](http://docs.annon.apiary.io/#reference/apis/plugins).
   """
-  use Annon.ManagementAPI.CommonRouter
+  use Annon.ManagementAPI.ControllersRouter
   alias Annon.Configuration.API, as: ConfigurationAPI
   alias Annon.Configuration.Plugin, as: ConfigurationPlugin
   alias Annon.Configuration.Schemas.Plugin, as: PluginSchema

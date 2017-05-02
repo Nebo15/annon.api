@@ -1,4 +1,4 @@
-defmodule Annon.ManagementAPI.CommonRouter do
+defmodule Annon.ManagementAPI.ControllersRouter do
   @moduledoc """
   This router is used in controllers of Annons management API.
   """
