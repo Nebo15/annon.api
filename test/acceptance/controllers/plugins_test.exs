@@ -34,10 +34,13 @@ defmodule Annon.Acceptance.Controllers.PluginsTest do
       |> get_body()
 
       proxy = :proxy_plugin
-      |> build_factory_params(%{is_enabled: false})
+      |> build_factory_params(%{is_enabled: false, settings: %{"host" => "host2.com", "port" => 40}})
 
       assert  %{
-        "data" => %{"is_enabled" => false, "settings" => %{"host" => "host.com", "port" => 4040}}
+        "data" => %{
+          "is_enabled" => false,
+          "settings" => %{"host" => "host2.com", "port" => 40}
+        }
       } = "apis/#{api_id}/plugins/proxy"
       |> put_management_url()
       |> put!(proxy)
