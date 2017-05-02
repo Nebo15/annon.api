@@ -70,24 +70,6 @@ defmodule Annon.Configuration.Plugin do
   end
 
   @doc """
-  Creates a Plugin.
-
-  ## Examples
-
-      iex> create_plugin(%{field: value})
-      {:ok, %Annon.Configuration.Schemas.Plugin{}}
-
-      iex> create_plugin(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_plugin(attrs \\ %{}) do
-    %PluginSchema{}
-    |> plugin_changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
   Create or Update a Plugin.
 
   Update requires all fields to be present.
@@ -161,19 +143,6 @@ defmodule Annon.Configuration.Plugin do
       {:error, _} ->
         {:error, :not_found}
     end
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking Plugin changes.
-
-  ## Examples
-
-      iex> change_plugin(plugin)
-      %Ecto.Changeset{source: %Annon.Configuration.Schemas.Plugin{}}
-
-  """
-  def change_plugin(%PluginSchema{} = plugin) do
-    plugin_changeset(plugin, %{})
   end
 
   defp plugin_changeset(%PluginSchema{} = plugin, attrs) do

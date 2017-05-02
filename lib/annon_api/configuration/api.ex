@@ -143,19 +143,6 @@ defmodule Annon.Configuration.API do
     end
   end
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking API changes.
-
-  ## Examples
-
-      iex> change_api(api)
-      %Ecto.Changeset{source: %Annon.Configuration.Schemas.API{}}
-
-  """
-  def change_api(%APISchema{} = api) do
-    api_changeset(api, %{})
-  end
-
   defp api_changeset(%APISchema{} = api, attrs) do
     api
     |> cast(attrs, @required_api_fields)
