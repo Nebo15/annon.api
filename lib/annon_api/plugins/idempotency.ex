@@ -15,6 +15,12 @@ defmodule Annon.Plugins.Idempotency do
 
   @idempotent_methods ["POST"]
 
+  @doc """
+  Settings validator.
+  """
+  def validate_settings(changeset),
+    do: changeset
+
   @doc false
   def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
     plugins

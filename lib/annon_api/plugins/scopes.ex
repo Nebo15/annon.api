@@ -12,6 +12,11 @@ defmodule Annon.Plugins.Scopes do
   alias Annon.Plugins.Scopes.PCMStrategy
   alias Annon.Plugins.Scopes.OAuth2Strategy
 
+  @doc """
+  Settings validator delegate.
+  """
+  defdelegate validate_settings(changeset), to: Annon.Plugins.Scopes.SettingsValidator
+
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts)
     when is_list(plugins) do
     plugins

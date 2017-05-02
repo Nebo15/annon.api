@@ -9,6 +9,12 @@ defmodule Annon.Plugins.CORS do
   alias Annon.Configuration.Schemas.Plugin
   alias Annon.Configuration.Schemas.API, as: APISchema
 
+  @doc """
+  Settings validator.
+  """
+  def validate_settings(changeset),
+    do: changeset
+
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts)
     when is_list(plugins) do
     plugins
