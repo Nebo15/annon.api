@@ -73,10 +73,9 @@ defmodule Annon.Configuration.Plugin do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_plugin(%APISchema{} = api, name, attrs) do
+  def create_plugin(%APISchema{} = api, attrs) do
     %PluginSchema{api: api}
     |> plugin_changeset(attrs)
-    |> validate_inclusion(:name, [name], message: "name conflicts with request parameters") # TODO: move to controller
     |> Repo.insert()
   end
 
@@ -148,7 +147,7 @@ defmodule Annon.Configuration.Plugin do
     |> validate_required(@required_plugin_fields)
     |> validate_inclusion(:name, @plugin_names)
     |> assoc_constraint(:api)
-    |> unique_constraint(:api_id_name)
+    |> unique_constraint(:name, name: :plugins_api_id_name_index, message: "has already been taken")
     |> validate_settings()
   end
 

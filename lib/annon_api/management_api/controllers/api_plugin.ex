@@ -21,9 +21,13 @@ defmodule Annon.ManagementAPI.Controllers.API.Plugin do
 
   # TODO: deprecated
   post "/:api_id/plugins" do
-    api_id
-    |> PluginSchema.create(conn.body_params)
-    |> render_change(conn, 201)
+    with {:ok, %APISchema{} = api} <- ConfigurationAPI.get_api(api_id) do
+      api
+      |> ConfigurationPlugin.create_plugin(conn.body_params)
+      |> render_change(conn, 201)
+    else
+      {:error, :not_found} -> render_schema({:error, :not_found}, conn)
+    end
   end
 
   get "/:api_id/plugins/:name" do
@@ -45,7 +49,7 @@ defmodule Annon.ManagementAPI.Controllers.API.Plugin do
       {:error, :not_found} ->
         with {:ok, %APISchema{} = api} <- ConfigurationAPI.get_api(api_id) do
           api
-          |> ConfigurationPlugin.create_plugin(name, attrs)
+          |> ConfigurationPlugin.create_plugin(attrs)
           |> render_change(conn, 201)
         else
           {:error, :not_found} -> render_schema({:error, :not_found}, conn)
