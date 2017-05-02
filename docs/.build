@@ -5,7 +5,7 @@ fonts/icomoon.eot
 fonts/icomoon.svg
 fonts/icomoon.ttf
 fonts/icomoon.woff
-dist/sidebar_items-cfb267eab6.js
+dist/sidebar_items-b85d780d8e.js
 api-reference.html
 readme.html
 404.html
@@ -15,6 +15,8 @@ Annon.AutoClustering.html
 Annon.Cache.EtsAdapter.html
 Annon.Cache.FilterHelper.html
 Annon.Cache.PostgresAdapter.html
+Annon.Configuration.API.html
+Annon.Configuration.Plugin.html
 Annon.Configuration.Repo.html
 Annon.Configuration.Schemas.API.html
 Annon.Configuration.Schemas.API.Request.html
@@ -45,6 +47,7 @@ Annon.Plugins.Logger.html
 Annon.Plugins.Monitoring.html
 Annon.Plugins.Proxy.html
 Annon.Plugins.Proxy.MultipartForm.html
+Annon.Plugins.Proxy.SettingsValidator.html
 Annon.Plugins.Scopes.html
 Annon.Plugins.Scopes.JWTStrategy.html
 Annon.Plugins.Scopes.PCMStrategy.html

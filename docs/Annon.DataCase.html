@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.DataCase – annon_api v0.2.35</title>
+    <title>Annon.DataCase – annon_api v0.2.36</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-cfb267eab6.js"></script>
+    <script src="dist/sidebar_items-b85d780d8e.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.35
+        v0.2.36
       </h2>
     </div>
     
@@ -58,7 +58,7 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.35</small>
+        <small class="visible-xs">annon_api v0.2.36</small>
         Annon.DataCase
         
         
@@ -95,10 +95,10 @@ of the test unless the test case is marked as async.</p>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#errors_on/2">errors_on(struct, data)</a>
+    <a href="#changeset_errors/1">changeset_errors(changeset)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Helper for returning list of errors in a struct when given certain data</p>
+    <div class="summary-synopsis"><p>Helper for returning list of errors in a changeset</p>
 </div>
   
 </div>
@@ -121,30 +121,30 @@ of the test unless the test case is marked as async.</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="errors_on/2">
+          <div class="detail" id="changeset_errors/1">
   
   <div class="detail-header">
-    <a href="#errors_on/2" class="detail-link" title="Link to this function">
+    <a href="#changeset_errors/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">errors_on(struct, data)</span>
+    <span class="signature">changeset_errors(changeset)</span>
     
     
     
   </div>
   <section class="docstring">
-    <p>Helper for returning list of errors in a struct when given certain data.</p>
-<h2 id="errors_on/2-examples" class="section-heading">
-  <a href="#errors_on/2-examples" class="hover-link"><i class="icon-link"></i></a>
+    <p>Helper for returning list of errors in a changeset.</p>
+<h2 id="changeset_errors/1-examples" class="section-heading">
+  <a href="#changeset_errors/1-examples" class="hover-link"><i class="icon-link"></i></a>
   Examples
 </h2>
 
 <p>Given a User schema that lists <code class="inline">:name</code> as a required field and validates
 <code class="inline">:password</code> to be safe, it would return:</p>
-<pre><code class="iex elixir">iex&gt; errors_on(%User{}, %{password: &quot;password&quot;})
+<pre><code class="iex elixir">iex&gt; changeset_errors(%Changeset{})
 [password: &quot;is unsafe&quot;, name: &quot;is blank&quot;]</code></pre>
 <p>You could then write your assertion like:</p>
-<pre><code class="elixir">assert {:password, &quot;is unsafe&quot;} in errors_on(%User{}, %{password: &quot;password&quot;})</code></pre>
+<pre><code class="elixir">assert {:password, &quot;is unsafe&quot;} in changeset_errors(%Changeset{})</code></pre>
 
   </section>
 </div>

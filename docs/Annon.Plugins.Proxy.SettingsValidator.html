@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.PublicRouter – annon_api v0.2.36</title>
+    <title>Annon.Plugins.Proxy.SettingsValidator – annon_api v0.2.36</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items-b85d780d8e.js"></script>
@@ -59,16 +59,14 @@
 
       <h1>
         <small class="visible-xs">annon_api v0.2.36</small>
-        Annon.PublicRouter
+        Annon.Plugins.Proxy.SettingsValidator
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>Router for a Annons public API.</p>
-<p>It has all available plugins assigned (in a specific order),
-but witch of them should process request will be resolved in run-time.</p>
+          <p>Validation rules for proxy settings.</p>
 
         </section>
       
@@ -90,20 +88,8 @@ but witch of them should process request will be resolved in run-time.</p>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#call/2">call(conn, opts)</a>
+    <a href="#validate_settings/1">validate_settings(changeset)</a>
   </div>
-  
-    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/plug/1.3.5/Plug.html#c:call/2"><code class="inline">Plug.call/2</code></a></p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#init/1">init(opts)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Callback implementation for <a href="https://hexdocs.pm/plug/1.3.5/Plug.html#c:init/1"><code class="inline">Plug.init/1</code></a></p>
-</div>
   
 </div>
 
@@ -125,36 +111,19 @@ but witch of them should process request will be resolved in run-time.</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="call/2">
+          <div class="detail" id="validate_settings/1">
   
   <div class="detail-header">
-    <a href="#call/2" class="detail-link" title="Link to this function">
+    <a href="#validate_settings/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">call(conn, opts)</span>
+    <span class="signature">validate_settings(changeset)</span>
     
     
     
   </div>
   <section class="docstring">
-    <p>Callback implementation for <a href="https://hexdocs.pm/plug/1.3.5/Plug.html#c:call/2"><code class="inline">Plug.call/2</code></a>.</p>
-
-  </section>
-</div>
-<div class="detail" id="init/1">
-  
-  <div class="detail-header">
-    <a href="#init/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">init(opts)</span>
     
-    
-    
-  </div>
-  <section class="docstring">
-    <p>Callback implementation for <a href="https://hexdocs.pm/plug/1.3.5/Plug.html#c:init/1"><code class="inline">Plug.init/1</code></a>.</p>
-
   </section>
 </div>
 

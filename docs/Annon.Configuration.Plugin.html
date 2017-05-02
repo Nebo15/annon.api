@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Plugins.APILoader – annon_api v0.2.36</title>
+    <title>Annon.Configuration.Plugin – annon_api v0.2.36</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items-b85d780d8e.js"></script>
@@ -59,15 +59,14 @@
 
       <h1>
         <small class="visible-xs">annon_api v0.2.36</small>
-        Annon.Plugins.APILoader
+        Annon.Configuration.Plugin
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>This plugin should be first in plugs pipeline,
-because it’s used to fetch all settings and decide which ones should be applied for current consumer request.</p>
+          <p>The boundary for the Plugin Configurations system.</p>
 
         </section>
       
@@ -89,32 +88,45 @@ because it’s used to fetch all settings and decide which ones should be applie
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#find_matching_method/2">find_matching_method(apis, method)</a>
+    <a href="#create_or_update_plugin/2">create_or_update_plugin(api, attrs)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Create or Update a Plugin.
+Name can be passed either in <code class="inline">attrs</code> map or as second argument</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#create_or_update_plugin/3">create_or_update_plugin(api, name, attrs)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#find_matching_path/2">find_matching_path(apis, path)</a>
+    <a href="#delete_plugin/1">delete_plugin(plugin)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Deletes a Plugin</p>
+</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#find_plugin_settings/1">find_plugin_settings(plugins)</a>
+    <a href="#get_plugin/2">get_plugin(api_id, name)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Gets a single Plugin</p>
+</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_config/1">get_config(conn)</a>
+    <a href="#list_plugins/1">list_plugins(api_id)</a>
   </div>
   
+    <div class="summary-synopsis"><p>Returns the list of Plugins by API ID</p>
 </div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#init/1">init(opts)</a>
-  </div>
   
 </div>
 
@@ -136,13 +148,48 @@ because it’s used to fetch all settings and decide which ones should be applie
             </a>
             Functions
           </h1>
-          <div class="detail" id="find_matching_method/2">
+          <div class="detail" id="create_or_update_plugin/2">
   
   <div class="detail-header">
-    <a href="#find_matching_method/2" class="detail-link" title="Link to this function">
+    <a href="#create_or_update_plugin/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">find_matching_method(apis, method)</span>
+    <span class="signature">create_or_update_plugin(api, attrs)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Create or Update a Plugin.
+Name can be passed either in <code class="inline">attrs</code> map or as second argument.</p>
+<p>Update requires all fields to be present.
+Old Plugin will be deleted, but <code class="inline">id</code>, <code class="inline">api_id</code>, <code class="inline">name</code> and <code class="inline">inserted_at</code> values will be persisted in new record.</p>
+<h2 id="create_or_update_plugin/2-examples" class="section-heading">
+  <a href="#create_or_update_plugin/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; create_or_update_plugin(api, &quot;jwt&quot;, %{field: new_value})
+{:ok, %Annon.Configuration.Schemas.Plugin{}}
+
+iex&gt; create_or_update_plugin(api, &quot;jwt&quot;, %{field: bad_value})
+{:error, %Ecto.Changeset{}}
+
+iex&gt; create_or_update_plugin(api, %{field: new_value, name: &quot;jwt&quot;})
+{:ok, %Annon.Configuration.Schemas.Plugin{}}
+
+iex&gt; create_or_update_plugin(api, %{&quot;field&quot; =&gt; new_value, &quot;name&quot; =&gt; &quot;jwt&quot;})
+{:ok, %Annon.Configuration.Schemas.Plugin{}}</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="create_or_update_plugin/3">
+  
+  <div class="detail-header">
+    <a href="#create_or_update_plugin/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">create_or_update_plugin(api, name, attrs)</span>
     
     
     
@@ -151,64 +198,79 @@ because it’s used to fetch all settings and decide which ones should be applie
     
   </section>
 </div>
-<div class="detail" id="find_matching_path/2">
+<div class="detail" id="delete_plugin/1">
   
   <div class="detail-header">
-    <a href="#find_matching_path/2" class="detail-link" title="Link to this function">
+    <a href="#delete_plugin/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">find_matching_path(apis, path)</span>
+    <span class="signature">delete_plugin(plugin)</span>
     
     
     
   </div>
   <section class="docstring">
-    
+    <p>Deletes a Plugin.</p>
+<h2 id="delete_plugin/1-examples" class="section-heading">
+  <a href="#delete_plugin/1-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; delete_plugin(123)
+{:ok, %PluginSchema{}}
+
+iex&gt; delete_plugin(007)
+{:error, :not_found}</code></pre>
+
   </section>
 </div>
-<div class="detail" id="find_plugin_settings/1">
+<div class="detail" id="get_plugin/2">
   
   <div class="detail-header">
-    <a href="#find_plugin_settings/1" class="detail-link" title="Link to this function">
+    <a href="#get_plugin/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">find_plugin_settings(plugins)</span>
+    <span class="signature">get_plugin(api_id, name)</span>
     
     
     
   </div>
   <section class="docstring">
-    
+    <p>Gets a single Plugin.</p>
+<h2 id="get_plugin/2-examples" class="section-heading">
+  <a href="#get_plugin/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; get_plugin(123, &quot;jwt&quot;)
+{:ok, %Annon.Configuration.Schemas.Plugin{}}
+
+iex&gt; get_plugin(123, &quot;jwt&quot;)
+{:error, :not_found}</code></pre>
+
   </section>
 </div>
-<div class="detail" id="get_config/1">
+<div class="detail" id="list_plugins/1">
   
   <div class="detail-header">
-    <a href="#get_config/1" class="detail-link" title="Link to this function">
+    <a href="#list_plugins/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_config(conn)</span>
+    <span class="signature">list_plugins(api_id)</span>
     
     
     
   </div>
   <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="init/1">
-  
-  <div class="detail-header">
-    <a href="#init/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">init(opts)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
+    <p>Returns the list of Plugins by API ID.</p>
+<h2 id="list_plugins/1-examples" class="section-heading">
+  <a href="#list_plugins/1-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; list_plugins(api_id)
+[%Annon.Configuration.Schemas.Plugin{}, ...]</code></pre>
+
   </section>
 </div>
 

@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Plugins.Proxy – annon_api v0.2.36</title>
+    <title>Annon.Configuration.API – annon_api v0.2.36</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items-b85d780d8e.js"></script>
@@ -59,15 +59,14 @@
 
       <h1>
         <small class="visible-xs">annon_api v0.2.36</small>
-        Annon.Plugins.Proxy
+        Annon.Configuration.API
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p><a href="http://docs.annon.apiary.io/#reference/plugins/proxy">Proxy</a> - is a core plugin that
-sends incoming request to an upstream back-ends.</p>
+          <p>The boundary for the API Configurations system.</p>
 
         </section>
       
@@ -89,53 +88,53 @@ sends incoming request to an upstream back-ends.</p>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#do_request/3">do_request(link, conn, method)</a>
+    <a href="#create_api/1">create_api(attrs \\ %{})</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Creates a API</p>
+</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#find_plugin_settings/1">find_plugin_settings(plugins)</a>
+    <a href="#create_or_update_api/2">create_or_update_api(id, attrs)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Create or Update a API</p>
+</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#init/1">init(opts)</a>
+    <a href="#delete_api/1">delete_api(api)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Deletes a API</p>
+</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#log/2">log(data, type)</a>
+    <a href="#get_api/1">get_api(id)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Gets a single API</p>
+</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#make_link/3">make_link(proxy, api_path, conn)</a>
+    <a href="#list_apis/2">list_apis(conditions \\ %{}, paging \\ %Ecto.Paging{limit: 50})</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Returns the list of APIs</p>
+</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#put_additional_headers/2">put_additional_headers(headers, conn)</a>
+    <a href="#request_changeset/2">request_changeset(request, attrs)</a>
   </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#skip_filtered_headers/2">skip_filtered_headers(conn, arg2)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#validate_settings/1">validate_settings(changeset)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Settings validator delegate</p>
-</div>
   
 </div>
 
@@ -157,125 +156,155 @@ sends incoming request to an upstream back-ends.</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="do_request/3">
+          <div class="detail" id="create_api/1">
+  
+    <span id="create_api/0" />
   
   <div class="detail-header">
-    <a href="#do_request/3" class="detail-link" title="Link to this function">
+    <a href="#create_api/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">do_request(link, conn, method)</span>
+    <span class="signature">create_api(attrs \\ %{})</span>
     
     
     
   </div>
   <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="find_plugin_settings/1">
-  
-  <div class="detail-header">
-    <a href="#find_plugin_settings/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">find_plugin_settings(plugins)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="init/1">
-  
-  <div class="detail-header">
-    <a href="#init/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">init(opts)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="log/2">
-  
-  <div class="detail-header">
-    <a href="#log/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">log(data, type)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="make_link/3">
-  
-  <div class="detail-header">
-    <a href="#make_link/3" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">make_link(proxy, api_path, conn)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="put_additional_headers/2">
-  
-  <div class="detail-header">
-    <a href="#put_additional_headers/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">put_additional_headers(headers, conn)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="skip_filtered_headers/2">
-  
-  <div class="detail-header">
-    <a href="#skip_filtered_headers/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">skip_filtered_headers(conn, arg2)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="validate_settings/1">
-  
-  <div class="detail-header">
-    <a href="#validate_settings/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">validate_settings(changeset)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    <p>Settings validator delegate.</p>
+    <p>Creates a API.</p>
+<h2 id="create_api/1-examples" class="section-heading">
+  <a href="#create_api/1-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
 
+<pre><code class="iex elixir">iex&gt; create_api(%{field: value})
+{:ok, %Annon.Configuration.Schemas.API{}}
+
+iex&gt; create_api(%{field: bad_value})
+{:error, %Ecto.Changeset{}}</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="create_or_update_api/2">
+  
+  <div class="detail-header">
+    <a href="#create_or_update_api/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">create_or_update_api(id, attrs)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Create or Update a API.</p>
+<p>Update requires all fields to be present.
+Old API will be deleted, but <code class="inline">id</code> and <code class="inline">inserted_at</code> values will be persisted in new record.</p>
+<h2 id="create_or_update_api/2-examples" class="section-heading">
+  <a href="#create_or_update_api/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; create_or_update_api(api, %{field: new_value})
+{:ok, %Annon.Configuration.Schemas.API{}}
+
+iex&gt; create_or_update_api(api, %{field: bad_value})
+{:error, %Ecto.Changeset{}}</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="delete_api/1">
+  
+  <div class="detail-header">
+    <a href="#delete_api/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">delete_api(api)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Deletes a API.</p>
+<h2 id="delete_api/1-examples" class="section-heading">
+  <a href="#delete_api/1-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; delete_api(123)
+{:ok, %API{}}
+
+iex&gt; delete_api(007)
+{:error, :not_found}</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="get_api/1">
+  
+  <div class="detail-header">
+    <a href="#get_api/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">get_api(id)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Gets a single API.</p>
+<h2 id="get_api/1-examples" class="section-heading">
+  <a href="#get_api/1-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; get_api(123)
+{:ok, %Annon.Configuration.Schemas.API{}}
+
+iex&gt; get_api(456)
+{:error, :not_found}</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="list_apis/2">
+  
+    <span id="list_apis/0" />
+  
+    <span id="list_apis/1" />
+  
+  <div class="detail-header">
+    <a href="#list_apis/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">list_apis(conditions \\ %{}, paging \\ %Ecto.Paging{limit: 50})</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Returns the list of APIs.</p>
+<p>Response can be filtered by title if there is a <code class="inline">&quot;title&quot;</code> filed in <code class="inline">conditions</code>.</p>
+<h2 id="list_apis/2-examples" class="section-heading">
+  <a href="#list_apis/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; list_apis()
+{[%Annon.Configuration.Schemas.API{}, ...], %Ecto.Paging{}}</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="request_changeset/2">
+  
+  <div class="detail-header">
+    <a href="#request_changeset/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">request_changeset(request, attrs)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
   </section>
 </div>
 
