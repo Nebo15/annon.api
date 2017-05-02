@@ -3,153 +3,30 @@ defmodule Annon.Validators.Settings do
   This module provides helpers to validate individual plugin settings via JSON Schema that is stored inside methods.
   """
   alias Ecto.Changeset
-  import Ecto.Changeset
-  import Annon.Validators.JsonSchema
 
   # JWT
-  def validate_settings(%Changeset{changes: %{name: "jwt", settings: settings}} = ch) do
-    {%{}, %{signature: :string}}
-    |> cast(settings, [:signature])
-    |> validate_required([:signature])
-    |> put_changeset_errors(ch)
+  def validate_settings(%Changeset{changes: %{name: "jwt"}} = ch) do
+    Annon.Plugins.JWT.SettingsValidator.validate_settings(ch)
   end
 
   # ACL
   def validate_settings(%Changeset{changes: %{name: "acl"}} = ch) do
-    validate_via_json_schema(ch, :settings, %{
-      "type" => "object",
-      "required" => ["rules"],
-      "additionalProperties" => false,
-      "properties" => %{
-        "rules" => %{
-          "type" => "array",
-          "minItems" => 1,
-          "uniqueItems" => true,
-          "items" => %{
-            "type" => "object",
-            "required" => ["methods", "path", "scopes"],
-            "properties" => %{
-              "methods" => %{
-                "type" => "array",
-                "minItems" => 1,
-                "items" => %{
-                  "type" => "string",
-                  "enum" => ["GET", "POST", "PUT", "DELETE", "PATCH"]
-                }
-              },
-              "path" => %{
-                "type" => "string"
-              },
-              "scopes" => %{
-                "type" => "array",
-                "minItems" => 1,
-                "items" => %{
-                  "type" => "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    })
+    Annon.Plugins.ACL.SettingsValidator.validate_settings(ch)
   end
 
   # Validator
   def validate_settings(%Changeset{changes: %{name: "validator"}} = ch) do
-    validate_via_json_schema(ch, :settings, %{
-      "type" => "object",
-      "required" => ["rules"],
-      "additionalProperties" => false,
-      "properties" => %{
-        "rules" => %{
-          "type" => "array",
-          "minItems" => 1,
-          "uniqueItems" => true,
-          "items" => %{
-            "type" => "object",
-            "required" => ["methods", "path", "schema"],
-            "properties" => %{
-              "methods" => %{
-                "type" => "array",
-                "minItems" => 1,
-                "items" => %{
-                  "type" => "string",
-                  "enum" => ["POST", "PUT", "PATCH"]
-                }
-              },
-              "path" => %{
-                "type" => "string"
-              },
-              "schema" => %{
-                "type" => "object"
-              }
-            }
-          }
-        }
-      }
-    })
+    Annon.Plugins.Validator.SettingsValidator.validate_settings(ch)
   end
 
   # IPRestriction
   def validate_settings(%Changeset{changes: %{name: "ip_restriction"}} = ch) do
-    ch
-    |> validate_via_json_schema(:settings, %{
-      "type" => "object",
-      "anyOf" => [
-        %{"required" => ["whitelist", "blacklist"]},
-        %{"required" => ["whitelist"]},
-        %{"required" => ["blacklist"]}
-      ],
-      "additionalProperties" => false,
-      "properties" => %{
-        "whitelist" => %{
-          "type" => "array",
-          "items" => %{
-            "type" => "string",
-            "oneOf" => [
-              %{"pattern" => "^(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)$"}
-            ]
-          }
-        },
-        "blacklist" => %{
-          "type" => "array",
-          "items" => %{
-            "type" => "string",
-            "oneOf" => [
-              %{"pattern" => "^(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)$"}
-            ]
-          }
-        }
-      }
-    })
+    Annon.Plugins.IPRestriction.SettingsValidator.validate_settings(ch)
   end
 
   # UARestriction
   def validate_settings(%Changeset{changes: %{name: "ua_restriction"}} = ch) do
-    ch
-    |> validate_via_json_schema(:settings, %{
-      "type" => "object",
-      "anyOf" => [
-        %{"required" => ["whitelist", "blacklist"]},
-        %{"required" => ["whitelist"]},
-        %{"required" => ["blacklist"]}
-      ],
-      "additionalProperties" => false,
-      "properties" => %{
-        "whitelist" => %{
-          "type" => "array",
-          "items" => %{
-            "type" => "string"
-          }
-        },
-        "blacklist" => %{
-          "type" => "array",
-          "items" => %{
-            "type" => "string"
-          }
-        }
-      }
-    })
+    Annon.Plugins.UARestriction.SettingsValidator.validate_settings(ch)
   end
 
   # Proxy
@@ -159,28 +36,9 @@ defmodule Annon.Validators.Settings do
 
   # Scopes
   def validate_settings(%Changeset{changes: %{name: "scopes"}} = ch) do
-    ch
-    |> validate_via_json_schema(:settings, %{
-      "type" => "object",
-      "required" => ["strategy"],
-      "additionalProperties" => false,
-      "properties" => %{
-        "strategy" => %{
-          "enum" => ["pcm", "jwt"]
-        },
-        "url_template" => %{
-          "type" => "string"
-        }
-      }
-    })
+    Annon.Plugins.Scopes.SettingsValidator.validate_settings(ch)
   end
 
   # general
   def validate_settings(ch), do: ch
-
-  defp put_changeset_errors(%Changeset{valid?: true}, ch), do: ch
-  defp put_changeset_errors(%Changeset{valid?: false, errors: errors}, ch) do
-    ch
-    |> Map.merge(%{errors: errors, valid?: false})
-  end
 end

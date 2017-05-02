@@ -12,6 +12,11 @@ defmodule Annon.Plugins.UARestriction do
   alias EView.Views.Error, as: ErrorView
   alias Annon.Helpers.Response
 
+  @doc """
+  Settings validator delegate.
+  """
+  defdelegate validate_settings(changeset), to: Annon.Plugins.UARestriction.SettingsValidator
+
   @doc false
   def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
     plugin = find_plugin_settings(plugins)

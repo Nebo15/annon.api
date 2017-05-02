@@ -19,6 +19,12 @@ defmodule Annon.Plugins.JWT do
   alias EView.Views.Error, as: ErrorView
   alias Annon.Helpers.Response
 
+  @doc """
+  Settings validator delegate.
+  """
+  defdelegate validate_settings(changeset), to: Annon.Plugins.JWT.SettingsValidator
+
+
   @doc false
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts) when is_list(plugins) do
     plugins

@@ -13,6 +13,11 @@ defmodule Annon.Plugins.ACL do
   alias EView.Views.Error, as: ErrorView
   alias Annon.Helpers.Response
 
+  @doc """
+  Settings validator delegate.
+  """
+  defdelegate validate_settings(changeset), to: Annon.Plugins.ACL.SettingsValidator
+
   @doc false
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins, request: %{path: api_path}}}} = conn, _opts)
     when is_list(plugins) do

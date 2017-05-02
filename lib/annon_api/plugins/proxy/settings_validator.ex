@@ -1,12 +1,11 @@
 defmodule Annon.Plugins.Proxy.SettingsValidator do
   @moduledoc """
-  Validation rules for proxy settings.
+  Validation rules for Proxy plugin settings.
   """
   import Annon.Validators.JsonSchema
 
-  def validate_settings(changeset) do
-    changeset
-    |> validate_via_json_schema(:settings, %{
+  def validate_settings(%Ecto.Changeset{} = changeset) do
+    validate_via_json_schema(changeset, :settings, %{
       "type" => "object",
       "required" => ["host"],
       "additionalProperties" => false,
