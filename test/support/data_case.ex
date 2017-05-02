@@ -39,23 +39,21 @@ defmodule Annon.DataCase do
   end
 
   @doc """
-  Helper for returning list of errors in a struct when given certain data.
+  Helper for returning list of errors in a changeset.
 
   ## Examples
 
   Given a User schema that lists `:name` as a required field and validates
   `:password` to be safe, it would return:
 
-      iex> errors_on(%User{}, %{password: "password"})
+      iex> changeset_errors(%Changeset{})
       [password: "is unsafe", name: "is blank"]
 
   You could then write your assertion like:
 
-      assert {:password, "is unsafe"} in errors_on(%User{}, %{password: "password"})
+      assert {:password, "is unsafe"} in changeset_errors(%Changeset{})
   """
-  def errors_on(struct, data) do
-    data
-    |> (&struct.__struct__.changeset(struct, &1)).()
-    |> Enum.flat_map(fn {key, errors} -> for msg <- errors, do: {key, msg} end)
+  def changeset_errors(changeset) do
+    changeset.errors
   end
 end

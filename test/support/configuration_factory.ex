@@ -30,7 +30,10 @@ defmodule Annon.ConfigurationFactory do
     %Annon.Configuration.Schemas.Plugin{
       name: "proxy",
       is_enabled: true,
-      settings: %{}
+      settings: %{
+        "host" => sequence(:host, &"www.example#{&1}.com"),
+        "port" => 80
+      }
     }
   end
 

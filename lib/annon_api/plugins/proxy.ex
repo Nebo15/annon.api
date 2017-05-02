@@ -13,6 +13,11 @@ defmodule Annon.Plugins.Proxy do
   alias Annon.Configuration.Schemas.Plugin
   alias Annon.Configuration.Schemas.API, as: APISchema
 
+  @doc """
+  Settings validator delegate.
+  """
+  defdelegate validate_settings(changeset), to: Annon.Plugins.Proxy.SettingsValidator
+
   @doc false
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins, request: %{path: api_path}}}} = conn, _opts)
     when is_list(plugins) do
