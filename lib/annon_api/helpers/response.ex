@@ -19,11 +19,6 @@ defmodule Annon.Helpers.Response do
     |> send_error_template(conn, 501)
   end
 
-  def send_error(conn, :mailformed_request) do
-    "400.json"
-    |> send_error_template(conn, 400)
-  end
-
   # This method is used in Plug.ErrorHandler.
   def send_error(conn, %{kind: kind, reason: reason, stack: _stack}) do
     status = get_exception_status(kind, reason)
@@ -39,6 +34,13 @@ defmodule Annon.Helpers.Response do
     |> EView.Views.ValidationError.render(%{schema: invalid})
     |> send(conn, 422)
     |> halt()
+  end
+
+  def send_error(conn, :no_root_object, root_object_name) do
+    send_validation_error(conn, [{"$.#{root_object_name}", %{
+      rule: :required,
+      params: []
+    }}])
   end
 
   @doc """
