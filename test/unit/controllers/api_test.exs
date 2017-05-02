@@ -181,11 +181,13 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
 
       "/apis/#{data.id}"
       |> call_delete()
-      |> assert_conn_status()
+      |> assert_conn_status(204)
+
+      assert {[], _} = Annon.Configuration.API.list_apis()
 
       "/apis/#{data.id}"
       |> call_delete()
-      |> assert_conn_status(404)
+      |> assert_conn_status(204)
     end
   end
 end

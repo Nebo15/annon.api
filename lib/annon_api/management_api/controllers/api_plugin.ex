@@ -8,15 +8,12 @@ defmodule Annon.ManagementAPI.Controllers.API.Plugin do
   You can find full description in [REST API documentation](http://docs.annon.apiary.io/#reference/apis/plugins).
   """
   use Annon.ManagementAPI.CommonRouter
-  alias Annon.Configuration.Repo
-  alias Annon.Helpers.Pagination
-
+  alias Annon.Configuration.Plugin, as: ConfigurationPlugin
   alias Annon.Configuration.Schemas.Plugin, as: PluginSchema
 
   get "/:api_id/plugins" do
-    [api_id: api_id]
-    |> PluginSchema.get_by()
-    |> Repo.page(Pagination.page_info(conn))
+    api_id
+    |> ConfigurationPlugin.list_plugins()
     |> render_collection(conn)
   end
 
@@ -39,8 +36,12 @@ defmodule Annon.ManagementAPI.Controllers.API.Plugin do
   end
 
   delete "/:api_id/plugins/:name" do
-    api_id
-    |> PluginSchema.delete(name)
-    |> render_delete(conn)
+    case ConfigurationPlugin.get_plugin(api_id, name) do
+      {:ok, plugin} ->
+        ConfigurationPlugin.delete_plugin(plugin)
+        render_delete(conn)
+      {:error, :not_found} ->
+        render_delete(conn)
+    end
   end
 end

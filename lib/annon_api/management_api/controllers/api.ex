@@ -8,19 +8,25 @@ defmodule Annon.ManagementAPI.Controllers.API do
   You can find full description in [REST API documentation](http://docs.annon.apiary.io/#reference/apis).
   """
   use Annon.ManagementAPI.CommonRouter
+  alias Annon.Configuration.API, as: ConfigurationAPI
   alias Annon.Configuration.Schemas.API, as: APISchema
-  alias Annon.Configuration.Repo
   alias Annon.Helpers.Pagination
 
   get "/" do
-    APISchema
-    |> Repo.page(Pagination.page_info(conn))
-    |> render_collection(conn)
+    paging = Pagination.page_info_from(conn.query_params)
+
+    {request, paging} =
+      conn
+      |> Map.fetch!(:query_params)
+      |> Map.take(["name"])
+      |> ConfigurationAPI.list_apis(paging)
+
+    render_collection({request, paging}, conn)
   end
 
   get "/:api_id" do
-    APISchema
-    |> Repo.get(api_id)
+    api_id
+    |> ConfigurationAPI.get_api()
     |> render_schema(conn)
   end
 
@@ -37,9 +43,13 @@ defmodule Annon.ManagementAPI.Controllers.API do
   end
 
   delete "/:api_id" do
-    api_id
-    |> APISchema.delete
-    |> render_delete(conn)
+    case ConfigurationAPI.get_api(api_id) do
+      {:ok, api} ->
+        ConfigurationAPI.delete_api(api)
+        render_delete(conn)
+      {:error, :not_found} ->
+        render_delete(conn)
+    end
   end
 
   forward "/", to: Annon.ManagementAPI.Controllers.API.Plugin

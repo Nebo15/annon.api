@@ -2,80 +2,6 @@ defmodule Annon.ManagementAPI.Controllers.API.PluginTest do
   @moduledoc false
   use Annon.UnitCase, async: true
 
-  describe "/apis/:api_id/plugins (pagination)" do
-    setup do
-      api = Annon.ConfigurationFactory.insert(:api)
-
-      plugins = [
-        Annon.ConfigurationFactory.insert(:proxy_plugin, api: api),
-        Annon.ConfigurationFactory.insert(:jwt_plugin, api: api),
-        Annon.ConfigurationFactory.insert(:acl_plugin, api: api),
-        Annon.ConfigurationFactory.insert(:idempotency_plugin, api: api),
-        Annon.ConfigurationFactory.insert(:ip_restriction_plugin, api: api),
-        Annon.ConfigurationFactory.insert(:validator_plugin, api: api)
-      ]
-
-      {:ok, %{api_id: api.id, plugins: plugins}}
-    end
-
-    test "GET /apis/:api_id/plugins?starting_after=2&limit=3", %{api_id: api_id, plugins: plugins} do
-      id = Enum.at(plugins, 2).id
-
-      conn = "/apis/#{api_id}/plugins?starting_after=#{id}&limit=3"
-      |> call_get()
-      |> assert_conn_status()
-
-      expected_records =
-        plugins
-        |> Enum.slice(3, 5)
-        |> Enum.map(&Map.get(&1, :id))
-
-      actual_records =
-        Poison.decode!(conn.resp_body)["data"]
-        |> Enum.map(&Map.get(&1, "id"))
-
-      assert expected_records == actual_records
-    end
-
-    test "GET /apis/:api_id/plugins?ending_before=3&limit=3", %{api_id: api_id, plugins: plugins} do
-      id = Enum.at(plugins, 3).id
-
-      conn = "/apis/#{api_id}/plugins?ending_before=#{id}&limit=3"
-      |> call_get()
-      |> assert_conn_status()
-
-      expected_records =
-        plugins
-        |> Enum.slice(0, 3)
-        |> Enum.map(&Map.get(&1, :id))
-
-      actual_records =
-        Poison.decode!(conn.resp_body)["data"]
-        |> Enum.map(&Map.get(&1, "id"))
-
-      assert expected_records == actual_records
-    end
-
-    test "GET /apis/:api_id/plugins?ending_before=5&limit=2", %{api_id: api_id, plugins: plugins} do
-      id = Enum.at(plugins, 5).id
-
-      conn = "/apis/#{api_id}/plugins?ending_before=#{id}&limit=2"
-      |> call_get()
-      |> assert_conn_status()
-
-      expected_records =
-        plugins
-        |> Enum.slice(3, 2)
-        |> Enum.map(&Map.get(&1, :id))
-
-      actual_records =
-        Poison.decode!(conn.resp_body)["data"]
-        |> Enum.map(&Map.get(&1, "id"))
-
-      assert expected_records == actual_records
-    end
-  end
-
   describe "/apis/:api_id/plugins" do
     test "GET empty list" do
       api_model = Annon.ConfigurationFactory.insert(:api)
@@ -213,11 +139,13 @@ defmodule Annon.ManagementAPI.Controllers.API.PluginTest do
 
       "/apis/#{api_model.id}/plugins/#{acl_plugin.name}"
       |> call_delete()
-      |> assert_conn_status()
+      |> assert_conn_status(204)
 
       "/apis/#{api_model.id}/plugins/#{acl_plugin.name}"
       |> call_get()
       |> assert_conn_status(404)
+
+      assert [%{name: "jwt"}] = Annon.Configuration.Plugin.list_plugins(api_model.id)
 
       "/apis/#{api_model.id}/plugins/#{jwt_plugin.name}"
       |> call_get()

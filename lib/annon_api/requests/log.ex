@@ -124,7 +124,7 @@ defmodule Annon.Requests.Log do
   end
 
   @doc """
-  Deletes a Request or return `:ok` if Request is already deleted.
+  Deletes a Request.
 
   ## Examples
 

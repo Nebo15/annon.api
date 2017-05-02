@@ -37,7 +37,7 @@ defmodule Annon.Acceptance.Controllers.APITest do
       "apis/#{id}"
       |> put_management_url()
       |> delete()
-      |> assert_status(200)
+      |> assert_status(204)
 
       "apis/#{id}"
       |> put_management_url()
@@ -49,7 +49,7 @@ defmodule Annon.Acceptance.Controllers.APITest do
       "apis/1000"
       |> put_management_url()
       |> delete()
-      |> assert_status(404)
+      |> assert_status(204)
     end
   end
 end
