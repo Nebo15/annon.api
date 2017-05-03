@@ -7,7 +7,7 @@ defmodule Annon.ManagementAPI.ConfigReloaderPlug do
   alias Annon.AutoClustering
 
   @destructive_methods ["POST", "PUT", "DELETE"]
-  @successful_statuses [200, 201]
+  @successful_statuses [200, 201, 204]
 
   def init(opts), do: opts
 
