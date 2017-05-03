@@ -19,7 +19,6 @@ defmodule Annon.Configuration.Schemas.API do
 
     has_many :plugins, Annon.Configuration.Schemas.Plugin
 
-    # TODO: UTC datetime
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 end

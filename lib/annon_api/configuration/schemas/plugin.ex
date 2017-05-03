@@ -13,6 +13,6 @@ defmodule Annon.Configuration.Schemas.Plugin do
 
     belongs_to :api, APISchema, type: :binary_id
 
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 end

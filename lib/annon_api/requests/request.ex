@@ -6,7 +6,7 @@ defmodule Annon.Requests.Request do
 
   @derive {Poison.Encoder, except: [:__meta__]}
   @primary_key {:id, :string, autogenerate: false}
-  schema "logs" do
+  schema "requests" do
     embeds_one :api, API, primary_key: false do
       field :id, :string
       field :name, :string
@@ -43,6 +43,6 @@ defmodule Annon.Requests.Request do
     field :ip_address, :string
     field :status_code, :integer
 
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 end
