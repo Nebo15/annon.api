@@ -4,7 +4,6 @@ defmodule Annon.Plugins.ACL.SettingsValidator do
   """
   import Annon.Validators.JsonSchema
 
-  # TODO: Replace validation with JSON Schema
   def validate_settings(%Ecto.Changeset{} = changeset) do
     validate_via_json_schema(changeset, :settings, %{
       "type" => "object",
