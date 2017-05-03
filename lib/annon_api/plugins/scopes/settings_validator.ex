@@ -11,7 +11,7 @@ defmodule Annon.Plugins.Scopes.SettingsValidator do
       "additionalProperties" => false,
       "properties" => %{
         "strategy" => %{
-          "enum" => ["pcm", "jwt"]
+          "enum" => ["pcm", "jwt", "oauth2"]
         },
         "url_template" => %{
           "type" => "string"
