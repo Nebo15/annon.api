@@ -42,11 +42,10 @@ defmodule Annon.Plugins.Scopes do
     scopes =
       token
       |> get_in(["data", "details", "scope"])
-      |> String.split(",")
 
     conn
-    |> Conn.put_private(:scopes, scopes)
-    |> Conn.put_private(:consumer_id, get_in(token, ["data", "details", "client_id"]))
+    |> Conn.put_private(:scopes, (if scopes, do: String.split(scopes, ","), else: []))
+    |> Conn.put_private(:consumer_id, get_in(token, ["data", "user_id"]))
   end
   defp get_scopes(conn, %{"strategy" => "pcm", "url_template" => url_template}) do
     scopes =
