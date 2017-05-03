@@ -25,32 +25,42 @@ defmodule Annon.Plugins.Scopes do
   end
   def call(conn, _), do: conn
 
-  defp save_scopes(scopes, conn) do
-    conn
-    |> Conn.put_private(:scopes, scopes)
-  end
-
   defp get_scopes(conn, %{"strategy" => "jwt"}) do
-    conn.private[:jwt_token]
-    |> JWTStrategy.get_scopes()
+    scopes =
+      conn.private[:jwt_token]
+      |> JWTStrategy.get_scopes()
+
+    Conn.put_private(conn, :scopes, scopes)
   end
   defp get_scopes(conn, %{"strategy" => "oauth2", "url_template" => url_template}) do
+    token =
+      conn
+      |> Conn.get_req_header("authorization")
+      |> (fn(["Bearer " <> string]) -> string end).()
+      |> OAuth2Strategy.get_scopes(url_template)
+
+    scopes =
+      token
+      |> get_in(["data", "details", "scope"])
+      |> String.split(",")
+
     conn
-    |> Conn.get_req_header("authorization")
-    |> (fn(["Bearer " <> string]) -> string end).()
-    |> OAuth2Strategy.get_scopes(url_template)
+    |> Conn.put_private(:scopes, scopes)
+    |> Conn.put_private(:consumer_id, get_in(token, ["data", "details", "client_id"]))
   end
   defp get_scopes(conn, %{"strategy" => "pcm", "url_template" => url_template}) do
-    conn.private
-    |> Map.get(:consumer_id)
-    |> PCMStrategy.get_scopes(url_template)
+    scopes =
+      conn.private
+      |> Map.get(:consumer_id)
+      |> PCMStrategy.get_scopes(url_template)
+
+    Conn.put_private(conn, :scopes, scopes)
   end
   defp get_scopes(_, _), do: []
 
   defp execute(%Plugin{settings: settings}, conn) do
     conn
     |> get_scopes(settings)
-    |> save_scopes(conn)
   end
   defp execute(_, conn), do: conn
 end

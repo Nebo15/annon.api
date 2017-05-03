@@ -6,7 +6,6 @@ defmodule Annon.Plugins.Scopes.OAuth2Strategy do
     scope
     |> get_url(url_template)
     |> retrieve_scopes()
-    |> prepare_scopes()
   end
 
   defp get_url(token, url_template), do: String.replace(url_template, "{token}", token)
@@ -16,9 +15,5 @@ defmodule Annon.Plugins.Scopes.OAuth2Strategy do
     |> HTTPoison.get!
     |> Map.get(:body)
     |> Poison.decode!
-    |> get_in(["data", "details", "scope"])
   end
-
-  defp prepare_scopes(nil), do: []
-  defp prepare_scopes(string), do: String.split(string, ",")
 end
