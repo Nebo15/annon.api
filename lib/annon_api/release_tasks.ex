@@ -1,57 +1,79 @@
-defmodule :annon_api_tasks do
+defmodule Annon.ReleaseTasks do
   @moduledoc """
   Nice way to apply migrations inside a released application.
 
-  For a containerized version of Annon you can set `APP_MIGRATE=true` environment variable to run this tasks.
-
   Example:
-      ./bin/$APP_NAME command "annon_tasks" migrate!
+
+      annon_api/bin/annon_api command Elixir.Annon.ReleaseTasks migrate!
   """
-  require Logger
+  alias Ecto.Migrator
+
+  @start_apps [
+    :logger_json,
+    :postgrex,
+    :ecto
+  ]
 
   @otp_app :annon_api
-  @repos Confex.get(@otp_app, :ecto_repos)
-  @default_repos_path Path.join(["priv", "repos"])
+
+  @repos [
+    Annon.Configuration.Repo,
+    Annon.Requests.Repo
+  ]
 
   def migrate! do
-    load_app()
+    IO.puts "Loading #{@otp_app}.."
+    # Load the code for apps, but don't start it
+    :ok = Application.load(@otp_app)
 
-    @repos
-    |> Enum.each(fn repo ->
-      migrations_path = get_migrations_path(@otp_app, repo)
+    IO.puts "Starting dependencies.."
+    # Start apps necessary for executing migrations
+    Enum.each(@start_apps, &Application.ensure_all_started/1)
 
-      Logger.info("Running migrations for #{@otp_app} repo #{inspect repo}. Migrations path: #{migrations_path}")
+    # Start the Repo(s) for annon_api
+    IO.puts "Starting repos.."
+    Enum.each(@repos, &(&1.start_link(pool_size: 1)))
 
-      repo
-      |> start_repo
-      |> Ecto.Migrator.run(migrations_path, :up, all: true)
-    end)
+    # Run migrations
+    run_migrations_for(@otp_app)
 
-    System.halt(0)
+    # Run the seed script if it exists
+    seed_script = seed_path(@otp_app)
+    if File.exists?(seed_script) do
+      IO.puts "Running seed script for app #{@otp_app}.."
+      Code.eval_file(seed_script)
+    end
+
+    # Signal shutdown
+    IO.puts "Success!"
     :init.stop()
   end
 
-  defp get_migrations_path(otp_app, repo) do
-    conf_path = otp_app
-    |> Confex.get(repo)
-    |> Keyword.get(:priv)
-
-    Path.join([conf_path || @default_repos_path, "migrations"])
+  defp run_migrations_for(app) do
+    IO.puts "Running migrations for #{app}"
+    Enum.each(@repos, &run_repo_migrations(app, &1))
   end
 
-  defp start_repo(repo) do
-    repo.start_link()
-    repo
+  defp run_repo_migrations(app, repo) do
+    Migrator.run(repo, migrations_path(app, repo), :up, all: true)
   end
 
-  defp load_app do
-    start_applications([:logger, :postgrex, :ecto])
-    :ok = Application.load(:annon_api)
+  defp migrations_path(app, repo) do
+    priv_path =
+      app
+      |> Application.get_env(repo)
+      |> Keyword.get(:priv)
+
+    case priv_path do
+      nil -> Path.join([priv_dir(app), "repos", String.downcase(Atom.to_string(repo)), "migrations"])
+      "priv/" <> path -> Path.join([priv_dir(app), path, "migrations"])
+      full_path -> full_path
+    end
   end
 
-  defp start_applications(apps) do
-    Enum.each(apps, fn app ->
-      {_ , _message} = Application.ensure_all_started(app)
-    end)
-  end
+  defp seed_path(app),
+    do: Path.join([priv_dir(app), "repos", "seeds.exs"])
+
+  def priv_dir(app),
+    do: :code.priv_dir(app)
 end
