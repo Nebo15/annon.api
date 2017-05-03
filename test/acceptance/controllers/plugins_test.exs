@@ -43,7 +43,7 @@ defmodule Annon.Acceptance.Controllers.PluginsTest do
 
       %{
         "error" => %{
-          "invalid" => [%{"entry" => "$.signature", "rules" => [%{"rule" => "cast"}]}]
+          "invalid" => [%{"entry" => "$.settings", "rules" => [%{"rule" => "cast"}]}]
           # TODO: Entry should be $.settings.signature
         }
       } = "apis/#{api_id}/plugins"
