@@ -5,7 +5,7 @@ fonts/icomoon.eot
 fonts/icomoon.svg
 fonts/icomoon.ttf
 fonts/icomoon.woff
-dist/sidebar_items-87fff64010.js
+dist/sidebar_items-d913926d86.js
 api-reference.html
 readme.html
 404.html
@@ -73,5 +73,4 @@ Annon.Requests.Request.Latencies.html
 Annon.RequestsFactory.html
 Annon.UnitCase.html
 Annon.Validators.JsonSchema.html
-Annon.Validators.Settings.html
 index.html
