@@ -5,7 +5,7 @@ fonts/icomoon.eot
 fonts/icomoon.svg
 fonts/icomoon.ttf
 fonts/icomoon.woff
-dist/sidebar_items-55c44bdd3e.js
+dist/sidebar_items-87fff64010.js
 api-reference.html
 readme.html
 404.html
@@ -27,11 +27,11 @@ Annon.Helpers.IP.html
 Annon.Helpers.Latency.html
 Annon.Helpers.Pagination.html
 Annon.Helpers.Response.html
-Annon.ManagementAPI.CommonRouter.html
 Annon.ManagementAPI.ConfigReloaderPlug.html
 Annon.ManagementAPI.Controllers.API.html
 Annon.ManagementAPI.Controllers.API.Plugin.html
 Annon.ManagementAPI.Controllers.Request.html
+Annon.ManagementAPI.ControllersRouter.html
 Annon.ManagementAPI.Render.html
 Annon.ManagementAPI.Router.html
 Annon.PCMMockServer.html
@@ -61,6 +61,7 @@ Annon.Plugins.Validator.html
 Annon.Plugins.Validator.SettingsValidator.html
 Annon.PrivateRouter.html
 Annon.PublicRouter.html
+Annon.ReleaseTasks.html
 Annon.Requests.Log.html
 Annon.Requests.Repo.html
 Annon.Requests.Request.html
@@ -73,5 +74,4 @@ Annon.RequestsFactory.html
 Annon.UnitCase.html
 Annon.Validators.JsonSchema.html
 Annon.Validators.Settings.html
-annon_api_tasks.html
 index.html

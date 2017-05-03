@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>annon_api_tasks – annon_api v0.2.38</title>
+    <title>Annon.ReleaseTasks – annon_api v0.2.39</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-55c44bdd3e.js"></script>
+    <script src="dist/sidebar_items-87fff64010.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.38
+        v0.2.39
       </h2>
     </div>
     
@@ -58,8 +58,8 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.38</small>
-        annon_api_tasks
+        <small class="visible-xs">annon_api v0.2.39</small>
+        Annon.ReleaseTasks
         
         
       </h1>
@@ -67,9 +67,8 @@
       
         <section id="moduledoc">
           <p>Nice way to apply migrations inside a released application.</p>
-<p>For a containerized version of Annon you can set <code class="inline">APP_MIGRATE=true</code> environment variable to run this tasks.</p>
 <p>Example:</p>
-<pre><code class="elixir">./bin/$APP_NAME command &quot;annon_tasks&quot; migrate!</code></pre>
+<pre><code class="elixir">annon_api/bin/annon_api command Elixir.Annon.ReleaseTasks migrate!</code></pre>
 
         </section>
       
@@ -92,6 +91,12 @@
     <div class="summary-row">
   <div class="summary-signature">
     <a href="#migrate!/0">migrate!()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#priv_dir/1">priv_dir(app)</a>
   </div>
   
 </div>
@@ -121,6 +126,21 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">migrate!()</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="priv_dir/1">
+  
+  <div class="detail-header">
+    <a href="#priv_dir/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">priv_dir(app)</span>
     
     
     
