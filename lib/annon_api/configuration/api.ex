@@ -96,8 +96,7 @@ defmodule Annon.Configuration.API do
   """
   def update_api(%APISchema{id: id, inserted_at: inserted_at}, attrs) do
     api =
-      id
-      |> build_api_by_id()
+      %APISchema{id: id}
       |> api_changeset(attrs)
       |> put_change(:inserted_at, inserted_at)
 
@@ -111,9 +110,6 @@ defmodule Annon.Configuration.API do
       {:error, :insert, changeset, _} -> {:error, changeset}
     end
   end
-
-  defp build_api_by_id(id) when is_binary(id),
-    do: %APISchema{id: id}
 
   @doc """
   Deletes a API.
