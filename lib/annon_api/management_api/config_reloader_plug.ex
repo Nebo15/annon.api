@@ -9,7 +9,8 @@ defmodule Annon.ManagementAPI.ConfigReloaderPlug do
   @destructive_methods ["POST", "PUT", "DELETE"]
   @successful_statuses [200, 201, 204]
 
-  def init(opts), do: opts
+  def init(opts),
+    do: opts
 
   def call(%Plug.Conn{method: method, status: status} = conn, _opts)
       when method in @destructive_methods and status in @successful_statuses do
@@ -17,5 +18,6 @@ defmodule Annon.ManagementAPI.ConfigReloaderPlug do
 
     conn
   end
-  def call(conn, _opts), do: conn
+  def call(conn, _opts),
+    do: conn
 end

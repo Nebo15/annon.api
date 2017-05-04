@@ -9,12 +9,6 @@ defmodule Annon.ManagementAPI.ControllersRouter do
       import Annon.ManagementAPI.Render
 
       plug :match
-
-      plug Plug.RequestId
-      plug Plug.Parsers, parsers: [:json],
-                         pass:  ["application/json"],
-                         json_decoder: Poison
-
       plug :dispatch
     end
   end

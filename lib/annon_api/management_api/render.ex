@@ -8,19 +8,16 @@ defmodule Annon.ManagementAPI.Render do
   This render should be used for `Repo.all` results.
   """
   def render_collection(nil, conn) do
-    conn
-    |> send_error(:not_found)
+    send_error(conn, :not_found)
   end
 
   def render_collection({resources, %Ecto.Paging{} = paging}, conn) do
-    conn = conn
-    |> Plug.Conn.assign(:paging, paging)
+    conn = Plug.Conn.assign(conn, :paging, paging)
     render_collection(resources, conn)
   end
 
   def render_collection(resources, conn) when is_list(resources) do
-    resources
-    |> send(conn, 200)
+    send(resources, conn, 200)
   end
 
   @doc """
@@ -29,15 +26,13 @@ defmodule Annon.ManagementAPI.Render do
   def render_schema(nil, conn),
     do: render_schema({:error, :not_found}, conn)
   def render_schema({:error, :not_found}, conn) do
-    conn
-    |> send_error(:not_found)
+    send_error(conn, :not_found)
   end
 
   def render_schema(resource, conn) when is_map(resource),
     do: render_schema({:ok, resource}, conn)
   def render_schema({:ok, resource}, conn) when is_map(resource) do
-    resource
-    |> send(conn, 200)
+    send(resource, conn, 200)
   end
 
   @doc """
@@ -46,8 +41,7 @@ defmodule Annon.ManagementAPI.Render do
   def render_change(tuple, conn, status \\ 200)
 
   def render_change(nil, conn, _status) do
-    conn
-    |> send_error(:not_found)
+    send_error(conn, :not_found)
   end
 
   def render_change({:error, changeset}, conn, _status) do
@@ -57,8 +51,7 @@ defmodule Annon.ManagementAPI.Render do
   end
 
   def render_change({:ok, resource}, conn, status) when is_map(resource) do
-    resource
-    |> send(conn, status)
+    send(resource, conn, status)
   end
 
   @doc """
@@ -67,13 +60,11 @@ defmodule Annon.ManagementAPI.Render do
   It will throw an error if you tried to delete more than one record in a DB.
   """
   def render_delete({0, _}, conn) do
-    conn
-    |> send_error(:not_found)
+    send_error(conn, :not_found)
   end
 
   def render_delete({1, _}, conn) do
-    %{}
-    |> send(conn, 200)
+    send(%{}, conn, 200)
   end
 
   def render_delete(conn) do
