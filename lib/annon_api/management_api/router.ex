@@ -18,7 +18,7 @@ defmodule Annon.ManagementAPI.Router do
 
   plug :dispatch
 
-  plug Annon.ManagementAPI.ConfigReloaderPlug
+  plug Annon.ManagementAPI.ConfigReloaderPlug, subscriber: &Annon.AutoClustering.reload_config/0
 
   forward "/apis", to: Annon.ManagementAPI.Controllers.API
   forward "/requests", to: Annon.ManagementAPI.Controllers.Request
