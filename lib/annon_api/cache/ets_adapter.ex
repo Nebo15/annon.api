@@ -24,9 +24,10 @@ defmodule Annon.Cache.EtsAdapter do
   end
 
   def warm_up do
-    query = from a in API,
-            join: Plugin,
-            preload: [:plugins]
+    query =
+      from a in API,
+        join: Plugin,
+        preload: [:plugins]
 
     apis =
       query
