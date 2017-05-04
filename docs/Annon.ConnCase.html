@@ -1,0 +1,1122 @@
+    <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.15.1">
+    <title>Annon.ConnCase – annon_api v0.2.45</title>
+    <link rel="stylesheet" href="dist/app-091c05798a.css" />
+    
+    <script src="dist/sidebar_items-32341665fd.js"></script>
+  </head>
+  <body data-type="modules">
+    <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
+
+    <div class="main">
+<button class="sidebar-toggle">
+  <i class="icon-menu"></i>
+</button>
+<section class="sidebar">
+
+  
+  <a href="readme.html" class="sidebar-projectLink">
+    <div class="sidebar-projectDetails">
+      <h1 class="sidebar-projectName">
+        annon_api
+      </h1>
+      <h2 class="sidebar-projectVersion">
+        v0.2.45
+      </h2>
+    </div>
+    
+  </a>
+
+  <div class="sidebar-search">
+    <i class="icon-search"></i>
+    <input type="text" class="sidebar-searchInput" placeholder="search" autocomplete="off" />
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+    
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
+    
+
+    
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+
+      <h1>
+        <small class="visible-xs">annon_api v0.2.45</small>
+        Annon.ConnCase
+        
+        
+      </h1>
+
+      
+        <section id="moduledoc">
+          <p>This module defines the test case to be used by
+tests that require setting up a connection.</p>
+<h2 id="module-credentials" class="section-heading">
+  <a href="#module-credentials" class="hover-link"><i class="icon-link"></i></a>
+  Credentials
+</h2>
+
+<p>Most of source code is a copy-paste from <code class="inline">Phoenix.ConnTest</code>,
+it’s already contains great tests suite, but we don’t
+want to depend on Phoenix.</p>
+<h2 id="module-endpoint-testing" class="section-heading">
+  <a href="#module-endpoint-testing" class="hover-link"><i class="icon-link"></i></a>
+  Endpoint testing
+</h2>
+
+<p><a href="Annon.ConnCase.html#content"><code class="inline">Annon.ConnCase</code></a> typically works against routers. That’s
+the preferred way to test anything that your router dispatches
+to.</p>
+<pre><code class="elixir">conn = get build_conn(), &quot;/&quot;
+assert conn.resp_body =~ &quot;Welcome!&quot;
+
+conn = post build_conn(), &quot;/login&quot;, [username: &quot;john&quot;, password: &quot;doe&quot;]
+assert conn.resp_body =~ &quot;Logged in!&quot;</code></pre>
+<p>As in your application, the connection is also the main abstraction
+in testing. <code class="inline">build_conn()</code> returns a new connection and functions in this
+module can be used to manipulate the connection before dispatching
+to the router.</p>
+<p>For example, one could set the accepts header for json requests as
+follows:</p>
+<pre><code class="elixir">build_conn()
+|&gt; put_req_header(&quot;accept&quot;, &quot;application/json&quot;)
+|&gt; get(&quot;/&quot;)</code></pre>
+<p>The router being tested is accessed via the <code class="inline">@router</code> module
+attribute.</p>
+<h2 id="module-controller-testing" class="section-heading">
+  <a href="#module-controller-testing" class="hover-link"><i class="icon-link"></i></a>
+  Controller testing
+</h2>
+
+<p>The functions in this module can also be used for controller
+testing. While router testing is preferred over controller
+testing as a controller often depends on the pipelines invoked
+in the router and before, unit testing controllers may be helpful
+in some situations.</p>
+<p>For such cases, just pass an atom representing the action
+to dispatch:</p>
+<pre><code class="elixir">conn = get build_conn(), :index
+assert conn.resp_body =~ &quot;Welcome!&quot;</code></pre>
+
+        </section>
+      
+
+      
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <i class="icon-link"></i>
+            </a>
+            Summary
+          </h1>
+          
+
+          
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#assert_error_sent/2">assert_error_sent(status_int_or_atom, func)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Asserts an error was wrapped and sent with the given status</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#build_conn/0">build_conn()</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Creates a connection to be used in upcoming requests</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#build_conn/3">build_conn(method, path, params_or_body \\ nil)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Creates a connection to be used in upcoming requests
+with a preset method, path and body</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#conn/0">conn()</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Deprecated version of conn/0. Use build_conn/0 instead</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#conn/3">conn(method, path, params_or_body \\ nil)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Deprecated version of conn/3. Use build_conn/3 instead</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#connect/3">connect(conn, path_or_action, params_or_body \\ nil)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Dispatches to the current router</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#delete/3">delete(conn, path_or_action, params_or_body \\ nil)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Dispatches to the current router</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#delete_req_cookie/2">delete_req_cookie(conn, key)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Deletes a request cookie</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#dispatch/5">dispatch(conn, router, method, path_or_action, params_or_body \\ nil)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Dispatches the connection to the given router</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get/3">get(conn, path_or_action, params_or_body \\ nil)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Dispatches to the current router</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#head/3">head(conn, path_or_action, params_or_body \\ nil)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Dispatches to the current router</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#html_response/2">html_response(conn, status)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Asserts the given status code, that we have an html response and
+returns the response body if one was set or sent</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#json_response/3">json_response(conn, status, opts \\ [])</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Asserts the given status code, that we have an json response and
+returns the decoded JSON response if one was set or sent</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#options/3">options(conn, path_or_action, params_or_body \\ nil)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Dispatches to the current router</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#patch/3">patch(conn, path_or_action, params_or_body \\ nil)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Dispatches to the current router</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#patch_json/3">patch_json(conn, path_or_action, params)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Dispatches to the current router with JSON-encoded params</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#post/3">post(conn, path_or_action, params_or_body \\ nil)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Dispatches to the current router</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#post_json/3">post_json(conn, path_or_action, params)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Dispatches to the current router with JSON-encoded params</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#put/3">put(conn, path_or_action, params_or_body \\ nil)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Dispatches to the current router</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#put_json/3">put_json(conn, path_or_action, params)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Dispatches to the current router with JSON-encoded params</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#put_req_cookie/3">put_req_cookie(conn, key, value)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Puts a request cookie</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#recycle/1">recycle(conn)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Recycles the connection</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#redirected_to/2">redirected_to(conn, status \\ 302)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Returns the location header from the given redirect response</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#response/2">response(conn, given)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Asserts the given status code and returns the response body
+if one was set or sent</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#response_content_type/2">response_content_type(conn, format)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Returns the content type as long as it matches the given format</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#text_response/2">text_response(conn, status)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Asserts the given status code, that we have an text response and
+returns the response body if one was set or sent</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#trace/3">trace(conn, path_or_action, params_or_body \\ nil)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Dispatches to the current router</p>
+</div>
+  
+</div>
+
+  </div>
+
+
+          
+
+        </section>
+      
+
+      
+
+      
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <i class="icon-link"></i>
+            </a>
+            Functions
+          </h1>
+          <div class="detail" id="assert_error_sent/2">
+  
+  <div class="detail-header">
+    <a href="#assert_error_sent/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">assert_error_sent(status_int_or_atom, func)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>assert_error_sent(integer | atom, function) :: {integer, list, term}</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Asserts an error was wrapped and sent with the given status.</p>
+<p>Useful for testing actions that you expect raise an error and have
+the response wrapped in an HTTP status, with content usually rendered
+by your MyApp.ErrorView.</p>
+<p>The function accepts a status either as an integer HTTP status or
+atom, such as <code class="inline">404</code> or <code class="inline">:not_found</code>. If an error is raised, a
+3-tuple of the wrapped response is returned matching the
+status, headers, and body of the response:</p>
+<pre><code class="elixir">{404, [{&quot;content-type&quot;, &quot;text/html&quot;} | _], &quot;Page not found&quot;}</code></pre>
+<h2 id="assert_error_sent/2-examples" class="section-heading">
+  <a href="#assert_error_sent/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="elixir">assert_error_sent :not_found, fn -&gt;
+  get build_conn(), &quot;/users/not-found&quot;
+end
+
+response = assert_error_sent 404, fn -&gt;
+  get build_conn(), &quot;/users/not-found&quot;
+end
+assert {404, [_h | _t], &quot;Page not found&quot;} = response</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="build_conn/0">
+  
+  <div class="detail-header">
+    <a href="#build_conn/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">build_conn()</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>build_conn() :: <a href="https://hexdocs.pm/plug/1.3.5/Plug.Conn.html#t:t/0">Plug.Conn.t</a></pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Creates a connection to be used in upcoming requests.</p>
+
+  </section>
+</div>
+<div class="detail" id="build_conn/3">
+  
+    <span id="build_conn/2" />
+  
+  <div class="detail-header">
+    <a href="#build_conn/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">build_conn(method, path, params_or_body \\ nil)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>build_conn(atom | binary, binary, binary | list | map) :: <a href="https://hexdocs.pm/plug/1.3.5/Plug.Conn.html#t:t/0">Plug.Conn.t</a></pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Creates a connection to be used in upcoming requests
+with a preset method, path and body.</p>
+<p>This is useful when a specific connection is required
+for testing a plug or a particular function.</p>
+
+  </section>
+</div>
+<div class="detail" id="conn/0">
+  
+  <div class="detail-header">
+    <a href="#conn/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">conn()</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>conn() :: <a href="https://hexdocs.pm/plug/1.3.5/Plug.Conn.html#t:t/0">Plug.Conn.t</a></pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Deprecated version of conn/0. Use build_conn/0 instead</p>
+
+  </section>
+</div>
+<div class="detail" id="conn/3">
+  
+    <span id="conn/2" />
+  
+  <div class="detail-header">
+    <a href="#conn/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">conn(method, path, params_or_body \\ nil)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>conn(atom | binary, binary, binary | list | map) :: <a href="https://hexdocs.pm/plug/1.3.5/Plug.Conn.html#t:t/0">Plug.Conn.t</a></pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Deprecated version of conn/3. Use build_conn/3 instead</p>
+
+  </section>
+</div>
+<div class="detail" id="connect/3">
+  
+    <span id="connect/2" />
+  
+  <div class="detail-header">
+    <a href="#connect/3" class="detail-link" title="Link to this macro">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">connect(conn, path_or_action, params_or_body \\ nil)</span>
+    
+    
+      <span class="note">(macro)</span>
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Dispatches to the current router.</p>
+<p>See <a href="#dispatch/5"><code class="inline">dispatch/5</code></a> for more information.</p>
+
+  </section>
+</div>
+<div class="detail" id="delete/3">
+  
+    <span id="delete/2" />
+  
+  <div class="detail-header">
+    <a href="#delete/3" class="detail-link" title="Link to this macro">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">delete(conn, path_or_action, params_or_body \\ nil)</span>
+    
+    
+      <span class="note">(macro)</span>
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Dispatches to the current router.</p>
+<p>See <a href="#dispatch/5"><code class="inline">dispatch/5</code></a> for more information.</p>
+
+  </section>
+</div>
+<div class="detail" id="delete_req_cookie/2">
+  
+  <div class="detail-header">
+    <a href="#delete_req_cookie/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">delete_req_cookie(conn, key)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>delete_req_cookie(<a href="https://hexdocs.pm/plug/1.3.5/Plug.Conn.html#t:t/0">Plug.Conn.t</a>, binary) :: <a href="https://hexdocs.pm/plug/1.3.5/Plug.Conn.html#t:t/0">Plug.Conn.t</a></pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Deletes a request cookie.</p>
+
+  </section>
+</div>
+<div class="detail" id="dispatch/5">
+  
+    <span id="dispatch/4" />
+  
+  <div class="detail-header">
+    <a href="#dispatch/5" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">dispatch(conn, router, method, path_or_action, params_or_body \\ nil)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Dispatches the connection to the given router.</p>
+<p>When invoked via <a href="#get/3"><code class="inline">get/3</code></a>, <a href="#post/3"><code class="inline">post/3</code></a> and friends, the router
+is automatically retrieved from the <code class="inline">@router</code> module
+attribute, otherwise it must be given as an argument.</p>
+<p>The connection will be configured with the given <code class="inline">method</code>,
+<code class="inline">path_or_action</code> and <code class="inline">params_or_body</code>.</p>
+<p>If <code class="inline">path_or_action</code> is a string, it is considered to be the
+request path and stored as so in the connection. If an atom,
+it is assumed to be an action and the connection is dispatched
+to the given action.</p>
+<h2 id="dispatch/5-parameters-and-body" class="section-heading">
+  <a href="#dispatch/5-parameters-and-body" class="hover-link"><i class="icon-link"></i></a>
+  Parameters and body
+</h2>
+
+<p>This function, as well as <a href="#get/3"><code class="inline">get/3</code></a>, <a href="#post/3"><code class="inline">post/3</code></a> and friends, accepts the
+request body or parameters as last argument:</p>
+<pre><code class="elixir">  get build_conn(), &quot;/&quot;, some: &quot;param&quot;
+  get build_conn(), &quot;/&quot;, &quot;some=param&amp;url=encoded&quot;</code></pre>
+<p>The allowed values are:</p>
+<ul>
+<li><p><code class="inline">nil</code> - meaning there is no body</p>
+</li>
+<li><p>a binary - containing a request body. For such cases, <code class="inline">:headers</code>
+must be given as option with a content-type</p>
+</li>
+<li><p>a map or list - containing the parameters which will automatically
+set the content-type to multipart. The map or list may contain
+other lists or maps and all entries will be normalized to string
+keys</p>
+</li>
+<li><p>a struct - unlike other maps, a struct will be passed through as-is
+without normalizing its entries</p>
+</li>
+</ul>
+
+  </section>
+</div>
+<div class="detail" id="get/3">
+  
+    <span id="get/2" />
+  
+  <div class="detail-header">
+    <a href="#get/3" class="detail-link" title="Link to this macro">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">get(conn, path_or_action, params_or_body \\ nil)</span>
+    
+    
+      <span class="note">(macro)</span>
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Dispatches to the current router.</p>
+<p>See <a href="#dispatch/5"><code class="inline">dispatch/5</code></a> for more information.</p>
+
+  </section>
+</div>
+<div class="detail" id="head/3">
+  
+    <span id="head/2" />
+  
+  <div class="detail-header">
+    <a href="#head/3" class="detail-link" title="Link to this macro">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">head(conn, path_or_action, params_or_body \\ nil)</span>
+    
+    
+      <span class="note">(macro)</span>
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Dispatches to the current router.</p>
+<p>See <a href="#dispatch/5"><code class="inline">dispatch/5</code></a> for more information.</p>
+
+  </section>
+</div>
+<div class="detail" id="html_response/2">
+  
+  <div class="detail-header">
+    <a href="#html_response/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">html_response(conn, status)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>html_response(<a href="https://hexdocs.pm/plug/1.3.5/Plug.Conn.html#t:t/0">Plug.Conn.t</a>, status :: integer | atom) ::
+  <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a> |
+  no_return</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Asserts the given status code, that we have an html response and
+returns the response body if one was set or sent.</p>
+<h2 id="html_response/2-examples" class="section-heading">
+  <a href="#html_response/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="elixir">assert html_response(conn, 200) =~ &quot;&lt;html&gt;&quot;</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="json_response/3">
+  
+    <span id="json_response/2" />
+  
+  <div class="detail-header">
+    <a href="#json_response/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">json_response(conn, status, opts \\ [])</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Asserts the given status code, that we have an json response and
+returns the decoded JSON response if one was set or sent.</p>
+<h2 id="json_response/3-examples" class="section-heading">
+  <a href="#json_response/3-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="elixir">body = json_response(conn, 200)
+assert &quot;can&#39;t be blank&quot; in body[&quot;errors&quot;]</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="options/3">
+  
+    <span id="options/2" />
+  
+  <div class="detail-header">
+    <a href="#options/3" class="detail-link" title="Link to this macro">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">options(conn, path_or_action, params_or_body \\ nil)</span>
+    
+    
+      <span class="note">(macro)</span>
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Dispatches to the current router.</p>
+<p>See <a href="#dispatch/5"><code class="inline">dispatch/5</code></a> for more information.</p>
+
+  </section>
+</div>
+<div class="detail" id="patch/3">
+  
+    <span id="patch/2" />
+  
+  <div class="detail-header">
+    <a href="#patch/3" class="detail-link" title="Link to this macro">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">patch(conn, path_or_action, params_or_body \\ nil)</span>
+    
+    
+      <span class="note">(macro)</span>
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Dispatches to the current router.</p>
+<p>See <a href="#dispatch/5"><code class="inline">dispatch/5</code></a> for more information.</p>
+
+  </section>
+</div>
+<div class="detail" id="patch_json/3">
+  
+  <div class="detail-header">
+    <a href="#patch_json/3" class="detail-link" title="Link to this macro">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">patch_json(conn, path_or_action, params)</span>
+    
+    
+      <span class="note">(macro)</span>
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Dispatches to the current router with JSON-encoded params.</p>
+<p>See <a href="#dispatch/5"><code class="inline">dispatch/5</code></a> for more information.</p>
+
+  </section>
+</div>
+<div class="detail" id="post/3">
+  
+    <span id="post/2" />
+  
+  <div class="detail-header">
+    <a href="#post/3" class="detail-link" title="Link to this macro">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">post(conn, path_or_action, params_or_body \\ nil)</span>
+    
+    
+      <span class="note">(macro)</span>
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Dispatches to the current router.</p>
+<p>See <a href="#dispatch/5"><code class="inline">dispatch/5</code></a> for more information.</p>
+
+  </section>
+</div>
+<div class="detail" id="post_json/3">
+  
+  <div class="detail-header">
+    <a href="#post_json/3" class="detail-link" title="Link to this macro">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">post_json(conn, path_or_action, params)</span>
+    
+    
+      <span class="note">(macro)</span>
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Dispatches to the current router with JSON-encoded params.</p>
+<p>See <a href="#dispatch/5"><code class="inline">dispatch/5</code></a> for more information.</p>
+
+  </section>
+</div>
+<div class="detail" id="put/3">
+  
+    <span id="put/2" />
+  
+  <div class="detail-header">
+    <a href="#put/3" class="detail-link" title="Link to this macro">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">put(conn, path_or_action, params_or_body \\ nil)</span>
+    
+    
+      <span class="note">(macro)</span>
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Dispatches to the current router.</p>
+<p>See <a href="#dispatch/5"><code class="inline">dispatch/5</code></a> for more information.</p>
+
+  </section>
+</div>
+<div class="detail" id="put_json/3">
+  
+  <div class="detail-header">
+    <a href="#put_json/3" class="detail-link" title="Link to this macro">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">put_json(conn, path_or_action, params)</span>
+    
+    
+      <span class="note">(macro)</span>
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Dispatches to the current router with JSON-encoded params.</p>
+<p>See <a href="#dispatch/5"><code class="inline">dispatch/5</code></a> for more information.</p>
+
+  </section>
+</div>
+<div class="detail" id="put_req_cookie/3">
+  
+  <div class="detail-header">
+    <a href="#put_req_cookie/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">put_req_cookie(conn, key, value)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>put_req_cookie(<a href="https://hexdocs.pm/plug/1.3.5/Plug.Conn.html#t:t/0">Plug.Conn.t</a>, binary, binary) :: <a href="https://hexdocs.pm/plug/1.3.5/Plug.Conn.html#t:t/0">Plug.Conn.t</a></pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Puts a request cookie.</p>
+
+  </section>
+</div>
+<div class="detail" id="recycle/1">
+  
+  <div class="detail-header">
+    <a href="#recycle/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">recycle(conn)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>recycle(<a href="https://hexdocs.pm/plug/1.3.5/Plug.Conn.html#t:t/0">Plug.Conn.t</a>) :: <a href="https://hexdocs.pm/plug/1.3.5/Plug.Conn.html#t:t/0">Plug.Conn.t</a></pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Recycles the connection.</p>
+<p>Recycling receives a connection and returns a new connection,
+containing cookies and relevant information from the given one.</p>
+<p>This emulates behaviour performed by browsers where cookies
+returned in the response are available in following requests.</p>
+<p>Note <a href="#recycle/1"><code class="inline">recycle/1</code></a> is automatically invoked when dispatching
+to the router, unless the connection has already been
+recycled.</p>
+
+  </section>
+</div>
+<div class="detail" id="redirected_to/2">
+  
+    <span id="redirected_to/1" />
+  
+  <div class="detail-header">
+    <a href="#redirected_to/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">redirected_to(conn, status \\ 302)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>redirected_to(<a href="https://hexdocs.pm/plug/1.3.5/Plug.Conn.html#t:t/0">Plug.Conn.t</a>, status :: non_neg_integer) :: <a href="https://hexdocs.pm/plug/1.3.5/Plug.Conn.html#t:t/0">Plug.Conn.t</a></pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Returns the location header from the given redirect response.</p>
+<p>Raises if the response does not match the redirect status code
+(defaults to 302).</p>
+<h2 id="redirected_to/2-examples" class="section-heading">
+  <a href="#redirected_to/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="elixir">assert redirected_to(conn) =~ &quot;/foo/bar&quot;
+assert redirected_to(conn, 301) =~ &quot;/foo/bar&quot;
+assert redirected_to(conn, :moved_permanently) =~ &quot;/foo/bar&quot;</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="response/2">
+  
+  <div class="detail-header">
+    <a href="#response/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">response(conn, given)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>response(<a href="https://hexdocs.pm/plug/1.3.5/Plug.Conn.html#t:t/0">Plug.Conn.t</a>, status :: integer | atom) ::
+  binary |
+  no_return</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Asserts the given status code and returns the response body
+if one was set or sent.</p>
+<h2 id="response/2-examples" class="section-heading">
+  <a href="#response/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="elixir">conn = get build_conn(), &quot;/&quot;
+assert response(conn, 200) =~ &quot;hello world&quot;</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="response_content_type/2">
+  
+  <div class="detail-header">
+    <a href="#response_content_type/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">response_content_type(conn, format)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>response_content_type(<a href="https://hexdocs.pm/plug/1.3.5/Plug.Conn.html#t:t/0">Plug.Conn.t</a>, atom) ::
+  <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a> |
+  no_return</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Returns the content type as long as it matches the given format.</p>
+<h2 id="response_content_type/2-examples" class="section-heading">
+  <a href="#response_content_type/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="elixir"># Assert we have an html response with utf-8 charset
+assert response_content_type(conn, :html) =~ &quot;charset=utf-8&quot;</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="text_response/2">
+  
+  <div class="detail-header">
+    <a href="#text_response/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">text_response(conn, status)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>text_response(<a href="https://hexdocs.pm/plug/1.3.5/Plug.Conn.html#t:t/0">Plug.Conn.t</a>, status :: integer | atom) ::
+  <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a> |
+  no_return</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Asserts the given status code, that we have an text response and
+returns the response body if one was set or sent.</p>
+<h2 id="text_response/2-examples" class="section-heading">
+  <a href="#text_response/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="elixir">assert text_response(conn, 200) =~ &quot;hello&quot;</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="trace/3">
+  
+    <span id="trace/2" />
+  
+  <div class="detail-header">
+    <a href="#trace/3" class="detail-link" title="Link to this macro">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">trace(conn, path_or_action, params_or_body \\ nil)</span>
+    
+    
+      <span class="note">(macro)</span>
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Dispatches to the current router.</p>
+<p>See <a href="#dispatch/5"><code class="inline">dispatch/5</code></a> for more information.</p>
+
+  </section>
+</div>
+
+        </section>
+      
+
+      
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.15.1),
+          </span>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+  <script src="dist/app-574613960f.js"></script>
+  </body>
+</html>
+
