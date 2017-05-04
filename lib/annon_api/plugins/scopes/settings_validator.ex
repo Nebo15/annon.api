@@ -2,10 +2,10 @@ defmodule Annon.Plugins.Scopes.SettingsValidator do
   @moduledoc """
   Validation rules for Scopes plugin settings.
   """
-  import Annon.Validators.JsonSchema
+  import Annon.Helpers.JsonSchemaValidator
 
   def validate_settings(%Ecto.Changeset{} = changeset) do
-    validate_via_json_schema(changeset, :settings, %{
+    validate_with_json_schema(changeset, :settings, %{
       "type" => "object",
       "required" => ["strategy"],
       "additionalProperties" => false,

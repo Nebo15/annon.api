@@ -2,10 +2,10 @@ defmodule Annon.Plugins.Validator.SettingsValidator do
   @moduledoc """
   Validation rules for Validator plugin settings.
   """
-  import Annon.Validators.JsonSchema
+  import Annon.Helpers.JsonSchemaValidator
 
   def validate_settings(%Ecto.Changeset{} = changeset) do
-    validate_via_json_schema(changeset, :settings, %{
+    validate_with_json_schema(changeset, :settings, %{
       "type" => "object",
       "required" => ["rules"],
       "additionalProperties" => false,
