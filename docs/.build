@@ -5,7 +5,7 @@ fonts/icomoon.eot
 fonts/icomoon.svg
 fonts/icomoon.ttf
 fonts/icomoon.woff
-dist/sidebar_items-32341665fd.js
+dist/sidebar_items-feca4ee2a1.js
 api-reference.html
 readme.html
 404.html
@@ -36,6 +36,7 @@ Annon.ManagementAPI.ControllersRouter.html
 Annon.ManagementAPI.Render.html
 Annon.ManagementAPI.Router.html
 Annon.PCMMockServer.html
+Annon.PathHelpers.html
 Annon.Plugin.html
 Annon.Plugins.ACL.html
 Annon.Plugins.ACL.SettingsValidator.html

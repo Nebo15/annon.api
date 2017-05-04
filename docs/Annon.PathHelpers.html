@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Plugins.CORS – annon_api v0.2.46</title>
+    <title>Annon.PathHelpers – annon_api v0.2.46</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items-feca4ee2a1.js"></script>
@@ -59,14 +59,14 @@
 
       <h1>
         <small class="visible-xs">annon_api v0.2.46</small>
-        Annon.Plugins.CORS
+        Annon.PathHelpers
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>This plugin controls cross-origin resource sharing.</p>
+          <p>This module provider path generation helpers for various entities in Management API.</p>
 
         </section>
       
@@ -88,29 +88,38 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#call/2">call(conn, arg2)</a>
+    <a href="#api_path/1">api_path(api_id)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#find_plugin_settings/1">find_plugin_settings(plugins)</a>
+    <a href="#apis_path/0">apis_path()</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#init/1">init(opts)</a>
+    <a href="#plugin_path/2">plugin_path(api_id, name)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#validate_settings/1">validate_settings(changeset)</a>
+    <a href="#plugins_path/1">plugins_path(api_id)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Settings validator</p>
 </div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#request_path/1">request_path(request_id)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#requests_path/0">requests_path()</a>
+  </div>
   
 </div>
 
@@ -132,13 +141,13 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="call/2">
+          <div class="detail" id="api_path/1">
   
   <div class="detail-header">
-    <a href="#call/2" class="detail-link" title="Link to this function">
+    <a href="#api_path/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">call(conn, arg2)</span>
+    <span class="signature">api_path(api_id)</span>
     
     
     
@@ -147,13 +156,13 @@
     
   </section>
 </div>
-<div class="detail" id="find_plugin_settings/1">
+<div class="detail" id="apis_path/0">
   
   <div class="detail-header">
-    <a href="#find_plugin_settings/1" class="detail-link" title="Link to this function">
+    <a href="#apis_path/0" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">find_plugin_settings(plugins)</span>
+    <span class="signature">apis_path()</span>
     
     
     
@@ -162,13 +171,13 @@
     
   </section>
 </div>
-<div class="detail" id="init/1">
+<div class="detail" id="plugin_path/2">
   
   <div class="detail-header">
-    <a href="#init/1" class="detail-link" title="Link to this function">
+    <a href="#plugin_path/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">init(opts)</span>
+    <span class="signature">plugin_path(api_id, name)</span>
     
     
     
@@ -177,20 +186,49 @@
     
   </section>
 </div>
-<div class="detail" id="validate_settings/1">
+<div class="detail" id="plugins_path/1">
   
   <div class="detail-header">
-    <a href="#validate_settings/1" class="detail-link" title="Link to this function">
+    <a href="#plugins_path/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">validate_settings(changeset)</span>
+    <span class="signature">plugins_path(api_id)</span>
     
     
     
   </div>
   <section class="docstring">
-    <p>Settings validator.</p>
-
+    
+  </section>
+</div>
+<div class="detail" id="request_path/1">
+  
+  <div class="detail-header">
+    <a href="#request_path/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">request_path(request_id)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="requests_path/0">
+  
+  <div class="detail-header">
+    <a href="#requests_path/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">requests_path()</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
   </section>
 </div>
 

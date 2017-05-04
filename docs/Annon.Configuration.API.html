@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Configuration.API – annon_api v0.2.45</title>
+    <title>Annon.Configuration.API – annon_api v0.2.46</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-32341665fd.js"></script>
+    <script src="dist/sidebar_items-feca4ee2a1.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.45
+        v0.2.46
       </h2>
     </div>
     
@@ -58,7 +58,7 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.45</small>
+        <small class="visible-xs">annon_api v0.2.46</small>
         Annon.Configuration.API
         
         
@@ -88,17 +88,11 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#create_api/1">create_api(attrs)</a>
+    <a href="#create_api/2">create_api(id, attrs)</a>
   </div>
   
     <div class="summary-synopsis"><p>Creates a API</p>
 </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#create_api/2">create_api(id, attrs)</a>
-  </div>
   
 </div>
 <div class="summary-row">
@@ -162,33 +156,7 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="create_api/1">
-  
-  <div class="detail-header">
-    <a href="#create_api/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">create_api(attrs)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    <p>Creates a API.</p>
-<h2 id="create_api/1-examples" class="section-heading">
-  <a href="#create_api/1-examples" class="hover-link"><i class="icon-link"></i></a>
-  Examples
-</h2>
-
-<pre><code class="iex elixir">iex&gt; create_api(%{field: value})
-{:ok, %Annon.Configuration.Schemas.API{}}
-
-iex&gt; create_api(%{field: bad_value})
-{:error, %Ecto.Changeset{}}</code></pre>
-
-  </section>
-</div>
-<div class="detail" id="create_api/2">
+          <div class="detail" id="create_api/2">
   
   <div class="detail-header">
     <a href="#create_api/2" class="detail-link" title="Link to this function">
@@ -200,7 +168,19 @@ iex&gt; create_api(%{field: bad_value})
     
   </div>
   <section class="docstring">
-    
+    <p>Creates a API.</p>
+<p>ID is not auto-generated, we recommend to use Ecto UUID’s: <a href="https://hexdocs.pm/ecto/2.1.4/Ecto.UUID.html#generate/0"><code class="inline">Ecto.UUID.generate/0</code></a>.</p>
+<h2 id="create_api/2-examples" class="section-heading">
+  <a href="#create_api/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; create_api(id, %{field: value})
+{:ok, %Annon.Configuration.Schemas.API{}}
+
+iex&gt; create_api(id, %{field: bad_value})
+{:error, %Ecto.Changeset{}}</code></pre>
+
   </section>
 </div>
 <div class="detail" id="delete_api/1">
