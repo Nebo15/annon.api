@@ -12,11 +12,6 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
     %{conn: conn}
   end
 
-  def apis_path,
-    do: "apis"
-  def api_path(api_id),
-    do: "#{apis_path()}/#{api_id}"
-
   describe "on index" do
     test "lists all apis", %{conn: conn} do
       assert [] ==

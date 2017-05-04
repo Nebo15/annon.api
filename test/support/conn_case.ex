@@ -63,6 +63,7 @@ defmodule Annon.ConnCase do
       import Ecto.Changeset
       import Ecto.Query
       import Plug.Conn
+      import Annon.PathHelpers
       alias Annon.Configuration.Repo, as: ConfigurationRepo
       alias Annon.Requests.Repo, as: RequestsRepo
       alias Plug.Conn

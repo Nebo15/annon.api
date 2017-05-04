@@ -15,11 +15,6 @@ defmodule Annon.ManagementAPI.Controllers.APIPluginTest do
     }
   end
 
-  def plugins_path(api_id),
-    do: "apis/#{api_id}/plugins"
-  def plugin_path(api_id, name),
-    do: "#{plugins_path(api_id)}/#{name}"
-
   describe "on index" do
     test "lists all plugins", %{conn: conn, api: api} do
       assert [] ==

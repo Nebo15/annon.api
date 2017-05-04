@@ -12,11 +12,6 @@ defmodule Annon.ManagementAPI.Controllers.RequestTest do
     %{conn: conn}
   end
 
-  def requests_path,
-    do: "requests"
-  def request_path(request_id),
-    do: "#{requests_path()}/#{request_id}"
-
   describe "on index" do
     test "lists all requests in descending order", %{conn: conn} do
       assert [] ==
