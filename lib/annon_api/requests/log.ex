@@ -54,7 +54,16 @@ defmodule Annon.Requests.Log do
     do: query
 
   defp maybe_filter_status_codes(query, %{"status_codes" => status_codes}) when is_binary(status_codes) do
-    codes = String.split(status_codes, ",")
+    codes =
+      status_codes
+      |> String.split(",")
+      |> Enum.filter(fn status_code ->
+        case Integer.parse(status_code) do
+          {code, ""} -> true
+          _ -> false
+        end
+      end)
+
     where(query, [r], r.status_code in ^codes)
   end
   defp maybe_filter_status_codes(query, _),
