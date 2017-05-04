@@ -12,7 +12,7 @@ defmodule Annon.Configuration.Plugin do
   @plugins Annon.Plugin.__plugins__()
   @plugin_names Annon.Plugin.__plugin_names__()
   @plugin_fields [:name, :settings, :is_enabled]
-  @required_plugin_fields [:name, :is_enabled]
+  @required_plugin_fields @plugin_fields
 
   @doc """
   Returns the list of Plugins by API ID.
