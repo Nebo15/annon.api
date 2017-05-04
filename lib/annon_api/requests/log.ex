@@ -59,7 +59,7 @@ defmodule Annon.Requests.Log do
       |> String.split(",")
       |> Enum.filter(fn status_code ->
         case Integer.parse(status_code) do
-          {code, ""} -> true
+          {_code, ""} -> true
           _ -> false
         end
       end)
