@@ -146,9 +146,15 @@ defmodule Annon.Configuration.API do
   end
 
   def request_changeset(%APISchema.Request{} = request, attrs) do
+    management_api_port =
+      :annon_api
+      |> Confex.get_map(:management_http)
+      |> Keyword.fetch!(:port)
+
     request
     |> cast(attrs, @required_api_request_fields)
     |> validate_required(@required_api_request_fields)
     |> validate_subset(:methods, @known_http_verbs)
+    |> validate_exclusion(:port, [management_api_port], message: "This port is reserver for Management API")
   end
 end
