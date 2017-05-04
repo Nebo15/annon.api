@@ -50,18 +50,6 @@ defmodule Annon.Configuration.PluginTest do
   end
 
   describe "update_plugin/2" do
-    # TODO: Move to controller
-    # test "with valid data creates a new plugin", %{api: api} do
-    #   create_attrs = ConfigurationFactory.params_for(:proxy_plugin, api_id: api.id)
-    #   assert {:ok, %PluginSchema{} = plugin} = Plugin.update_plugin(api, create_attrs)
-
-    #   assert plugin.name == create_attrs.name
-    #   assert plugin.is_enabled == create_attrs.is_enabled
-    #   assert plugin.settings["host"] == create_attrs.settings["host"]
-    #   assert plugin.settings["port"] == create_attrs.settings["port"]
-    #   assert plugin.api_id == create_attrs.api_id
-    # end
-
     test "updates existing plugin", %{api: api} do
       old_plugin = ConfigurationFactory.insert(:proxy_plugin, api_id: api.id)
       update_overrides = [api_id: api.id, name: old_plugin.name, is_enabled: false]

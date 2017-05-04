@@ -61,5 +61,5 @@ defmodule Annon.ManagementAPI.Controllers.API do
     end
   end
 
-  forward "/", to: Annon.ManagementAPI.Controllers.API.Plugin
+  forward "/", to: Annon.ManagementAPI.Controllers.APIPlugin
 end

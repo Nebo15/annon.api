@@ -1,4 +1,4 @@
-defmodule Annon.ManagementAPI.Controllers.API.Plugin do
+defmodule Annon.ManagementAPI.Controllers.APIPlugin do
   @moduledoc """
   REST interface that allows to manage Plugins and their settings.
 

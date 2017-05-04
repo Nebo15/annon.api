@@ -96,8 +96,7 @@ defmodule Annon.Configuration.Plugin do
   """
   def update_plugin(%PluginSchema{id: id, inserted_at: inserted_at, api_id: api_id, name: name}, attrs) do
     plugin =
-      id
-      |> build_plugin_by_id()
+      %PluginSchema{id: id}
       |> plugin_changeset(attrs)
       |> put_change(:inserted_at, inserted_at)
       |> put_change(:api_id, api_id)
@@ -111,13 +110,6 @@ defmodule Annon.Configuration.Plugin do
       {:ok, %{insert: plugin}} -> {:ok, plugin}
       {:error, :insert, changeset, _} -> {:error, changeset}
     end
-  end
-
-  defp build_plugin_by_id(id) when is_number(id),
-    do: %PluginSchema{id: id}
-  defp build_plugin_by_id(id) when is_binary(id) do
-    {id, ""} = Integer.parse(id)
-    build_plugin_by_id(id)
   end
 
   @doc """

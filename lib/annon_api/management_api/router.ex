@@ -3,18 +3,17 @@ defmodule Annon.ManagementAPI.Router do
   Router for a [Annons Management API](http://docs.annon.apiary.io/#reference/apis).
   """
   use Plug.Router
+  use Plug.ErrorHandler
 
   if Confex.get(:annon_api, :sql_sandbox) do
     plug Phoenix.Ecto.SQL.Sandbox
   end
 
-  use Plug.ErrorHandler
-
   plug :match
 
   plug Plug.RequestId
   plug Plug.Parsers, parsers: [:json],
-                     pass:  ["application/json"],
+                     pass: ["application/json"],
                      json_decoder: Poison
 
   plug :dispatch

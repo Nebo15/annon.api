@@ -16,13 +16,12 @@ defmodule Annon.DataCase do
 
   using do
     quote do
-      alias Annon.Configuration.Repo, as: ConfigurationRepo
-      alias Annon.Requests.Repo, as: RequestsRepo
-
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
       import Annon.DataCase
+      alias Annon.Configuration.Repo, as: ConfigurationRepo
+      alias Annon.Requests.Repo, as: RequestsRepo
     end
   end
 
