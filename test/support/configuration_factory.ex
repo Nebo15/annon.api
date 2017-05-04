@@ -9,6 +9,7 @@ defmodule Annon.ConfigurationFactory do
 
   def api_factory do
     %Annon.Configuration.Schemas.API{
+      id: Ecto.UUID.generate(),
       name: sequence(:api_name, &"An API ##{&1}"),
       request: build(:api_request)
     }

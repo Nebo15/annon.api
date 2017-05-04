@@ -59,20 +59,17 @@ defmodule Annon.Configuration.API do
   @doc """
   Creates a API.
 
+  ID is not auto-generated, we recommend to use Ecto UUID's: `Ecto.UUID.generate/0`.
+
   ## Examples
 
-      iex> create_api(%{field: value})
+      iex> create_api(id, %{field: value})
       {:ok, %Annon.Configuration.Schemas.API{}}
 
-      iex> create_api(%{field: bad_value})
+      iex> create_api(id, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_api(attrs) do
-    %APISchema{}
-    |> api_changeset(attrs)
-    |> Repo.insert()
-  end
   def create_api(id, attrs) do
     %APISchema{id: id}
     |> api_changeset(attrs)

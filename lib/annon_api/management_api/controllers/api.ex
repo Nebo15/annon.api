@@ -46,8 +46,8 @@ defmodule Annon.ManagementAPI.Controllers.API do
 
   # TODO: deprecated
   post "/" do
-    conn.body_params
-    |> ConfigurationAPI.create_api()
+    Ecto.UUID.generate()
+    |> ConfigurationAPI.create_api(conn.body_params)
     |> render_change(conn, 201)
   end
 

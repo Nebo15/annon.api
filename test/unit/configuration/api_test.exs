@@ -90,36 +90,6 @@ defmodule Annon.Configuration.APITest do
     end
   end
 
-  describe "create_api/1" do
-    test "with valid data creates a api" do
-      assert {:ok, %APISchema{} = api} = API.create_api(@create_attrs)
-
-      assert api.name == @create_attrs.name
-      assert api.request.host == @create_attrs.request.host
-      assert api.request.methods == @create_attrs.request.methods
-      assert api.request.path == @create_attrs.request.path
-      assert api.request.port == @create_attrs.request.port
-      assert api.request.scheme == @create_attrs.request.scheme
-    end
-
-    test "with management port binding returns error changeset" do
-      management_port =
-        :annon_api
-        |> Confex.get_map(:management_http)
-        |> Keyword.fetch!(:port)
-
-      create_attrs = %{@create_attrs | request: %{@create_attrs.request | port: management_port}}
-      expected_error = {:port, {"This port is reserver for Management API", [validation: :exclusion]}}
-
-      assert {:error, %Ecto.Changeset{} = changeset} = API.create_api(create_attrs)
-      assert expected_error in changeset_errors(changeset.changes.request)
-    end
-
-    test "with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = API.create_api(%{})
-    end
-  end
-
   describe "create_api/2" do
     test "with valid data creates a api" do
       id = Ecto.UUID.generate()

@@ -5,7 +5,7 @@ defmodule Annon.Configuration.Schemas.API do
   use Ecto.Schema
 
   @derive {Poison.Encoder, except: [:__meta__, :plugins]}
-  @primary_key {:id, :binary_id, autogenerate: true}
+  @primary_key {:id, :binary_id, autogenerate: false}
   schema "apis" do
     field :name, :string
 
