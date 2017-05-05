@@ -54,10 +54,12 @@ defmodule Annon.Acceptance.Plugins.ACLTest do
         |> get!()
         |> get_body()
 
-      assert %{
-        "name" => "acl",
-        "api_id" => ^api_id
-      } = List.first(plugins)
+      assert Enum.any?(plugins, fn plugin ->
+        case plugin do
+          %{"name" => "acl", "api_id" => ^api_id} -> true
+          _ -> false
+        end
+      end)
     end
 
     test "create with invalid settings", %{api_id: api_id} do
