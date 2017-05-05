@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Configuration.API – annon_api v0.2.50</title>
+    <title>Annon.Configuration.API – annon_api v0.2.51</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-30443a2e63.js"></script>
+    <script src="dist/sidebar_items-1098618361.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.50
+        v0.2.51
       </h2>
     </div>
     
@@ -58,7 +58,7 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.50</small>
+        <small class="visible-xs">annon_api v0.2.51</small>
         Annon.Configuration.API
         
         
@@ -101,6 +101,24 @@
   </div>
   
     <div class="summary-synopsis"><p>Deletes a API</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#dump_apis/0">dump_apis()</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Returns all APIs that have at least one enabled Plugin and preloads Plugins</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#find_api/5">find_api(scheme, method, host, port, path)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Returns first API that match request parameters</p>
 </div>
   
 </div>
@@ -206,6 +224,54 @@ iex&gt; create_api(id, %{field: bad_value})
 
 iex&gt; delete_api(007)
 {:error, :not_found}</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="dump_apis/0">
+  
+  <div class="detail-header">
+    <a href="#dump_apis/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">dump_apis()</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Returns all APIs that have at least one enabled Plugin and preloads Plugins.</p>
+<h2 id="dump_apis/0-examples" class="section-heading">
+  <a href="#dump_apis/0-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; dump_apis()
+[%Annon.Configuration.Schemas.API{}, ...]</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="find_api/5">
+  
+  <div class="detail-header">
+    <a href="#find_api/5" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">find_api(scheme, method, host, port, path)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Returns first API that match request parameters.</p>
+<p>APIs are ordered by <code class="inline">inserted_at</code> field to make sure that new overlapping
+settings don’t break old gateway behaviors.</p>
+<h2 id="find_api/5-examples" class="section-heading">
+  <a href="#find_api/5-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; find_api(&quot;POST&quot;, &quot;HTTP&quot;, &quot;example.com&quot;, 80, &quot;/my_path&quot;)
+%Annon.Configuration.Schemas.API{}</code></pre>
 
   </section>
 </div>
