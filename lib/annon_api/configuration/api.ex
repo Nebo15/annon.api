@@ -138,7 +138,7 @@ defmodule Annon.Configuration.API do
       iex> dump_apis()
       [%Annon.Configuration.Schemas.API{}, ...]
   """
-  def dump_apis() do
+  def dump_apis do
     Repo.all(apis_dump_query())
   end
 
