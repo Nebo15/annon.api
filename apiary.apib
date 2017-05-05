@@ -110,6 +110,17 @@ See [LICENSE.md](https://github.com/Nebo15/annon.api/blob/master/LICENSE.md).
 
 API is a endpoint definition for any upstream back-end. They can be extended by Annons plugins.
 
+#### Processing Order
+
+Notice that even truough we trying to protect you from creating overllaping API configurations, 
+we can not guarantee that they always unique. API that was defined earlier will always have 
+higher priority, thus after creating overlapping API it won't work, but you won't break the one 
+that were working earlier.
+
+#### Wildcard Domains
+
+In API request settings you can use `%` to match any substring in a request host.
+
 ## APIs [/apis]
 
 ### Get APIs [GET /apis{?name,limit,starting_after,ending_before}]
@@ -125,10 +136,6 @@ API is a endpoint definition for any upstream back-end. They can be extended by 
         + data (array[`API__Response`])
 
 ### Create API [POST]
-
-#### API's Processing Order
-
-Notice that even truough we trying to protect you from creating interlapped API's, we can not guarantee that they always unique. In general, API that was defined earlier will always have higher priority.
 
 + Request (application/json)
     + Attributes 
@@ -746,6 +753,16 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
     + Attributes (Response_Collection)
         + data (array[`API_Status`])
 
+# Group Dictionaries
+
+## Cluster Status [/dictionaries/plugins]
+
+### Get all Plugins [GET]
+
++ Response 200 (application/json)
+    + Attributes (Response_Collection)
+        + data (`Plugin_Dictionary_Entry`)
+
 # Data Structures
 ## Responses
 ### `Response_Collection`
@@ -817,14 +834,12 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
     - 8080
 
 ### `Cluster_Node_Status`
-+ name
-+ heap_sizes
-+ otp_release
-+ process_count
-+ process_limit
-+ stared_at
-+ cpu_load
-+ memory_usage
++ name: `nonode@nohost` (string)
++ otp_release: `19` (string)
++ process_count: 656 (number)
++ process_limit: 262144 (number)
++ run_queue: 0 (number)
++ uptime: 239.873 (number) - Seconds since node VM start.
 
 ## APIs
 ### `API__Request`
@@ -832,13 +847,20 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 + description: `My API example` (string, optional) - Description of an API.
 + docs_url: `http://docs.annon.apiary.io/` (string, optional) - Link to the API documentation page.
 + health (`API_Health`, optional)
-+ request (object, fixed-type) - Request description.
-    + methods (array[`HTTP_Verb`], required) - HTTP request method.
-    + scheme: http (string) - HTTP request scheme. May be: `http`, `https`.
-    + host: `os-dev-gateway.nebo15.com` (string, required) - DNS address of your API or its IP.
-    + port: 80 (number) - Port on which your API recieves requests.
-    + path: /andrew/ (string, required) - Public path to your API. Must start with `/`.
++ request (`API_Request__Request`, fixed-type) - Request description.
 + disclose_status: false (boolean, optional) - If `true` API status will be publically available in API Status endpoint.
+
+### `API_Request__Request`
++ methods (array[`HTTP_Verb`], required) - HTTP request method.
++ scheme: http (string) - HTTP request scheme. May be: `http`, `https`.
++ host: `os-dev-gateway.nebo15.com` (string, required) - DNS address of your API or its IP.
++ port: 80 (number) - Port on which your API recieves requests.
++ path: /andrew/ (string, required) - Public path to your API. Must start with `/`.
+
+### `API_Embed`
++ id: 56c31536a60ad644060041af (string) - Unique ID for API.
++ name: my_api (string, required) - Unique name for API.
++ request (`API_Request__Request`, fixed-type) - Request description.
 
 ### `API__Response`
 + id: 56c31536a60ad644060041af (string) - Unique ID for API.
@@ -870,6 +892,10 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 + Include Plugin
 + created_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
 + updated_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
+
+### `Plugin_Dictionary_Entry`
++ name: plugin_name (string) - Plugin name
++ validation_schema: `{}` (string) - JSON schema to validate plugin settings.
 
 ## Proxy Plugin
 ### `Plugin_Proxy__Request`
@@ -1161,7 +1187,7 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 + id: `tl8nd5019bkendi1uadl2nqq38g69dbf` (string) - unique request identifier.
 + idempotency_key: `myidempotencykey` (string) - Idempotency Key if consumer sent it, `null` otherwise.
 + inserted_at: `2016-11-04T16:16:20.875777` (string)
-+ api (`API__Response`, optional)
++ api (`API_Embed`, optional)
 + status_code: 200 (number) - HTTP status code.
 + ip_address: `10.2.87.0` (string) - Consumer IP address.
 
