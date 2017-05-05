@@ -11,6 +11,8 @@ defmodule Annon.Plugins.Scopes do
   alias Annon.Plugins.Scopes.JWTStrategy
   alias Annon.Plugins.Scopes.PCMStrategy
   alias Annon.Plugins.Scopes.OAuth2Strategy
+  alias Annon.Helpers.Response
+  alias EView.Views.Error, as: ErrorView
 
   @doc """
   Settings validator delegate.
@@ -32,20 +34,29 @@ defmodule Annon.Plugins.Scopes do
 
     Conn.put_private(conn, :scopes, scopes)
   end
+  # TODO: refactor this method into a Plug of it's own, designing it after plugins/jwt.ex
   defp get_scopes(conn, %{"strategy" => "oauth2", "url_template" => url_template}) do
-    token =
-      conn
-      |> Conn.get_req_header("authorization")
-      |> (fn(["Bearer " <> string]) -> string end).()
-      |> OAuth2Strategy.get_scopes(url_template)
+    token = Conn.get_req_header(conn, "authorization")
 
-    scopes =
-      token
-      |> get_in(["data", "details", "scope"])
+    if token do
+      token_attributes =
+        token
+        |> (fn(["Bearer " <> string]) -> string end).()
+        |> OAuth2Strategy.token_attributes(url_template)
 
-    conn
-    |> Conn.put_private(:scopes, (if scopes, do: String.split(scopes, ","), else: []))
-    |> Conn.put_private(:consumer_id, get_in(token, ["data", "user_id"]))
+      if token_attributes do
+        scopes = get_in(token_attributes, ["data", "details", "scope"])
+        consumer_id = get_in(token_attributes, ["data", "user_id"])
+
+        conn
+        |> Conn.put_private(:scopes, scopes)
+        |> Conn.put_private(:consumer_id, consumer_id)
+      else
+        return_401(conn)
+      end
+    else
+      return_401(conn)
+    end
   end
   defp get_scopes(conn, %{"strategy" => "pcm", "url_template" => url_template}) do
     scopes =
@@ -62,4 +73,19 @@ defmodule Annon.Plugins.Scopes do
     |> get_scopes(settings)
   end
   defp execute(_, conn), do: conn
+
+  defp return_401(conn) do
+    "401.json"
+    |> ErrorView.render(%{
+      message: "Your token is invalid.",
+      invalid: [%{
+        entry_type: "header",
+        entry: "Authorization",
+        description: "Your token is invalid.",
+        rules: []
+      }]
+    })
+    |> Response.send(conn, 401)
+    |> Response.halt()
+  end
 end
