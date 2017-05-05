@@ -9,10 +9,11 @@ defmodule Annon.Configuration.API do
   alias Ecto.Multi
   alias Ecto.Paging
 
-  # @api_fields [:name, :description, :health, :docs_url, :disclose_status]
+  @api_fields [:name, :description, :health, :docs_url, :disclose_status]
   @required_api_fields [:name]
   @required_api_request_fields [:scheme, :host, :port, :path, :methods]
   @known_http_verbs ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
+  @known_health_statuses ["operational", "degradated_perfomance", "partial_outage", "major_outage"]
 
   @doc """
   Returns the list of APIs.
@@ -188,8 +189,11 @@ defmodule Annon.Configuration.API do
 
   defp api_changeset(%APISchema{} = api, attrs) do
     api
-    |> cast(attrs, @required_api_fields)
+    |> cast(attrs, @api_fields)
     |> validate_required(@required_api_fields)
+    |> validate_length(:description, max: 512)
+    |> validate_length(:docs_url, max: 512)
+    |> validate_inclusion(:health, @known_health_statuses)
     |> unique_constraint(:name, name: :apis_name_index)
     |> unique_constraint(:request, name: :api_unique_request_index)
     |> cast_embed(:request, with: &request_changeset/2)

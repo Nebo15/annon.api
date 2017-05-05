@@ -8,6 +8,10 @@ defmodule Annon.Configuration.Schemas.API do
   @primary_key {:id, :binary_id, autogenerate: false}
   schema "apis" do
     field :name, :string
+    field :description, :string, default: ""
+    field :docs_url, :string, default: ""
+    field :health, :string, default: "operational"
+    field :disclose_status, :boolean, default: false
 
     embeds_one :request, Request, primary_key: false, on_replace: :update do
       field :scheme, :string

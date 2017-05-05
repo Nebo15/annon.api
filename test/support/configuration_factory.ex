@@ -11,6 +11,10 @@ defmodule Annon.ConfigurationFactory do
     %Annon.Configuration.Schemas.API{
       id: Ecto.UUID.generate(),
       name: sequence(:api_name, &"An API ##{&1}"),
+      description: sequence(:api_description, &"An API description ##{&1}"),
+      health: "operational",
+      docs_url: sequence(:api_docs_url, &"example.com/#{&1}"),
+      disclose_status: false,
       request: build(:api_request)
     }
   end
