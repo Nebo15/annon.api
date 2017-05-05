@@ -30,7 +30,7 @@ defmodule Annon.Helpers.JsonSchemaValidator do
     |> Enum.reduce(changeset, fn({%{description: message, rule: rule, params: params}, json_path}, changeset) ->
       fake_field =
         json_path
-        |> String.replace_leading("$", "#{field}")
+        |> String.replace_leading("$", Atom.to_string(field))
         |> String.to_atom()
 
       errors = [{fake_field, {message, [validation: rule]}}] ++ changeset.errors
