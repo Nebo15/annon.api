@@ -36,30 +36,29 @@ defmodule Annon.Plugins.Scopes do
   end
   # TODO: refactor this method into a Plug of it's own, designing it after plugins/jwt.ex
   defp get_scopes(conn, %{"strategy" => "oauth2", "url_template" => url_template}) do
-    token = Conn.get_req_header(conn, "authorization")
+    case Conn.get_req_header(conn, "authorization") do
+      [token] ->
+        token_attributes =
+          token
+          |> (fn("Bearer " <> string) -> string end).()
+          |> OAuth2Strategy.token_attributes(url_template)
 
-    if token do
-      token_attributes =
-        token
-        |> (fn(["Bearer " <> string]) -> string end).()
-        |> OAuth2Strategy.token_attributes(url_template)
+        if token_attributes do
+          scopes =
+            token_attributes
+            |> get_in(["data", "details", "scope"])
+            |> String.split(",")
 
-      if token_attributes do
-        scopes =
-          token_attributes
-          |> get_in(["data", "details", "scope"])
-          |> String.split(",")
+          consumer_id = get_in(token_attributes, ["data", "user_id"])
 
-        consumer_id = get_in(token_attributes, ["data", "user_id"])
-
-        conn
-        |> Conn.put_private(:scopes, scopes)
-        |> Conn.put_private(:consumer_id, consumer_id)
-      else
-        return_401(conn)
-      end
-    else
-      return_401(conn)
+          conn
+          |> Conn.put_private(:scopes, scopes)
+          |> Conn.put_private(:consumer_id, consumer_id)
+        else
+          return_401(conn, "access_token does not exist.")
+        end
+      _ ->
+        return_401(conn, "access_token was not provided.")
     end
   end
   defp get_scopes(conn, %{"strategy" => "pcm", "url_template" => url_template}) do
@@ -78,14 +77,14 @@ defmodule Annon.Plugins.Scopes do
   end
   defp execute(_, conn), do: conn
 
-  defp return_401(conn) do
+  defp return_401(conn, message) do
     "401.json"
     |> ErrorView.render(%{
-      message: "Your token is invalid.",
+      message: message,
       invalid: [%{
         entry_type: "header",
         entry: "Authorization",
-        description: "Your token is invalid.",
+        description: message,
         rules: []
       }]
     })
