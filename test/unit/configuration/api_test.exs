@@ -79,6 +79,35 @@ defmodule Annon.Configuration.APITest do
     end
   end
 
+  test "list_disclosed_apis/0 returns disclosed apis" do
+    assert [] = API.list_disclosed_apis()
+
+    ConfigurationFactory.insert(:api)
+    assert [] = API.list_disclosed_apis()
+
+    api = ConfigurationFactory.insert(:api, disclose_status: true)
+    disclosed_apis = API.list_disclosed_apis()
+    assert length(disclosed_apis) == 1
+    disclosed_api = List.first(disclosed_apis)
+
+    # Discloses only info data
+    assert disclosed_api.id == api.id
+    assert disclosed_api.name == api.name
+    assert disclosed_api.description == api.description
+    assert disclosed_api.health == api.health
+    assert disclosed_api.docs_url == api.docs_url
+
+    # Does not expose critical data
+    assert disclosed_api.request == nil
+    assert disclosed_api.updated_at == nil
+    assert disclosed_api.inserted_at == nil
+    assert disclosed_api.disclose_status == false
+    assert %Ecto.Association.NotLoaded{} = disclosed_api.plugins
+
+    ConfigurationFactory.insert(:api, disclose_status: true)
+    assert length(API.list_disclosed_apis()) == 2
+  end
+
   describe "get_api/1" do
     test "returns the api with given id" do
       api = ConfigurationFactory.insert(:api)

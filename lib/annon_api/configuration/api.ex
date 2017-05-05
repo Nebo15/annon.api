@@ -40,6 +40,16 @@ defmodule Annon.Configuration.API do
     do: query
 
   @doc """
+  Returns list of apis statuses
+  """
+  def list_disclosed_apis do
+    Repo.all from apis in APISchema,
+      where: apis.disclose_status == true,
+      select: [:id, :name, :description, :health, :docs_url],
+      order_by: apis.inserted_at
+  end
+
+  @doc """
   Gets a single API.
 
   ## Examples
