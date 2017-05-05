@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Plugins.Idempotency – annon_api v0.2.54</title>
+    <title>Annon.Monitoring – annon_api v0.2.54</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items-1b0c36e8aa.js"></script>
@@ -59,14 +59,14 @@
 
       <h1>
         <small class="visible-xs">annon_api v0.2.54</small>
-        Annon.Plugins.Idempotency
+        Annon.Monitoring
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p><a href="http://docs.annon.apiary.io/#reference/plugins/idempotency">Request Idempotency plugin</a>.</p>
+          <p>Monitoring service for Annons clusters.</p>
 
         </section>
       
@@ -88,29 +88,14 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#find_plugin_settings/1">find_plugin_settings(plugins)</a>
+    <a href="#get_node_status/1">get_node_status(erl_node)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#init/1">init(opts)</a>
+    <a href="#get_status/0">get_status()</a>
   </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#settings_validation_schema/0">settings_validation_schema()</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#validate_settings/1">validate_settings(changeset)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Settings validator</p>
-</div>
   
 </div>
 
@@ -132,13 +117,13 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="find_plugin_settings/1">
+          <div class="detail" id="get_node_status/1">
   
   <div class="detail-header">
-    <a href="#find_plugin_settings/1" class="detail-link" title="Link to this function">
+    <a href="#get_node_status/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">find_plugin_settings(plugins)</span>
+    <span class="signature">get_node_status(erl_node)</span>
     
     
     
@@ -147,50 +132,19 @@
     
   </section>
 </div>
-<div class="detail" id="init/1">
+<div class="detail" id="get_status/0">
   
   <div class="detail-header">
-    <a href="#init/1" class="detail-link" title="Link to this function">
+    <a href="#get_status/0" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">init(opts)</span>
+    <span class="signature">get_status()</span>
     
     
     
   </div>
   <section class="docstring">
     
-  </section>
-</div>
-<div class="detail" id="settings_validation_schema/0">
-  
-  <div class="detail-header">
-    <a href="#settings_validation_schema/0" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">settings_validation_schema()</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="validate_settings/1">
-  
-  <div class="detail-header">
-    <a href="#validate_settings/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">validate_settings(changeset)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    <p>Settings validator.</p>
-
   </section>
 </div>
 
