@@ -5,7 +5,11 @@ defmodule Annon.Plugins.JWT.SettingsValidator do
   import Annon.Helpers.JsonSchemaValidator
 
   def validate_settings(%Ecto.Changeset{} = changeset) do
-    validate_with_json_schema(changeset, :settings, %{
+    validate_with_json_schema(changeset, :settings, settings_validation_schema())
+  end
+
+  def settings_validation_schema do
+    %{
       "type" => "object",
       "required" => ["signature"],
       "additionalProperties" => false,
@@ -14,6 +18,6 @@ defmodule Annon.Plugins.JWT.SettingsValidator do
           "type" => "string"
         },
       },
-    })
+    }
   end
 end

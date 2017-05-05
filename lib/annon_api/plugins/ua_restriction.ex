@@ -16,6 +16,7 @@ defmodule Annon.Plugins.UARestriction do
   Settings validator delegate.
   """
   defdelegate validate_settings(changeset), to: Annon.Plugins.UARestriction.SettingsValidator
+  defdelegate settings_validation_schema(), to: Annon.Plugins.UARestriction.SettingsValidator
 
   @doc false
   def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opt) when is_list(plugins) do

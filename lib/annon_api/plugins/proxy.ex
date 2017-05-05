@@ -17,6 +17,7 @@ defmodule Annon.Plugins.Proxy do
   Settings validator delegate.
   """
   defdelegate validate_settings(changeset), to: Annon.Plugins.Proxy.SettingsValidator
+  defdelegate settings_validation_schema(), to: Annon.Plugins.Proxy.SettingsValidator
 
   @doc false
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins, request: %{path: api_path}}}} = conn, _opts)

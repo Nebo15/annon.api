@@ -22,6 +22,7 @@ defmodule Annon.ManagementAPI.Router do
 
   forward "/apis", to: Annon.ManagementAPI.Controllers.API
   forward "/requests", to: Annon.ManagementAPI.Controllers.Request
+  forward "/dictionaries", to: Annon.ManagementAPI.Controllers.Dictionaries
 
   match _ do
     Annon.Helpers.Response.send_error(conn, :not_found)

@@ -20,6 +20,7 @@ defmodule Annon.Plugins.IPRestriction do
   Settings validator delegate.
   """
   defdelegate validate_settings(changeset), to: Annon.Plugins.IPRestriction.SettingsValidator
+  defdelegate settings_validation_schema(), to: Annon.Plugins.IPRestriction.SettingsValidator
 
   @doc false
   def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opt) when is_list(plugins) do

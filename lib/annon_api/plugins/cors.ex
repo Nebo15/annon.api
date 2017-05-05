@@ -14,6 +14,8 @@ defmodule Annon.Plugins.CORS do
   """
   def validate_settings(changeset),
     do: changeset
+  def settings_validation_schema,
+    do: %{}
 
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts)
     when is_list(plugins) do

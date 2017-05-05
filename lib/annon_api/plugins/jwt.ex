@@ -23,6 +23,7 @@ defmodule Annon.Plugins.JWT do
   Settings validator delegate.
   """
   defdelegate validate_settings(changeset), to: Annon.Plugins.JWT.SettingsValidator
+  defdelegate settings_validation_schema(), to: Annon.Plugins.JWT.SettingsValidator
 
   @doc false
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts) when is_list(plugins) do
