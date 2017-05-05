@@ -45,4 +45,28 @@ defmodule Annon.ManagementAPI.RouterTest do
       }
     ]
   end
+
+  test "shows cluster status", %{conn: conn} do
+    status =
+      conn
+      |> get("/cluster_status")
+      |> json_response(200)
+      |> Map.get("data")
+
+    assert %{
+      "cluster_size" => 1,
+      "cluster_strategy" => "epmd",
+      "nodes" => [
+        %{
+          "name" => "nonode@nohost",
+          "otp_release" => _,
+          "process_count" => _,
+          "process_limit" => _,
+          "run_queue" => _,
+          "uptime" => _
+        }
+      ],
+      "open_ports" => []
+    } = status
+  end
 end

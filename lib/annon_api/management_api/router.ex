@@ -35,6 +35,11 @@ defmodule Annon.ManagementAPI.Router do
     |> Render.render_collection(conn)
   end
 
+  get "/cluster_status" do
+    status = Annon.Monitoring.get_status()
+    Render.render_one({:ok, status}, conn)
+  end
+
   match _ do
     Response.send_error(conn, :not_found)
   end
