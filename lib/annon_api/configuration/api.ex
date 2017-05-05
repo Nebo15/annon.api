@@ -139,7 +139,9 @@ defmodule Annon.Configuration.API do
       [%Annon.Configuration.Schemas.API{}, ...]
   """
   def dump_apis do
-    Repo.all(apis_dump_query())
+    apis_dump_query()
+    |> join_enabled_plugins()
+    |> Repo.all()
   end
 
   @doc """
@@ -162,6 +164,7 @@ defmodule Annon.Configuration.API do
       |> where([apis], fragment("?->'port' = ?", apis.request, ^port))
       |> where([apis], fragment("? ILIKE (?#>>'{path}' || '%')", ^path, apis.request))
       |> limit(1)
+      |> join_enabled_plugins()
       |> Repo.all()
 
     case apis do
@@ -174,10 +177,13 @@ defmodule Annon.Configuration.API do
 
   defp apis_dump_query do
     from apis in APISchema,
-      join: plugins in PluginSchema, on: plugins.api_id == apis.id,
-      where: plugins.is_enabled == true,
-      preload: [plugins: plugins],
       order_by: apis.inserted_at
+  end
+
+  defp join_enabled_plugins(query) do
+    query
+    |> join(:inner, [apis], plugins in PluginSchema, plugins.api_id == apis.id and plugins.is_enabled == true)
+    |> preload([apis, plugins], [plugins: plugins])
   end
 
   defp api_changeset(%APISchema{} = api, attrs) do

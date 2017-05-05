@@ -142,15 +142,23 @@ defmodule Annon.Configuration.APITest do
 
       api_id = api.id
 
-      plugin = ConfigurationFactory.insert(:proxy_plugin, api_id: api.id)
+      plugin1 = ConfigurationFactory.insert(:proxy_plugin, api_id: api.id)
       assert [%APISchema{
         id: ^api_id,
         plugins: plugins
       }] = API.dump_apis()
 
       assert length(plugins) == 1
-      assert List.first(plugins).id == plugin.id
+      assert List.first(plugins).id == plugin1.id
       assert List.first(plugins).is_enabled == true
+
+      ConfigurationFactory.insert(:jwt_plugin, api_id: api.id)
+      assert [%APISchema{
+        id: ^api_id,
+        plugins: plugins
+      }] = API.dump_apis()
+
+      assert length(plugins) == 2
     end
 
     test "filters APIs when plugin is disabled" do
@@ -215,6 +223,9 @@ defmodule Annon.Configuration.APITest do
         path: "/my_path"
       }))
       ConfigurationFactory.insert(:proxy_plugin, api_id: api.id)
+      ConfigurationFactory.insert(:jwt_plugin, api_id: api.id)
+
+      IO.inspect API.dump_apis()
 
       assert {:ok, %APISchema{
         id: api_id,
@@ -222,7 +233,7 @@ defmodule Annon.Configuration.APITest do
       }} = API.find_api("http", "POST", "example.com", 80, "/my_path")
 
       assert api_id == api.id
-      assert length(plugins) == 1
+      assert length(plugins) == 2
 
       assert {:error, :not_found} = API.find_api("https", "POST", "example.com", 80, "/my_path")
       assert {:error, :not_found} = API.find_api("http", "POST", "example.com", 8080, "/my_path")
