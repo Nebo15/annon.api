@@ -29,7 +29,7 @@ defmodule Annon do
   end
 
   defp matcher_opts do
-    Confex.get_map(:annon_api, :configuration_cache)
+    Application.get_env(:annon_api, :configuration_cache)
   end
 
   # Loads configuration in `:on_init` callbacks and replaces `{:system, ..}` tuples via Confex

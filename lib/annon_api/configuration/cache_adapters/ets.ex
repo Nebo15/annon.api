@@ -51,9 +51,13 @@ defmodule Annon.Configuration.CacheAdapters.ETS do
       {{:api, api.id}, api, host_regex}
     end)
 
-    true = :ets.insert(table_name, objects)
-
-    :ok
+    case objects do
+      [] ->
+        :ok
+      objects when is_list(objects) ->
+        true = :ets.insert(table_name, objects)
+        :ok
+    end
   end
 
   defp filter_by_method(apis, method) do

@@ -163,14 +163,14 @@ defmodule Annon.Configuration.API do
       |> where([apis], fragment("? ILIKE ?#>>'{host}'", ^host, apis.request))
       |> where([apis], fragment("?->'port' = ?", apis.request, ^port))
       |> where([apis], fragment("? ILIKE (?#>>'{path}' || '%')", ^path, apis.request))
-      |> limit(1)
+      |> limit(10) # TODO: Limit 1 returns only one plugin in joined query, FIX IT
       |> join_enabled_plugins()
       |> Repo.all()
 
     case apis do
       [] ->
         {:error, :not_found}
-      [api] ->
+      [api|_] ->
         {:ok, api}
     end
   end

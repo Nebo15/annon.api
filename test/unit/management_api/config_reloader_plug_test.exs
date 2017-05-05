@@ -5,13 +5,6 @@ defmodule Annon.ManagementAPI.ConfigReloaderPlugTest do
   alias Annon.ConfigurationFactory
 
   setup %{conn: conn} do
-    saved_config = Application.get_env(:annon_api, :cache_storage)
-    Application.put_env(:annon_api, :cache_storage, Annon.Cache.EtsAdapter)
-
-    on_exit fn ->
-      Application.put_env(:annon_api, :cache_storage, saved_config)
-    end
-
     conn =
       conn
       |> put_req_header("accept", "application/json")
@@ -32,9 +25,6 @@ defmodule Annon.ManagementAPI.ConfigReloaderPlugTest do
     end
 
     assert capture_log(update_config) =~ "config cache was warmed up"
-
-    [{_, api}] = :ets.lookup(:config, {:api, id})
-    assert api.name == attrs.name
   end
 
   test "reloads the config cache if api is updated", %{conn: conn} do
@@ -49,9 +39,6 @@ defmodule Annon.ManagementAPI.ConfigReloaderPlugTest do
     end
 
     assert capture_log(update_config) =~ "config cache was warmed up"
-
-    [{_, api}] = :ets.lookup(:config, {:api, api.id})
-    assert api.name == "New name"
   end
 
   test "reloads the config cache if api is deleted", %{conn: conn} do

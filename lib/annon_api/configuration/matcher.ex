@@ -15,14 +15,20 @@ defmodule Annon.Configuration.Matcher do
     * `adapter` - cache adapter.
     * `cache_space` - unique cache space key if multiple matcher processes are started.
   """
-  def init(opts) do
+  def init(config) do
+    {:ok, configure(config), 0}
+  end
+
+  defp configure(config) do
+    {:ok, opts} = Annon.load_from_system_env(config)
+
     adapter = Keyword.get(opts, :adapter)
 
     unless adapter do
       raise "Configuration cache adapter is not set, expected module, got: #{inspect adapter}."
     end
 
-    {:ok, %{adapter: adapter, opts: opts}, 0}
+    %{adapter: adapter, opts: opts, config: config}
   end
 
   @doc """

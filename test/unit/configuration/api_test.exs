@@ -225,8 +225,6 @@ defmodule Annon.Configuration.APITest do
       ConfigurationFactory.insert(:proxy_plugin, api_id: api.id)
       ConfigurationFactory.insert(:jwt_plugin, api_id: api.id)
 
-      IO.inspect API.dump_apis()
-
       assert {:ok, %APISchema{
         id: api_id,
         plugins: plugins
