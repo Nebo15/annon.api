@@ -23,6 +23,10 @@ config :annon_api, Annon.Requests.Repo,
 config :annon_api,
   ecto_repos: [Annon.Configuration.Repo, Annon.Requests.Repo]
 
+config :annon_api, :configuration_cache,
+  adapter: {:system, :module, "CONFIGURATION_CACHE_ADAPTER", Annon.Configuration.CacheAdapters.ETS},
+  cache_space: :configuration
+
 # TODO: Replace with statix
 config :ex_statsd,
   host: "localhost",
@@ -56,8 +60,5 @@ config :skycluster,
 
 config :annon_api,
   sql_sandbox: {:system, :boolean, "SQL_SANDBOX", false}
-
-config :annon_api,
-  cache_storage: {:system, :module, "CACHE_STORAGE", Annon.Cache.EtsAdapter}
 
 import_config "#{Mix.env}.exs"

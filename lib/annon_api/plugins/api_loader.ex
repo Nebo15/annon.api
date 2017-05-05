@@ -5,22 +5,24 @@ defmodule Annon.Plugins.APILoader do
   """
   use Annon.Plugin,
     plugin_name: "api_loader"
-
   import Plug.Conn
+  alias Annon.Configuration.Matcher
 
   @doc false
-  def call(conn, _opts), do: put_private(conn, :api_config, conn |> get_config)
+  def call(conn, _opts),
+    do: put_private(conn, :api_config, find_api(conn))
 
-  def get_config(conn) do
+  def find_api(conn) do
     scheme = normalize_scheme(conn.scheme)
+    method = conn.method
     host = get_host(conn)
     port = conn.port
+    path = conn.request_path
 
-    apis = Confex.get(:annon_api, :cache_storage).find_api_by(scheme, host, port)
-
-    apis
-    |> find_matching_method(conn.method)
-    |> find_matching_path(conn.request_path)
+    case Matcher.match_request(scheme, method, host, port, path) do
+      {:ok, api} -> api
+      {:error, :not_found} -> nil
+    end
   end
 
   defp get_host(conn) do
@@ -30,19 +32,8 @@ defmodule Annon.Plugins.APILoader do
     end
   end
 
-  defp normalize_scheme(scheme) when is_atom(scheme), do: Atom.to_string(scheme)
-  defp normalize_scheme(scheme), do: scheme
-
-  def find_matching_method(apis, method) do
-    apis
-    |> Enum.filter(&Enum.member?(&1.request.methods, method))
-  end
-
-  def find_matching_path(apis, path) do
-    apis
-    |> Enum.filter(&String.starts_with?(path, &1.request.path))
-    |> Enum.sort_by(&String.length(&1.request.path))
-    |> Enum.reverse
-    |> List.first
-  end
+  defp normalize_scheme(scheme) when is_atom(scheme),
+    do: Atom.to_string(scheme)
+  defp normalize_scheme(scheme) when is_binary(scheme),
+    do: scheme
 end

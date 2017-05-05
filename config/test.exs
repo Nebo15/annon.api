@@ -50,8 +50,9 @@ config :ex_unit, capture_log: true
 
 config :hackney, use_default_pool: false
 
-config :annon_api,
-  cache_storage: {:system, :module, "CACHE_STORAGE", Annon.Cache.PostgresAdapter}
+config :annon_api, :configuration_cache,
+  adapter: {:system, :module, "CONFIGURATION_CACHE_ADAPTER", Annon.Configuration.CacheAdapters.Database},
+  cache_space: :configuration
 
 config :annon_api,
   sql_sandbox: {:system, :boolean, "SQL_SANDBOX", true}

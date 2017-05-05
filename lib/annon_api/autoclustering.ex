@@ -6,6 +6,7 @@ defmodule Annon.AutoClustering do
   """
   use GenServer
   require Logger
+  alias Annon.Configuration.Matcher
 
   def start_link do
     GenServer.start_link(__MODULE__, [], [name: __MODULE__])
@@ -54,8 +55,7 @@ defmodule Annon.AutoClustering do
   end
 
   def do_reload_config do
-    cache_adapter = Confex.get(:annon_api, :cache_storage)
-    cache_adapter.warm_up()
+    :ok = Matcher.config_change()
     Logger.info fn -> "Node #{node()}: config cache was warmed up." end
   end
 end
