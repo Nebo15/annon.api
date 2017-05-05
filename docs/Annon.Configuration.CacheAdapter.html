@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Plugins.CORS – annon_api v0.2.52</title>
+    <title>Annon.Configuration.CacheAdapter – annon_api v0.2.52</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items-5957cafb0b.js"></script>
@@ -59,14 +59,16 @@
 
       <h1>
         <small class="visible-xs">annon_api v0.2.52</small>
-        Annon.Plugins.CORS
+        Annon.Configuration.CacheAdapter
+        
+          <small>behaviour</small>
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>This plugin controls cross-origin resource sharing.</p>
+          <p>Adapter for API Gateway configuration loaders.</p>
 
         </section>
       
@@ -82,42 +84,42 @@
           
 
           
-  <div class="summary-functions summary">
+
+          
+  <div class="summary-callbacks summary">
     <h2>
-      <a href="#functions">Functions</a>
+      <a href="#callbacks">Callbacks</a>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#call/2">call(conn, arg2)</a>
+    <a href="#c:config_change/1">config_change(opts)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Updates cache information when configuration is changed</p>
+</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#find_plugin_settings/1">find_plugin_settings(plugins)</a>
+    <a href="#c:init/1">init(opts)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Initializes configuration adapter</p>
+</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#init/1">init(opts)</a>
+    <a href="#c:match_request/6">match_request(scheme, method, host, port, path, opts)</a>
   </div>
   
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#validate_settings/1">validate_settings(changeset)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Settings validator</p>
+    <div class="summary-synopsis"><p>Returns oldest API and associated Plugins that matches request parameters</p>
 </div>
   
 </div>
 
   </div>
 
-
-          
 
         </section>
       
@@ -125,78 +127,85 @@
       
 
       
-        <section id="functions" class="details-list">
+
+      
+        <section id="callbacks" class="details-list">
           <h1 class="section-heading">
-            <a class="hover-link" href="#functions">
+            <a class="hover-link" href="#callbacks">
               <i class="icon-link"></i>
             </a>
-            Functions
+            Callbacks
           </h1>
-          <div class="detail" id="call/2">
+          <div class="detail" id="c:config_change/1">
   
   <div class="detail-header">
-    <a href="#call/2" class="detail-link" title="Link to this function">
+    <a href="#c:config_change/1" class="detail-link" title="Link to this callback">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">call(conn, arg2)</span>
+    <span class="signature">config_change(opts)</span>
     
     
+    
+      <div class="specs">
+        
+          <pre>config_change(opts :: <a href="https://hexdocs.pm/elixir/Keyword.html#t:t/0">Keyword.t</a>) :: :ok</pre>
+        
+      </div>
     
   </div>
   <section class="docstring">
-    
+    <p>Updates cache information when configuration is changed.</p>
+
   </section>
 </div>
-<div class="detail" id="find_plugin_settings/1">
+<div class="detail" id="c:init/1">
   
   <div class="detail-header">
-    <a href="#find_plugin_settings/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">find_plugin_settings(plugins)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="init/1">
-  
-  <div class="detail-header">
-    <a href="#init/1" class="detail-link" title="Link to this function">
+    <a href="#c:init/1" class="detail-link" title="Link to this callback">
       <i class="icon-link"></i>
     </a>
     <span class="signature">init(opts)</span>
     
     
     
+      <div class="specs">
+        
+          <pre>init(opts :: <a href="https://hexdocs.pm/elixir/Keyword.html#t:t/0">Keyword.t</a>) :: :ok</pre>
+        
+      </div>
+    
   </div>
   <section class="docstring">
-    
+    <p>Initializes configuration adapter.</p>
+
   </section>
 </div>
-<div class="detail" id="validate_settings/1">
+<div class="detail" id="c:match_request/6">
   
   <div class="detail-header">
-    <a href="#validate_settings/1" class="detail-link" title="Link to this function">
+    <a href="#c:match_request/6" class="detail-link" title="Link to this callback">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">validate_settings(changeset)</span>
+    <span class="signature">match_request(scheme, method, host, port, path, opts)</span>
     
     
+    
+      <div class="specs">
+        
+          <pre>match_request(scheme :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>, method :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>, host :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>, port :: number, path :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>, opts :: <a href="https://hexdocs.pm/elixir/Keyword.html#t:t/0">Keyword.t</a>) ::
+  {:ok, <a href="https://hexdocs.pm/elixir/Map.html#t:t/0">Map.t</a>} |
+  {:error, :not_found}</pre>
+        
+      </div>
     
   </div>
   <section class="docstring">
-    <p>Settings validator.</p>
+    <p>Returns oldest API and associated Plugins that matches request parameters.</p>
 
   </section>
 </div>
 
         </section>
-      
-
       
           <footer class="footer">
         <p>

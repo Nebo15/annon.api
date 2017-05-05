@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Cache.FilterHelper – annon_api v0.2.51</title>
+    <title>Annon.Configuration.CacheAdapters.Database – annon_api v0.2.52</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-1098618361.js"></script>
+    <script src="dist/sidebar_items-5957cafb0b.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.51
+        v0.2.52
       </h2>
     </div>
     
@@ -58,15 +58,15 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.51</small>
-        Annon.Cache.FilterHelper
+        <small class="visible-xs">annon_api v0.2.52</small>
+        Annon.Configuration.CacheAdapters.Database
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>Helper for filtering responses from adapters</p>
+          <p>Adapter to access cache using RDBMS.</p>
 
         </section>
       
@@ -88,20 +88,29 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#do_filter/2">do_filter(response, host)</a>
+    <a href="#config_change/1">config_change(opts)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Updates cache information when configuration is changed</p>
+</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#make_response/1">make_response(arg)</a>
+    <a href="#init/1">init(opts)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Initializes configuration adapter</p>
+</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#put_in_acc/3">put_in_acc(acc, api, needed_host)</a>
+    <a href="#match_request/6">match_request(scheme, method, host, port, path, opts)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Returns oldest API and associated Plugins that matches request parameters</p>
+</div>
   
 </div>
 
@@ -123,49 +132,55 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="do_filter/2">
+          <div class="detail" id="config_change/1">
   
   <div class="detail-header">
-    <a href="#do_filter/2" class="detail-link" title="Link to this function">
+    <a href="#config_change/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">do_filter(response, host)</span>
+    <span class="signature">config_change(opts)</span>
     
     
     
   </div>
   <section class="docstring">
-    
+    <p>Updates cache information when configuration is changed.</p>
+<p>Callback implementation for <a href="Annon.Configuration.CacheAdapter.html#c:config_change/1"><code class="inline">Annon.Configuration.CacheAdapter.config_change/1</code></a>.</p>
+
   </section>
 </div>
-<div class="detail" id="make_response/1">
+<div class="detail" id="init/1">
   
   <div class="detail-header">
-    <a href="#make_response/1" class="detail-link" title="Link to this function">
+    <a href="#init/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">make_response(arg)</span>
+    <span class="signature">init(opts)</span>
     
     
     
   </div>
   <section class="docstring">
-    
+    <p>Initializes configuration adapter.</p>
+<p>Callback implementation for <a href="Annon.Configuration.CacheAdapter.html#c:init/1"><code class="inline">Annon.Configuration.CacheAdapter.init/1</code></a>.</p>
+
   </section>
 </div>
-<div class="detail" id="put_in_acc/3">
+<div class="detail" id="match_request/6">
   
   <div class="detail-header">
-    <a href="#put_in_acc/3" class="detail-link" title="Link to this function">
+    <a href="#match_request/6" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">put_in_acc(acc, api, needed_host)</span>
+    <span class="signature">match_request(scheme, method, host, port, path, opts)</span>
     
     
     
   </div>
   <section class="docstring">
-    
+    <p>Returns oldest API and associated Plugins that matches request parameters.</p>
+<p>Callback implementation for <a href="Annon.Configuration.CacheAdapter.html#c:match_request/6"><code class="inline">Annon.Configuration.CacheAdapter.match_request/6</code></a>.</p>
+
   </section>
 </div>
 

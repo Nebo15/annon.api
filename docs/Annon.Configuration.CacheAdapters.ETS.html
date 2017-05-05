@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Cache.EtsAdapter – annon_api v0.2.51</title>
+    <title>Annon.Configuration.CacheAdapters.ETS – annon_api v0.2.52</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-1098618361.js"></script>
+    <script src="dist/sidebar_items-5957cafb0b.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.51
+        v0.2.52
       </h2>
     </div>
     
@@ -58,8 +58,8 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.51</small>
-        Annon.Cache.EtsAdapter
+        <small class="visible-xs">annon_api v0.2.52</small>
+        Annon.Configuration.CacheAdapters.ETS
         
         
       </h1>
@@ -88,14 +88,29 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#find_api_by/3">find_api_by(scheme, host, port)</a>
+    <a href="#config_change/1">config_change(opts)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Updates cache information when configuration is changed</p>
+</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#warm_up/0">warm_up()</a>
+    <a href="#init/1">init(opts)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Initializes configuration adapter</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#match_request/6">match_request(scheme, method, host, port, path, opts)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Returns oldest API and associated Plugins that matches request parameters</p>
+</div>
   
 </div>
 
@@ -117,34 +132,55 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="find_api_by/3">
+          <div class="detail" id="config_change/1">
   
   <div class="detail-header">
-    <a href="#find_api_by/3" class="detail-link" title="Link to this function">
+    <a href="#config_change/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">find_api_by(scheme, host, port)</span>
+    <span class="signature">config_change(opts)</span>
     
     
     
   </div>
   <section class="docstring">
-    
+    <p>Updates cache information when configuration is changed.</p>
+<p>Callback implementation for <a href="Annon.Configuration.CacheAdapter.html#c:config_change/1"><code class="inline">Annon.Configuration.CacheAdapter.config_change/1</code></a>.</p>
+
   </section>
 </div>
-<div class="detail" id="warm_up/0">
+<div class="detail" id="init/1">
   
   <div class="detail-header">
-    <a href="#warm_up/0" class="detail-link" title="Link to this function">
+    <a href="#init/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">warm_up()</span>
+    <span class="signature">init(opts)</span>
     
     
     
   </div>
   <section class="docstring">
+    <p>Initializes configuration adapter.</p>
+<p>Callback implementation for <a href="Annon.Configuration.CacheAdapter.html#c:init/1"><code class="inline">Annon.Configuration.CacheAdapter.init/1</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="match_request/6">
+  
+  <div class="detail-header">
+    <a href="#match_request/6" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">match_request(scheme, method, host, port, path, opts)</span>
     
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Returns oldest API and associated Plugins that matches request parameters.</p>
+<p>Callback implementation for <a href="Annon.Configuration.CacheAdapter.html#c:match_request/6"><code class="inline">Annon.Configuration.CacheAdapter.match_request/6</code></a>.</p>
+
   </section>
 </div>
 

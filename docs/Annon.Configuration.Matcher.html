@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Cache.PostgresAdapter – annon_api v0.2.51</title>
+    <title>Annon.Configuration.Matcher – annon_api v0.2.52</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-1098618361.js"></script>
+    <script src="dist/sidebar_items-5957cafb0b.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.51
+        v0.2.52
       </h2>
     </div>
     
@@ -58,15 +58,15 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.51</small>
-        Annon.Cache.PostgresAdapter
+        <small class="visible-xs">annon_api v0.2.52</small>
+        Annon.Configuration.Matcher
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>Adapter to access cache using RDBMS.</p>
+          <p>This module is responsible for configuration lookups for each request.</p>
 
         </section>
       
@@ -88,13 +88,34 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#find_api_by/3">find_api_by(scheme, host, port)</a>
+    <a href="#config_change/1">config_change(pid \\ __MODULE__)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Notifies cache adapter about configuration change</p>
+</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#warm_up/0">warm_up()</a>
+    <a href="#init/1">init(args)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Initializes matcher state</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#match_request/6">match_request(pid \\ __MODULE__, scheme, method, host, port, path)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Returns API and associated Plugins by a request parameters</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#start_link/2">start_link(opts, name \\ __MODULE__)</a>
   </div>
   
 </div>
@@ -117,28 +138,77 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="find_api_by/3">
+          <div class="detail" id="config_change/1">
+  
+    <span id="config_change/0" />
   
   <div class="detail-header">
-    <a href="#find_api_by/3" class="detail-link" title="Link to this function">
+    <a href="#config_change/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">find_api_by(scheme, host, port)</span>
+    <span class="signature">config_change(pid \\ __MODULE__)</span>
     
     
     
   </div>
   <section class="docstring">
-    
+    <p>Notifies cache adapter about configuration change.</p>
+
   </section>
 </div>
-<div class="detail" id="warm_up/0">
+<div class="detail" id="init/1">
   
   <div class="detail-header">
-    <a href="#warm_up/0" class="detail-link" title="Link to this function">
+    <a href="#init/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">warm_up()</span>
+    <span class="signature">init(args)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Initializes matcher state.</p>
+<p>It accepts two options:</p>
+<ul>
+<li><code class="inline">adapter</code> - cache adapter.
+</li>
+<li><code class="inline">cache_space</code> - unique cache space key if multiple matcher processes are started.
+</li>
+</ul>
+
+  </section>
+</div>
+<div class="detail" id="match_request/6">
+  
+    <span id="match_request/5" />
+  
+  <div class="detail-header">
+    <a href="#match_request/6" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">match_request(pid \\ __MODULE__, scheme, method, host, port, path)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Returns API and associated Plugins by a request parameters.</p>
+<p>This function receives adapter by casting GenServer and applies
+match in calling process context to reduce single-process bottleneck.</p>
+<p>Adapter should expect their match functions to be read-concurrent from other processes.</p>
+
+  </section>
+</div>
+<div class="detail" id="start_link/2">
+  
+    <span id="start_link/1" />
+  
+  <div class="detail-header">
+    <a href="#start_link/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">start_link(opts, name \\ __MODULE__)</span>
     
     
     
