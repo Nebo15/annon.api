@@ -16,19 +16,17 @@ defmodule Annon.ManagementAPI.Controllers.Request do
   get "/" do
     paging = Pagination.page_info_from(conn.query_params)
 
-    {request, paging} =
-      conn
-      |> Map.fetch!(:query_params)
-      |> Map.take(["idempotency_key", "api_ids", "status_codes", "ip_addresses"])
-      |> Log.list_requests(paging)
-
-    render_collection({request, paging}, conn)
+    conn
+    |> Map.fetch!(:query_params)
+    |> Map.take(["idempotency_key", "api_ids", "status_codes", "ip_addresses"])
+    |> Log.list_requests(paging)
+    |> render_collection_with_pagination(conn)
   end
 
   get "/:request_id" do
     request_id
     |> Log.get_request()
-    |> render_schema(conn)
+    |> render_one(conn)
   end
 
   delete "/:request_id" do

@@ -15,19 +15,17 @@ defmodule Annon.ManagementAPI.Controllers.API do
   get "/" do
     paging = Pagination.page_info_from(conn.query_params)
 
-    {request, paging} =
-      conn
-      |> Map.fetch!(:query_params)
-      |> Map.take(["name"])
-      |> ConfigurationAPI.list_apis(paging)
-
-    render_collection({request, paging}, conn)
+    conn
+    |> Map.fetch!(:query_params)
+    |> Map.take(["name"])
+    |> ConfigurationAPI.list_apis(paging)
+    |> render_collection_with_pagination(conn)
   end
 
   get "/:api_id" do
     api_id
     |> ConfigurationAPI.get_api()
-    |> render_schema(conn)
+    |> render_one(conn)
   end
 
   put "/:api_id" do
@@ -35,12 +33,12 @@ defmodule Annon.ManagementAPI.Controllers.API do
       {:ok, %APISchema{} = api} ->
         api
         |> ConfigurationAPI.update_api(conn.body_params)
-        |> render_change(conn, 200)
+        |> render_one(conn, 200)
 
       {:error, :not_found} ->
         api_id
         |> ConfigurationAPI.create_api(conn.body_params)
-        |> render_change(conn, 201)
+        |> render_one(conn, 201)
     end
   end
 
@@ -48,7 +46,7 @@ defmodule Annon.ManagementAPI.Controllers.API do
   post "/" do
     Ecto.UUID.generate()
     |> ConfigurationAPI.create_api(conn.body_params)
-    |> render_change(conn, 201)
+    |> render_one(conn, 201)
   end
 
   delete "/:api_id" do

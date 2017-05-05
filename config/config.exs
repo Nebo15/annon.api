@@ -61,4 +61,5 @@ config :skycluster,
 config :annon_api,
   sql_sandbox: {:system, :boolean, "SQL_SANDBOX", false}
 
+import_config "plugins.exs"
 import_config "#{Mix.env}.exs"

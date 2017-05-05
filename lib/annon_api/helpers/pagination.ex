@@ -4,19 +4,17 @@ defmodule Annon.Helpers.Pagination do
   """
 
   def page_info_from(params) do
-    starting_after = extract_integer(params, "starting_after")
-    ending_before = extract_integer(params, "ending_before")
-    limit = extract_integer(params, "limit", 50)
+    starting_after = Map.get(params, "starting_after")
+    ending_before = Map.get(params, "ending_before")
+    limit = get_limit(params, 50)
 
     cursors = %Ecto.Paging.Cursors{starting_after: starting_after, ending_before: ending_before}
 
     %Ecto.Paging{limit: limit, cursors: cursors}
   end
 
-  def page_info(%Plug.Conn{query_params: query_params}), do: page_info_from(query_params)
-
-  def extract_integer(map, key, default \\ nil) do
-    case Map.get(map, key) do
+  def get_limit(map, default \\ nil) do
+    case Map.get(map, "limit") do
       nil ->
         default
       string ->

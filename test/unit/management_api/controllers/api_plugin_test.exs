@@ -157,11 +157,9 @@ defmodule Annon.ManagementAPI.Controllers.APIPluginTest do
     end
 
     test "returns no content when plugin does not exist", %{conn: conn, api: api} do
-      plugin = ConfigurationFactory.insert(:proxy_plugin, api_id: api.id)
-
       resp =
         conn
-        |> delete(plugin_path(api.id, plugin.name))
+        |> delete(plugin_path(api.id, "proxy"))
         |> response(204)
 
       assert "" = resp

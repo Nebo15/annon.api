@@ -24,16 +24,17 @@ defmodule Annon.ManagementAPI.Controllers.APIPlugin do
     with {:ok, %APISchema{} = api} <- ConfigurationAPI.get_api(api_id) do
       api
       |> ConfigurationPlugin.create_plugin(conn.body_params)
-      |> render_change(conn, 201)
+      |> render_one(conn, 201)
     else
-      {:error, :not_found} -> render_schema({:error, :not_found}, conn)
+      {:error, :not_found} = err ->
+        render_one(err, conn)
     end
   end
 
   get "/:api_id/plugins/:name" do
     api_id
     |> ConfigurationPlugin.get_plugin(name)
-    |> render_schema(conn)
+    |> render_one(conn)
   end
 
   put "/:api_id/plugins/:name" do
@@ -44,15 +45,16 @@ defmodule Annon.ManagementAPI.Controllers.APIPlugin do
       {:ok, %PluginSchema{} = plugin} ->
         plugin
         |> ConfigurationPlugin.update_plugin(attrs)
-        |> render_change(conn, 200)
+        |> render_one(conn, 200)
 
       {:error, :not_found} ->
         with {:ok, %APISchema{} = api} <- ConfigurationAPI.get_api(api_id) do
           api
           |> ConfigurationPlugin.create_plugin(attrs)
-          |> render_change(conn, 201)
+          |> render_one(conn, 201)
         else
-          {:error, :not_found} -> render_schema({:error, :not_found}, conn)
+          {:error, :not_found} = err ->
+            render_one(err, conn)
         end
     end
   end
