@@ -154,15 +154,13 @@ defmodule Annon.Configuration.API do
       %Annon.Configuration.Schemas.API{}
   """
   def find_api(scheme, method, host, port, path) do
-    ilike_path = "#{path}%"
-
     apis =
       apis_dump_query()
       |> where([apis], fragment("?->'scheme' = ?", apis.request, ^scheme))
       |> where([apis], fragment("?->'methods' \\? ?", apis.request, ^method))
       |> where([apis], fragment("? ILIKE ?#>>'{host}'", ^host, apis.request))
       |> where([apis], fragment("?->'port' = ?", apis.request, ^port))
-      |> where([apis], fragment("? ILIKE (?#>>'{path}' || '%')", ^ilike_path, apis.request))
+      |> where([apis], fragment("? ILIKE (?#>>'{path}' || '%')", ^path, apis.request))
       |> limit(1)
       |> Repo.all()
 
