@@ -14,9 +14,7 @@ defmodule Annon.Plugins.Scopes.OAuth2Strategy do
     response = HTTPoison.get!(url)
 
     if response.status_code == 200 do
-      response
-      |> Poison.decode!()
-      |> Map.get(:body)
+      Poison.decode!(response.body)
     end
   end
 end

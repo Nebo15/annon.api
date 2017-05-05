@@ -45,7 +45,12 @@ defmodule Annon.Plugins.Scopes do
         |> OAuth2Strategy.token_attributes(url_template)
 
       if token_attributes do
-        scopes = get_in(token_attributes, ["data", "details", "scope"])
+        IO.inspect token_attributes
+        scopes =
+          token_attributes
+          |> get_in(["data", "details", "scope"])
+          |> String.split(",")
+
         consumer_id = get_in(token_attributes, ["data", "user_id"])
 
         conn
