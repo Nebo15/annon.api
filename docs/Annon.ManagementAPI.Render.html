@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.ManagementAPI.Render – annon_api v0.2.52</title>
+    <title>Annon.ManagementAPI.Render – annon_api v0.2.53</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-5957cafb0b.js"></script>
+    <script src="dist/sidebar_items-df730477a8.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.52
+        v0.2.53
       </h2>
     </div>
     
@@ -58,7 +58,7 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.52</small>
+        <small class="visible-xs">annon_api v0.2.53</small>
         Annon.ManagementAPI.Render
         
         
@@ -88,19 +88,19 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#render_change/3">render_change(tuple, conn, status \\ 200)</a>
+    <a href="#render_collection/2">render_collection(resources, conn)</a>
   </div>
   
-    <div class="summary-synopsis"><p>This render should be used for <code class="inline">Repo.create</code> and <code class="inline">Repo.update</code> results</p>
+    <div class="summary-synopsis"><p>Renders collection/</p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#render_collection/2">render_collection(resources, conn)</a>
+    <a href="#render_collection_with_pagination/2">render_collection_with_pagination(arg, conn)</a>
   </div>
   
-    <div class="summary-synopsis"><p>This render should be used for <code class="inline">Repo.all</code> results</p>
+    <div class="summary-synopsis"><p>Renders collection with paging</p>
 </div>
   
 </div>
@@ -109,22 +109,16 @@
     <a href="#render_delete/1">render_delete(conn)</a>
   </div>
   
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#render_delete/2">render_delete(arg, conn)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>This render should be used for <code class="inline">Repo.delete_all</code> results</p>
+    <div class="summary-synopsis"><p>Renders http response without content</p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#render_schema/2">render_schema(resource, conn)</a>
+    <a href="#render_one/3">render_one(tuple, conn, status \\ 200)</a>
   </div>
   
-    <div class="summary-synopsis"><p>This render should be used for <code class="inline">Repo.one</code> results</p>
+    <div class="summary-synopsis"><p>Renders single schema</p>
 </div>
   
 </div>
@@ -147,25 +141,7 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="render_change/3">
-  
-    <span id="render_change/2" />
-  
-  <div class="detail-header">
-    <a href="#render_change/3" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">render_change(tuple, conn, status \\ 200)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    <p>This render should be used for <code class="inline">Repo.create</code> and <code class="inline">Repo.update</code> results.</p>
-
-  </section>
-</div>
-<div class="detail" id="render_collection/2">
+          <div class="detail" id="render_collection/2">
   
   <div class="detail-header">
     <a href="#render_collection/2" class="detail-link" title="Link to this function">
@@ -177,7 +153,23 @@
     
   </div>
   <section class="docstring">
-    <p>This render should be used for <code class="inline">Repo.all</code> results.</p>
+    <p>Renders collection/</p>
+
+  </section>
+</div>
+<div class="detail" id="render_collection_with_pagination/2">
+  
+  <div class="detail-header">
+    <a href="#render_collection_with_pagination/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">render_collection_with_pagination(arg, conn)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Renders collection with paging.</p>
 
   </section>
 </div>
@@ -193,39 +185,25 @@
     
   </div>
   <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="render_delete/2">
-  
-  <div class="detail-header">
-    <a href="#render_delete/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">render_delete(arg, conn)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    <p>This render should be used for <code class="inline">Repo.delete_all</code> results.</p>
-<p>It will throw an error if you tried to delete more than one record in a DB.</p>
+    <p>Renders http response without content.</p>
 
   </section>
 </div>
-<div class="detail" id="render_schema/2">
+<div class="detail" id="render_one/3">
+  
+    <span id="render_one/2" />
   
   <div class="detail-header">
-    <a href="#render_schema/2" class="detail-link" title="Link to this function">
+    <a href="#render_one/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">render_schema(resource, conn)</span>
+    <span class="signature">render_one(tuple, conn, status \\ 200)</span>
     
     
     
   </div>
   <section class="docstring">
-    <p>This render should be used for <code class="inline">Repo.one</code> results.</p>
+    <p>Renders single schema.</p>
 
   </section>
 </div>

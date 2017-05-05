@@ -5,7 +5,7 @@ fonts/icomoon.eot
 fonts/icomoon.svg
 fonts/icomoon.ttf
 fonts/icomoon.woff
-dist/sidebar_items-5957cafb0b.js
+dist/sidebar_items-df730477a8.js
 api-reference.html
 readme.html
 404.html
@@ -25,6 +25,7 @@ Annon.Configuration.Schemas.Plugin.html
 Annon.ConfigurationFactory.html
 Annon.ConnCase.html
 Annon.DataCase.html
+Annon.HTTPServer.Supervisor.html
 Annon.Helpers.IP.html
 Annon.Helpers.JsonSchemaValidator.html
 Annon.Helpers.Latency.html
