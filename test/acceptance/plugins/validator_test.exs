@@ -26,6 +26,69 @@ defmodule Annon.Acceptance.Plugins.ValidatorTest do
     %{api_id: api_id, api_path: api_path}
   end
 
+  describe "Validator Plugin" do
+    test "create", %{api_id: api_id} do
+      validator = :validator_plugin
+      |> build_factory_params(%{settings: %{
+        rules: [%{methods: ["POST", "PUT", "PATCH"], path: ".*", schema: %{}}]
+      }})
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(validator)
+      |> assert_status(201)
+
+      %{
+        "data" => [%{
+          "name" => "validator",
+          "api_id" => ^api_id
+        }
+      ]} = "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> get!()
+      |> get_body()
+    end
+
+    test "create with invalid settings", %{api_id: api_id} do
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(%{})
+      |> assert_status(422)
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(build_invalid_plugin("validator"))
+      |> assert_status(422)
+
+      %{
+        "error" => %{
+          "invalid" => [
+            %{"entry" => "$.settings.rules.[0].methods.[0]", "rules" => [
+              %{"params" => ["POST", "PUT", "PATCH"], "rule" => "inclusion"}
+            ]},
+            %{"entry" => "$.settings.rules.[0].path", "rules" => [
+              %{"params" => ["string", _], "rule" => "cast"} # TODO: Remove tail from "params"
+            ]},
+            %{"entry" => "$.settings.rules.[0].schema", "rules" => [
+              %{"params" => ["object", _], "rule" => "cast"} # TODO: Remove tail from "params"
+            ]}
+          ]
+
+        }
+      } = "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(%{
+        name: "validator",
+        is_enabled: false,
+        settings: %{
+          rules: [%{methods: ["UNKNOWN"], path: 123, schema: nil}]
+        }
+      })
+      |> assert_status(422)
+      |> get_body()
+    end
+  end
+
   test "validates versus schema", %{api_id: api_id, api_path: api_path} do
     validator_plugin = :validator_plugin
     |> build_factory_params(%{settings: %{

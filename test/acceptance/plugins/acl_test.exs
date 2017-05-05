@@ -38,6 +38,54 @@ defmodule Annon.Acceptance.Plugins.ACLTest do
     %{api_id: api_id, api_path: api_path}
   end
 
+  describe "ACL Plugin" do
+    test "create", %{api_id: api_id} do
+      acl = :acl_plugin
+      |> build_factory_params()
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(acl)
+      |> assert_status(201)
+
+      assert %{"data" => plugins} =
+        "apis/#{api_id}/plugins"
+        |> put_management_url()
+        |> get!()
+        |> get_body()
+
+      assert %{
+        "name" => "acl",
+        "api_id" => ^api_id
+      } = List.first(plugins)
+    end
+
+    test "create with invalid settings", %{api_id: api_id} do
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(%{})
+      |> assert_status(422)
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(build_invalid_plugin("acl"))
+      |> assert_status(422)
+
+      %{
+        "error" => %{
+          "invalid" => [%{"entry" => "$.settings.rules.[0].scopes", "rules" => [%{"rule" => "cast"}]}]
+        }
+      } = "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(%{name: "acl",
+        is_enabled: false,
+        settings: %{rules: [%{"methods" => ["GET"], "path" => ".*", "scopes" => 100}]}
+      })
+      |> assert_status(422)
+      |> get_body()
+    end
+  end
+
   describe "JWT Strategy" do
     test "Auth0 Flow is supported", %{api_id: api_id, api_path: api_path} do
       acl_plugin = build_factory_params(:acl_plugin, %{settings: %{

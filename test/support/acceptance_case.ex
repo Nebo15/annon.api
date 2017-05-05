@@ -148,6 +148,14 @@ defmodule Annon.AcceptanceCase do
     end
   end
 
+  def build_invalid_plugin(plugin_name) when is_binary(plugin_name) do
+    %{
+      name: plugin_name,
+      is_enabled: false,
+      settings: %{"invalid" => "data"}
+    }
+  end
+
   def assert_status({:error, error}, _status) do
     assert false
     error

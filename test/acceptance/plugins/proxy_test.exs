@@ -23,6 +23,53 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
     %{api_id: api_id, api_path: api_path, api: api}
   end
 
+  describe "Proxy Plugin" do
+    test "create", %{api_id: api_id} do
+      proxy = :proxy_plugin
+      |> build_factory_params(%{settings: %{host: "host.com"}})
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(proxy)
+      |> assert_status(201)
+
+      %{
+        "data" => [%{
+          "name" => "proxy",
+          "api_id" => ^api_id
+        }
+      ]} = "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> get!()
+      |> get_body()
+    end
+
+    test "create with invalid settings", %{api_id: api_id} do
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(%{})
+      |> assert_status(422)
+
+      "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(build_invalid_plugin("proxy"))
+      |> assert_status(422)
+
+      %{
+        "error" => %{
+          "invalid" => [
+            %{"entry" => "$.settings.host", "rules" => [%{"rule" => "schemata"}]},
+            %{"entry" => "$.settings.path", "rules" => [%{"rule" => "cast"}]},
+          ]
+        }
+      } = "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(%{name: "proxy", is_enabled: false, settings: %{host: "localhost", path: 100}})
+      |> assert_status(422)
+      |> get_body()
+    end
+  end
+
   describe "proxy settings validator" do
     test "allows only host and port", %{api_id: api_id, api_path: api_path} do
       api_id
