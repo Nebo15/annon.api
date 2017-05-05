@@ -45,7 +45,6 @@ defmodule Annon.Plugins.Scopes do
         |> OAuth2Strategy.token_attributes(url_template)
 
       if token_attributes do
-        IO.inspect token_attributes
         scopes =
           token_attributes
           |> get_in(["data", "details", "scope"])
