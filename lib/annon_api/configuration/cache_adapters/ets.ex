@@ -3,16 +3,18 @@ defmodule Annon.Configuration.CacheAdapters.ETS do
   Adapter to access cache using ETS.
   """
   @behaviour Annon.Configuration.CacheAdapter
-  @table_name :configuration
   alias Annon.Configuration.API
 
-  def init do
-    :ets.new(@table_name, [:ordered_set, :public, :named_table, read_concurrency: true])
-    config_change()
+  def init(opts) do
+    table_name = Keyword.fetch!(opts, :cache_space)
+    :ets.new(table_name, [:ordered_set, :public, :named_table, read_concurrency: true])
+    config_change(opts)
     :ok
   end
 
-  def match_request(scheme, method, host, port, path) do
+  def match_request(scheme, method, host, port, path, opts) do
+    table_name = Keyword.fetch!(opts, :cache_space)
+
     match_spec = %{
       request: %{
         scheme: scheme,
@@ -21,7 +23,7 @@ defmodule Annon.Configuration.CacheAdapters.ETS do
     }
 
     apis =
-      @table_name
+      table_name
       |> :ets.match_object({:_, match_spec, :_})
       |> filter_by_method(method)
       |> filter_by_host(host)
@@ -35,7 +37,9 @@ defmodule Annon.Configuration.CacheAdapters.ETS do
     end
   end
 
-  def config_change do
+  def config_change(opts) do
+    table_name = Keyword.fetch!(opts, :cache_space)
+
     objects = Enum.map(API.dump_apis(), fn api ->
       host_pattern =
         api.request.host
@@ -47,7 +51,8 @@ defmodule Annon.Configuration.CacheAdapters.ETS do
       {{:api, api.id}, api, host_regex}
     end)
 
-    true = :ets.insert(@table_name, objects)
+    true = :ets.insert(table_name, objects)
+
     :ok
   end
 

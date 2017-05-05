@@ -6,7 +6,7 @@ defmodule Annon.Configuration.CacheAdapter do
   @doc """
   Initializes configuration adapter.
   """
-  @callback init() :: :ok
+  @callback init(opts :: Keyword.t) :: :ok
 
   @doc """
   Returns oldest API and associated Plugins that matches request parameters.
@@ -15,10 +15,11 @@ defmodule Annon.Configuration.CacheAdapter do
                           method :: String.t,
                           host :: String.t,
                           port :: number,
-                          path :: String.t) :: {:ok, Map.t} | {:error, :not_found}
+                          path :: String.t,
+                          opts :: Keyword.t) :: {:ok, Map.t} | {:error, :not_found}
 
   @doc """
   Updates cache information when configuration is changed.
   """
-  @callback config_change() :: :ok
+  @callback config_change(opts :: Keyword.t) :: :ok
 end

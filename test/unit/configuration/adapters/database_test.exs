@@ -6,11 +6,11 @@ defmodule Annon.Configuration.CacheAdapter.DatabaseTest do
   alias Annon.ConfigurationFactory
 
   test "init/0 returns ok" do
-    assert :ok == Database.init()
+    assert :ok == Database.init([])
   end
 
   test "config_change/0 returns ok" do
-    assert :ok == Database.config_change()
+    assert :ok == Database.config_change([])
   end
 
   test "match_request/5 returns matched apis" do
@@ -26,14 +26,14 @@ defmodule Annon.Configuration.CacheAdapter.DatabaseTest do
     assert {:ok, %APISchema{
       id: api_id,
       plugins: plugins
-    }} = Database.match_request("http", "POST", "example.com", 80, "/my_path")
+    }} = Database.match_request("http", "POST", "example.com", 80, "/my_path", [])
 
     assert api_id == api.id
     assert length(plugins) == 1
 
-    assert {:error, :not_found} = Database.match_request("https", "POST", "example.com", 80, "/my_path")
-    assert {:error, :not_found} = Database.match_request("http", "POST", "example.com", 8080, "/my_path")
-    assert {:error, :not_found} = Database.match_request("http", "GET", "example.com", 80, "/my_path")
-    assert {:error, :not_found} = Database.match_request("http", "POST", "other_example.com", 80, "/my_path")
+    assert {:error, :not_found} = Database.match_request("https", "POST", "example.com", 80, "/my_path", [])
+    assert {:error, :not_found} = Database.match_request("http", "POST", "example.com", 8080, "/my_path", [])
+    assert {:error, :not_found} = Database.match_request("http", "GET", "example.com", 80, "/my_path", [])
+    assert {:error, :not_found} = Database.match_request("http", "POST", "other_example.com", 80, "/my_path", [])
   end
 end

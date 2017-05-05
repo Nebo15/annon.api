@@ -4,10 +4,17 @@ defmodule Annon.Configuration.Matcher do
   """
   use GenServer
 
-  def start_link(opts) do
-    GenServer.start_link(__MODULE__, opts, [name: __MODULE__])
+  def start_link(opts, name \\ __MODULE__) do
+    GenServer.start_link(__MODULE__, opts, [name: name])
   end
 
+  @doc """
+  Initializes matcher state.
+
+  It accepts two options:
+    * `adapter` - cache adapter.
+    * `cache_space` - unique cache space key if multiple matcher processes are started.
+  """
   def init(opts) do
     adapter = Keyword.get(opts, :adapter)
 
@@ -15,14 +22,14 @@ defmodule Annon.Configuration.Matcher do
       raise "Configuration cache adapter is not set, expected module, got: #{inspect adapter}."
     end
 
-    {:ok, %{adapter: adapter}, 0}
+    {:ok, %{adapter: adapter, opts: opts}, 0}
   end
 
   @doc """
   Notifies cache adapter about configuration change.
   """
-  def config_change do
-    GenServer.call(__MODULE__, :config_change)
+  def config_change(pid \\ __MODULE__) do
+    GenServer.call(pid, :config_change)
   end
 
   @doc """
@@ -33,28 +40,31 @@ defmodule Annon.Configuration.Matcher do
 
   Adapter should expect their match functions to be read-concurrent from other processes.
   """
-  def match_request(scheme, method, host, port, path) do
-    adapter = GenServer.call(__MODULE__, :get_adapter)
-    adapter.match_request(scheme, method, host, port, path)
+  def match_request(pid \\ __MODULE__, scheme, method, host, port, path) do
+    {adapter, opts} = GenServer.call(pid, :get_adapter)
+    adapter.match_request(scheme, method, host, port, path, opts)
   end
 
   # Initializes cache adapter after GenServer is started.
   @doc false
-  def handle_info(:timeout, %{adapter: adapter} = state) do
-    :ok = adapter.init()
+  def handle_info(:timeout, state) do
+    %{adapter: adapter, opts: opts} = state
+    :ok = adapter.init(opts)
     {:noreply, state}
   end
 
   # Reloads configuration for a cache adapter
   @doc false
-  def handle_call(:config_change, _from, %{adapter: adapter} = state) do
-    :ok = adapter.config_change()
+  def handle_call(:config_change, _from, state) do
+    %{adapter: adapter, opts: opts} = state
+    :ok = adapter.config_change(opts)
     {:reply, :ok, state}
   end
 
   # Reloads configuration for a cache adapter
   @doc false
-  def handle_call(:get_adapter, _from, %{adapter: adapter} = state) do
-    {:reply, adapter, state}
+  def handle_call(:get_adapter, _from, state) do
+    %{adapter: adapter, opts: opts} = state
+    {:reply, {adapter, opts}, state}
   end
 end
