@@ -1,4 +1,8 @@
 defmodule Annon.Monitoring do
+  @moduledoc """
+  Monitoring service for Annons clusters.
+  """
+
   def get_status do
     cluster_nodes = :erlang.nodes()
     cluster_strategy = get_cluster_strategy()
