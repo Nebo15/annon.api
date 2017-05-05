@@ -192,6 +192,27 @@ defmodule Annon.Plugins.APILoaderTest do
     end
   end
 
+  describe "find_matching_path/2" do
+    test "support matching request paths against regexes" do
+      apis = [
+        %{
+          id: 1,
+          request: %{ path: "/posts/\\d+/comments" }
+        },
+        %{
+          id: 2,
+          request: %{ path: "/posts/\\d+/comments/\\d+" }
+        }
+      ]
+
+      result_1 = Annon.Plugins.APILoader.find_matching_path(apis, "/posts/123/comments")
+      result_2 = Annon.Plugins.APILoader.find_matching_path(apis, "/posts/123/comments/234")
+
+      assert 1 = result_1.id
+      assert 2 = result_2.id
+    end
+  end
+
   defp get_from_body(response, what_to_get) do
     response
     |> Map.get(:resp_body)
