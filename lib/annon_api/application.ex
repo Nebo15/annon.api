@@ -13,6 +13,7 @@ defmodule Annon do
     children = [
       supervisor(Annon.Configuration.Repo, []),
       supervisor(Annon.Requests.Repo, []),
+      worker(Annon.Configuration.Matcher, [matcher_opts()]),
       http_endpoint_spec(Annon.ManagementAPI.Router, :management_http),
       http_endpoint_spec(Annon.PublicRouter, :public_http),
       http_endpoint_spec(Annon.PrivateRouter, :private_http),
@@ -25,6 +26,10 @@ defmodule Annon do
 
   defp http_endpoint_spec(router, config) do
     Plug.Adapters.Cowboy.child_spec(:http, router, [], Confex.get_map(:annon_api, config))
+  end
+
+  defp matcher_opts do
+    Confex.get_map(:annon_api, :configuration_cache)
   end
 
   # Loads configuration in `:on_init` callbacks and replaces `{:system, ..}` tuples via Confex

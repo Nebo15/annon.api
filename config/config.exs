@@ -21,9 +21,11 @@ config :annon_api, Annon.Requests.Repo,
   pool_size: 50
 
 config :annon_api,
-  ecto_repos: [Annon.Configuration.Repo, Annon.Requests.Repo],
-  configuration_cache_adapter:
-    {:system, :module, "CONFIGURATION_CACHE_ADAPTER", Annon.Configuration.CacheAdapters.ETS}
+  ecto_repos: [Annon.Configuration.Repo, Annon.Requests.Repo]
+
+config :annon_api, :configuration_cache,
+  adapter: {:system, :module, "CONFIGURATION_CACHE_ADAPTER", Annon.Configuration.CacheAdapters.ETS},
+  cache_space: :configuration
 
 # TODO: Replace with statix
 config :ex_statsd,
