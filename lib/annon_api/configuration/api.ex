@@ -139,10 +139,42 @@ defmodule Annon.Configuration.API do
       [%Annon.Configuration.Schemas.API{}, ...]
   """
   def dump_apis() do
-    Repo.all(dump_query())
+    Repo.all(apis_dump_query())
   end
 
-  defp dump_query do
+  @doc """
+  Returns first API that match request parameters.
+
+  APIs are ordered by `inserted_at` field to make sure that new overlapping
+  settings don't break old gateway behaviors.
+
+  ## Examples
+
+      iex> find_api("POST", "HTTP", "example.com", 80, "/my_path")
+      %Annon.Configuration.Schemas.API{}
+  """
+  def find_api(scheme, method, host, port, path) do
+    ilike_path = "#{path}%"
+
+    apis =
+      apis_dump_query()
+      |> where([apis], fragment("?->'scheme' = ?", apis.request, ^scheme))
+      |> where([apis], fragment("?->'methods' \\? ?", apis.request, ^method))
+      |> where([apis], fragment("? ILIKE ?#>>'{host}'", ^host, apis.request))
+      |> where([apis], fragment("?->'port' = ?", apis.request, ^port))
+      |> where([apis], fragment("? ILIKE (?#>>'{path}' || '%')", ^ilike_path, apis.request))
+      |> limit(1)
+      |> Repo.all()
+
+    case apis do
+      [] ->
+        {:error, :not_found}
+      [api] ->
+        {:ok, api}
+    end
+  end
+
+  defp apis_dump_query do
     from apis in APISchema,
       join: plugins in PluginSchema, on: plugins.api_id == apis.id,
       where: plugins.is_enabled == true,

@@ -201,6 +201,101 @@ defmodule Annon.Configuration.APITest do
     end
   end
 
+  describe "find_api/5" do
+    test "returns error when no APIs are matching request" do
+      assert {:error, :not_found} == API.find_api("http", "POST", "example.com", 80, "/my_path")
+    end
+
+    test "returns matched APIs" do
+      api = ConfigurationFactory.insert(:api, request: ConfigurationFactory.build(:api_request, %{
+        scheme: "http",
+        methods: ["POST"],
+        host: "example.com",
+        port: 80,
+        path: "/my_path"
+      }))
+      ConfigurationFactory.insert(:proxy_plugin, api_id: api.id)
+
+      assert {:ok, %APISchema{
+        id: api_id,
+        plugins: plugins
+      }} = API.find_api("http", "POST", "example.com", 80, "/my_path")
+
+      assert api_id == api.id
+      assert length(plugins) == 1
+
+      assert {:error, :not_found} = API.find_api("https", "POST", "example.com", 80, "/my_path")
+      assert {:error, :not_found} = API.find_api("http", "POST", "example.com", 8080, "/my_path")
+      assert {:error, :not_found} = API.find_api("http", "GET", "example.com", 80, "/my_path")
+      assert {:error, :not_found} = API.find_api("http", "POST", "other_example.com", 80, "/my_path")
+    end
+
+    test "returns matched APIs with multiple methods" do
+      api = ConfigurationFactory.insert(:api, request: ConfigurationFactory.build(:api_request, %{
+        scheme: "http",
+        methods: ["POST", "GET"],
+        host: "example.com",
+        port: 80,
+        path: "/my_path"
+      }))
+      ConfigurationFactory.insert(:proxy_plugin, api_id: api.id)
+
+      assert {:ok, %APISchema{
+        id: api_id,
+        plugins: plugins
+      }} = API.find_api("http", "GET", "example.com", 80, "/my_path")
+
+      assert api_id == api.id
+      assert length(plugins) == 1
+
+      assert {:ok, %APISchema{
+        id: api_id,
+        plugins: plugins
+      }} = API.find_api("http", "POST", "example.com", 80, "/my_path")
+
+      assert api_id == api.id
+      assert length(plugins) == 1
+    end
+
+    test "returns matched APIs with wildcard domain" do
+      api = ConfigurationFactory.insert(:api, request: ConfigurationFactory.build(:api_request, %{
+        scheme: "http",
+        methods: ["POST"],
+        host: "%.example.com",
+        port: 80,
+        path: "/my_path"
+      }))
+      ConfigurationFactory.insert(:proxy_plugin, api_id: api.id)
+
+      assert {:ok, %APISchema{
+        id: api_id,
+        plugins: plugins
+      }} = API.find_api("http", "POST", "subdomain.example.com", 80, "/my_path")
+
+      assert api_id == api.id
+      assert length(plugins) == 1
+    end
+
+    test "returns matched APIs with deep paths" do
+      api = ConfigurationFactory.insert(:api, request: ConfigurationFactory.build(:api_request, %{
+        scheme: "http",
+        methods: ["POST"],
+        host: "example.com",
+        port: 80,
+        path: "/my_path"
+      }))
+      ConfigurationFactory.insert(:proxy_plugin, api_id: api.id)
+
+      assert {:ok, %APISchema{
+        id: api_id,
+        plugins: plugins
+      }} = API.find_api("http", "POST", "example.com", 80, "/my_path/some_substring")
+
+      assert api_id == api.id
+      assert length(plugins) == 1
+    end
+  end
+
   test "delete_api/1 deletes the api" do
     api = ConfigurationFactory.insert(:api)
     assert {:ok, %APISchema{}} = API.delete_api(api)
