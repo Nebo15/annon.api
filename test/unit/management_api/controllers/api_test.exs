@@ -289,6 +289,35 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
         |> Map.get("data")
     end
 
+    test "requires request path to start with /", %{conn: conn} do
+      id = Ecto.UUID.generate()
+
+      create_attrs =
+        ConfigurationFactory.params_for(:api,
+          request: ConfigurationFactory.params_for(:api_request, path: "bad_path/")
+        )
+
+      errors =
+        conn
+        |> put_json(api_path(id), create_attrs)
+        |> json_response(422)
+        |> Map.get("error")
+
+      assert %{"invalid" => [
+        %{
+          "entry" => "$.request.path",
+          "entry_type" => "json_data_property",
+          "rules" => [
+            %{
+              "description" => "API request path should start with `/`.",
+              "params" => ["~r/^\\//"],
+              "rule" => "format"
+            }
+          ]
+        }
+      ]} = errors
+    end
+
     test "requires all fields to be present on update", %{conn: conn} do
       api = ConfigurationFactory.insert(:api)
       update_attrs = %{}
