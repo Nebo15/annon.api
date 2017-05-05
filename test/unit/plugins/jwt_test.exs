@@ -115,8 +115,8 @@ defmodule Annon.Plugins.JWTTest do
       |> Ecto.Changeset.change(params)
       |> Annon.Plugins.JWT.SettingsValidator.validate_settings()
 
-    assert %Ecto.Changeset{valid?: false, errors: [settings: {"required property signature was not present", _}]}
-      = changeset
+    assert %Ecto.Changeset{valid?: false, errors: errors} = changeset
+    assert settings: {"required property signature was not present", [validation: :required]} in errors
   end
 
   test "apis model don't have plugins" do

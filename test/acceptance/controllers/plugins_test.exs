@@ -43,8 +43,9 @@ defmodule Annon.Acceptance.Controllers.PluginsTest do
 
       %{
         "error" => %{
-          "invalid" => [%{"entry" => "$.settings", "rules" => [%{"rule" => "cast"}]}]
-          # TODO: Entry should be $.settings.signature
+          "invalid" => [%{"entry" => "$.settings.signature", "rules" => [
+            %{"rule" => "cast", "params" => ["string" | _]} # TODO: Get rid from tail in params
+          ]}]
         }
       } = "apis/#{api_id}/plugins"
       |> put_management_url()
@@ -119,8 +120,18 @@ defmodule Annon.Acceptance.Controllers.PluginsTest do
 
       %{
         "error" => %{
-          "invalid" => [%{"entry" => "$.settings", "rules" => [%{"rule" => "cast"}]}]
-          # TODO: There are should be more entries with valid paths $.settings.schema
+          "invalid" => [
+            %{"entry" => "$.settings.rules.[0].methods.[0]", "rules" => [
+              %{"params" => ["POST", "PUT", "PATCH"], "rule" => "inclusion"}
+            ]},
+            %{"entry" => "$.settings.rules.[0].path", "rules" => [
+              %{"params" => ["string", _], "rule" => "cast"} # TODO: Remove tail from "params"
+            ]},
+            %{"entry" => "$.settings.rules.[0].schema", "rules" => [
+              %{"params" => ["object", _], "rule" => "cast"} # TODO: Remove tail from "params"
+            ]}
+          ]
+
         }
       } = "apis/#{api_id}/plugins"
       |> put_management_url()
@@ -170,8 +181,7 @@ defmodule Annon.Acceptance.Controllers.PluginsTest do
 
       %{
         "error" => %{
-          "invalid" => [%{"entry" => "$.settings", "rules" => [%{"rule" => "cast"}]}]
-          # TODO: Entry should be $.settings.rules[0].scopes
+          "invalid" => [%{"entry" => "$.settings.rules.[0].scopes", "rules" => [%{"rule" => "cast"}]}]
         }
       } = "apis/#{api_id}/plugins"
       |> put_management_url()
@@ -258,8 +268,8 @@ defmodule Annon.Acceptance.Controllers.PluginsTest do
 
       %{
         "error" => %{
-          "invalid" => [%{"entry" => "$.settings", "rules" => [%{"rule" => "cast"}]}]
-          # TODO: Entry should be $.settings.blacklist
+          "invalid" => [%{"entry" => "$.settings.blacklist", "rules" => [%{"rule" => "cast"}]}]
+          # TODO: Test "params"
           # "invalid" => [%{"entry" => "$.settings.ip_whitelis", "rules" => [%{"rule" => "format"}]}]
           # TODO: different fields should not be merged together in one `entry`
         }
@@ -309,8 +319,10 @@ defmodule Annon.Acceptance.Controllers.PluginsTest do
 
       %{
         "error" => %{
-          "invalid" => [%{"entry" => "$.settings", "rules" => [%{"rule" => "cast"}]}]
-          # TODO: Entry should be $.settings.scope
+          "invalid" => [
+            %{"entry" => "$.settings.host", "rules" => [%{"rule" => "schemata"}]},
+            %{"entry" => "$.settings.path", "rules" => [%{"rule" => "cast"}]},
+          ]
         }
       } = "apis/#{api_id}/plugins"
       |> put_management_url()

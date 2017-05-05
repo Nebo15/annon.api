@@ -20,17 +20,29 @@ defmodule Annon.Helpers.JsonSchemaValidator do
       :ok ->
         changeset
       {:error, failed_validations} ->
-        %{changeset |
-          valid?: false,
-          errors: build_changeset_errors(field, failed_validations) ++ changeset.errors}
+        changeset = %{changeset | valid?: false}
+        build_changeset_errors(changeset, field, failed_validations)
     end
   end
 
-  defp build_changeset_errors(field, failed_validations) do
+  defp build_changeset_errors(changeset, field, failed_validations) do
     failed_validations
-    |> Enum.map_reduce([], fn({%{description: message, rule: rule}, _}, acc) ->
-      {nil, Keyword.put(acc, field, {message, [validation: rule]})}
+    |> Enum.reduce(changeset, fn({%{description: message, rule: rule, params: params}, json_path}, changeset) ->
+      fake_field =
+        json_path
+        |> String.replace_leading("$", "#{field}")
+        |> String.to_atom()
+
+      errors = [{fake_field, {message, [validation: rule]}}] ++ changeset.errors
+
+      validations =
+        if changeset.validations,
+          do: [{fake_field, {rule, params}}] ++ changeset.validations,
+        else: [{fake_field, {rule, params}}]
+
+      %{changeset |
+        errors: errors,
+        validations: validations}
     end)
-    |> elem(1)
   end
 end
