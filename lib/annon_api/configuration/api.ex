@@ -5,6 +5,7 @@ defmodule Annon.Configuration.API do
   import Ecto.{Query, Changeset}, warn: false
   alias Annon.Configuration.Repo
   alias Annon.Configuration.Schemas.API, as: APISchema
+  alias Annon.Configuration.Schemas.Plugin, as: PluginSchema
   alias Ecto.Multi
   alias Ecto.Paging
 
@@ -127,6 +128,26 @@ defmodule Annon.Configuration.API do
       {:error, _} ->
         {:error, :not_found}
     end
+  end
+
+  @doc """
+  Returns all APIs that have at least one enabled Plugin and preloads Plugins.
+
+  ## Examples
+
+      iex> dump_apis()
+      [%Annon.Configuration.Schemas.API{}, ...]
+  """
+  def dump_apis() do
+    Repo.all(dump_query())
+  end
+
+  defp dump_query do
+    from apis in APISchema,
+      join: plugins in PluginSchema, on: plugins.api_id == apis.id,
+      where: plugins.is_enabled == true,
+      preload: [plugins: plugins],
+      order_by: apis.inserted_at
   end
 
   defp api_changeset(%APISchema{} = api, attrs) do

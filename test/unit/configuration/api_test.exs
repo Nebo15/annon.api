@@ -133,6 +133,74 @@ defmodule Annon.Configuration.APITest do
     end
   end
 
+  describe "dump_apis/0" do
+    test "returns active APIs" do
+      assert [] = API.dump_apis()
+
+      api = ConfigurationFactory.insert(:api)
+      assert [] = API.dump_apis()
+
+      api_id = api.id
+
+      plugin = ConfigurationFactory.insert(:proxy_plugin, api_id: api.id)
+      assert [%APISchema{
+        id: ^api_id,
+        plugins: plugins
+      }] = API.dump_apis()
+
+      assert length(plugins) == 1
+      assert List.first(plugins).id == plugin.id
+      assert List.first(plugins).is_enabled == true
+    end
+
+    test "filters APIs when plugin is disabled" do
+      api = ConfigurationFactory.insert(:api)
+      ConfigurationFactory.insert(:proxy_plugin, api_id: api.id, is_enabled: false)
+      assert [] == API.dump_apis()
+
+      api_id = api.id
+
+      plugin2 = ConfigurationFactory.insert(:jwt_plugin, api_id: api.id, is_enabled: true)
+      assert [%APISchema{
+        id: ^api_id,
+        plugins: plugins
+      }] = API.dump_apis()
+
+      assert length(plugins) == 1
+      assert List.first(plugins).id == plugin2.id
+      assert List.first(plugins).is_enabled == true
+    end
+
+    test "does not return plugins from other APIs" do
+      api1 = ConfigurationFactory.insert(:api)
+      plugin1 = ConfigurationFactory.insert(:proxy_plugin, api_id: api1.id)
+      api1_id = api1.id
+
+      api2 = ConfigurationFactory.insert(:api)
+      plugin2 = ConfigurationFactory.insert(:proxy_plugin, api_id: api2.id)
+      api2_id = api2.id
+
+      assert [
+        %APISchema{
+          id: ^api1_id,
+          plugins: plugins1
+        },
+        %APISchema{
+          id: ^api2_id,
+          plugins: plugins2
+        },
+      ] = API.dump_apis()
+
+      assert length(plugins1) == 1
+      assert List.first(plugins1).id == plugin1.id
+      assert List.first(plugins1).is_enabled == true
+
+      assert length(plugins2) == 1
+      assert List.first(plugins2).id == plugin2.id
+      assert List.first(plugins2).is_enabled == true
+    end
+  end
+
   test "delete_api/1 deletes the api" do
     api = ConfigurationFactory.insert(:api)
     assert {:ok, %APISchema{}} = API.delete_api(api)
