@@ -41,21 +41,7 @@ defmodule Annon.Configuration.CacheAdapters.ETS do
     table_name = Keyword.fetch!(opts, :cache_space)
 
     objects = Enum.map(API.dump_apis(), fn api ->
-      host_pattern =
-        api.request.host
-        |> Regex.escape()
-        |> String.replace("%", ".*")
-
-      host_regex = Regex.compile!("^#{host_pattern}$")
-
-      path_pattern =
-        api.request.path
-        |> Regex.escape()
-        |> String.replace("%", ".*")
-
-      path_regex = Regex.compile!("^#{path_pattern}")
-
-      {{:api, api.id}, api, host_regex, path_regex}
+      {{:api, api.id}, api, compile_host_regex(api.request.host), compile_path_regex(api.request.path)}
     end)
 
     case objects do
@@ -73,10 +59,28 @@ defmodule Annon.Configuration.CacheAdapters.ETS do
     end)
   end
 
+  defp compile_host_regex(host) do
+    host_pattern =
+        host
+        |> Regex.escape()
+        |> String.replace("%", ".*")
+
+    Regex.compile!("^#{host_pattern}$")
+  end
+
   defp filter_by_host(apis, host) do
     Enum.filter(apis, fn({_, _, host_regex, _}) ->
       Regex.match?(host_regex, host)
     end)
+  end
+
+  defp compile_path_regex(path) do
+    path_pattern =
+      path
+      |> Regex.escape()
+      |> String.replace("%", ".*")
+
+    Regex.compile!("^#{path_pattern}")
   end
 
   defp filter_by_path(apis, path) do
