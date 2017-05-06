@@ -30,3 +30,4 @@ Dockerfile
 # Ignore markdown description
 README.md
 LICENSE.md
+cover/

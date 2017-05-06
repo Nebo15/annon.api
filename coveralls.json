@@ -10,7 +10,11 @@
     "embeds_one",
     "embeds_many",
     "schema",
-    "send"
+    "send",
+    "def init(.+\/\/.+).+do"
   ],
-  "treat_no_relevant_lines_as_covered": true
+  "coverage_options": {
+    "treat_no_relevant_lines_as_covered": true,
+    "output_dir": "cover/",
+  }
 }
