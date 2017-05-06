@@ -10,7 +10,7 @@ defmodule Annon.ManagementAPI.Controllers.API do
   use Annon.ManagementAPI.ControllersRouter
   alias Annon.Configuration.API, as: ConfigurationAPI
   alias Annon.Configuration.Schemas.API, as: APISchema
-  alias Annon.Helpers.Pagination
+  alias Annon.ManagementAPI.Pagination
 
   get "/" do
     paging = Pagination.page_info_from(conn.query_params)

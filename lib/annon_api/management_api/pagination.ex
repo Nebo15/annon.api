@@ -1,4 +1,4 @@
-defmodule Annon.Helpers.Pagination do
+defmodule Annon.ManagementAPI.Pagination do
   @moduledoc """
   Functions related to paging
   """
