@@ -15,8 +15,7 @@ defmodule Annon.PublicRouter do
 
   plug :match
 
-  # Plugin that traces request start time
-  plug Annon.Plugin.ClientLatency
+  plug Annon.Plugin.RequestTimeRecorder
 
   plug Plug.RequestId
   plug Plug.Parsers, parsers: [:multipart, :json],
@@ -35,6 +34,7 @@ defmodule Annon.PublicRouter do
   # Monitoring plugins that do not affect on request or response
   plug Annon.Plugins.Logger
   plug Annon.Plugins.Monitoring
+  plug Annon.Plugin.LatencyRecorder
 
   # Security plugins that can halt connection immediately
   plug Annon.Plugins.IPRestriction

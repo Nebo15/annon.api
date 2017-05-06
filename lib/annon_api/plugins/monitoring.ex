@@ -10,7 +10,6 @@ defmodule Annon.Plugins.Monitoring do
     plugin_name: "monitoring"
 
   alias Plug.Conn
-  import Annon.Helpers.Latency
 
   @doc false
   def call(%Conn{} = conn, _opts) do
@@ -27,16 +26,10 @@ defmodule Annon.Plugins.Monitoring do
   end
 
   defp write_metrics(%Conn{} = conn) do
-    client_req_start_time = Map.get(conn.assigns, :client_req_start_time)
-    conn = write_latency(conn, :latencies_client, client_req_start_time)
-    request_duration = conn.assigns.latencies_client - Map.get(conn.assigns, :latencies_upstream, 0)
     api_tags = tags(conn) ++ ["http_status:#{to_string conn.status}"]
-
     ExStatsD.timer(conn.assigns.latencies_client, "latency", tags: api_tags)
     ExStatsD.increment("response_count", tags: api_tags)
-
     conn
-    |> Conn.assign(:latencies_gateway, request_duration)
   end
 
   defp tags(%Conn{host: host, method: method, port: port} = conn),

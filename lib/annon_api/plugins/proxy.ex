@@ -7,7 +7,6 @@ defmodule Annon.Plugins.Proxy do
     plugin_name: "proxy"
 
   import Annon.Helpers.IP
-  import Annon.Helpers.Latency
 
   alias Plug.Conn
   alias Annon.Configuration.Schemas.Plugin
@@ -40,7 +39,7 @@ defmodule Annon.Plugins.Proxy do
   end
 
   defp do_proxy(settings, api_path, %Conn{method: method} = conn) do
-    req_start_time = get_time()
+    request_start_time = System.monotonic_time()
 
     log({settings, api_path, conn.request_path}, "request settings")
     response = settings
@@ -49,7 +48,9 @@ defmodule Annon.Plugins.Proxy do
     |> do_request(conn, method)
     |> log("do_request")
 
-    conn = write_latency(conn, :latencies_upstream, req_start_time)
+    request_end_time = System.monotonic_time()
+    upstream_latency = System.convert_time_unit(request_end_time - request_start_time, :native, :micro_seconds)
+    conn = Conn.assign(conn, :latencies_upstream, upstream_latency)
 
     response.headers
     |> Enum.reduce(conn, fn
