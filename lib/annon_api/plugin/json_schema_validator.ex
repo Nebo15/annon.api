@@ -1,4 +1,4 @@
-defmodule Annon.Helpers.JsonSchemaValidator do
+defmodule Annon.Plugin.JsonSchemaValidator do
   @moduledoc """
   This module provides [JSON Schema](http://json-schema.org/) validator for a plugin settings.
 
