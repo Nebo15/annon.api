@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.ReleaseTasks – annon_api v0.2.54</title>
+    <title>Annon.Monitoring – annon_api v0.2.54</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items-0f6b832a3a.js"></script>
@@ -59,16 +59,14 @@
 
       <h1>
         <small class="visible-xs">annon_api v0.2.54</small>
-        Annon.ReleaseTasks
+        Annon.Monitoring
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>Nice way to apply migrations inside a released application.</p>
-<p>Example:</p>
-<pre><code class="elixir">annon_api/bin/annon_api command Elixir.Annon.ReleaseTasks migrate!</code></pre>
+          <p>Monitoring service for Annons clusters.</p>
 
         </section>
       
@@ -90,13 +88,13 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#migrate!/0">migrate!()</a>
+    <a href="#get_node_status/1">get_node_status(erl_node)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#priv_dir/1">priv_dir(app)</a>
+    <a href="#get_status/0">get_status()</a>
   </div>
   
 </div>
@@ -119,13 +117,13 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="migrate!/0">
+          <div class="detail" id="get_node_status/1">
   
   <div class="detail-header">
-    <a href="#migrate!/0" class="detail-link" title="Link to this function">
+    <a href="#get_node_status/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">migrate!()</span>
+    <span class="signature">get_node_status(erl_node)</span>
     
     
     
@@ -134,13 +132,13 @@
     
   </section>
 </div>
-<div class="detail" id="priv_dir/1">
+<div class="detail" id="get_status/0">
   
   <div class="detail-header">
-    <a href="#priv_dir/1" class="detail-link" title="Link to this function">
+    <a href="#get_status/0" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">priv_dir(app)</span>
+    <span class="signature">get_status()</span>
     
     
     
