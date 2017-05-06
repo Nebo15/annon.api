@@ -147,7 +147,7 @@ defmodule Annon.Configuration.Plugin do
     do: changeset
   defp validate_settings(%Changeset{valid?: true} = changeset) do
     %{params: %{"name" => name}} = changeset
-    plugin_impl = Map.fetch!(@plugins, name)
+    plugin_impl = Map.fetch!(@plugins, String.to_atom(name))
     plugin_impl.validate_settings(changeset)
   end
 end
