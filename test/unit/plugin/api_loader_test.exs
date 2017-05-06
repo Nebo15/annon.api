@@ -1,4 +1,4 @@
-defmodule Annon.Plugins.APILoaderTest do
+defmodule Annon.Plugin.APILoaderTest do
   @moduledoc false
   use Annon.UnitCase
 
@@ -15,7 +15,7 @@ defmodule Annon.Plugins.APILoaderTest do
         |> Map.put(:port, request.port)
         |> Map.put(:method, request.methods |> hd())
         |> Map.put(:scheme, request.scheme)
-        |> Annon.Plugins.APILoader.call([])
+        |> Annon.Plugin.APILoader.call([])
 
       assert config.id == api.id
       assert config.request == request
@@ -32,7 +32,7 @@ defmodule Annon.Plugins.APILoaderTest do
         |> Map.put(:port, request.port)
         |> Map.put(:method, request.methods |> hd())
         |> Map.put(:scheme, request.scheme)
-        |> Annon.Plugins.APILoader.call([])
+        |> Annon.Plugin.APILoader.call([])
     end
   end
 

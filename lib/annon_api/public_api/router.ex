@@ -16,7 +16,7 @@ defmodule Annon.PublicRouter do
   plug :match
 
   # Plugin that traces request start time
-  plug Annon.Plugins.ClientLatency
+  plug Annon.Plugin.ClientLatency
 
   plug Plug.RequestId
   plug Plug.Parsers, parsers: [:multipart, :json],
@@ -26,7 +26,7 @@ defmodule Annon.PublicRouter do
                      read_length: 2_000_000,
                      read_timeout: 108_000
 
-  plug Annon.Plugins.APILoader
+  plug Annon.Plugin.APILoader
 
   plug Annon.Plugins.CORS
 

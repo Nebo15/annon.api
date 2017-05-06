@@ -1,4 +1,4 @@
-defmodule Annon.Plugins.APILoader do
+defmodule Annon.Plugin.APILoader do
   @moduledoc """
   This plugin should be first in plugs pipeline,
   because it's used to fetch all settings and decide which ones should be applied for current consumer request.

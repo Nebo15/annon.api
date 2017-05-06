@@ -1,4 +1,4 @@
-defmodule Annon.Plugins.ClientLatency do
+defmodule Annon.Plugin.ClientLatency do
   @moduledoc """
   This plugin writes request start time to conn.assigns.
   """
