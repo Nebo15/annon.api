@@ -1,8 +1,8 @@
-defmodule Annon.Plugins.Proxy.UpstreamRequest do
+defmodule Annon.Plugin.UpstreamRequest do
   @moduledoc """
 
   """
-  alias Annon.Plugins.Proxy.UpstreamRequest
+  alias Annon.Plugin.UpstreamRequest
 
   defstruct scheme: nil,
             host: nil,

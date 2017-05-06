@@ -5,6 +5,7 @@ defmodule Annon.Plugin.APILoader do
   """
   use Annon.Plugin,
     plugin_name: "api_loader"
+
   import Plug.Conn
   alias Annon.Configuration.Matcher
 

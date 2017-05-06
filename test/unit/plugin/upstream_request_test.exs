@@ -1,8 +1,8 @@
-defmodule Annon.Plugins.Proxy.UpstreamRequestTest do
+defmodule Annon.Plugin.UpstreamRequestTest do
   @moduledoc false
   use Annon.UnitCase, async: true
-  import Annon.Plugins.Proxy.UpstreamRequest
-  alias Annon.Plugins.Proxy.UpstreamRequest
+  import Annon.Plugin.UpstreamRequest
+  alias Annon.Plugin.UpstreamRequest
 
   describe "to_upstream_url/1" do
     test "constructs valid url" do
