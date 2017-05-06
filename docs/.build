@@ -5,7 +5,7 @@ fonts/icomoon.eot
 fonts/icomoon.svg
 fonts/icomoon.ttf
 fonts/icomoon.woff
-dist/sidebar_items-0f6b832a3a.js
+dist/sidebar_items-95cccaf607.js
 api-reference.html
 readme.html
 404.html
@@ -58,6 +58,7 @@ Annon.Plugins.Monitoring.html
 Annon.Plugins.Proxy.html
 Annon.Plugins.Proxy.MultipartForm.html
 Annon.Plugins.Proxy.SettingsValidator.html
+Annon.Plugins.Proxy.UpstreamRequest.html
 Annon.Plugins.Scopes.html
 Annon.Plugins.Scopes.JWTStrategy.html
 Annon.Plugins.Scopes.PCMStrategy.html

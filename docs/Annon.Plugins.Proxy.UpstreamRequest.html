@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Plugins.Idempotency – annon_api v0.2.56</title>
+    <title>Annon.Plugins.Proxy.UpstreamRequest – annon_api v0.2.56</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items-95cccaf607.js"></script>
@@ -59,15 +59,14 @@
 
       <h1>
         <small class="visible-xs">annon_api v0.2.56</small>
-        Annon.Plugins.Idempotency
+        Annon.Plugins.Proxy.UpstreamRequest
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p><a href="http://docs.annon.apiary.io/#reference/plugins/idempotency">Request Idempotency plugin</a>.</p>
-
+          
         </section>
       
 
@@ -88,28 +87,19 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#find_plugin_settings/1">find_plugin_settings(plugins)</a>
+    <a href="#get_upstream_path/4">get_upstream_path(request_path, proxy_path, api_path, bool)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Constructs upstream path based on <a href="http://docs.annon.apiary.io/#reference/plugins/proxy">Proxy Docs</a></p>
+</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#init/1">init(opts)</a>
+    <a href="#to_upstream_url!/1">to_upstream_url!(upstream_request)</a>
   </div>
   
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#settings_validation_schema/0">settings_validation_schema()</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#validate_settings/1">validate_settings(changeset)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Settings validator</p>
+    <div class="summary-synopsis"><p>Constructs upstream URL by UpstreamRequest schema</p>
 </div>
   
 </div>
@@ -132,64 +122,43 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="find_plugin_settings/1">
+          <div class="detail" id="get_upstream_path/4">
   
   <div class="detail-header">
-    <a href="#find_plugin_settings/1" class="detail-link" title="Link to this function">
+    <a href="#get_upstream_path/4" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">find_plugin_settings(plugins)</span>
+    <span class="signature">get_upstream_path(request_path, proxy_path, api_path, bool)</span>
     
     
     
   </div>
   <section class="docstring">
-    
+    <p>Constructs upstream path based on <a href="http://docs.annon.apiary.io/#reference/plugins/proxy">Proxy Docs</a>.</p>
+
   </section>
 </div>
-<div class="detail" id="init/1">
+<div class="detail" id="to_upstream_url!/1">
   
   <div class="detail-header">
-    <a href="#init/1" class="detail-link" title="Link to this function">
+    <a href="#to_upstream_url!/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">init(opts)</span>
+    <span class="signature">to_upstream_url!(upstream_request)</span>
     
     
     
   </div>
   <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="settings_validation_schema/0">
-  
-  <div class="detail-header">
-    <a href="#settings_validation_schema/0" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">settings_validation_schema()</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="validate_settings/1">
-  
-  <div class="detail-header">
-    <a href="#validate_settings/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">validate_settings(changeset)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    <p>Settings validator.</p>
+    <p>Constructs upstream URL by UpstreamRequest schema.</p>
+<p>Raises <a href="https://hexdocs.pm/elixir/RuntimeError.html"><code class="inline">RuntimeError</code></a> if host or schema is not set.</p>
+<h2 id="to_upstream_url!/1-examples" class="section-heading">
+  <a href="#to_upstream_url!/1-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; to_upstream_url(%UpstreamRequest{})
+&quot;http://example.com:80/subpath?a=b#hello&quot;</code></pre>
 
   </section>
 </div>
