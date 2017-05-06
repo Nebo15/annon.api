@@ -24,7 +24,7 @@ defmodule Annon.Configuration.CacheAdapters.ETS do
 
     apis =
       table_name
-      |> :ets.match_object({:_, match_spec, :_})
+      |> :ets.match_object({:_, match_spec, :_, :_})
       |> filter_by_method(method)
       |> filter_by_host(host)
       |> filter_by_path(path)
@@ -32,7 +32,7 @@ defmodule Annon.Configuration.CacheAdapters.ETS do
     case apis do
       [] ->
         {:error, :not_found}
-      [{_, api, _}|_] ->
+      [{_, api, _, _}|_] ->
         {:ok, api}
     end
   end
@@ -48,7 +48,14 @@ defmodule Annon.Configuration.CacheAdapters.ETS do
 
       host_regex = Regex.compile!("^#{host_pattern}$")
 
-      {{:api, api.id}, api, host_regex}
+      path_pattern =
+        api.request.path
+        |> Regex.escape()
+        |> String.replace("%", ".*")
+
+      path_regex = Regex.compile!("^#{path_pattern}")
+
+      {{:api, api.id}, api, host_regex, path_regex}
     end)
 
     case objects do
@@ -61,20 +68,20 @@ defmodule Annon.Configuration.CacheAdapters.ETS do
   end
 
   defp filter_by_method(apis, method) do
-    Enum.filter(apis, fn({_, api, _}) ->
+    Enum.filter(apis, fn({_, api, _, _}) ->
       method in api.request.methods
     end)
   end
 
   defp filter_by_host(apis, host) do
-    Enum.filter(apis, fn({_, _, host_regex}) ->
+    Enum.filter(apis, fn({_, _, host_regex, _}) ->
       Regex.match?(host_regex, host)
     end)
   end
 
   defp filter_by_path(apis, path) do
-    Enum.filter(apis, fn({_, api, _}) ->
-      String.starts_with?(path, api.request.path)
+    Enum.filter(apis, fn({_, _, _, path_regex}) ->
+      Regex.match?(path_regex, path)
     end)
   end
 end

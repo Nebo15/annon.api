@@ -123,5 +123,28 @@ defmodule Annon.Configuration.CacheAdapter.ETSTest do
       assert api_id == api.id
       assert length(plugins) == 1
     end
+
+    test "returns matched APIs with wildcard paths" do
+      api = ConfigurationFactory.insert(:api, request: ConfigurationFactory.build(:api_request, %{
+        scheme: "http",
+        methods: ["POST"],
+        host: "example.com",
+        port: 80,
+        path: "/my_path/%/comments"
+      }))
+      ConfigurationFactory.insert(:proxy_plugin, api_id: api.id)
+
+      :ok = ETS.config_change([cache_space: @test_table_name])
+
+      opts = [cache_space: @test_table_name]
+
+      assert {:ok, %APISchema{
+        id: api_id,
+        plugins: plugins
+      }} = ETS.match_request("http", "POST", "example.com", 80, "/my_path/some_substring/comments", opts)
+
+      assert api_id == api.id
+      assert length(plugins) == 1
+    end
   end
 end
