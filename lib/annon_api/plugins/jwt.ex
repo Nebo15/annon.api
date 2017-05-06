@@ -29,16 +29,16 @@ defmodule Annon.Plugins.JWT do
   def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts) when is_list(plugins) do
     plugins
     |> find_plugin_settings()
-    |> execute(conn)
+    |> do_execute(conn)
   end
   def call(conn, _), do: conn
 
-  defp execute(nil, conn), do: conn
-  defp execute(%Plugin{settings: %{"signature" => signature}}, conn) do
+  defp do_execute(nil, conn), do: conn
+  defp do_execute(%Plugin{settings: %{"signature" => signature}}, conn) do
     conn
     |> parse_auth(Conn.get_req_header(conn, "authorization"), Base.decode64(signature))
   end
-  defp execute(_plugin, conn) do
+  defp do_execute(_plugin, conn) do
     Logger.error("JWT tokens decryption key is not set")
     conn
     |> Response.send_error(:internal_error)

@@ -26,11 +26,11 @@ defmodule Annon.Plugins.IPRestriction do
   def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
     plugins
     |> find_plugin_settings()
-    |> execute(conn)
+    |> do_execute(conn)
   end
   def call(conn, _), do: conn
 
-  defp execute(%Plugin{} = plugin, %Plug.Conn{remote_ip: remote_ip} = conn) do
+  defp do_execute(%Plugin{} = plugin, %Plug.Conn{remote_ip: remote_ip} = conn) do
     if check_ip(plugin, ip_to_string(remote_ip)) do
       conn
     else
@@ -40,7 +40,7 @@ defmodule Annon.Plugins.IPRestriction do
       |> Response.halt()
     end
   end
-  defp execute(_, conn), do: conn
+  defp do_execute(_, conn), do: conn
 
   defp check_ip(plugin, ip) do
     blacklisted = blacklisted?(plugin, ip)

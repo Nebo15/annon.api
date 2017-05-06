@@ -21,7 +21,7 @@ defmodule Annon.Plugins.CORS do
     when is_list(plugins) do
     plugins
     |> find_plugin_settings()
-    |> execute(conn)
+    |> do_execute(conn)
   end
   def call(conn, _), do: conn
 
@@ -31,8 +31,8 @@ defmodule Annon.Plugins.CORS do
     |> CORSPlug.init()
   end
 
-  defp execute(nil, conn), do: conn
-  defp execute(%Plugin{settings: settings}, conn) do
+  defp do_execute(nil, conn), do: conn
+  defp do_execute(%Plugin{settings: settings}, conn) do
     conn
     |> CORSPlug.call(init_settings(settings))
   end

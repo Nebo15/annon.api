@@ -24,7 +24,7 @@ defmodule Annon.Plugins.UARestriction do
     validation_result = validate_plugin_settings(plugin)
 
     plugin
-    |> execute(conn, validation_result)
+    |> do_execute(conn, validation_result)
   end
   def call(conn, _), do: conn
 
@@ -57,13 +57,13 @@ defmodule Annon.Plugins.UARestriction do
     |> Enum.at(0)
   end
 
-  defp execute(_plugin, conn, :error), do: Response.send_validation_error(conn, [{"invalid", "settings"}])
-  defp execute(%Plugin{} = plugin, conn, :ok) do
+  defp do_execute(_plugin, conn, :error), do: Response.send_validation_error(conn, [{"invalid", "settings"}])
+  defp do_execute(%Plugin{} = plugin, conn, :ok) do
     plugin
     |> check_user_agent(extract_user_agent(conn))
     |> process_check_result(conn)
   end
-  defp execute(_, conn, :ok), do: conn
+  defp do_execute(_, conn, :ok), do: conn
 
   defp process_check_result(true, conn), do: conn
   defp process_check_result(_, conn) do

@@ -24,20 +24,20 @@ defmodule Annon.Plugins.ACL do
     when is_list(plugins) do
     plugins
     |> find_plugin_settings()
-    |> execute(api_path, conn)
+    |> do_execute(api_path, conn)
     |> send_response(conn)
   end
   def call(conn, _), do: conn
 
-  defp execute(nil, _api_path, _conn), do: :ok
-  defp execute(%Plugin{settings: %{"rules" => rules}},
+  defp do_execute(nil, _api_path, _conn), do: :ok
+  defp do_execute(%Plugin{settings: %{"rules" => rules}},
                api_path,
                %Conn{private: %{scopes: scopes}} = conn) do
     scopes
     |> validate_scopes(rules, api_path, Map.take(conn, [:request_path, :method]))
   end
-  defp execute(%Plugin{settings: %{"rules" => _}}, _api_path, _conn), do: {:error, :no_scopes_is_set}
-  defp execute(_plugin, _api_path, _conn), do: :ok
+  defp do_execute(%Plugin{settings: %{"rules" => _}}, _api_path, _conn), do: {:error, :no_scopes_is_set}
+  defp do_execute(_plugin, _api_path, _conn), do: :ok
 
   defp validate_scopes(nil, _server_rules, _api_path, _conn_data),
     do: {:error, :no_scopes_is_set}

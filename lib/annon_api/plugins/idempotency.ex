@@ -27,18 +27,19 @@ defmodule Annon.Plugins.Idempotency do
   def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
     plugins
     |> find_plugin_settings()
-    |> execute(conn)
+    |> do_execute(conn)
   end
   def call(conn, _), do: conn
 
-  defp execute(%Plugin{}, %Plug.Conn{method: method, body_params: params} = conn) when method in @idempotent_methods do
+  defp do_execute(%Plugin{}, %Plug.Conn{method: method, body_params: params} = conn)
+    when method in @idempotent_methods do
     conn
     |> Conn.get_req_header("x-idempotency-key")
     |> load_log_request
     |> validate_request(params)
     |> normalize_resp(conn)
   end
-  defp execute(_, conn), do: conn
+  defp do_execute(_, conn), do: conn
 
   defp load_log_request([key|_]) when is_binary(key) do
     Log.get_request_by(idempotency_key: key)

@@ -24,11 +24,11 @@ defmodule Annon.Plugins.Validator do
     when is_list(plugins) do
     plugins
     |> find_plugin_settings()
-    |> execute(api_path, conn)
+    |> do_execute(api_path, conn)
   end
   def call(conn, _), do: conn
 
-  defp execute(%Plugin{settings: %{"rules" => rules}}, api_path, %Plug.Conn{body_params: body} = conn) do
+  defp do_execute(%Plugin{settings: %{"rules" => rules}}, api_path, %Plug.Conn{body_params: body} = conn) do
     request_path = String.trim_leading(conn.request_path, api_path)
 
     rules
@@ -42,7 +42,7 @@ defmodule Annon.Plugins.Validator do
      end)
     |> validate_request(body, conn)
   end
-  defp execute(_, _api_path, conn), do: conn
+  defp do_execute(_, _api_path, conn), do: conn
 
   defp validate_request(nil, _body, conn), do: conn
   defp validate_request(schema, body, conn) do

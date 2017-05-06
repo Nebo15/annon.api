@@ -23,12 +23,12 @@ defmodule Annon.Plugins.Proxy do
     when is_list(plugins) do
     plugins
     |> find_plugin_settings()
-    |> execute(api_path, conn)
+    |> do_execute(api_path, conn)
   end
   def call(conn, _), do: conn
 
-  defp execute(nil, _, conn), do: conn
-  defp execute(%Plugin{settings: settings} = plugin, api_path, conn) do
+  defp do_execute(nil, _, conn), do: conn
+  defp do_execute(%Plugin{settings: settings} = plugin, api_path, conn) do
     conn = plugin
     |> get_additional_headers()
     |> put_request_id(conn)

@@ -24,7 +24,7 @@ defmodule Annon.Plugins.Scopes do
     when is_list(plugins) do
     plugins
     |> find_plugin_settings()
-    |> execute(conn)
+    |> do_execute(conn)
   end
   def call(conn, _), do: conn
 
@@ -72,11 +72,11 @@ defmodule Annon.Plugins.Scopes do
   end
   defp get_scopes(_, _), do: []
 
-  defp execute(%Plugin{settings: settings}, conn) do
+  defp do_execute(%Plugin{settings: settings}, conn) do
     conn
     |> get_scopes(settings)
   end
-  defp execute(_, conn), do: conn
+  defp do_execute(_, conn), do: conn
 
   defp return_401(conn, message) do
     "401.json"
