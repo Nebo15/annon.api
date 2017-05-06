@@ -17,6 +17,7 @@ defmodule Annon.PublicRouter do
 
   plug Annon.Plugin.RequestTimeRecorder
 
+  plug Plug.Head
   plug Plug.RequestId
   plug Plug.Parsers, parsers: [:multipart, :json],
                      pass: ["*/*"],
