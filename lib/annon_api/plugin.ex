@@ -33,7 +33,7 @@ defmodule Annon.Plugin do
         |> Enum.find(&filter_plugin/1)
       end
 
-      defp filter_plugin(%PluginSchema{name: plugin_name, is_enabled: true}) when plugin_name == @plugin_name, do: true
+      defp filter_plugin(%PluginSchema{name: plugin_name}) when plugin_name == @plugin_name, do: true
       defp filter_plugin(_), do: false
     end
   end
