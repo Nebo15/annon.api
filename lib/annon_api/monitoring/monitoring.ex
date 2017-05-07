@@ -6,18 +6,22 @@ defmodule Annon.Monitoring do
   def get_status do
     cluster_nodes = :erlang.nodes()
     cluster_strategy = get_cluster_strategy()
-    nodes_info = [get_node_status(:erlang.node())] # TODO: Return other nodes info
+    nodes_status =
+      Enum.reduce(Node.list(), [get_node_status()], fn remote_node, acc ->
+        remote_node_status = :rpc.call(remote_node, Annon.Monitoring, :get_node_status, [])
+        [remote_node_status] ++ acc
+      end)
 
     %{
       cluster_size: length(cluster_nodes) + 1,
       cluster_strategy: cluster_strategy,
-      nodes: nodes_info,
+      nodes: nodes_status,
       open_ports: [] # TODO: List open ports
     }
   end
 
-  def get_node_status(erl_node) do
-    node = Atom.to_string(erl_node)
+  def get_node_status() do
+    node = Atom.to_string(:erlang.node())
     otp_release = to_string(:erlang.system_info(:otp_release))
     run_queue = :erlang.statistics(:run_queue)
     process_count = :erlang.system_info(:process_count)
