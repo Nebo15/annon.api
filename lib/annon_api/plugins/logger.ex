@@ -77,7 +77,7 @@ defmodule Annon.Plugins.Logger do
     |> process_content_disposition(conn)
   end
 
-  defp process_content_disposition("inline; filename=" <> _, _conn), do: nil
+  defp process_content_disposition("inline; filename=" <> _, _conn), do: "inline; filename=..."
   defp process_content_disposition(nil, conn), do: conn.resp_body
   defp process_content_disposition(_, conn), do: conn.resp_body
 
