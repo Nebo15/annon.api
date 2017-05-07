@@ -18,7 +18,6 @@ defmodule Annon.PublicRouter do
   plug Plug.Head
   plug Plug.RequestId
 
-
   plug Plug.Parsers, parsers: [:multipart, :json],
                      pass: ["*/*"],
                      json_decoder: Poison,

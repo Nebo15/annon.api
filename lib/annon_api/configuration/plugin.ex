@@ -9,7 +9,6 @@ defmodule Annon.Configuration.Plugin do
   alias Ecto.Changeset
   alias Ecto.Multi
 
-
   @plugin_fields [:name, :settings, :is_enabled]
   @required_plugin_fields @plugin_fields
   @plugins Application.fetch_env!(:annon_api, :plugins)
