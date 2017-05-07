@@ -7,29 +7,29 @@ defmodule Annon.Plugins.UARestriction do
   use Annon.Plugin, plugin_name: "ua_restriction"
   alias EView.Views.Error, as: ErrorView
   alias Annon.Helpers.Response
+  require Logger
 
   defdelegate validate_settings(changeset), to: Annon.Plugins.UARestriction.SettingsValidator
   defdelegate settings_validation_schema(), to: Annon.Plugins.UARestriction.SettingsValidator
 
   def execute(%Conn{} = conn, _request, settings) do
-    settings
-    |> check_user_agent(get_user_agent(conn, ""))
-    |> process_check_result(conn)
-  end
-
-  defp get_user_agent(conn, default) do
-    case Plug.Conn.get_req_header(conn, "user-agent") do
-      [] -> default
-      [user_agent|_] -> user_agent
+    with {:ok, user_agent} <- fetch_user_agent(conn),
+         true <- check_user_agent(settings, user_agent) do
+      conn
+    else
+      :error ->
+        Logger.warn("Request does not contain User-Agent header, User Agent restrictions won't be applied")
+        conn
+      false ->
+        render_forbidden(conn)
     end
   end
 
-  defp process_check_result(true, conn), do: conn
-  defp process_check_result(_, conn) do
-    "403.json"
-    |> ErrorView.render(%{message: "You have been blocked from accessing this resource."})
-    |> Response.send(conn, 403)
-    |> Response.halt()
+  defp fetch_user_agent(conn) do
+    case Plug.Conn.get_req_header(conn, "user-agent") do
+      [] -> :error
+      [user_agent | _] -> {:ok, user_agent}
+    end
   end
 
   defp check_user_agent(settings, user_agent) do
@@ -39,20 +39,27 @@ defmodule Annon.Plugins.UARestriction do
   end
 
   defp whitelisted?(%{"whitelist" => list}, user_agent) do
-    list
-    |> Enum.any?(fn(item) -> user_agent_matches?(item, user_agent) end)
+    Enum.any?(list, &user_agent_matches?(&1, user_agent))
   end
-  defp whitelisted?(_plugin, _user_agent), do: nil
+  defp whitelisted?(_plugin, _user_agent),
+    do: nil
 
   defp blacklisted?(%{"blacklist" => list}, user_agent) do
-    list
-    |> Enum.any?(fn(item) -> user_agent_matches?(item, user_agent) end)
+    Enum.any?(list, &user_agent_matches?(&1, user_agent))
   end
-  defp blacklisted?(_plugin, _user_agent), do: nil
+  defp blacklisted?(_plugin, _user_agent),
+    do: nil
 
   defp user_agent_matches?(regex, user_agent) do
     regex
     |> Regex.compile!()
     |> Regex.match?(user_agent)
+  end
+
+  def render_forbidden(conn) do
+    "403.json"
+    |> ErrorView.render(%{message: "You have been blocked from accessing this resource."})
+    |> Response.send(conn, 403)
+    |> Response.halt()
   end
 end
