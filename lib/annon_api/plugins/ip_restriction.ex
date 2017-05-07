@@ -32,27 +32,30 @@ defmodule Annon.Plugins.IPRestriction do
   end
 
   defp whitelisted?(%{"whitelist" => list}, ip) do
-    list
-    |> Enum.any?(fn(item) -> ip_matches?(item, ip) end)
+    Enum.any?(list, &ip_matches?(&1, ip))
   end
-  defp whitelisted?(_plugin, _ip), do: nil
+  defp whitelisted?(_plugin, _ip),
+    do: nil
 
   defp blacklisted?(%{"blacklist" => list}, ip) do
-    list
-    |> Enum.any?(fn(item) -> ip_matches?(item, ip) end)
+    Enum.any?(list, &ip_matches?(&1, ip))
   end
-  defp blacklisted?(_plugin, _ip), do: nil
+  defp blacklisted?(_plugin, _ip),
+    do: nil
 
   defp ip_matches?(ip1, ip2) do
     ip2_list = String.split(ip2, ".")
 
-    0 < ip1
-    |> String.split(".")
-    |> Enum.reduce_while(0, fn(item, i) ->
-      case item !== "*" && item !== Enum.at(ip2_list, i) do
-        true -> {:halt, -1}
-        _    -> {:cont, i + 1}
-      end
-    end)
+    matches_count =
+      ip1
+      |> String.split(".")
+      |> Enum.reduce_while(0, fn(item, i) ->
+        case item !== "*" && item !== Enum.at(ip2_list, i) do
+          true -> {:halt, -1}
+          _    -> {:cont, i + 1}
+        end
+      end)
+
+    0 < matches_count
   end
 end
