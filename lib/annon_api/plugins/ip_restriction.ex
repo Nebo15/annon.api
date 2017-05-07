@@ -6,32 +6,16 @@ defmodule Annon.Plugins.IPRestriction do
   Also you can use it in Consumer plugin settings overrides to limit IP's from which specific consumer
   can request your API.
   """
-  use Annon.Plugin,
-    plugin_name: "ip_restriction"
-
+  use Annon.Plugin, plugin_name: "ip_restriction"
   import Annon.Helpers.IP
-
-  alias Annon.Configuration.Schemas.Plugin
-  alias Annon.Configuration.Schemas.API, as: APISchema
   alias EView.Views.Error, as: ErrorView
   alias Annon.Helpers.Response
 
-  @doc """
-  Settings validator delegate.
-  """
   defdelegate validate_settings(changeset), to: Annon.Plugins.IPRestriction.SettingsValidator
   defdelegate settings_validation_schema(), to: Annon.Plugins.IPRestriction.SettingsValidator
 
-  @doc false
-  def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
-    plugins
-    |> find_plugin_settings()
-    |> do_execute(conn)
-  end
-  def call(conn, _), do: conn
-
-  defp do_execute(%Plugin{} = plugin, %Plug.Conn{remote_ip: remote_ip} = conn) do
-    if check_ip(plugin, ip_to_string(remote_ip)) do
+  def execute(%Conn{remote_ip: remote_ip} = conn, _request, settings) do
+    if check_ip(settings, ip_to_string(remote_ip)) do
       conn
     else
       "403.json"
@@ -40,7 +24,6 @@ defmodule Annon.Plugins.IPRestriction do
       |> Response.halt()
     end
   end
-  defp do_execute(_, conn), do: conn
 
   defp check_ip(plugin, ip) do
     blacklisted = blacklisted?(plugin, ip)
@@ -48,13 +31,13 @@ defmodule Annon.Plugins.IPRestriction do
     whitelisted || (whitelisted === nil && !blacklisted)
   end
 
-  defp whitelisted?(%Plugin{settings: %{"whitelist" => list}}, ip) do
+  defp whitelisted?(%{"whitelist" => list}, ip) do
     list
     |> Enum.any?(fn(item) -> ip_matches?(item, ip) end)
   end
   defp whitelisted?(_plugin, _ip), do: nil
 
-  defp blacklisted?(%Plugin{settings: %{"blacklist" => list}}, ip) do
+  defp blacklisted?(%{"blacklist" => list}, ip) do
     list
     |> Enum.any?(fn(item) -> ip_matches?(item, ip) end)
   end

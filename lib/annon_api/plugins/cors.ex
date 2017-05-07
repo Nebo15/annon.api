@@ -2,38 +2,21 @@ defmodule Annon.Plugins.CORS do
   @moduledoc """
   This plugin controls cross-origin resource sharing.
   """
-  use Annon.Plugin,
-    plugin_name: "cors"
+  use Annon.Plugin, plugin_name: "cors"
 
-  alias Plug.Conn
-  alias Annon.Configuration.Schemas.Plugin
-  alias Annon.Configuration.Schemas.API, as: APISchema
-
-  @doc """
-  Settings validator.
-  """
   def validate_settings(changeset),
     do: changeset
+
   def settings_validation_schema,
     do: %{}
 
-  def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts)
-    when is_list(plugins) do
-    plugins
-    |> find_plugin_settings()
-    |> do_execute(conn)
-  end
-  def call(conn, _), do: conn
+  def execute(%Conn{} = conn, _request, settings) do
+    settings = settings || %{}
+    settings =
+      settings
+      |> Enum.map(fn({key, value}) -> {String.to_atom(key), value} end)
+      |> CORSPlug.init()
 
-  defp init_settings(settings) do
-    settings
-    |> Enum.map(fn({key, value}) -> {String.to_atom(key), value} end)
-    |> CORSPlug.init()
-  end
-
-  defp do_execute(nil, conn), do: conn
-  defp do_execute(%Plugin{settings: settings}, conn) do
-    conn
-    |> CORSPlug.call(init_settings(settings))
+    CORSPlug.call(conn, settings)
   end
 end

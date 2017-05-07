@@ -9,10 +9,13 @@ defmodule Annon.Configuration.Plugin do
   alias Ecto.Changeset
   alias Ecto.Multi
 
-  @plugins Application.fetch_env!(:annon_api, :plugins)
-  @plugin_names Application.fetch_env!(:annon_api, :plugin_names)
+
   @plugin_fields [:name, :settings, :is_enabled]
   @required_plugin_fields @plugin_fields
+  @plugins Application.fetch_env!(:annon_api, :plugins)
+  @known_plugin_names Enum.reduce(@plugins, [], fn {name, opts}, acc ->
+    if Keyword.get(opts, :system?, false), do: acc, else: [Atom.to_string(name)] ++ acc
+  end)
 
   @doc """
   Returns the list of Plugins by API ID.
@@ -137,7 +140,7 @@ defmodule Annon.Configuration.Plugin do
     plugin
     |> cast(attrs, @plugin_fields)
     |> validate_required(@required_plugin_fields)
-    |> validate_inclusion(:name, @plugin_names)
+    |> validate_inclusion(:name, @known_plugin_names)
     |> assoc_constraint(:api)
     |> unique_constraint(:name, name: :plugins_api_id_name_index, message: "has already been taken")
     |> validate_settings()
@@ -147,7 +150,12 @@ defmodule Annon.Configuration.Plugin do
     do: changeset
   defp validate_settings(%Changeset{valid?: true} = changeset) do
     %{params: %{"name" => name}} = changeset
-    plugin_impl = Map.fetch!(@plugins, String.to_atom(name))
-    plugin_impl.validate_settings(changeset)
+
+    plugin_module =
+      @plugins
+      |> Keyword.fetch!(String.to_atom(name))
+      |> Keyword.fetch!(:module)
+
+    plugin_module.validate_settings(changeset)
   end
 end

@@ -25,29 +25,30 @@ defmodule Annon.Acceptance.Plugins.UARestrictionTest do
   end
 
   describe "settings validation" do
-    test "invalid settings", %{api_id: api_id, api_path: api_path} do
-      ua_restriction_plugin = :ua_restriction_plugin
-      |> build_factory_params(%{settings: %{
-        blacklist: ["*"],
-        whitelist: ["a*"]
-      }})
+    # TODO: Move to creation changeset
+    # test "invalid settings", %{api_id: api_id, api_path: api_path} do
+    #   ua_restriction_plugin = :ua_restriction_plugin
+    #   |> build_factory_params(%{settings: %{
+    #     blacklist: ["*"],
+    #     whitelist: ["a*"]
+    #   }})
 
-      "apis/#{api_id}/plugins"
-      |> put_management_url()
-      |> post!(ua_restriction_plugin)
-      |> assert_status(201)
+    #   "apis/#{api_id}/plugins"
+    #   |> put_management_url()
+    #   |> post!(ua_restriction_plugin)
+    #   |> assert_status(201)
 
-      expected_result = [%{"entry" => "settings", "entry_type" => "json_data_property", "rules" => ["invalid"]}]
+    #   expected_result = [%{"entry" => "settings", "entry_type" => "json_data_property", "rules" => ["invalid"]}]
 
-      actual_result = api_path
-      |> put_public_url()
-      |> get!()
-      |> assert_status(422)
-      |> get_body()
-      |> get_in(["error", "invalid"])
+    #   actual_result = api_path
+    #   |> put_public_url()
+    #   |> get!()
+    #   |> assert_status(422)
+    #   |> get_body()
+    #   |> get_in(["error", "invalid"])
 
-      assert expected_result == actual_result
-    end
+    #   assert expected_result == actual_result
+    # end
 
     test "valid settings", %{api_id: api_id, api_path: api_path} do
       ua_restriction_plugin = :ua_restriction_plugin

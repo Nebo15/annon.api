@@ -5,6 +5,7 @@ defmodule Annon.Plugins.UARestriction.SettingsValidator do
   import Annon.Plugin.JsonSchemaValidator
 
   def validate_settings(%Ecto.Changeset{} = changeset) do
+    # TODO: Validate that regexps is valid
     validate_with_json_schema(changeset, :settings, settings_validation_schema())
   end
 

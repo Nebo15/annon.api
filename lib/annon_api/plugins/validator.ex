@@ -6,29 +6,15 @@ defmodule Annon.Plugins.Validator do
   It's response structure described in
   our [API Manifest](http://docs.apimanifest.apiary.io/#introduction/interacting-with-api/errors).
   """
-  use Annon.Plugin,
-    plugin_name: "validator"
-
-  alias Annon.Configuration.Schemas.Plugin
-  alias Annon.Configuration.Schemas.API, as: APISchema
+  use Annon.Plugin, plugin_name: "validator"
   alias Annon.Helpers.Response
 
-  @doc """
-  Settings validator delegate.
-  """
   defdelegate validate_settings(changeset), to: Annon.Plugins.Validator.SettingsValidator
   defdelegate settings_validation_schema(), to: Annon.Plugins.Validator.SettingsValidator
 
-  @doc false
-  def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins, request: %{path: api_path}}}} = conn, _opt)
-    when is_list(plugins) do
-    plugins
-    |> find_plugin_settings()
-    |> do_execute(api_path, conn)
-  end
-  def call(conn, _), do: conn
+  def execute(%Conn{body_params: body} = conn, %{api: %{request: %{path: api_path}}}, settings) do
+    %{"rules" => rules} = settings
 
-  defp do_execute(%Plugin{settings: %{"rules" => rules}}, api_path, %Plug.Conn{body_params: body} = conn) do
     request_path = String.trim_leading(conn.request_path, api_path)
 
     rules
@@ -42,15 +28,19 @@ defmodule Annon.Plugins.Validator do
      end)
     |> validate_request(body, conn)
   end
-  defp do_execute(_, _api_path, conn), do: conn
+  def execute(conn, _request, _settings),
+    do: conn
 
-  defp validate_request(nil, _body, conn), do: conn
+  defp validate_request(nil, _body, conn),
+    do: conn
   defp validate_request(schema, body, conn) do
     schema
     |> NExJsonSchema.Validator.validate(body)
     |> process_validator_result(conn)
   end
 
-  defp process_validator_result(:ok, conn), do: conn
-  defp process_validator_result({:error, invalid}, conn), do: conn |> Response.send_validation_error(invalid)
+  defp process_validator_result(:ok, conn),
+    do: conn
+  defp process_validator_result({:error, invalid}, conn),
+    do: Response.send_validation_error(conn, invalid)
 end

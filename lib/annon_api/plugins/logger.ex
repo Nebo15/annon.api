@@ -5,30 +5,21 @@ defmodule Annon.Plugins.Logger do
 
   All stored records can be accessible via [management API](http://docs.annon.apiary.io/#reference/requests).
   """
-  use Annon.Plugin,
-    plugin_name: "logger"
-
-  alias Plug.Conn
+  use Annon.Plugin, plugin_name: "logger"
   alias Annon.Requests.Log
-  alias Annon.Configuration.Schemas.API, as: APISchema
   require Logger
 
-  @doc false
-  def call(conn, _opts) do
-    conn
-    |> Conn.register_before_send(fn conn ->
-      conn
-      |> log_request()
-    end)
+  def execute(%Conn{} = conn, %{api: api}, _settings) do
+    Conn.register_before_send(conn, &log_request(&1, api))
   end
 
-  defp log_request(conn) do
+  defp log_request(conn, api) do
     request = %{
       id: get_request_id(conn),
       idempotency_key: get_idempotency_key(conn) || "",
       ip_address: conn.remote_ip |> Tuple.to_list |> Enum.join("."),
       request: get_request_data(conn),
-      api: get_api_data(conn),
+      api: get_api_data(api),
       response: get_response_data(conn),
       latencies: get_latencies_data(conn),
       status_code: conn.status
@@ -58,8 +49,9 @@ defmodule Annon.Plugins.Logger do
   defp modify_headers_list([]), do: []
   defp modify_headers_list([{key, value}|t]), do: [%{key => value}] ++ modify_headers_list(t)
 
-  defp get_api_data(%Plug.Conn{private: %{api_config: nil}}), do: nil
-  defp get_api_data(%Plug.Conn{private: %{api_config: %APISchema{id: id, name: name, request: request}}}) do
+  defp get_api_data(nil),
+    do: nil
+  defp get_api_data(%{id: id, name: name, request: request}) do
     %{
       id: to_string(id),
       name: name,

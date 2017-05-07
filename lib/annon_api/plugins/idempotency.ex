@@ -2,36 +2,21 @@ defmodule Annon.Plugins.Idempotency do
   @moduledoc """
   [Request Idempotency plugin](http://docs.annon.apiary.io/#reference/plugins/idempotency).
   """
-  use Annon.Plugin,
-    plugin_name: "idempotency"
-
-  alias Plug.Conn
-  alias Annon.Configuration.Schemas.Plugin
-  alias Annon.Configuration.Schemas.API, as: APISchema
+  use Annon.Plugin, plugin_name: "idempotency"
   alias Annon.Requests.Log
-  alias Annon.Requests.Request
+  alias Annon.Requests.Request, as: RequestSchema
   alias EView.Views.Error, as: ErrorView
   alias Annon.Helpers.Response
 
   @idempotent_methods ["POST"]
 
-  @doc """
-  Settings validator.
-  """
   def validate_settings(changeset),
     do: changeset
+
   def settings_validation_schema,
     do: %{}
 
-  @doc false
-  def call(%Plug.Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opt) when is_list(plugins) do
-    plugins
-    |> find_plugin_settings()
-    |> do_execute(conn)
-  end
-  def call(conn, _), do: conn
-
-  defp do_execute(%Plugin{}, %Plug.Conn{method: method, body_params: params} = conn)
+  def execute(%Conn{method: method, body_params: params} = conn, _request, _settings)
     when method in @idempotent_methods do
     conn
     |> Conn.get_req_header("x-idempotency-key")
@@ -39,19 +24,21 @@ defmodule Annon.Plugins.Idempotency do
     |> validate_request(params)
     |> normalize_resp(conn)
   end
-  defp do_execute(_, conn), do: conn
+  def execute(%Conn{} = conn, _request, _settings),
+    do: conn
 
   defp load_log_request([key|_]) when is_binary(key) do
     Log.get_request_by(idempotency_key: key)
   end
   defp load_log_request(_), do: nil
 
-  defp validate_request({:ok, %Request{request: %{body: body}} = log_request}, params) do
+  defp validate_request({:ok, %RequestSchema{request: %{body: body}} = log_request}, params) do
     {Map.equal?(params, body), log_request}
   end
   defp validate_request(_, _params), do: nil
 
-  defp normalize_resp({true, %Request{response: %{headers: headers, body: body}, status_code: status_code}}, conn) do
+  defp normalize_resp({true, %RequestSchema{response: %{headers: headers, body: body}, status_code: status_code}}, conn)
+    do
     conn
     |> Conn.merge_resp_headers(format_headers(headers))
     |> Conn.send_resp(status_code, body)

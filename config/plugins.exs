@@ -1,16 +1,17 @@
 use Mix.Config
 
-enabled_plugins = %{
-  jwt: Annon.Plugins.JWT,
-  validator: Annon.Plugins.Validator,
-  acl: Annon.Plugins.ACL,
-  proxy: Annon.Plugins.Proxy,
-  idempotency: Annon.Plugins.Idempotency,
-  ip_restriction: Annon.Plugins.IPRestriction,
-  ua_restriction: Annon.Plugins.UARestriction,
-  scopes: Annon.Plugins.Scopes,
-  cors: Annon.Plugins.CORS,
-}
-
-config :annon_api, :plugins, enabled_plugins
-config :annon_api, :plugin_names, Enum.map(Map.keys(enabled_plugins), &to_string/1)
+config :annon_api, :plugins, [
+  {:cors, deps: [], features: [:modify_conn], module: Annon.Plugins.CORS},
+  {:idempotency, deps: [:cors], features: [:modify_conn, :log_consistency], module: Annon.Plugins.Idempotency},
+  {:logger, deps: [:idempotency, :monitoring], features: [], system?: true, module: Annon.Plugins.Logger},
+  {:monitoring, deps: [:cors], features: [], system?: true, module: Annon.Plugins.Monitoring},
+  {:ip_restriction, deps: [:logger], features: [:modify_conn], module: Annon.Plugins.IPRestriction},
+  {:ua_restriction, deps: [:logger], features: [:modify_conn], module: Annon.Plugins.UARestriction},
+  {:jwt, deps: [:ip_restriction, :ua_restriction], features: [:modify_conn], module: Annon.Plugins.JWT},
+  # {:oauth, deps: [:ip_restriction, :ua_restriction], features: [:modify_conn]},
+  {:scopes, deps: [:jwt, :oauth], features: [:modify_conn], module: Annon.Plugins.Scopes},
+  {:acl,  deps: [:scopes], require: [:scopes], features: [:modify_conn], module: Annon.Plugins.ACL},
+  {:validator, deps: [:acl, :ip_restriction, :ua_restriction, :logger], features: [:decode_body, :modify_conn],
+    module: Annon.Plugins.Validator},
+  {:proxy, deps: [:validator, :logger, :acl], features: [:modify_conn], module: Annon.Plugins.Proxy}
+]

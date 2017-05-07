@@ -15,10 +15,10 @@ defmodule Annon.PublicRouter do
 
   plug :match
 
-  plug Annon.Plugin.RequestTimeRecorder
-
   plug Plug.Head
   plug Plug.RequestId
+
+
   plug Plug.Parsers, parsers: [:multipart, :json],
                      pass: ["*/*"],
                      json_decoder: Poison,
@@ -26,29 +26,7 @@ defmodule Annon.PublicRouter do
                      read_length: 2_000_000,
                      read_timeout: 108_000
 
-  plug Annon.Plugin.APILoader
-
-  plug Annon.Plugins.CORS
-
-  plug Annon.Plugins.Idempotency # TODO: set plug after logger plug (and after acl/iprestiction, in others section)
-
-  # Monitoring plugins that do not affect on request or response
-  plug Annon.Plugins.Logger
-  plug Annon.Plugins.Monitoring
-  plug Annon.Plugin.LatencyRecorder
-
-  # Security plugins that can halt connection immediately
-  plug Annon.Plugins.IPRestriction
-  plug Annon.Plugins.UARestriction
-  plug Annon.Plugins.JWT
-  plug Annon.Plugins.Scopes
-  plug Annon.Plugins.ACL
-
-  # Other helper plugins that can halt connection without proxy
-  plug Annon.Plugins.Validator
-
-  # Proxy
-  plug Annon.Plugins.Proxy
+  plug Annon.Plugin.PipelinePlug
 
   plug :dispatch
 

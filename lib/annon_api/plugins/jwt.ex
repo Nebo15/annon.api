@@ -5,43 +5,22 @@ defmodule Annon.Plugins.JWT do
   It's implemented mainly to be used with [Auth0](https://auth0.com/),
   but it should support any JWT-based authentication providers.
   """
-  use Annon.Plugin,
-    plugin_name: "jwt"
-
-  require Logger
-
+  use Annon.Plugin, plugin_name: "jwt"
   import Joken
-
-  alias Plug.Conn
   alias Joken.Token
-  alias Annon.Configuration.Schemas.Plugin
-  alias Annon.Configuration.Schemas.API, as: APISchema
   alias EView.Views.Error, as: ErrorView
   alias Annon.Helpers.Response
+  require Logger
 
-  @doc """
-  Settings validator delegate.
-  """
   defdelegate validate_settings(changeset), to: Annon.Plugins.JWT.SettingsValidator
   defdelegate settings_validation_schema(), to: Annon.Plugins.JWT.SettingsValidator
 
-  @doc false
-  def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts) when is_list(plugins) do
-    plugins
-    |> find_plugin_settings()
-    |> do_execute(conn)
+  def execute(%Conn{} = conn, _request, %{"signature" => signature}) do
+    parse_auth(conn, Conn.get_req_header(conn, "authorization"), Base.decode64(signature))
   end
-  def call(conn, _), do: conn
-
-  defp do_execute(nil, conn), do: conn
-  defp do_execute(%Plugin{settings: %{"signature" => signature}}, conn) do
-    conn
-    |> parse_auth(Conn.get_req_header(conn, "authorization"), Base.decode64(signature))
-  end
-  defp do_execute(_plugin, conn) do
+  def execute(conn, _request, _settings) do
     Logger.error("JWT tokens decryption key is not set")
-    conn
-    |> Response.send_error(:internal_error)
+    Response.send_error(conn, :internal_error)
   end
 
   defp parse_auth(conn, _, :error) do

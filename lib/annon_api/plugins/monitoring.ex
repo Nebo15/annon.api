@@ -6,14 +6,11 @@ defmodule Annon.Plugins.Monitoring do
 
   It can be used with [DataDog agent](http://datadoghq.com).
   """
-  use Annon.Plugin,
-    plugin_name: "monitoring"
-
+  use Annon.Plugin, plugin_name: "monitoring"
   alias Plug.Conn
 
-  @doc false
-  def call(%Conn{} = conn, _opts) do
-    api_tags = tags(conn)
+  def execute(%Conn{} = conn, %{api: api}, _settings) do
+    api_tags = tags(conn, api)
 
     conn
     |> get_request_size()
@@ -22,22 +19,34 @@ defmodule Annon.Plugins.Monitoring do
     ExStatsD.increment("request_count", tags: api_tags)
 
     conn
-    |> Conn.register_before_send(&write_metrics(&1))
+    |> Conn.register_before_send(&write_metrics(&1, api))
+    |> Conn.register_before_send(&assign_latencies/1)
   end
 
-  defp write_metrics(%Conn{} = conn) do
-    api_tags = tags(conn) ++ ["http_status:#{to_string conn.status}"]
+  defp assign_latencies(conn) do
+    request_end_time = System.monotonic_time()
+    request_start_time = Map.get(conn.assigns, :request_start_time)
+    latencies_client = System.convert_time_unit(request_end_time - request_start_time, :native, :micro_seconds)
+    request_duration = latencies_client - Map.get(conn.assigns, :latencies_upstream, 0)
+
+    conn
+    |> Conn.assign(:latencies_gateway, request_duration)
+    |> Conn.assign(:latencies_client, latencies_client)
+  end
+
+  defp write_metrics(%Conn{} = conn, api) do
+    api_tags = tags(conn, api) ++ ["http_status:#{to_string conn.status}"]
     ExStatsD.timer(conn.assigns.latencies_client, "latency", tags: api_tags)
     ExStatsD.increment("response_count", tags: api_tags)
     conn
   end
 
-  defp tags(%Conn{host: host, method: method, port: port} = conn),
+  defp tags(%Conn{host: host, method: method, port: port} = conn, api),
     do: ["http_host:#{to_string host}",
          "http_method:#{to_string method}",
-         "http_port:#{to_string port}"] ++ api_tags(conn) ++ get_request_id(conn)
+         "http_port:#{to_string port}"] ++ api_tags(api) ++ get_request_id(conn)
 
-  defp api_tags(%Conn{private: %{api_config: %{name: api_name, id: api_id}}}),
+  defp api_tags(%{name: api_name, id: api_id}),
     do: ["api_name:#{to_string api_name}", "api_id:#{to_string api_id}"]
   defp api_tags(_),
     do: ["api_name:unknown", "api_id:unknown"]
