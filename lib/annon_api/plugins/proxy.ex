@@ -100,7 +100,7 @@ defmodule Annon.Plugins.Proxy do
   defp put_x_forwarded_proto_header(upstream_request, %{scheme: scheme}),
     do: UpstreamRequest.put_header(upstream_request, "x-forwarded-proto", Atom.to_string(scheme))
 
-  def drop_stripped_headers(upstream_request, %{"strip_headers" => true, "headers_to_strip" => headers})
+  def drop_stripped_headers(upstream_request, %{"stripped_headers" => headers})
     when not is_nil(headers),
     do: Enum.reduce(headers, upstream_request, &UpstreamRequest.delete_header(&2, &1))
   def drop_stripped_headers(upstream_request, _settings),
