@@ -17,7 +17,7 @@ defmodule Annon do
       supervisor(Annon.Requests.Repo, []),
       worker(Annon.Configuration.Matcher, [matcher_opts()]),
       worker(Annon.AutoClustering, []),
-      supervisor(Annon.HTTPServer.Supervisor, []),
+      supervisor(Annon.PublicAPI.Supervisor, []),
     ]
 
     opts = [strategy: :one_for_one, name: Annon.Supervisor]

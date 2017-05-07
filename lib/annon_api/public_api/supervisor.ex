@@ -1,6 +1,6 @@
-defmodule Annon.HTTPServer.Supervisor do
+defmodule Annon.PublicAPI.Supervisor do
   @moduledoc """
-  HTTPServer supervisor manages opened HTTP and HTTP ports for API Gateway.
+  PublicAPI supervisor manages opened HTTP and HTTP ports for API Gateway.
   """
   use Supervisor
 
@@ -15,7 +15,7 @@ defmodule Annon.HTTPServer.Supervisor do
       http_endpoint_spec(Annon.PrivateRouter, :private_http),
     ]
 
-    opts = [strategy: :one_for_one, name: Annon.HTTPServer.Supervisor]
+    opts = [strategy: :one_for_one, name: Annon.PublicAPI.Supervisor]
     supervise(children, opts)
   end
 
