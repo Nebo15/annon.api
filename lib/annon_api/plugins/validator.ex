@@ -12,35 +12,29 @@ defmodule Annon.Plugins.Validator do
   defdelegate validate_settings(changeset), to: Annon.Plugins.Validator.SettingsValidator
   defdelegate settings_validation_schema(), to: Annon.Plugins.Validator.SettingsValidator
 
-  def execute(%Conn{body_params: body} = conn, %{api: %{request: %{path: api_path}}}, settings) do
-    %{"rules" => rules} = settings
+  def execute(conn, %{api: %{request: %{path: api_path}}}, %{"rules" => rules}) do
+    %Conn{body_params: req_body_params, method: req_method, request_path: request_path} = conn
 
-    request_path = String.trim_leading(conn.request_path, api_path)
+    api_relative_path = String.trim_leading(request_path, api_path)
 
-    rules
-    |> Enum.find_value(fn(rule) ->
-       method_matches? = conn.method in rule["methods"]
-       path_matches? = request_path =~ ~r"#{rule["path"]}"
-
-       if method_matches? && path_matches? do
-         rule["schema"]
-       end
-     end)
-    |> validate_request(body, conn)
-  end
-  def execute(conn, _request, _settings),
-    do: conn
-
-  defp validate_request(nil, _body, conn),
-    do: conn
-  defp validate_request(schema, body, conn) do
-    schema
-    |> NExJsonSchema.Validator.validate(body)
-    |> process_validator_result(conn)
+    with {:ok, schema} <- find_schema(rules, req_method, api_relative_path),
+         :ok <- NExJsonSchema.Validator.validate(schema, req_body_params) do
+      conn
+    else
+      nil -> conn
+      {:error, invalid} -> Response.send_validation_error(conn, invalid)
+    end
   end
 
-  defp process_validator_result(:ok, conn),
-    do: conn
-  defp process_validator_result({:error, invalid}, conn),
-    do: Response.send_validation_error(conn, invalid)
+  # Returns nil if schema is not found
+  defp find_schema(rules, req_method, api_relative_path) do
+    Enum.find_value(rules, fn %{"path" => rule_path, "schema" => schema, "methods" => methods} ->
+      method_matches? = req_method in methods
+      path_matches? = api_relative_path =~ ~r"#{rule_path}"
+
+      if method_matches? && path_matches? do
+        {:ok, schema}
+      end
+    end)
+  end
 end
