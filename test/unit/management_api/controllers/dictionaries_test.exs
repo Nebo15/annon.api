@@ -19,7 +19,11 @@ defmodule Annon.ManagementAPI.Controllers.DictionariesTest do
       |> Map.get("data")
       |> Enum.map(fn plugin -> plugin["name"] end)
 
-    known_names = Application.get_env(:annon_api, :plugin_names)
+    known_names =
+      :annon_api
+      |> Application.get_env(:plugins)
+      |> Enum.map(fn {name, _opts} -> Atom.to_string(name) end)
+
     assert Enum.all?(known_names, fn name -> name in plugins end)
   end
 end

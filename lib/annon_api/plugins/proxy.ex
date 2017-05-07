@@ -3,37 +3,19 @@ defmodule Annon.Plugins.Proxy do
   [Proxy](http://docs.annon.apiary.io/#reference/plugins/proxy) - is a core plugin that
   sends incoming request to an upstream back-ends.
   """
-  use Annon.Plugin,
-    plugin_name: "proxy"
-
+  use Annon.Plugin, plugin_name: "proxy"
   import Annon.Helpers.IP
 
-  alias Plug.Conn
-  alias Annon.Configuration.Schemas.Plugin
-  alias Annon.Configuration.Schemas.API, as: APISchema
-
-  @doc """
-  Settings validator delegate.
-  """
   defdelegate validate_settings(changeset), to: Annon.Plugins.Proxy.SettingsValidator
   defdelegate settings_validation_schema(), to: Annon.Plugins.Proxy.SettingsValidator
 
-  @doc false
-  def call(%Conn{private: %{api_config: %APISchema{plugins: plugins, request: %{path: api_path}}}} = conn, _opts)
-    when is_list(plugins) do
-    plugins
-    |> find_plugin_settings()
-    |> do_execute(api_path, conn)
-  end
-  def call(conn, _), do: conn
-
-  defp do_execute(nil, _, conn), do: conn
-  defp do_execute(%Plugin{settings: settings} = plugin, api_path, conn) do
-    conn = plugin
-    |> get_additional_headers()
-    |> put_request_id(conn)
-    |> put_additional_headers(conn)
-    |> skip_filtered_headers(settings)
+  def execute(%Conn{} = conn, %{api: %{request: %{path: api_path}}}, settings) do
+    conn =
+      settings
+      |> get_additional_headers()
+      |> put_request_id(conn)
+      |> put_additional_headers(conn)
+      |> skip_filtered_headers(settings)
 
     do_proxy(settings, api_path, conn)
   end
@@ -168,7 +150,7 @@ defmodule Annon.Plugins.Proxy do
     end)
   end
 
-  defp get_additional_headers(%Plugin{settings: %{"additional_headers" => headers}}),
+  defp get_additional_headers(%{"additional_headers" => headers}),
     do: headers
   defp get_additional_headers(_), do: []
 

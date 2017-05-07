@@ -4,40 +4,27 @@ defmodule Annon.Plugins.ACL do
 
   It allows to set list of scopes that is required for path relative to an API.
   """
-  use Annon.Plugin,
-    plugin_name: "acl"
-
-  alias Plug.Conn
-  alias Annon.Configuration.Schemas.Plugin
-  alias Annon.Configuration.Schemas.API, as: APISchema
+  use Annon.Plugin, plugin_name: "acl"
   alias EView.Views.Error, as: ErrorView
   alias Annon.Helpers.Response
+  require Logger
 
-  @doc """
-  Settings validator delegate.
-  """
   defdelegate validate_settings(changeset), to: Annon.Plugins.ACL.SettingsValidator
   defdelegate settings_validation_schema(), to: Annon.Plugins.ACL.SettingsValidator
 
-  @doc false
-  def call(%Conn{private: %{api_config: %APISchema{plugins: plugins, request: %{path: api_path}}}} = conn, _opts)
-    when is_list(plugins) do
-    plugins
-    |> find_plugin_settings()
+  def execute(%Conn{} = conn, %{api: %{request: %{path: api_path}}}, settings) do
+    settings
     |> do_execute(api_path, conn)
     |> send_response(conn)
   end
-  def call(conn, _), do: conn
 
-  defp do_execute(nil, _api_path, _conn), do: :ok
-  defp do_execute(%Plugin{settings: %{"rules" => rules}},
-               api_path,
-               %Conn{private: %{scopes: scopes}} = conn) do
-    scopes
-    |> validate_scopes(rules, api_path, Map.take(conn, [:request_path, :method]))
+  defp do_execute(%{"rules" => rules}, api_path, %Conn{private: %{scopes: scopes}} = conn) do
+    validate_scopes(scopes, rules, api_path, Map.take(conn, [:request_path, :method]))
   end
-  defp do_execute(%Plugin{settings: %{"rules" => _}}, _api_path, _conn), do: {:error, :no_scopes_is_set}
-  defp do_execute(_plugin, _api_path, _conn), do: :ok
+  defp do_execute(%{"rules" => _}, _api_path, _conn),
+    do: {:error, :no_scopes_is_set}
+  defp do_execute(_plugin, _api_path, _conn),
+    do: :ok
 
   defp validate_scopes(nil, _server_rules, _api_path, _conn_data),
     do: {:error, :no_scopes_is_set}

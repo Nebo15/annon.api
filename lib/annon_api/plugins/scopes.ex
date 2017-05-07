@@ -2,31 +2,19 @@ defmodule Annon.Plugins.Scopes do
   @moduledoc """
   This plugin receives user scopes from PCM by party_id.
   """
-  use Annon.Plugin,
-    plugin_name: "scopes"
-
-  alias Plug.Conn
-  alias Annon.Configuration.Schemas.Plugin
-  alias Annon.Configuration.Schemas.API, as: APISchema
+  use Annon.Plugin, plugin_name: "scopes"
   alias Annon.Plugins.Scopes.JWTStrategy
   alias Annon.Plugins.Scopes.PCMStrategy
   alias Annon.Plugins.Scopes.OAuth2Strategy
   alias Annon.Helpers.Response
   alias EView.Views.Error, as: ErrorView
 
-  @doc """
-  Settings validator delegate.
-  """
   defdelegate validate_settings(changeset), to: Annon.Plugins.Scopes.SettingsValidator
   defdelegate settings_validation_schema(), to: Annon.Plugins.Scopes.SettingsValidator
 
-  def call(%Conn{private: %{api_config: %APISchema{plugins: plugins}}} = conn, _opts)
-    when is_list(plugins) do
-    plugins
-    |> find_plugin_settings()
-    |> do_execute(conn)
+  def execute(%Conn{} = conn, _request, settings) do
+    get_scopes(conn, settings)
   end
-  def call(conn, _), do: conn
 
   defp get_scopes(conn, %{"strategy" => "jwt"}) do
     scopes =
@@ -71,12 +59,6 @@ defmodule Annon.Plugins.Scopes do
     Conn.put_private(conn, :scopes, scopes)
   end
   defp get_scopes(_, _), do: []
-
-  defp do_execute(%Plugin{settings: settings}, conn) do
-    conn
-    |> get_scopes(settings)
-  end
-  defp do_execute(_, conn), do: conn
 
   defp return_401(conn, message) do
     "401.json"

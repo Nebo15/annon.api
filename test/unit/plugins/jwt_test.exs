@@ -14,9 +14,8 @@ defmodule Annon.Plugins.JWTTest do
 
     :get
     |> prepare_conn(api.request)
-    |> Map.put(:private, %{api_config: %{api | plugins: [jwt_plugin]}})
     |> Map.put(:req_headers, [{"authorization", "Bearer #{jwt_token("super_coolHacker")}bad"}])
-    |> Annon.Plugins.JWT.call(%{})
+    |> Annon.Plugins.JWT.execute(%{api: api}, jwt_plugin.settings)
     |> assert_conn_status(401)
   end
 
@@ -28,9 +27,8 @@ defmodule Annon.Plugins.JWTTest do
 
     %Plug.Conn{private: %{jwt_token: %Joken.Token{} = jwt_token}} = :get
     |> prepare_conn(jwt_plugin.api.request)
-    |> Map.put(:private, %{api_config: %{ jwt_plugin.api | plugins: [jwt_plugin]}})
     |> Map.put(:req_headers, [ {"authorization", "Bearer #{jwt_token("super_coolHacker")}"}])
-    |> Annon.Plugins.JWT.call(%{})
+    |> Annon.Plugins.JWT.execute(%{api: api}, jwt_plugin.settings)
 
     assert @payload == jwt_token.claims
   end
@@ -43,9 +41,8 @@ defmodule Annon.Plugins.JWTTest do
 
     :get
     |> prepare_conn(jwt_plugin.api.request)
-    |> Map.put(:private, %{api_config: %{ jwt_plugin.api | plugins: [jwt_plugin]}})
     |> Map.put(:req_headers, [ {"authorization", "Bearer #{jwt_token("super_coolHacker")}"}])
-    |> Annon.Plugins.JWT.call(%{})
+    |> Annon.Plugins.JWT.execute(%{api: api}, jwt_plugin.settings)
     |> assert_conn_status(501)
   end
 
@@ -58,8 +55,7 @@ defmodule Annon.Plugins.JWTTest do
     %Plug.Conn{private: private} =
       :get
       |> prepare_conn(jwt_plugin.api.request)
-      |> Map.put(:private, %{api_config: %{ jwt_plugin.api | plugins: [jwt_plugin]}})
-      |> Annon.Plugins.JWT.call(%{})
+      |> Annon.Plugins.JWT.execute(%{api: api}, jwt_plugin.settings)
 
     refute Map.has_key?(private, :jwt_token)
   end
@@ -73,9 +69,8 @@ defmodule Annon.Plugins.JWTTest do
     %Plug.Conn{private: private} =
       :get
       |> prepare_conn(jwt_plugin.api.request)
-      |> Map.put(:private, %{api_config: %{ jwt_plugin.api | plugins: [jwt_plugin]}})
       |> Map.put(:req_headers, [ {"authorization", "Unkown #{jwt_token("super_coolHacker")}"}])
-      |> Annon.Plugins.JWT.call(%{})
+      |> Annon.Plugins.JWT.execute(%{api: api}, jwt_plugin.settings)
 
     refute Map.has_key?(private, :jwt_token)
   end
@@ -90,7 +85,7 @@ defmodule Annon.Plugins.JWTTest do
     :get
     |> prepare_conn(jwt_plugin.api.request)
     |> Map.put(:private, %{api_config: jwt_plugin.api})
-    |> Annon.Plugins.JWT.call(%{})
+    |> Annon.Plugins.JWT.execute(%{api: api}, jwt_plugin.settings)
     |> assert_conn_status(nil)
   end
 
@@ -102,9 +97,8 @@ defmodule Annon.Plugins.JWTTest do
 
     :get
     |> prepare_conn(jwt_plugin.api.request)
-    |> Map.put(:private, %{api_config: %{ jwt_plugin.api | plugins: [jwt_plugin]}})
     |> Map.put(:req_headers, [ {"authorization", "Bearer #{jwt_token("super_coolHacker")}"}])
-    |> Annon.Plugins.JWT.call(%{})
+    |> Annon.Plugins.JWT.execute(%{api: api}, jwt_plugin.settings)
     |> assert_conn_status(501)
   end
 
@@ -117,15 +111,6 @@ defmodule Annon.Plugins.JWTTest do
 
     assert %Ecto.Changeset{valid?: false, errors: errors} = changeset
     assert settings: {"required property signature was not present", [validation: :required]} in errors
-  end
-
-  test "apis model don't have plugins" do
-    api = Annon.ConfigurationFactory.build(:api)
-
-    :get
-    |> prepare_conn(api.request)
-    |> Annon.Plugins.JWT.call(%{})
-    |> assert_conn_status(nil)
   end
 
   defp prepare_conn(method, request) do

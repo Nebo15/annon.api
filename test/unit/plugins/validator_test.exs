@@ -17,37 +17,36 @@ defmodule Annon.Plugins.ValidatorTest do
       "required" => ["bar"]
     }
 
-    model = Annon.ConfigurationFactory.build(:api, %{
+    settings = %{"rules" => [%{"methods" => ["POST"], "path" => ".*", "schema" => schema}]}
+
+    api = Annon.ConfigurationFactory.build(:api, %{
       plugins: [
         Annon.ConfigurationFactory.build(:validator_plugin, %{
-          settings: %{
-            "rules" => [%{"methods" => ["POST"], "path" => ".*", "schema" => schema}]
-          }
+          settings: settings
         })
       ]
     })
+
+    request = %{api: api}
 
     conn = :post
     |> conn("/", Poison.encode!(%{}))
 
     conn
     |> Map.put(:body_params, %{"foo" =>  "100500", "bar" => "a"})
-    |> put_private(:api_config, model)
-    |> Annon.Plugins.Validator.call([])
+    |> Annon.Plugins.Validator.execute(request, settings)
     |> assert_conn_status(422)
     |> assert_halt
 
     conn
     |> Map.put(:body_params, %{"foo" =>  100500, "bar" => "a"})
-    |> put_private(:api_config, model)
-    |> Annon.Plugins.Validator.call([])
+    |> Annon.Plugins.Validator.execute(request, settings)
     |> assert_conn_status(nil)
     |> assert_not_halt
 
     conn
     |> Map.put(:body_params, %{"foo" =>  100500})
-    |> put_private(:api_config, model)
-    |> Annon.Plugins.Validator.call([])
+    |> Annon.Plugins.Validator.execute(request, settings)
     |> assert_conn_status(422)
     |> assert_halt
   end
