@@ -2,7 +2,7 @@ defmodule Annon.Plugins.Idempotency do
   @moduledoc """
   [Request Idempotency plugin](http://docs.annon.apiary.io/#reference/plugins/idempotency).
   """
-  use Annon.Plugin, plugin_name: "idempotency"
+  use Annon.Plugin, plugin_name: :idempotency
   alias Annon.Requests.Log
   alias Annon.Requests.Request, as: RequestSchema
   alias EView.Views.Error, as: ErrorView

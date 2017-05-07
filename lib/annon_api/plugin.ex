@@ -27,7 +27,7 @@ defmodule Annon.Plugin do
         throw "You need to pass `:plugin_name` when using Annon.Plugin"
       end
 
-      @plugin_features compile_time_opts |> Keyword.fetch!(:plugin_name) |> String.to_atom() |> get_plugin_features()
+      @plugin_features compile_time_opts |> Keyword.fetch!(:plugin_name) |> get_plugin_features()
 
       @doc """
       Loads Plugin features from application configuration and modifies request features.

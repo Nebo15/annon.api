@@ -4,7 +4,7 @@ defmodule Annon.Plugins.UARestriction do
 
   TODO: refactor validation from this file and pre-compile patterns for reuse
   """
-  use Annon.Plugin, plugin_name: "ua_restriction"
+  use Annon.Plugin, plugin_name: :ua_restriction
   alias EView.Views.Error, as: ErrorView
   alias Annon.Helpers.Response
   require Logger

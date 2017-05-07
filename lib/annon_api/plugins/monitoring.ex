@@ -6,7 +6,7 @@ defmodule Annon.Plugins.Monitoring do
 
   It can be used with [DataDog agent](http://datadoghq.com).
   """
-  use Annon.Plugin, plugin_name: "monitoring"
+  use Annon.Plugin, plugin_name: :monitoring
   alias Plug.Conn
 
   def execute(%Conn{} = conn, %{api: api, start_time: request_start_time}, _settings) do

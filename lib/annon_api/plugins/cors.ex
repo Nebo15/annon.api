@@ -2,7 +2,7 @@ defmodule Annon.Plugins.CORS do
   @moduledoc """
   This plugin controls cross-origin resource sharing.
   """
-  use Annon.Plugin, plugin_name: "cors"
+  use Annon.Plugin, plugin_name: :cors
 
   def validate_settings(changeset),
     do: changeset

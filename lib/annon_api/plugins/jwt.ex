@@ -5,7 +5,7 @@ defmodule Annon.Plugins.JWT do
   It's implemented mainly to be used with [Auth0](https://auth0.com/),
   but it should support any JWT-based authentication providers.
   """
-  use Annon.Plugin, plugin_name: "jwt"
+  use Annon.Plugin, plugin_name: :jwt
   import Joken
   alias Joken.Token
   alias EView.Views.Error, as: ErrorView

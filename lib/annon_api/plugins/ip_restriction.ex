@@ -6,7 +6,7 @@ defmodule Annon.Plugins.IPRestriction do
   Also you can use it in Consumer plugin settings overrides to limit IP's from which specific consumer
   can request your API.
   """
-  use Annon.Plugin, plugin_name: "ip_restriction"
+  use Annon.Plugin, plugin_name: :ip_restriction
   import Annon.Helpers.IP
   alias EView.Views.Error, as: ErrorView
   alias Annon.Helpers.Response

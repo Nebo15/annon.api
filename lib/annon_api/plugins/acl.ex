@@ -4,7 +4,7 @@ defmodule Annon.Plugins.ACL do
 
   It allows to set list of scopes that is required for path relative to an API.
   """
-  use Annon.Plugin, plugin_name: "acl"
+  use Annon.Plugin, plugin_name: :acl
   alias EView.Views.Error, as: ErrorView
   alias Annon.Helpers.Response
   require Logger

@@ -5,7 +5,7 @@ defmodule Annon.Plugins.Logger do
 
   All stored records can be accessible via [management API](http://docs.annon.apiary.io/#reference/requests).
   """
-  use Annon.Plugin, plugin_name: "logger"
+  use Annon.Plugin, plugin_name: :logger
   alias Annon.Requests.Log
   require Logger
 

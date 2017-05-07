@@ -2,7 +2,7 @@ defmodule Annon.Plugins.Scopes do
   @moduledoc """
   This plugin receives user scopes from PCM by party_id.
   """
-  use Annon.Plugin, plugin_name: "scopes"
+  use Annon.Plugin, plugin_name: :scopes
   alias Annon.Plugins.Scopes.JWTStrategy
   alias Annon.Plugins.Scopes.PCMStrategy
   alias Annon.Plugins.Scopes.OAuth2Strategy

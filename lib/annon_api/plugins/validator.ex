@@ -6,7 +6,7 @@ defmodule Annon.Plugins.Validator do
   It's response structure described in
   our [API Manifest](http://docs.apimanifest.apiary.io/#introduction/interacting-with-api/errors).
   """
-  use Annon.Plugin, plugin_name: "validator"
+  use Annon.Plugin, plugin_name: :validator
   alias Annon.Helpers.Response
 
   defdelegate validate_settings(changeset), to: Annon.Plugins.Validator.SettingsValidator

@@ -3,7 +3,7 @@ defmodule Annon.Plugins.Proxy do
   [Proxy](http://docs.annon.apiary.io/#reference/plugins/proxy) - is a core plugin that
   sends incoming request to an upstream back-ends.
   """
-  use Annon.Plugin, plugin_name: "proxy"
+  use Annon.Plugin, plugin_name: :proxy
   import Annon.Helpers.IP
 
   defdelegate validate_settings(changeset), to: Annon.Plugins.Proxy.SettingsValidator
