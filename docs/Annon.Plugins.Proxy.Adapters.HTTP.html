@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.HTTPServer.Supervisor – annon_api v0.2.62</title>
+    <title>Annon.Plugins.Proxy.Adapters.HTTP – annon_api v0.2.62</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items-d0dd9f6923.js"></script>
@@ -59,14 +59,14 @@
 
       <h1>
         <small class="visible-xs">annon_api v0.2.62</small>
-        Annon.HTTPServer.Supervisor
+        Annon.Plugins.Proxy.Adapters.HTTP
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>HTTPServer supervisor manages opened HTTP and HTTP ports for API Gateway.</p>
+          <p>HTTP(s) requests adapter that sends body as-is via HTTPPoison.</p>
 
         </section>
       
@@ -88,7 +88,7 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#start_link/0">start_link()</a>
+    <a href="#dispatch/2">dispatch(upstream_request, conn)</a>
   </div>
   
 </div>
@@ -111,13 +111,13 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="start_link/0">
+          <div class="detail" id="dispatch/2">
   
   <div class="detail-header">
-    <a href="#start_link/0" class="detail-link" title="Link to this function">
+    <a href="#dispatch/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">start_link()</span>
+    <span class="signature">dispatch(upstream_request, conn)</span>
     
     
     

@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Plugins.Proxy – annon_api v0.2.61</title>
+    <title>Annon.Plugins.Proxy – annon_api v0.2.62</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-a198e1a3ee.js"></script>
+    <script src="dist/sidebar_items-d0dd9f6923.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.61
+        v0.2.62
       </h2>
     </div>
     
@@ -58,7 +58,7 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.61</small>
+        <small class="visible-xs">annon_api v0.2.62</small>
         Annon.Plugins.Proxy
         
         
@@ -89,7 +89,7 @@ sends incoming request to an upstream back-ends.</p>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#do_request/3">do_request(link, conn, method)</a>
+    <a href="#drop_stripped_headers/2">drop_stripped_headers(upstream_request, arg2)</a>
   </div>
   
 </div>
@@ -104,18 +104,6 @@ sends incoming request to an upstream back-ends.</p>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#log/2">log(data, type)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#make_link/3">make_link(proxy, api_path, conn)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
     <a href="#prepare/1">prepare(request)</a>
   </div>
   
@@ -125,23 +113,11 @@ sends incoming request to an upstream back-ends.</p>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#put_additional_headers/2">put_additional_headers(headers, conn)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
     <a href="#settings_validation_schema/0">settings_validation_schema()</a>
   </div>
   
     <div class="summary-synopsis"><p>See <a href="Annon.Plugins.Proxy.SettingsValidator.html#settings_validation_schema/0"><code class="inline">Annon.Plugins.Proxy.SettingsValidator.settings_validation_schema/0</code></a></p>
 </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#skip_filtered_headers/2">skip_filtered_headers(conn, arg2)</a>
-  </div>
   
 </div>
 <div class="summary-row">
@@ -172,13 +148,13 @@ sends incoming request to an upstream back-ends.</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="do_request/3">
+          <div class="detail" id="drop_stripped_headers/2">
   
   <div class="detail-header">
-    <a href="#do_request/3" class="detail-link" title="Link to this function">
+    <a href="#drop_stripped_headers/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">do_request(link, conn, method)</span>
+    <span class="signature">drop_stripped_headers(upstream_request, arg2)</span>
     
     
     
@@ -211,36 +187,6 @@ sends incoming request to an upstream back-ends.</p>
 
   </section>
 </div>
-<div class="detail" id="log/2">
-  
-  <div class="detail-header">
-    <a href="#log/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">log(data, type)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="make_link/3">
-  
-  <div class="detail-header">
-    <a href="#make_link/3" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">make_link(proxy, api_path, conn)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
 <div class="detail" id="prepare/1">
   
   <div class="detail-header">
@@ -257,21 +203,6 @@ sends incoming request to an upstream back-ends.</p>
 
   </section>
 </div>
-<div class="detail" id="put_additional_headers/2">
-  
-  <div class="detail-header">
-    <a href="#put_additional_headers/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">put_additional_headers(headers, conn)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
 <div class="detail" id="settings_validation_schema/0">
   
   <div class="detail-header">
@@ -286,21 +217,6 @@ sends incoming request to an upstream back-ends.</p>
   <section class="docstring">
     <p>See <a href="Annon.Plugins.Proxy.SettingsValidator.html#settings_validation_schema/0"><code class="inline">Annon.Plugins.Proxy.SettingsValidator.settings_validation_schema/0</code></a>.</p>
 
-  </section>
-</div>
-<div class="detail" id="skip_filtered_headers/2">
-  
-  <div class="detail-header">
-    <a href="#skip_filtered_headers/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">skip_filtered_headers(conn, arg2)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
   </section>
 </div>
 <div class="detail" id="validate_settings/1">
