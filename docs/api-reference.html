@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>API Reference – annon_api v0.2.56</title>
+    <title>API Reference – annon_api v0.2.57</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-95cccaf607.js"></script>
+    <script src="dist/sidebar_items-bf0992a6fe.js"></script>
   </head>
   <body data-type="extras">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.56
+        v0.2.57
       </h2>
     </div>
     
@@ -58,7 +58,7 @@
 
 
 <h1>
-  <small class="visible-xs">annon_api v0.2.56</small>
+  <small class="visible-xs">annon_api v0.2.57</small>
   API Reference
 </h1>
 
@@ -201,27 +201,6 @@ access to the application’s data layer</p>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="Annon.Helpers.JsonSchemaValidator.html">Annon.Helpers.JsonSchemaValidator</a></div>
-  
-    <div class="summary-synopsis"><p>This module provides <a href="http://json-schema.org/">JSON Schema</a> validator for a plugin settings</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Annon.Helpers.Latency.html">Annon.Helpers.Latency</a></div>
-  
-    <div class="summary-synopsis"><p>Helper for tracing client latency</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Annon.Helpers.Pagination.html">Annon.Helpers.Pagination</a></div>
-  
-    <div class="summary-synopsis"><p>Functions related to paging</p>
-</div>
-  
-</div>
-<div class="summary-row">
   <div class="summary-signature"><a href="Annon.Helpers.Response.html">Annon.Helpers.Response</a></div>
   
     <div class="summary-synopsis"><p>This is a helper module for dispatching requests</p>
@@ -273,6 +252,13 @@ whenever there was change done by a Management API</p>
   
 </div>
 <div class="summary-row">
+  <div class="summary-signature"><a href="Annon.ManagementAPI.Pagination.html">Annon.ManagementAPI.Pagination</a></div>
+  
+    <div class="summary-synopsis"><p>Functions related to paging</p>
+</div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature"><a href="Annon.ManagementAPI.Render.html">Annon.ManagementAPI.Render</a></div>
   
     <div class="summary-synopsis"><p>Use this helpers when you want to render result in a controllers</p>
@@ -315,6 +301,41 @@ whenever there was change done by a Management API</p>
   
 </div>
 <div class="summary-row">
+  <div class="summary-signature"><a href="Annon.Plugin.APILoader.html">Annon.Plugin.APILoader</a></div>
+  
+    <div class="summary-synopsis"><p>This plugin should be first in plugs pipeline,
+because it’s used to fetch all settings and decide which ones should be applied for current consumer request</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Annon.Plugin.JsonSchemaValidator.html">Annon.Plugin.JsonSchemaValidator</a></div>
+  
+    <div class="summary-synopsis"><p>This module provides <a href="http://json-schema.org/">JSON Schema</a> validator for a plugin settings</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Annon.Plugin.LatencyRecorder.html">Annon.Plugin.LatencyRecorder</a></div>
+  
+    <div class="summary-synopsis"><p>This plug calculates and assigns request latencies after request was sent to the Consumer</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Annon.Plugin.RequestTimeRecorder.html">Annon.Plugin.RequestTimeRecorder</a></div>
+  
+    <div class="summary-synopsis"><p>This plugin writes request start time to conn.assigns</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Annon.Plugin.UpstreamRequest.html">Annon.Plugin.UpstreamRequest</a></div>
+  
+    <div class="summary-synopsis"></div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature"><a href="Annon.Plugins.ACL.html">Annon.Plugins.ACL</a></div>
   
     <div class="summary-synopsis"><p><a href="http://docs.annon.apiary.io/#reference/plugins/acl">Access Control Layer (ACL) plugin</a></p>
@@ -329,24 +350,9 @@ whenever there was change done by a Management API</p>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="Annon.Plugins.APILoader.html">Annon.Plugins.APILoader</a></div>
-  
-    <div class="summary-synopsis"><p>This plugin should be first in plugs pipeline,
-because it’s used to fetch all settings and decide which ones should be applied for current consumer request</p>
-</div>
-  
-</div>
-<div class="summary-row">
   <div class="summary-signature"><a href="Annon.Plugins.CORS.html">Annon.Plugins.CORS</a></div>
   
     <div class="summary-synopsis"><p>This plugin controls cross-origin resource sharing</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Annon.Plugins.ClientLatency.html">Annon.Plugins.ClientLatency</a></div>
-  
-    <div class="summary-synopsis"><p>This plugin writes request start time to conn.assigns</p>
 </div>
   
 </div>
@@ -420,12 +426,6 @@ sends incoming request to an upstream back-ends</p>
   
     <div class="summary-synopsis"><p>Validation rules for Proxy plugin settings</p>
 </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Annon.Plugins.Proxy.UpstreamRequest.html">Annon.Plugins.Proxy.UpstreamRequest</a></div>
-  
-    <div class="summary-synopsis"></div>
   
 </div>
 <div class="summary-row">

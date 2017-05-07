@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Plugins.ClientLatency – annon_api v0.2.56</title>
+    <title>Annon.Plugin.LatencyRecorder – annon_api v0.2.57</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-95cccaf607.js"></script>
+    <script src="dist/sidebar_items-bf0992a6fe.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.56
+        v0.2.57
       </h2>
     </div>
     
@@ -58,15 +58,15 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.56</small>
-        Annon.Plugins.ClientLatency
+        <small class="visible-xs">annon_api v0.2.57</small>
+        Annon.Plugin.LatencyRecorder
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>This plugin writes request start time to conn.assigns.</p>
+          <p>This plug calculates and assigns request latencies after request was sent to the Consumer.</p>
 
         </section>
       
@@ -87,6 +87,12 @@
       <a href="#functions">Functions</a>
     </h2>
     <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#assign_latencies/1">assign_latencies(conn)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature">
     <a href="#call/2">call(conn, opts)</a>
   </div>
@@ -117,7 +123,22 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="call/2">
+          <div class="detail" id="assign_latencies/1">
+  
+  <div class="detail-header">
+    <a href="#assign_latencies/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">assign_latencies(conn)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="call/2">
   
   <div class="detail-header">
     <a href="#call/2" class="detail-link" title="Link to this function">

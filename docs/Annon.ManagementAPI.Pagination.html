@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Plugins.Proxy.UpstreamRequest – annon_api v0.2.56</title>
+    <title>Annon.ManagementAPI.Pagination – annon_api v0.2.57</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-95cccaf607.js"></script>
+    <script src="dist/sidebar_items-bf0992a6fe.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.56
+        v0.2.57
       </h2>
     </div>
     
@@ -58,15 +58,16 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.56</small>
-        Annon.Plugins.Proxy.UpstreamRequest
+        <small class="visible-xs">annon_api v0.2.57</small>
+        Annon.ManagementAPI.Pagination
         
         
       </h1>
 
       
         <section id="moduledoc">
-          
+          <p>Functions related to paging</p>
+
         </section>
       
 
@@ -87,20 +88,14 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_upstream_path/4">get_upstream_path(request_path, proxy_path, api_path, bool)</a>
+    <a href="#get_limit/2">get_limit(map, default \\ nil)</a>
   </div>
-  
-    <div class="summary-synopsis"><p>Constructs upstream path based on <a href="http://docs.annon.apiary.io/#reference/plugins/proxy">Proxy Docs</a></p>
-</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#to_upstream_url!/1">to_upstream_url!(upstream_request)</a>
+    <a href="#page_info_from/1">page_info_from(params)</a>
   </div>
-  
-    <div class="summary-synopsis"><p>Constructs upstream URL by UpstreamRequest schema</p>
-</div>
   
 </div>
 
@@ -122,44 +117,36 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="get_upstream_path/4">
+          <div class="detail" id="get_limit/2">
+  
+    <span id="get_limit/1" />
   
   <div class="detail-header">
-    <a href="#get_upstream_path/4" class="detail-link" title="Link to this function">
+    <a href="#get_limit/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_upstream_path(request_path, proxy_path, api_path, bool)</span>
+    <span class="signature">get_limit(map, default \\ nil)</span>
     
     
     
   </div>
   <section class="docstring">
-    <p>Constructs upstream path based on <a href="http://docs.annon.apiary.io/#reference/plugins/proxy">Proxy Docs</a>.</p>
-
+    
   </section>
 </div>
-<div class="detail" id="to_upstream_url!/1">
+<div class="detail" id="page_info_from/1">
   
   <div class="detail-header">
-    <a href="#to_upstream_url!/1" class="detail-link" title="Link to this function">
+    <a href="#page_info_from/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">to_upstream_url!(upstream_request)</span>
+    <span class="signature">page_info_from(params)</span>
     
     
     
   </div>
   <section class="docstring">
-    <p>Constructs upstream URL by UpstreamRequest schema.</p>
-<p>Raises <a href="https://hexdocs.pm/elixir/RuntimeError.html"><code class="inline">RuntimeError</code></a> if host or schema is not set.</p>
-<h2 id="to_upstream_url!/1-examples" class="section-heading">
-  <a href="#to_upstream_url!/1-examples" class="hover-link"><i class="icon-link"></i></a>
-  Examples
-</h2>
-
-<pre><code class="iex elixir">iex&gt; to_upstream_url(%UpstreamRequest{})
-&quot;http://example.com:80/subpath?a=b#hello&quot;</code></pre>
-
+    
   </section>
 </div>
 
