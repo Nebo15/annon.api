@@ -75,8 +75,8 @@ defmodule Annon.Acceptance.Smoke.AclTest do
       |> Poison.decode!
 
     assert "Your JWT token is invalid." == response["error"]["message"]
-    assert "access_denied" == response["error"]["type"]
-    assert 401 == response["meta"]["code"]
+    assert "validation_failed" == response["error"]["type"]
+    assert 422 == response["meta"]["code"]
 
     assert_logs_are_written(response)
   end

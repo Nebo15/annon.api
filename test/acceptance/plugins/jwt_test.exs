@@ -115,7 +115,7 @@ defmodule Annon.Acceptance.Plugins.JWTTest do
     } = api_path
     |> put_public_url()
     |> get!([{"authorization", "Bearer #{auth_token}"}])
-    |> assert_status(401)
+    |> assert_status(422)
     |> get_body()
   end
 

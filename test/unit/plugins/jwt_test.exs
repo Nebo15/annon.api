@@ -16,7 +16,7 @@ defmodule Annon.Plugins.JWTTest do
     |> prepare_conn(api.request)
     |> Map.put(:req_headers, [{"authorization", "Bearer #{jwt_token("super_coolHacker")}bad"}])
     |> Annon.Plugins.JWT.execute(%{api: api}, jwt_plugin.settings)
-    |> assert_conn_status(401)
+    |> assert_conn_status(422)
   end
 
   test "jwt sucessful auth", %{api: api} do
@@ -88,18 +88,19 @@ defmodule Annon.Plugins.JWTTest do
     |> assert_conn_status(nil)
   end
 
-  test "jwt without signature", %{api: api} do
-    jwt_plugin = Annon.ConfigurationFactory.build(:jwt_plugin, %{
-      api: api,
-      settings: %{}
-    })
+  # TODO: Validate this when plugin is created
+  # test "jwt without signature", %{api: api} do
+  #   jwt_plugin = Annon.ConfigurationFactory.build(:jwt_plugin, %{
+  #     api: api,
+  #     settings: %{}
+  #   })
 
-    :get
-    |> prepare_conn(jwt_plugin.api.request)
-    |> Map.put(:req_headers, [ {"authorization", "Bearer #{jwt_token("super_coolHacker")}"}])
-    |> Annon.Plugins.JWT.execute(%{api: api}, jwt_plugin.settings)
-    |> assert_conn_status(501)
-  end
+  #   :get
+  #   |> prepare_conn(jwt_plugin.api.request)
+  #   |> Map.put(:req_headers, [ {"authorization", "Bearer #{jwt_token("super_coolHacker")}"}])
+  #   |> Annon.Plugins.JWT.execute(%{api: api}, jwt_plugin.settings)
+  #   |> assert_conn_status(501)
+  # end
 
   test "jwt required signature in settings" do
     params = %{name: "jwt", settings: %{"some" => "value"}}
