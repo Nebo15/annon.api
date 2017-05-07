@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>API Reference – annon_api v0.2.58</title>
+    <title>API Reference – annon_api v0.2.59</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-bf0992a6fe.js"></script>
+    <script src="dist/sidebar_items-624a4e57a1.js"></script>
   </head>
   <body data-type="extras">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.58
+        v0.2.59
       </h2>
     </div>
     
@@ -58,7 +58,7 @@
 
 
 <h1>
-  <small class="visible-xs">annon_api v0.2.58</small>
+  <small class="visible-xs">annon_api v0.2.59</small>
   API Reference
 </h1>
 
@@ -301,10 +301,10 @@ whenever there was change done by a Management API</p>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="Annon.Plugin.APILoader.html">Annon.Plugin.APILoader</a></div>
+  <div class="summary-signature"><a href="Annon.Plugin.FeatureRequirements.html">Annon.Plugin.FeatureRequirements</a></div>
   
-    <div class="summary-synopsis"><p>This plugin should be first in plugs pipeline,
-because it’s used to fetch all settings and decide which ones should be applied for current consumer request</p>
+    <div class="summary-synopsis"><p>This module provides a struct that allows Plugins to set their requirements
+on a request processing</p>
 </div>
   
 </div>
@@ -316,16 +316,16 @@ because it’s used to fetch all settings and decide which ones should be applie
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="Annon.Plugin.LatencyRecorder.html">Annon.Plugin.LatencyRecorder</a></div>
+  <div class="summary-signature"><a href="Annon.Plugin.PipelinePlug.html">Annon.Plugin.PipelinePlug</a></div>
   
-    <div class="summary-synopsis"><p>This plug calculates and assigns request latencies after request was sent to the Consumer</p>
+    <div class="summary-synopsis"><p>This module inject Plugins pipeline into Plug.Router</p>
 </div>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="Annon.Plugin.RequestTimeRecorder.html">Annon.Plugin.RequestTimeRecorder</a></div>
+  <div class="summary-signature"><a href="Annon.Plugin.Request.html">Annon.Plugin.Request</a></div>
   
-    <div class="summary-synopsis"><p>This plugin writes request start time to conn.assigns</p>
+    <div class="summary-synopsis"><p>This module provides structure that goes trough Plugins execution pipeline</p>
 </div>
   
 </div>

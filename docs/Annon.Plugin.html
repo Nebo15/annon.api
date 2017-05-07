@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Plugin – annon_api v0.2.58</title>
+    <title>Annon.Plugin – annon_api v0.2.59</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-bf0992a6fe.js"></script>
+    <script src="dist/sidebar_items-624a4e57a1.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.58
+        v0.2.59
       </h2>
     </div>
     
@@ -58,7 +58,7 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.58</small>
+        <small class="visible-xs">annon_api v0.2.59</small>
         Annon.Plugin
         
           <small>behaviour</small>
@@ -102,10 +102,37 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#c:find_plugin_settings/1">find_plugin_settings(list)</a>
+    <a href="#c:execute/3">execute(conn, plugin_request, plugin_settings)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Find plugin settings in <code class="inline">plugins</code> list. Returns <code class="inline">nil</code> if plugin is not found</p>
+    <div class="summary-synopsis"><p>Executes Plugin</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:prepare/1">prepare(plugin_request)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Initializes Plugin</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:settings_validation_schema/0">settings_validation_schema()</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Validates JSON Schema that can be used to validate Plugin settings</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:validate_settings/1">validate_settings(changeset)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Validates Plugin settings</p>
 </div>
   
 </div>
@@ -128,27 +155,106 @@
             </a>
             Callbacks
           </h1>
-          <div class="detail" id="c:find_plugin_settings/1">
+          <div class="detail" id="c:execute/3">
   
   <div class="detail-header">
-    <a href="#c:find_plugin_settings/1" class="detail-link" title="Link to this callback">
+    <a href="#c:execute/3" class="detail-link" title="Link to this callback">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">find_plugin_settings(list)</span>
+    <span class="signature">execute(conn, plugin_request, plugin_settings)</span>
     
     
     
       <div class="specs">
         
-          <pre>find_plugin_settings([<a href="Annon.Configuration.Schemas.Plugin.html#t:t/0">Annon.Configuration.Schemas.Plugin.t</a>]) ::
-  nil |
-  <a href="Annon.Configuration.Schemas.Plugin.html#t:t/0">Annon.Configuration.Schemas.Plugin.t</a></pre>
+          <pre>execute(conn :: <a href="https://hexdocs.pm/plug/1.3.5/Plug.Conn.html#t:t/0">Plug.Conn.t</a>, plugin_request :: %Annon.Plugin.Request{api: term, conn: term, feature_requirements: term, plugins: term, start_time: term}, plugin_settings :: %Annon.Configuration.Schemas.Plugin{__meta__: term, api: term, api_id: term, id: term, inserted_at: term, is_enabled: term, name: term, settings: term, updated_at: term}) :: %Annon.Plugin.Request{api: term, conn: term, feature_requirements: term, plugins: term, start_time: term}</pre>
         
       </div>
     
   </div>
   <section class="docstring">
-    <p>Find plugin settings in <code class="inline">plugins</code> list. Returns <code class="inline">nil</code> if plugin is not found.</p>
+    <p>Executes Plugin.</p>
+<p>Receives <a href="Annon.Plugin.Request.html"><code class="inline">Annon.Plugin.Request</code></a> structure, which allows Plugin to:</p>
+<ul>
+<li>Set properties for upstream request (in <code class="inline">conn.assigns.upstream_request</code>).
+</li>
+<li>Modify connection if this feature was enabled.
+</li>
+</ul>
+
+  </section>
+</div>
+<div class="detail" id="c:prepare/1">
+  
+  <div class="detail-header">
+    <a href="#c:prepare/1" class="detail-link" title="Link to this callback">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">prepare(plugin_request)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>prepare(plugin_request :: %Annon.Plugin.Request{api: term, conn: term, feature_requirements: term, plugins: term, start_time: term}) :: %Annon.Plugin.Request{api: term, conn: term, feature_requirements: term, plugins: term, start_time: term}</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Initializes Plugin.</p>
+<p>Receives <a href="Annon.Plugin.Request.html"><code class="inline">Annon.Plugin.Request</code></a> structure and returns it, which allows Plugin to:</p>
+<ul>
+<li>Remove itself from execution pipeline if it should be disabled. (Eg. plugin that it depends on is not enabled.)
+</li>
+<li>Set required execution features. (Eg. if it wants log writes to be consistent.)
+</li>
+</ul>
+<p>Connection MUST NOT be changed in a preparation pipeline.</p>
+
+  </section>
+</div>
+<div class="detail" id="c:settings_validation_schema/0">
+  
+  <div class="detail-header">
+    <a href="#c:settings_validation_schema/0" class="detail-link" title="Link to this callback">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">settings_validation_schema()</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>settings_validation_schema() :: <a href="https://hexdocs.pm/elixir/Map.html#t:t/0">Map.t</a></pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Validates JSON Schema that can be used to validate Plugin settings.</p>
+
+  </section>
+</div>
+<div class="detail" id="c:validate_settings/1">
+  
+  <div class="detail-header">
+    <a href="#c:validate_settings/1" class="detail-link" title="Link to this callback">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">validate_settings(changeset)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>validate_settings(changeset :: <a href="https://hexdocs.pm/ecto/2.1.4/Ecto.Changeset.html#t:t/0">Ecto.Changeset.t</a>) :: <a href="https://hexdocs.pm/ecto/2.1.4/Ecto.Changeset.html#t:t/0">Ecto.Changeset.t</a></pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Validates Plugin settings.</p>
 
   </section>
 </div>
