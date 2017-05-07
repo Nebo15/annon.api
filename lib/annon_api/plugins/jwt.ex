@@ -8,7 +8,6 @@ defmodule Annon.Plugins.JWT do
   use Annon.Plugin, plugin_name: :jwt
   import Joken
   alias Joken.Token
-  alias EView.Views.Error, as: ErrorView
   alias Annon.Helpers.Response
   require Logger
 

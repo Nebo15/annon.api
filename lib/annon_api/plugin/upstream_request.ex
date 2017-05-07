@@ -51,6 +51,8 @@ defmodule Annon.Plugin.UpstreamRequest do
   defp get_port(port, _scheme) when is_binary(port),
     do: port
 
+  defp strip_leading_slash("/"),
+    do: ""
   defp strip_leading_slash("/" <> path),
     do: path
   defp strip_leading_slash(path) when is_binary(path),
@@ -73,12 +75,11 @@ defmodule Annon.Plugin.UpstreamRequest do
   @doc """
   Constructs upstream path based on [Proxy Docs](http://docs.annon.apiary.io/#reference/plugins/proxy).
   """
-  def get_upstream_path(request_path, "/", _api_path, false),
+  def get_upstream_path(request_path, proxy_path, _api_path, false) when proxy_path == "/" or is_nil(proxy_path),
     do: request_path
   def get_upstream_path(request_path, proxy_path, _api_path, false),
     do: "#{proxy_path}#{request_path}"
-
-  def get_upstream_path(request_path, "/", api_path, true) do
+  def get_upstream_path(request_path, proxy_path, api_path, true) when proxy_path == "/" or is_nil(proxy_path) do
     api_path = String.trim_trailing(api_path, "/")
     case String.trim_leading(request_path, api_path) do
       "" ->
@@ -90,5 +91,19 @@ defmodule Annon.Plugin.UpstreamRequest do
   def get_upstream_path(request_path, proxy_path, api_path, true) do
     upstream_path = String.trim_leading(request_path, api_path)
     "#{proxy_path}#{upstream_path}"
+  end
+
+  @doc """
+  Puts header to Upstream Request.
+  """
+  def put_header(%UpstreamRequest{headers: headers} = request, key, value) when is_binary(key) and is_binary(value) do
+    %{request | headers: List.keystore(headers, key, 0, {key, value})}
+  end
+
+  @doc """
+  Deletes header from Upstream Request.
+  """
+  def delete_header(%UpstreamRequest{headers: headers} = request, key) when is_binary(key) do
+    %{request | headers: List.keydelete(headers, key, 0)}
   end
 end

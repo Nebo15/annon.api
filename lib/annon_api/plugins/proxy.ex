@@ -5,188 +5,120 @@ defmodule Annon.Plugins.Proxy do
   """
   use Annon.Plugin, plugin_name: :proxy
   import Annon.Helpers.IP
+  alias Annon.Plugin.UpstreamRequest
 
   defdelegate validate_settings(changeset), to: Annon.Plugins.Proxy.SettingsValidator
   defdelegate settings_validation_schema(), to: Annon.Plugins.Proxy.SettingsValidator
 
-  def execute(%Conn{} = conn, %{api: %{request: %{path: api_path}}}, settings) do
-    conn =
-      settings
-      |> get_additional_headers()
-      |> put_request_id(conn)
-      |> put_additional_headers(conn)
-      |> skip_filtered_headers(settings)
+  def execute(%Conn{} = conn, %{api: api}, settings) do
+    upstream_request = build_upstream_request(conn, api, settings)
+    proxy_adapter = Annon.Plugins.Proxy.Adapters.HTTP
 
-    do_proxy(settings, api_path, conn)
-  end
-
-  defp do_proxy(settings, api_path, %Conn{method: method} = conn) do
     request_start_time = System.monotonic_time()
 
-    log({settings, api_path, conn.request_path}, "request settings")
-    response = settings
-    |> make_link(api_path, conn)
-    |> log("make_link")
-    |> do_request(conn, method)
-    |> log("do_request")
+    %{
+      headers: resp_headers,
+      body: resp_body,
+      status_code: resp_status_code
+    } = proxy_adapter.dispatch(upstream_request, conn)
 
     request_end_time = System.monotonic_time()
     upstream_latency = System.convert_time_unit(request_end_time - request_start_time, :native, :micro_seconds)
-    conn = Conn.assign(conn, :latencies_upstream, upstream_latency)
 
-    response.headers
+    resp_headers
     |> Enum.reduce(conn, fn
-      {"x-request-id", _header_value}, conn ->
-        conn
-      {header_key, header_value}, conn ->
-        conn |> Conn.put_resp_header(String.downcase(header_key), header_value)
+      {"x-request-id", _header_value}, conn -> conn
+      {header_key, header_value}, conn -> Conn.put_resp_header(conn, String.downcase(header_key), header_value)
     end)
-    |> Conn.send_resp(response.status_code, response.body)
+    |> Conn.assign(:latencies_upstream, upstream_latency)
+    |> Conn.send_resp(resp_status_code, resp_body)
     |> Conn.halt
   end
 
-  def log(data, type) do
-    require Logger
-    Logger.debug(inspect {type, data})
-    data
-  end
+  defp build_upstream_request(conn, %{request: %{path: api_path}}, settings) do
+    %Conn{
+      request_path: request_path,
+      assigns: %{upstream_request: upstream_request},
+      query_string: query_string
+    } = conn
 
-  def do_request(link, conn, method) do
-    case Plug.Conn.get_req_header(conn, "content-type") do
-      [content_type] ->
-        if String.starts_with?(content_type, "multipart/form-data") do
-          do_fileupload_request_cont(link, conn, method)
-        else
-          do_request_cont(link, conn, method)
-        end
-      _ ->
-        do_request_cont(link, conn, method)
-    end
-  end
+    strip_api_path? = Map.get(settings, "strip_api_path", false)
+    proxy_path = Map.get(settings, "path", nil)
+    upstream_scheme = Map.get(settings, "scheme", Atom.to_string(conn.scheme))
+    upstream_host = Map.fetch!(settings, "host")
+    upstream_port = Map.get(settings, "port", nil)
+    upstream_path = UpstreamRequest.get_upstream_path(request_path, proxy_path, api_path, strip_api_path?)
 
-  defp do_fileupload_request_cont(link, conn, _method) do
-    req_headers = Enum.reject(conn.req_headers, fn {k, _} ->
-      String.downcase(k) in ["content-type", "content-disposition", "content-length", "host"]
-    end)
-
-    multipart = Annon.Plugins.Proxy.MultipartForm.reconstruct_using(conn.body_params)
-
-    HTTPoison.post!(link, {:multipart, multipart}, req_headers)
-  end
-
-  defp do_request_cont(link, conn, method) do
-    body = conn
-    |> Map.get(:body_params)
-    |> Poison.encode!()
-
-    method = method
-    |> String.to_atom
-
-    timeout_opts = [connect_timeout: 30_000, recv_timeout: 30_000, timeout: 30_000]
-
-    headers =
-      conn
-      |> Map.get(:req_headers)
-      |> Enum.reject(fn {a, _} -> a == "host" end)
-
-    case HTTPoison.request(method, link, body, headers, timeout_opts) do
-      {:ok, response} ->
-        response
-      {:error, %{reason: reason}} ->
-        %{
-          status_code: 502,
-          body: Annon.Helpers.Response.build_upstream_error(reason),
-          headers: []
-        }
-    end
-  end
-
-  def make_link(proxy, api_path, conn) do
-    proxy
-    |> put_scheme(conn)
-    |> put_host(proxy)
-    |> put_port(proxy)
-    |> put_path(proxy, api_path, conn)
-    |> put_query(proxy, conn)
-  end
-
-  defp put_request_id(headers, conn) do
-    id = conn
-    |> Conn.get_resp_header("x-request-id")
-    |> Enum.at(0)
-
-    [%{"x-request-id" => id}] ++ headers
-  end
-
-  defp put_x_forwarded_for_header(headers, conn), do: headers ++ [%{"x-forwarded-for" => ip_to_string(conn.remote_ip)}]
-
-  defp put_x_consumer_scopes_header(headers, %Conn{private: %{scopes: nil}}),
-    do: headers
-  defp put_x_consumer_scopes_header(headers, %Conn{private: %{scopes: scopes}}) do
-    headers ++ [%{"x-consumer-scopes" => Enum.join(scopes, " ")}]
-  end
-  defp put_x_consumer_scopes_header(headers, _), do: headers
-
-  defp put_x_consumer_id_header(headers, %Conn{private: %{consumer_id: nil}}), do: headers
-  defp put_x_consumer_id_header(headers, %Conn{private: %{consumer_id: consumer_id}}) do
-    headers ++ [%{"x-consumer-id" => consumer_id}]
-  end
-  defp put_x_consumer_id_header(headers, _), do: headers
-
-  defp remove_protected_headers(conn) do
-    :annon_api
-    |> Confex.get(:protected_headers)
-    |> Enum.reduce(conn, fn(header, conn) -> Conn.delete_req_header(conn, header) end)
-  end
-
-  def put_additional_headers(headers, conn) do
-    conn = remove_protected_headers(conn)
-    headers
+    %{upstream_request |
+      scheme: upstream_scheme,
+      host: upstream_host,
+      port: upstream_port,
+      path: upstream_path,
+      query_params: query_string
+    }
+    |> put_request_id_header(conn)
+    |> put_connection_headers(conn)
     |> put_x_forwarded_for_header(conn)
+    |> put_x_forwarded_proto_header(conn)
     |> put_x_consumer_scopes_header(conn)
     |> put_x_consumer_id_header(conn)
-    |> Enum.reduce(conn, fn(header, conn) ->
-      with {k, v} <- header |> Enum.at(0), do: Conn.put_req_header(conn, k, v)
+    |> put_additional_headers(settings)
+    |> drop_stripped_headers(settings)
+  end
+
+  defp put_request_id_header(upstream_request, conn) do
+    request_id =
+      conn
+      |> Conn.get_resp_header("x-request-id")
+      |> Enum.at(0)
+
+    UpstreamRequest.put_header(upstream_request, "x-request-id", request_id)
+  end
+
+  defp put_connection_headers(upstream_request, %Conn{req_headers: headers}) do
+    protected_headers = Confex.get(:annon_api, :protected_headers)
+
+    Enum.reduce(headers, upstream_request, fn {header, value}, upstream_request ->
+      if header in protected_headers,
+          do: upstream_request,
+        else: UpstreamRequest.put_header(upstream_request, header, value)
     end)
   end
 
-  defp get_additional_headers(%{"additional_headers" => headers}),
-    do: headers
-  defp get_additional_headers(_), do: []
-
-  def skip_filtered_headers(conn, %{"strip_headers" => true, "headers_to_strip" => headers}) do
-    Enum.reduce(headers, conn, &Plug.Conn.delete_req_header(&2, &1))
+  defp put_additional_headers(upstream_request, %{"additional_headers" => headers}) do
+    Enum.reduce(headers, upstream_request, fn header_obj, upstream_request ->
+      [{header, value}] = Map.to_list(header_obj)
+      UpstreamRequest.put_header(upstream_request, header, value)
+    end)
   end
-  def skip_filtered_headers(conn, _plugin), do: conn
+  defp put_additional_headers(upstream_request, _conn),
+    do: upstream_request
 
-  defp put_scheme(%{"scheme" => scheme}, _conn), do: scheme <> "://"
-  defp put_scheme(_, %Conn{scheme: scheme}), do: Atom.to_string(scheme) <> "://"
+  defp put_x_forwarded_for_header(upstream_request, %{remote_ip: remote_ip}),
+    do: UpstreamRequest.put_header(upstream_request, "x-forwarded-for", ip_to_string(remote_ip))
 
-  defp put_host(pr, %{"host" => host}), do: pr <> host
-  defp put_host(pr, %{}), do: pr
+  defp put_x_forwarded_proto_header(upstream_request, %{scheme: scheme}),
+    do: UpstreamRequest.put_header(upstream_request, "x-forwarded-proto", Atom.to_string(scheme))
 
-  defp put_port(pr, %{"port" => port}) when is_number(port), do: pr |> put_port(%{"port" => Integer.to_string(port)})
-  defp put_port(pr, %{"port" => port}), do: pr <> ":" <> port
-  defp put_port(pr, %{}), do: pr
+  def drop_stripped_headers(upstream_request, %{"strip_headers" => true, "headers_to_strip" => headers})
+    when not is_nil(headers),
+    do: Enum.reduce(headers, upstream_request, &UpstreamRequest.delete_header(&2, &1))
+  def drop_stripped_headers(upstream_request, _settings),
+    do: upstream_request
 
-  defp put_path(pr, %{"strip_api_path" => true, "path" => "/"}, api_path, %Conn{request_path: request_path}),
-    do: pr <> String.replace_prefix(request_path, api_path, "")
+  # TODO: Move to scopes plugin
+  defp put_x_consumer_scopes_header(upstream_request, %Conn{private: %{scopes: scopes}}) when not is_nil(scopes) do
+    scope = Enum.join(scopes, " ")
+    UpstreamRequest.put_header(upstream_request, "x-consumer-scope", scope)
+    UpstreamRequest.put_header(upstream_request, "x-consumer-scopes", scope) # TODO: deprecated
+  end
+  defp put_x_consumer_scopes_header(upstream_request, _conn),
+    do: upstream_request
 
-  defp put_path(pr, %{"strip_api_path" => true, "path" => proxy_path}, api_path, %Conn{request_path: request_path}),
-    do: pr <> proxy_path <> String.replace_prefix(request_path, api_path, "")
-
-  defp put_path(pr, %{"strip_api_path" => true}, api_path, %Conn{request_path: request_path}),
-    do: pr <> String.replace_prefix(request_path, api_path, "")
-
-  defp put_path(pr, %{"path" => "/"}, _api_path, %Conn{request_path: request_path}),
-    do: pr <> request_path
-
-  defp put_path(pr, %{"path" => proxy_path}, _api_path, %Conn{request_path: request_path}),
-    do: pr <> proxy_path <> request_path
-
-  defp put_path(pr, _proxy_path, _api_path, %Conn{request_path: request_path}),
-    do: pr <> request_path
-
-  defp put_query(pr, _, %Conn{query_string: ""}), do: pr
-  defp put_query(pr, _, %Conn{query_string: query_string}), do: pr <> "?" <> query_string
+  # TODO: Move to scopes plugin
+  defp put_x_consumer_id_header(upstream_request, %Conn{private: %{consumer_id: consumer_id}})
+    when not is_nil(consumer_id),
+    do: UpstreamRequest.put_header(upstream_request, "x-consumer-id", consumer_id)
+  defp put_x_consumer_id_header(upstream_request, _conn),
+    do: upstream_request
 end

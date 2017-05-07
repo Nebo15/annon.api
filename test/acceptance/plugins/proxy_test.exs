@@ -225,13 +225,13 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
 
       assert api_path == uri
 
-      assert %{"request" => %{"uri" => uri}} = "#{api_path}/foo"
+      assert %{"request" => %{"uri" => uri}} = "#{api_path}foo"
       |> put_public_url()
       |> get!()
       |> get_body()
       |> get_mock_response()
 
-      assert api_path <> "/foo" == uri
+      assert api_path <> "foo" == uri
     end
 
     test "when `strip_api_path` is false and proxy path is not set", %{api_id: api_id, api_path: api_path} do
@@ -249,13 +249,13 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
 
       assert api_path == uri
 
-      assert %{"request" => %{"uri" => uri}} = "#{api_path}/foo"
+      assert %{"request" => %{"uri" => uri}} = "#{api_path}foo"
       |> put_public_url()
       |> get!()
       |> get_body()
       |> get_mock_response()
 
-      assert api_path <> "/foo" == uri
+      assert api_path <> "foo" == uri
     end
 
     test "when `strip_api_path` is false and proxy path is set", %{api_id: api_id, api_path: api_path} do
@@ -276,13 +276,13 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
 
       assert proxy_path <> api_path == uri
 
-      assert %{"request" => %{"uri" => uri}} = "#{api_path}/foo"
+      assert %{"request" => %{"uri" => uri}} = "#{api_path}foo"
       |> put_public_url()
       |> get!()
       |> get_body()
       |> get_mock_response()
 
-      assert proxy_path <> api_path <> "/foo" == uri
+      assert proxy_path <> api_path <> "foo" == uri
     end
 
     test "when `strip_api_path` is true and proxy path is /", %{api_id: api_id, api_path: api_path} do
@@ -303,7 +303,7 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
 
       assert "/" == uri
 
-      assert %{"request" => %{"uri" => uri}} = "#{api_path}/foo"
+      assert %{"request" => %{"uri" => uri}} = "#{api_path}foo"
       |> put_public_url()
       |> get!()
       |> get_body()
@@ -327,7 +327,7 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
 
       assert "/" == uri
 
-      assert %{"request" => %{"uri" => uri}} = "#{api_path}/foo"
+      assert %{"request" => %{"uri" => uri}} = "#{api_path}foo"
       |> put_public_url()
       |> get!()
       |> get_body()
@@ -354,13 +354,13 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
 
       assert proxy_path == uri
 
-      assert %{"request" => %{"uri" => uri}} = "#{api_path}/foo"
+      assert %{"request" => %{"uri" => uri}} = "#{api_path}foo"
       |> put_public_url()
       |> get!()
       |> get_body()
       |> get_mock_response()
 
-      assert proxy_path <> "/foo" == uri
+      assert proxy_path <> "foo" == uri
     end
   end
 
