@@ -20,7 +20,7 @@ defmodule Annon.Monitoring do
     }
   end
 
-  def get_node_status() do
+  def get_node_status do
     node = Atom.to_string(:erlang.node())
     otp_release = to_string(:erlang.system_info(:otp_release))
     run_queue = :erlang.statistics(:run_queue)
