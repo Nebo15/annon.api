@@ -53,7 +53,9 @@ config :annon_api, :management_http,
   port: {:system, :integer, "GATEWAY_MANAGEMENT_PORT", 4001}
 
 config :annon_api,
-  protected_headers: ["x-consumer-id", "x-consumer-scope", "x-consumer-token", "x-consumer-token-id"]
+  protected_headers: {:system, :list, "PROTECTED_HEADERS", [
+    "x-consumer-id", "x-consumer-scope", "x-consumer-token", "x-consumer-token-id"
+  ]}
 
 config :skycluster,
   strategy: {:system, :module, "SKYCLUSTER_STRATEGY", Cluster.Strategy.Epmd}
