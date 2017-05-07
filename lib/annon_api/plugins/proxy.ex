@@ -63,6 +63,7 @@ defmodule Annon.Plugins.Proxy do
     |> put_x_consumer_scopes_header(conn)
     |> put_x_consumer_id_header(conn)
     |> put_additional_headers(settings)
+    |> maybe_preserve_host_header(conn, settings)
     |> drop_stripped_headers(settings)
   end
 
@@ -99,6 +100,11 @@ defmodule Annon.Plugins.Proxy do
 
   defp put_x_forwarded_proto_header(upstream_request, %{scheme: scheme}),
     do: UpstreamRequest.put_header(upstream_request, "x-forwarded-proto", Atom.to_string(scheme))
+
+  defp maybe_preserve_host_header(upstream_request, %{host: conn_host}, %{"preserve_host" => true}),
+    do: UpstreamRequest.put_header(upstream_request, "host", conn_host)
+  defp maybe_preserve_host_header(upstream_request, _conn, _settings),
+    do: upstream_request
 
   def drop_stripped_headers(upstream_request, %{"stripped_headers" => headers})
     when not is_nil(headers),

@@ -14,25 +14,15 @@ defmodule Annon.Plugins.Proxy.SettingsValidator do
       "required" => ["host"],
       "additionalProperties" => false,
       "properties" => %{
-        "strip_api_path" => %{
-          "type" => "boolean"
-        },
-        "additional_headers" => %{
-          "type" => "array",
-          "uniqueItems" => true,
-          "items" => %{
-            "type" => "string"
-          }
-        },
-        "scheme" => %{
-          "enum" => ["http", "https"]
-        },
         "host" => %{
           "type" => "string",
           "oneOf" => [
             %{"format" => "hostname"},
             %{"format" => "ipv4"}
           ]
+        },
+        "scheme" => %{
+          "enum" => ["http", "https"]
         },
         "port" => %{
           "type" => "integer"
@@ -44,12 +34,22 @@ defmodule Annon.Plugins.Proxy.SettingsValidator do
         "strip_api_path" => %{
           "type" => "boolean"
         },
+        "preserve_host" => %{
+          "type" => "boolean"
+        },
         "additional_headers" => %{
           "type" => "array",
           "items" => %{
             "type" => "object"
           }
-        }
+        },
+        "stripped_headers" => %{
+          "type" => "array",
+          "uniqueItems" => true,
+          "items" => %{
+            "type" => "string"
+          }
+        },
       },
     }
   end
