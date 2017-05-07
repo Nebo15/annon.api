@@ -11,8 +11,9 @@ defmodule Annon.Plugin do
     * `init/1` settings required by Plug behavior, that will pass opts to `init/2` methods.
     * `find_plugin_settings/1` method that allows to find plugin settings and make sure that it's enabled.
   """
-  alias Annon.Configuration.Schemas.Plugin, as: PluginSchema
   alias Annon.Plugin.Request
+
+  defstruct name: nil, module: nil, is_enabled: nil, settings: nil, deps: [], features: [], system?: false
 
   defmacro __using__(compile_time_opts) do
     quote bind_quoted: [compile_time_opts: compile_time_opts], location: :keep do
@@ -26,9 +27,7 @@ defmodule Annon.Plugin do
         throw "You need to pass `:plugin_name` when using Annon.Plugin"
       end
 
-      @plugin_name compile_time_opts |> Keyword.fetch!(:plugin_name) |> String.to_atom()
-      @plugin_info :annon_api |> Application.get_env(:plugins) |> Keyword.fetch!(@plugin_name)
-      @plugin_features @plugin_info |> Keyword.get(:features, []) |> Enum.map(&({&1, true})) |> Enum.into(%{})
+      @plugin_features compile_time_opts |> Keyword.fetch!(:plugin_name) |> String.to_atom() |> get_plugin_features()
 
       @doc """
       Loads Plugin features from application configuration and modifies request features.
@@ -37,19 +36,33 @@ defmodule Annon.Plugin do
         def prepare(%Request{} = request),
           do: request
       else
-        def prepare(%Request{} = request) do
-          feature_requirements =
-            Enum.reduce(@plugin_features, request.feature_requirements, fn feature, requirements ->
-              Map.put(requirements, feature, true)
-            end)
-
-          %{request | feature_requirements: feature_requirements}
-        end
+        def prepare(%Request{} = request),
+          do: update_feature_requirements(request, @plugin_features)
       end
     end
   end
 
-  defstruct name: nil, module: nil, is_enabled: nil, settings: nil, deps: [], features: [], system?: false
+  @doc """
+  Returns list of processing pipeline features that Plugin requires to work properly.
+  """
+  def get_plugin_features(plugin_name) when is_atom(plugin_name) do
+    :annon_api
+    |> Application.get_env(:plugins)
+    |> Keyword.fetch!(plugin_name)
+    |> Keyword.get(:features, [])
+  end
+
+  @doc """
+  Updates `Annon.Plugin.Request` structure by raising flag on features in `features` list.
+  """
+  def update_feature_requirements(%Request{} = request, features) do
+    feature_requirements =
+      Enum.reduce(features, request.feature_requirements, fn feature, requirements ->
+        Map.put(requirements, feature, true)
+      end)
+
+    %{request | feature_requirements: feature_requirements}
+  end
 
   @doc """
   Initializes Plugin.
@@ -74,7 +87,7 @@ defmodule Annon.Plugin do
   """
   @callback execute(conn :: Plug.Conn.t,
                     plugin_request :: %Annon.Plugin.Request{},
-                    plugin_settings :: %PluginSchema{}) :: %Annon.Plugin.Request{}
+                    plugin_settings :: %Annon.Configuration.Schemas.Plugin{}) :: %Annon.Plugin.Request{}
 
   @doc """
   Validates Plugin settings.

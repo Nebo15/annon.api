@@ -84,7 +84,6 @@ defmodule Annon.Plugins.JWTTest do
 
     :get
     |> prepare_conn(jwt_plugin.api.request)
-    |> Map.put(:private, %{api_config: jwt_plugin.api})
     |> Annon.Plugins.JWT.execute(%{api: api}, jwt_plugin.settings)
     |> assert_conn_status(nil)
   end

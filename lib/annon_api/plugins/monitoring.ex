@@ -9,7 +9,7 @@ defmodule Annon.Plugins.Monitoring do
   use Annon.Plugin, plugin_name: "monitoring"
   alias Plug.Conn
 
-  def execute(%Conn{} = conn, %{api: api}, _settings) do
+  def execute(%Conn{} = conn, %{api: api, start_time: request_start_time}, _settings) do
     api_tags = tags(conn, api)
 
     conn
@@ -20,12 +20,11 @@ defmodule Annon.Plugins.Monitoring do
 
     conn
     |> Conn.register_before_send(&write_metrics(&1, api))
-    |> Conn.register_before_send(&assign_latencies/1)
+    |> Conn.register_before_send(&assign_latencies(&1, request_start_time))
   end
 
-  defp assign_latencies(conn) do
+  defp assign_latencies(conn, request_start_time) do
     request_end_time = System.monotonic_time()
-    request_start_time = Map.get(conn.assigns, :request_start_time)
     latencies_client = System.convert_time_unit(request_end_time - request_start_time, :native, :micro_seconds)
     request_duration = latencies_client - Map.get(conn.assigns, :latencies_upstream, 0)
 
