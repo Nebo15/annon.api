@@ -1,5 +1,5 @@
 defmodule Annon.Plugins.Proxy.Adapters.HTTP do
-  @doc """
+  @moduledoc """
   HTTP(s) requests adapter that sends body as-is via HTTPPoison.
   """
   alias Annon.Plugin.UpstreamRequest
