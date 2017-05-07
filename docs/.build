@@ -5,7 +5,7 @@ fonts/icomoon.eot
 fonts/icomoon.svg
 fonts/icomoon.ttf
 fonts/icomoon.woff
-dist/sidebar_items-d0dd9f6923.js
+dist/sidebar_items-e50c490f85.js
 api-reference.html
 readme.html
 404.html
@@ -25,7 +25,6 @@ Annon.Configuration.Schemas.Plugin.html
 Annon.ConfigurationFactory.html
 Annon.ConnCase.html
 Annon.DataCase.html
-Annon.HTTPServer.Supervisor.html
 Annon.Helpers.IP.html
 Annon.Helpers.Response.html
 Annon.ManagementAPI.ConfigReloaderPlug.html
@@ -68,6 +67,7 @@ Annon.Plugins.UARestriction.SettingsValidator.html
 Annon.Plugins.Validator.html
 Annon.Plugins.Validator.SettingsValidator.html
 Annon.PrivateRouter.html
+Annon.PublicAPI.Supervisor.html
 Annon.PublicRouter.html
 Annon.ReleaseTasks.html
 Annon.Requests.Log.html
