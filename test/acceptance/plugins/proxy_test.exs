@@ -365,7 +365,7 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
   end
 
   describe "additional headers" do
-    test "x-consumer-id and x-consumer-scopes are set correctly", %{api_id: api_id, api_path: api_path} do
+    test "x-consumer-id and x-consumer-scope are set correctly", %{api_id: api_id, api_path: api_path} do
       proxy_path = "/proxy"
 
       api_id
@@ -404,12 +404,12 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
       |> get_body()
       |> get_in(["data", "request", "headers"])
 
-      actual_scopes = headers
-      |> Enum.filter_map(fn(x) -> Map.has_key?(x, "x-consumer-scopes") end, &(Map.get(&1, "x-consumer-scopes")))
+      actual_scope = headers
+      |> Enum.filter_map(fn(x) -> Map.has_key?(x, "x-consumer-scope") end, &(Map.get(&1, "x-consumer-scope")))
       |> Enum.at(0)
       |> String.split(" ")
 
-      assert expected_scopes == actual_scopes
+      assert expected_scopes == actual_scope
 
       actual_party_id = headers
       |> Enum.filter_map(fn(x) -> Map.has_key?(x, "x-consumer-id") end, &(Map.get(&1, "x-consumer-id")))

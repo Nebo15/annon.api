@@ -107,11 +107,8 @@ defmodule Annon.Plugins.Proxy do
     do: upstream_request
 
   # TODO: Move to scopes plugin
-  defp put_x_consumer_scopes_header(upstream_request, %Conn{private: %{scopes: scopes}}) when not is_nil(scopes) do
-    scope = Enum.join(scopes, " ")
-    UpstreamRequest.put_header(upstream_request, "x-consumer-scope", scope)
-    UpstreamRequest.put_header(upstream_request, "x-consumer-scopes", scope) # TODO: deprecated
-  end
+  defp put_x_consumer_scopes_header(upstream_request, %Conn{private: %{scopes: scopes}}) when not is_nil(scopes),
+    do: UpstreamRequest.put_header(upstream_request, "x-consumer-scope", Enum.join(scopes, " "))
   defp put_x_consumer_scopes_header(upstream_request, _conn),
     do: upstream_request
 
