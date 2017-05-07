@@ -10,6 +10,7 @@ defmodule Annon.Requests.LogTest do
   describe "list_requests/1" do
     test "returns all requests" do
       assert {[], _paging} = Log.list_requests()
+      assert {[], _paging} = Log.list_requests(%{})
       request = RequestsFactory.insert(:request)
       assert {[^request], _paging} = Log.list_requests()
     end

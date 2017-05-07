@@ -9,6 +9,10 @@ defmodule Annon.Configuration.APITest do
 
   @create_attrs %{
     name: "An API",
+    description: "My lovely API",
+    docs_url: "http://example.com/",
+    health: "operational",
+    disclose_status: false,
     request: %{
       host: "www.example.com",
       methods: ["GET", "PUT"],
@@ -30,6 +34,7 @@ defmodule Annon.Configuration.APITest do
       api2 = ConfigurationFactory.insert(:api, name: "API one two")
       api3 = ConfigurationFactory.insert(:api, name: "API three")
 
+      assert {[^api1, ^api2, ^api3], _paging} = API.list_apis(%{})
       assert {[^api1, ^api2, ^api3], _paging} = API.list_apis(%{"name" => nil})
       assert {[], _paging} = API.list_apis(%{"name" => "unknown"})
       assert {[^api2], _paging} = API.list_apis(%{"name" => "two"})
@@ -126,6 +131,10 @@ defmodule Annon.Configuration.APITest do
 
       assert api.id == id
       assert api.name == @create_attrs.name
+      assert api.description == @create_attrs.description
+      assert api.docs_url == @create_attrs.docs_url
+      assert api.health == @create_attrs.health
+      assert api.disclose_status == @create_attrs.disclose_status
       assert api.request.host == @create_attrs.request.host
       assert api.request.methods == @create_attrs.request.methods
       assert api.request.path == @create_attrs.request.path
@@ -147,6 +156,10 @@ defmodule Annon.Configuration.APITest do
       assert api.id == old_api.id
       assert api.inserted_at == old_api.inserted_at
       assert api.name == @create_attrs.name
+      assert api.description == @create_attrs.description
+      assert api.docs_url == @create_attrs.docs_url
+      assert api.health == @create_attrs.health
+      assert api.disclose_status == @create_attrs.disclose_status
       assert api.request.host == @create_attrs.request.host
       assert api.request.methods == @create_attrs.request.methods
       assert api.request.path == @create_attrs.request.path
