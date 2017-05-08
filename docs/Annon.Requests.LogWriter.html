@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Plugins.Proxy – annon_api v0.2.68</title>
+    <title>Annon.Requests.LogWriter – annon_api v0.2.68</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items-54f5743012.js"></script>
@@ -59,15 +59,14 @@
 
       <h1>
         <small class="visible-xs">annon_api v0.2.68</small>
-        Annon.Plugins.Proxy
+        Annon.Requests.LogWriter
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p><a href="http://docs.annon.apiary.io/#reference/plugins/proxy">Proxy</a> - is a core plugin that
-sends incoming request to an upstream back-ends.</p>
+          <p>This module provides interface to synchronously or asynchronously create Log Entries.</p>
 
         </section>
       
@@ -89,43 +88,29 @@ sends incoming request to an upstream back-ends.</p>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#drop_stripped_headers/2">drop_stripped_headers(upstream_request, arg2)</a>
+    <a href="#create_request/1">create_request(attrs)</a>
   </div>
   
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#execute/3">execute(conn, map, settings)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Executes Plugin</p>
+    <div class="summary-synopsis"><p>Creates a Request</p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#prepare/1">prepare(request)</a>
+    <a href="#create_request_async/2">create_request_async(attrs, opts \\ [])</a>
   </div>
   
-    <div class="summary-synopsis"><p>Loads Plugin features from application configuration and modifies request features</p>
+    <div class="summary-synopsis"><p>Asynchronously creates a Request.
+If request insert operations is failed, error is logged to a console</p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#settings_validation_schema/0">settings_validation_schema()</a>
+    <a href="#start_link/1">start_link(opts \\ [])</a>
   </div>
   
-    <div class="summary-synopsis"><p>See <a href="Annon.Plugins.Proxy.SettingsValidator.html#settings_validation_schema/0"><code class="inline">Annon.Plugins.Proxy.SettingsValidator.settings_validation_schema/0</code></a></p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#validate_settings/1">validate_settings(changeset)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>See <a href="Annon.Plugins.Proxy.SettingsValidator.html#validate_settings/1"><code class="inline">Annon.Plugins.Proxy.SettingsValidator.validate_settings/1</code></a></p>
+    <div class="summary-synopsis"><p>Start a LogWriter worker</p>
 </div>
   
 </div>
@@ -148,90 +133,89 @@ sends incoming request to an upstream back-ends.</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="drop_stripped_headers/2">
+          <div class="detail" id="create_request/1">
   
   <div class="detail-header">
-    <a href="#drop_stripped_headers/2" class="detail-link" title="Link to this function">
+    <a href="#create_request/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">drop_stripped_headers(upstream_request, arg2)</span>
+    <span class="signature">create_request(attrs)</span>
     
     
     
   </div>
   <section class="docstring">
-    
+    <p>Creates a Request.</p>
+<h2 id="create_request/1-examples" class="section-heading">
+  <a href="#create_request/1-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; create_request(%{field: value})
+{:ok, %Annon.Requests.Request{}}
+
+iex&gt; create_request(%{field: bad_value})
+{:error, %Ecto.Changeset{}}</code></pre>
+
   </section>
 </div>
-<div class="detail" id="execute/3">
+<div class="detail" id="create_request_async/2">
+  
+    <span id="create_request_async/1" />
   
   <div class="detail-header">
-    <a href="#execute/3" class="detail-link" title="Link to this function">
+    <a href="#create_request_async/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">execute(conn, map, settings)</span>
+    <span class="signature">create_request_async(attrs, opts \\ [])</span>
     
     
     
   </div>
   <section class="docstring">
-    <p>Executes Plugin.</p>
-<p>Receives <a href="Annon.Plugin.Request.html"><code class="inline">Annon.Plugin.Request</code></a> structure, which allows Plugin to:</p>
+    <p>Asynchronously creates a Request.
+If request insert operations is failed, error is logged to a console.</p>
+<p>Accepts optional <code class="inline">opts</code> as <a href="https://hexdocs.pm/elixir/Keyword.html"><code class="inline">Keyword</code></a>:</p>
 <ul>
-<li>Set properties for upstream request (in <code class="inline">conn.assigns.upstream_request</code>).
-</li>
-<li>Modify connection if this feature was enabled.
+<li><code class="inline">name</code> - name or pid of a worker process.
 </li>
 </ul>
-<p>Callback implementation for <a href="Annon.Plugin.html#c:execute/3"><code class="inline">Annon.Plugin.execute/3</code></a>.</p>
+<h2 id="create_request_async/2-examples" class="section-heading">
+  <a href="#create_request_async/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; create_request(%{field: value})
+:ok
+
+iex&gt; create_request(%{field: bad_value})
+{:error, %Ecto.Changeset{}}</code></pre>
 
   </section>
 </div>
-<div class="detail" id="prepare/1">
+<div class="detail" id="start_link/1">
+  
+    <span id="start_link/0" />
   
   <div class="detail-header">
-    <a href="#prepare/1" class="detail-link" title="Link to this function">
+    <a href="#start_link/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">prepare(request)</span>
+    <span class="signature">start_link(opts \\ [])</span>
     
     
     
   </div>
   <section class="docstring">
-    <p>Loads Plugin features from application configuration and modifies request features.</p>
-
-  </section>
-</div>
-<div class="detail" id="settings_validation_schema/0">
-  
-  <div class="detail-header">
-    <a href="#settings_validation_schema/0" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">settings_validation_schema()</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    <p>See <a href="Annon.Plugins.Proxy.SettingsValidator.html#settings_validation_schema/0"><code class="inline">Annon.Plugins.Proxy.SettingsValidator.settings_validation_schema/0</code></a>.</p>
-
-  </section>
-</div>
-<div class="detail" id="validate_settings/1">
-  
-  <div class="detail-header">
-    <a href="#validate_settings/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">validate_settings(changeset)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    <p>See <a href="Annon.Plugins.Proxy.SettingsValidator.html#validate_settings/1"><code class="inline">Annon.Plugins.Proxy.SettingsValidator.validate_settings/1</code></a>.</p>
+    <p>Start a LogWriter worker.</p>
+<p><code class="inline">start_link</code> accepts optional <code class="inline">opts</code> as <a href="https://hexdocs.pm/elixir/Keyword.html"><code class="inline">Keyword</code></a>:</p>
+<ul>
+<li><code class="inline">name</code> - name for a worker process;
+</li>
+<li><code class="inline">subscriber</code> - name or pid of a process that wants to be notified when log is
+  written with <a href="#create_request_async/1"><code class="inline">create_request_async/1</code></a>.
+</li>
+</ul>
 
   </section>
 </div>

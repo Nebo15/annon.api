@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Requests.Log – annon_api v0.2.67</title>
+    <title>Annon.Requests.Log – annon_api v0.2.68</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-67ba9fa189.js"></script>
+    <script src="dist/sidebar_items-54f5743012.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.67
+        v0.2.68
       </h2>
     </div>
     
@@ -58,7 +58,7 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.67</small>
+        <small class="visible-xs">annon_api v0.2.68</small>
         Annon.Requests.Log
         
         
@@ -87,6 +87,15 @@
       <a href="#functions">Functions</a>
     </h2>
     <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#change_request/1">change_request(attrs)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Returns an <code class="inline">%Ecto.Changeset{}</code> for tracking Request changes</p>
+</div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature">
     <a href="#create_request/1">create_request(attrs \\ %{})</a>
   </div>
@@ -124,6 +133,15 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
+    <a href="#insert_request/1">insert_request(changeset)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Writes request to a database</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#list_requests/2">list_requests(conditions \\ %{}, paging \\ %Ecto.Paging{limit: 50})</a>
   </div>
   
@@ -150,7 +168,30 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="create_request/1">
+          <div class="detail" id="change_request/1">
+  
+  <div class="detail-header">
+    <a href="#change_request/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">change_request(attrs)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Returns an <code class="inline">%Ecto.Changeset{}</code> for tracking Request changes.</p>
+<h2 id="change_request/1-examples" class="section-heading">
+  <a href="#change_request/1-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; change_template(request_attrs)
+%Ecto.Changeset{source: %Request{}}</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="create_request/1">
   
     <span id="create_request/0" />
   
@@ -253,6 +294,32 @@ iex&gt; get_request(456)
 
 iex&gt; get_request_by([idempotency_key: &quot;bad_my_key&quot;])
 {:error, :not_found}</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="insert_request/1">
+  
+  <div class="detail-header">
+    <a href="#insert_request/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">insert_request(changeset)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Writes request to a database.</p>
+<h2 id="insert_request/1-examples" class="section-heading">
+  <a href="#insert_request/1-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; create_request(%Ecto.Changeset{})
+{:ok, %Annon.Requests.Request{}}
+
+iex&gt; create_request(%Ecto.Changeset{valid?: false})
+{:error, %Ecto.Changeset{}}</code></pre>
 
   </section>
 </div>
