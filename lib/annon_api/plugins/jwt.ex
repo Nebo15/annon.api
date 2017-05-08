@@ -15,18 +15,15 @@ defmodule Annon.Plugins.JWT do
   defdelegate settings_validation_schema(), to: Annon.Plugins.JWT.SettingsValidator
 
   def execute(%Conn{} = conn, _request, %{"signature" => signature}) do
-    with {:ok, encoded_token} <- get_bearer_token(conn),
-         {:ok, decoded_signature} <- Base.decode64(signature) do
-      encoded_token
-      |> token()
-      |> with_signer(hs256(decoded_signature))
-      |> verify()
-      |> evaluate(conn)
-    else
-      :error ->
-        # TODO: Validate this on plugin creation
-        Logger.error("Your JWT token secret MUST be base64 encoded")
-        Response.send_error(conn, :internal_error)
+    case get_bearer_token(conn) do
+      {:ok, encoded_token} ->
+        {:ok, decoded_signature} = Base.decode64(signature)
+
+        encoded_token
+        |> token()
+        |> with_signer(hs256(decoded_signature))
+        |> verify()
+        |> evaluate(conn)
       {:error, _} ->
         conn
     end

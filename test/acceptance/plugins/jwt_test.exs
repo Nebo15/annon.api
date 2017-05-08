@@ -69,6 +69,20 @@ defmodule Annon.Acceptance.Plugins.JWTTest do
       |> get_body()
     end
 
+    test "create with invalid signature", %{api_id: api_id} do
+      %{
+        "error" => %{
+          "invalid" => [%{"entry" => "$.settings.signature", "rules" => [
+            %{"rule" => "cast", "description" => "is not Base64 encoded"}
+          ]}]
+        }
+      } = "apis/#{api_id}/plugins"
+      |> put_management_url()
+      |> post!(%{name: "jwt", is_enabled: false, settings: %{"signature" => "not_encoded_string"}})
+      |> assert_status(422)
+      |> get_body()
+    end
+
     test "create duplicates", %{api_id: api_id} do
       jwt_plugin = :jwt_plugin
       |> build_factory_params()

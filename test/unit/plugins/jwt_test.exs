@@ -33,19 +33,6 @@ defmodule Annon.Plugins.JWTTest do
     assert @payload == jwt_token.claims
   end
 
-  test "jwt with not base64-encoded signature", %{api: api} do
-    jwt_plugin = Annon.ConfigurationFactory.build(:jwt_plugin, %{
-      api: api,
-      settings: %{"signature" => "teststring"}
-    })
-
-    :get
-    |> prepare_conn(jwt_plugin.api.request)
-    |> Map.put(:req_headers, [ {"authorization", "Bearer #{jwt_token("super_coolHacker")}"}])
-    |> Annon.Plugins.JWT.execute(%{api: api}, jwt_plugin.settings)
-    |> assert_conn_status(501)
-  end
-
   test "jwt without authorization header", %{api: api} do
     jwt_plugin = Annon.ConfigurationFactory.build(:jwt_plugin, %{
       api: api,
