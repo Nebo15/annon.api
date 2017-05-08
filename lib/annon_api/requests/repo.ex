@@ -8,7 +8,6 @@ defmodule Annon.Requests.Repo do
   Also, if Idempotency plug is enabled and `X-Idempotency-Key: <key>` header is sent by a consumer,
   you can expect an additional read request.
   """
-
   use Ecto.Repo, otp_app: :annon_api
   use Ecto.Pagging.Repo
 

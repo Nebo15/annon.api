@@ -58,15 +58,16 @@ defmodule Annon.Requests.LogWriterTest do
 
   describe "create_request_async/1" do
     setup do
-      opts = [subscriber: self(), name: Annon.Requests.LogWriterTest]
-      {:ok, worker_pid} = Annon.Requests.LogWriter.start_link(opts)
-
-      Ecto.Adapters.SQL.Sandbox.allow(Annon.Requests.Repo, self(), worker_pid)
-
-      {:ok, %{writer_pid: worker_pid, worker_opts: opts}}
+      LogWriter.subscribe(self())
+      low_writer_pid = Process.whereis(Annon.Requests.LogWriter)
+      Ecto.Adapters.SQL.Sandbox.allow(Annon.Requests.Repo, self(), low_writer_pid)
+      on_exit fn ->
+        LogWriter.unsubscribe(self())
+      end
+      :ok
     end
 
-    test "with valid data creates a request", %{worker_opts: opts} do
+    test "with valid data creates a request" do
       create_attrs = %{
         id: "6f40ea08-00f9-4912-9472-4cd789facfa1",
         idempotency_key: "cc9b19a8-4e6d-4237-9bb0-1137ab0d9f82",
@@ -101,7 +102,7 @@ defmodule Annon.Requests.LogWriterTest do
         }
       }
 
-      assert :ok = LogWriter.create_request_async(create_attrs, opts)
+      assert :ok = LogWriter.create_request_async(create_attrs)
       assert_receive {:ok, %Request{} = request}
 
       assert request.api.id == create_attrs.api.id
@@ -114,8 +115,8 @@ defmodule Annon.Requests.LogWriterTest do
       assert request.status_code == create_attrs.status_code
     end
 
-    test "with invalid data returns error changeset", %{worker_opts: opts} do
-      assert {:error, %Ecto.Changeset{}} = LogWriter.create_request_async(%{}, opts)
+    test "with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = LogWriter.create_request_async(%{})
     end
   end
 end
