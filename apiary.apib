@@ -742,7 +742,7 @@ If any other response is sent, Consumer will not be autheticated.
 
 + Request (application/json)
     + Attributes
-        + scopes (`Plugin_Auth__Request`)
+        + auth (`Plugin_Auth__Request`)
 
 + Response 200 (application/json)
     + Attributes (Response_OK)
@@ -1211,7 +1211,7 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 
 ## Authentication Plugin
 ### `Plugin_Auth__Request`
-+ name: scopes (string, required)
++ name: auth (string, required)
 + is_enabled: true (boolean)
 + One of
     + settings (Plugin_Auth__Settings_oAuth, fixed-type)
