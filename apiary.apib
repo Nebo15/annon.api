@@ -117,9 +117,14 @@ we can not guarantee that they always unique. API that was defined earlier will 
 higher priority, thus after creating overlapping API it won't work, but you won't break the one 
 that were working earlier.
 
+### Pattern Matching
 #### Wildcard Domains
 
-In API request settings you can use `%` to match any substring in a request host.
+In API request settings you can use `%` to match any substring in a request host. Eg: `%.example.com` will match `user1.example.com`.
+
+#### API Path
+
+In API request settings you can use `%` to match any substring in a request path. Eg: `/blog/%/comments` will match `/blog/my_post/comments` (and a `/blog/my_post/comments` since path is prefix for request).
 
 ## APIs [/apis]
 
@@ -264,16 +269,15 @@ Proxy allows:
 You can set `strip_api_path` setting if you want to exclude API-related prefix from upstream request.
 
 Request Path | Proxy Path | API Path | `strip_api_path` | Upstream Request
------- | -------- | ------ | ------- | --------
-`/`    | `/proxy` | `/api` | `false` | `/proxy/api/`
-`/foo` | `/proxy` | `/api` | `false` | `/proxy/api/foo`
-`/`    | `/` | `/api` | `false` | `/api/`
-`/foo` | `/` | `/api` | `false` | `/api/foo`
-`/`    | `/proxy` | `/api` | `true` | `/proxy/`
-`/foo` | `/proxy` | `/api` | `true` | `/proxy/foo`
-`/`    | `/` | `/api` | `true` | `/`
-`/foo` | `/` | `/api` | `true` | `/foo`
-
+------------ | ---------- | -------- | ------- | --------
+`/api`       | `/proxy`   | `/api`   | `false` | `/proxy/api`
+`/api/foo`   | `/proxy`   | `/api`   | `false` | `/proxy/api/foo`
+`/api`       | `/`        | `/api`   | `false` | `/api`
+`/api/foo`   | `/`        | `/api`   | `false` | `/api/foo`
+`/api`       | `/proxy`   | `/api`   | `true`  | `/proxy`
+`/api/foo`   | `/proxy`   | `/api`   | `true`  | `/proxy/foo`
+`/api`       | `/`        | `/api`   | `true`  | `/`
+`/api/foo`   | `/`        | `/api`   | `true`  | `/foo`
 
 ### Bind or Update Proxy Plugin [PUT]
 
@@ -296,6 +300,8 @@ Request Path | Proxy Path | API Path | `strip_api_path` | Upstream Request
 
 
 ## JWT Authrozation [/apis/{api_id}/plugins/jwt]
+
+**This plugin is deprecated.**
 
 ### General Information
 JWT is a authroization plugin that decodes JWT tokens received from api consumer (with a `signature` field that is set in settings).
@@ -360,6 +366,8 @@ To receive an valid JWT with scopes token you must:
         + data (`Plugin_JWT__Response`)
 
 ## Scopes Resolver [/apis/{api_id}/plugins/scopes]
+
+**This plugin is deprecated.**
 
 This plugin resolves scopes based on JWT token contents or by sending upstream request to authorization service.
 
@@ -616,6 +624,137 @@ On `GET`, `POST`, `PUT` and other requests:
             + code: 201 (number)
         + data (`Plugin_CORS__Response`)
 
+## Authentication [/apis/{api_id}/plugins/auth]
+
+**This plugin is in development.**
+
+This plugin authenticates API consumers by using a configured strategy.
+
+Right now it supports two strategies:
+
+- `jwt` - uses JSON Web Token to resolve consumer ID and scope.
+- `oauth` - uses token from `Authorization: Bearer <token>` header and subsequent request to resolve consumer ID and scope via third-party provider.
+
+### JWT Strategy
+
+Decodes JWT tokens received from API Consumer and validates it signature by a configured secret key.
+If token is invalid, appropriate error response will be send back to api consumer.
+
+It requests `consumer_id` to be present in token itself, but Consumer `scope` can be resolved by:
+
+1. Adding `scope` field in JWT token.
+2. Subsequent request to a third-party provider.
+
+**Warning!** JWT signature should be Base64 encoded. Some providers (for example, Auth0) already encode it for you.
+
+#### Consumer Usage
+
+Consumer should send `Authorization: Bearer <jwt_token>` header with his requests.
+
+#### Subsequent requests
+
+You can configure this strategy to resolve consumer scope by a subsequent request to a 
+third-party provider, in this case GET request will be send to `url_template` 
+with substituted `{consumer_id}`. Annon will expect `HTTP 200` response in following format:
+
+```
+{
+  "data": {
+    "scope": "originator_loans:upload"
+  }
+}
+```
+
+If any other response is sent, Consumer will have no scopes but `X-Consumer-ID` header will be sent to upstream.
+
+#### Auth0 Support
+
+**Configuration**
+
+To configure Annon copy-paste your `Client Secret` from `Clients` -> `Settings` to plugins `signature` configuration.
+
+**Issuing a Token**
+
+To receive an valid JWT with scopes token you must:
+1. Set `app_metadata` for all your users, it should have AT LEAST one array with consumer ID:
+    ``` 
+    {
+      "consumer_id": "my_consumer_id"
+    }
+    ```
+    
+2. (Optional) If you prefer to receive scopes from Auth0 `app_metadata` should also have scopes array:
+    ```
+    {
+      "consumer_id": "my_consumer_id",
+      "consumer_scope": "email:read email:send"
+    }
+    ```
+
+    You can set default scopes in `Client` -> `Settings` -> `Advanced` -> `App Metadata`.
+    
+3. When authorizing consumers set correct scope to receive JWT token with `app_metadata`: `scope=openid app_metadata`.
+4. Whenever you make requests to Annon, use `id_token` from Auth0 response (it's a JWT token that we need) in a `Authorization: Bearer <id_token>` header.
+
+### oAuth Strategy
+
+Recieves `access_token` from a `Authorization: Bearer <access_token>` header 
+and sends a subsequent request to resolve Consumer ID and scopes via third-party provider (eg. [Mithril](http://docs.mithril1.apiary.io/#)). 
+
+#### Consumer Usage
+
+Consumer should send `Authorization: Bearer <access_token>` header with his requests.
+
+#### Subsequent requests
+
+GET request will be send to `url_template` with substituted `{access_token}`. 
+Annon will expect `HTTP 200` response in following formats:
+
+```
+{
+  "data": {
+    "user_id": "user-dsljsdflkdflj",
+    "details": {
+        "scope": "originator_loans:upload"
+    }
+  }
+}
+```
+`user_id` will be mapped to Consumer ID.
+
+**OR**
+
+```
+{
+  "data": {
+    "consumer_id": "user-dsljsdflkdflj",
+    "consumer_scope": "originator_loans:upload"
+  }
+}
+```
+
+If any other response is sent, Consumer will not be autheticated.
+
+### Bind or Update Authentication Plugin [PUT]
+
++ Parameters
+    + api_id: 1 (string, required) - API ID.
+
++ Request (application/json)
+    + Attributes
+        + scopes (`Plugin_Auth__Request`)
+
++ Response 200 (application/json)
+    + Attributes (Response_OK)
+        + data (`Plugin_Auth__Response`)
+
++ Response 201 (application/json)
+    + Attributes (Response_OK)
+        + meta (Response__Meta)
+            + code: 201 (number)
+        + data (`Plugin_Auth__Response`)
+
+
 ## Rate Limit [/apis/{api_id}/plugins/rate_limit]
 
 This plugin allows you to rate limit requests from API Consumers based on `X-Consumer-ID` header returned from authorization plugins.
@@ -855,7 +994,7 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 + scheme: http (string) - HTTP request scheme. May be: `http`, `https`.
 + host: `os-dev-gateway.nebo15.com` (string, required) - DNS address of your API or its IP.
 + port: 80 (number) - Port on which your API recieves requests.
-+ path: /andrew/ (string, required) - Public path to your API. Must start with `/`.
++ path: /andrew/ (string, required) - Public path to your API. Must start with `/`. All requests that start with `path` will fall onto API rules.
 
 ### `API_Embed`
 + id: 56c31536a60ad644060041af (string) - Unique ID for API.
@@ -896,6 +1035,8 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 ### `Plugin_Dictionary_Entry`
 + name: plugin_name (string) - Plugin name
 + validation_schema: `{}` (string) - JSON schema to validate plugin settings.
++ deps (array[]) - List of plugin names this plugin depends in runtime.
++ is_system: false (boolean) - System plugins can't be configured via ManagementAPI.
 
 ## Proxy Plugin
 ### `Plugin_Proxy__Request`
@@ -910,12 +1051,14 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 
 ### `Plugin_Proxy__Settings`
 + upstream (`Plugin_Proxy__Settings_Upstream`, required)
-+ `strip_host`: false (boolean, optional) - Keep HTTP HOST host header when proxying request to an upstream.
++ `preserve_host`: false (boolean, optional) - Keep HTTP HOST host header when proxying request to an upstream.
 + `strip_api_path`: false (boolean, optional) - Strip API part of path when sending request to upstream.
-+ `additional_headers` (array[object], optional) - Additional headers that should be sent to upstream.
-    + `X-Consumer-Header`: `header_value`
++ `additional_headers` (array[`Plugin_Proxy__Settings__Additional_Header`], optional) - Additional headers that should be sent to upstream.
 + `stripped_headers` (array[string], optional) - Headers that should NOT be sent to upstream.
     + `x-Unwanted-Header`
+
+### `Plugin_Proxy__Settings__Additional_Header`
++ `X-Consumer-Header`: `header_value` (string)
 
 ### `Plugin_Proxy__Settings_Upstream`
 + scheme: https (string) - HTTP request scheme. May be: `http`, `https`, `amqp`, `ws`.
@@ -1065,6 +1208,33 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 + blacklist (array[string], fixed-type, optional) - Blacklist of User Agents or patterns.
     + `Google*` (string)
     + `MyBot (version 1.0)` (string)
+
+## Authentication Plugin
+### `Plugin_Auth__Request`
++ name: scopes (string, required)
++ is_enabled: true (boolean)
++ One of
+    + settings (Plugin_Auth__Settings_oAuth, fixed-type)
+    + settings (Plugin_Auth__Settings_JWT, fixed-type)
+    + settings (Plugin_Auth__Settings_JWTs, fixed-type)
+
+### `Plugin_Auth__Response`
++ Include Plugin_Auth__Request
++ created_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
++ updated_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
+
+### `Plugin_Auth__Settings_oAuth`
++ strategy: oauth (string, required)
++ `url_template`: `http://ec2-52-58-60-8.eu-central-1.compute.amazonaws.com:8081/0/api.svc/party/{party_id}/scopes` (string, required) - Inside `url_template` you can use `{party_id}` to substitle consumer ID in a request path.
+
+### `Plugin_Auth__Settings_JWT`
++ strategy: jwt (string, required)
++ `third_party_resolver`: false (string, required) - Do not resolve scopes with subsequence request.
+
+### `Plugin_Auth__Settings_JWTs`
++ strategy: jwt (string, required)
++ `third_party_resolver`: true (boolean, required) - Resolve scopes with subsequent request. 
++ `url_template`: `http://ec2-52-58-60-8.eu-central-1.compute.amazonaws.com:8081/0/api.svc/party/{party_id}/scopes` (string, optional) - Inside `url_template` you can use `{party_id}` to substitle consumer ID in a request path.
 
 ## Rate Limit Plugin
 ### `Plugin_Rate_Limit__Request`
