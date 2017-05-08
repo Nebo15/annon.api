@@ -15,7 +15,7 @@ defmodule Annon.Plugins.JWT do
   defdelegate settings_validation_schema(), to: Annon.Plugins.JWT.SettingsValidator
 
   def execute(%Conn{} = conn, _request, %{"signature" => signature}) do
-    case get_bearer_token(conn) do
+    case fetch_bearer_token(conn) do
       {:ok, encoded_token} ->
         {:ok, decoded_signature} = Base.decode64(signature)
 
@@ -24,16 +24,15 @@ defmodule Annon.Plugins.JWT do
         |> with_signer(hs256(decoded_signature))
         |> verify()
         |> evaluate(conn)
-      {:error, _} ->
+      :error ->
         conn
     end
   end
 
-  defp get_bearer_token(conn) do
+  defp fetch_bearer_token(conn) do
     case Conn.get_req_header(conn, "authorization") do
-      [] -> {:error, :not_found}
       ["Bearer " <> encoded_token | _] -> {:ok, encoded_token}
-      _ -> {:error, :unkown_authorization_type}
+      _ -> :error
     end
   end
 
