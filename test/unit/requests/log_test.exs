@@ -192,6 +192,60 @@ defmodule Annon.Requests.LogTest do
     end
   end
 
+  describe "insert_request/1" do
+    test "with valid changeset creates a request" do
+      create_attrs = %{
+        id: "6f40ea08-00f9-4912-9472-4cd789facfa1",
+        idempotency_key: "cc9b19a8-4e6d-4237-9bb0-1137ab0d9f82",
+        ip_address: "129.168.1.10",
+        status_code: 200,
+        api: %{
+          id: "01",
+          name: "An API #01",
+          request: %{
+            host: "www.example01.com",
+            path: "/my_api/",
+            port: 80,
+            scheme: "http"
+          }
+        },
+        latencies: %{
+          client_request: 102,
+          gateway: 2,
+          upstream: 100
+        },
+        request: %{
+          body: %{},
+          headers: [%{"content-type" => "application/json"}],
+          method: "GET",
+          query: %{"key" => "value"},
+          uri: "/my_api/"
+        },
+        response: %{
+          body: "{}",
+          headers: [%{"content-type" => "application/json"}],
+          status_code: 200
+        }
+      }
+      create_changeset = Log.change_request(create_attrs)
+
+      assert {:ok, %Request{} = request} = Log.insert_request(create_changeset)
+
+      assert request.api.id == create_attrs.api.id
+      assert request.latencies.client_request == create_attrs.latencies.client_request
+      assert request.request.body == create_attrs.request.body
+      assert request.response.body == create_attrs.response.body
+      assert request.id == create_attrs.id
+      assert request.idempotency_key == create_attrs.idempotency_key
+      assert request.ip_address == create_attrs.ip_address
+      assert request.status_code == create_attrs.status_code
+    end
+
+    test "with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Log.create_request(%{})
+    end
+  end
+
   test "delete_request/1 deletes the request" do
     request = RequestsFactory.insert(:request)
     assert {:ok, %Request{}} = Log.delete_request(request)

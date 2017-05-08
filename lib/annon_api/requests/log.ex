@@ -127,10 +127,26 @@ defmodule Annon.Requests.Log do
 
   """
   def create_request(attrs \\ %{}) do
-    %Request{}
-    |> request_changeset(attrs)
-    |> Repo.insert()
+    attrs
+    |> change_request()
+    |> insert_request()
   end
+
+  @doc """
+  Writes request to a database.
+
+  ## Examples
+
+      iex> create_request(%Ecto.Changeset{})
+      {:ok, %Annon.Requests.Request{}}
+
+      iex> create_request(%Ecto.Changeset{valid?: false})
+      {:error, %Ecto.Changeset{}}
+  """
+  def insert_request(%Ecto.Changeset{valid?: false} = changeset),
+    do: {:error, changeset}
+  def insert_request(%Ecto.Changeset{} = changeset),
+    do: Repo.insert(changeset)
 
   @doc """
   Deletes a Request.
@@ -151,6 +167,19 @@ defmodule Annon.Requests.Log do
       {:error, _} ->
         {:error, :not_found}
     end
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking Request changes.
+
+  ## Examples
+
+      iex> change_template(request_attrs)
+      %Ecto.Changeset{source: %Request{}}
+
+  """
+  def change_request(attrs) do
+    request_changeset(%Request{}, attrs)
   end
 
   # Changesets
