@@ -233,7 +233,7 @@ This is a general section that describes methods for managing API Plugins. Each 
 
 + Request (application/json)
     + Attributes 
-        + proxy (`Plugin_Proxy__Request`)
+        + plugin (`Plugin_Proxy__Request`)
 
 + Response 200 (application/json)
     + Attributes (Response_OK)
@@ -286,7 +286,7 @@ Request Path | Proxy Path | API Path | `strip_api_path` | Upstream Request
 
 + Request (application/json)
     + Attributes
-        + proxy (`Plugin_Proxy__Request`)
+        + plugin (`Plugin_Proxy__Request`)
 
 + Response 200 (application/json)
     + Attributes (Response_OK)
@@ -353,7 +353,7 @@ To receive an valid JWT with scopes token you must:
 
 + Request (application/json)
     + Attributes
-        + jwt (`Plugin_JWT__Request`)
+        + plugin (`Plugin_JWT__Request`)
 
 + Response 200 (application/json)
     + Attributes (Response_OK)
@@ -408,7 +408,7 @@ Inside `url_template` you can use `{party_id}` to substitle consumer ID in a req
 
 + Request (application/json)
     + Attributes
-        + scopes (`Plugin_Scopes__Request`)
+        + plugin (`Plugin_Scopes__Request`)
 
 + Response 200 (application/json)
     + Attributes (Response_OK)
@@ -450,7 +450,7 @@ Path is relative to API path, so you **don't need to specify API path prefix**!
 
 + Request (application/json)
     + Attributes
-        + acl (`Plugin_ACL__Request`)
+        + plugin (`Plugin_ACL__Request`)
 
 + Response 200 (application/json)
     + Attributes (Response_OK)
@@ -484,7 +484,7 @@ Path is relative to API path, so you **don't need to specify API path prefix**!
 
 + Request (application/json)
     + Attributes
-        + validator (`Plugin_Validator__Request`)
+        + plugin (`Plugin_Validator__Request`)
 
 + Response 200 (application/json)
     + Attributes (Response_OK)
@@ -511,7 +511,7 @@ Gateway always send back the same response for requests made with the same key. 
 
 + Request (application/json)
     + Attributes
-        + idempotency (`Plugin_Idempotency__Request`)
+        + plugin (`Plugin_Idempotency__Request`)
 
 + Response 200 (application/json)
     + Attributes (Response_OK)
@@ -542,7 +542,7 @@ Rules applied in a predicted order:
 
 + Request (application/json)
     + Attributes
-        + `ip_restriction` (`Plugin_IP_Restriction__Request`)
+        + plugin (`Plugin_IP_Restriction__Request`)
 
 + Response 200 (application/json)
     + Attributes (Response_OK)
@@ -573,7 +573,7 @@ Rules applied in a predicted order:
 
 + Request (application/json)
     + Attributes
-        + `ua_restriction` (`Plugin_UA_Restriction__Request`)
+        + plugin (`Plugin_UA_Restriction__Request`)
 
 + Response 200 (application/json)
     + Attributes (Response_OK)
@@ -612,7 +612,7 @@ On `GET`, `POST`, `PUT` and other requests:
 
 + Request (application/json)
     + Attributes
-        + `cors` (`Plugin_CORS__Request`)
+        + plugin (`Plugin_CORS__Request`)
 
 + Response 200 (application/json)
     + Attributes (Response_OK)
@@ -742,7 +742,7 @@ If any other response is sent, Consumer will not be autheticated.
 
 + Request (application/json)
     + Attributes
-        + auth (`Plugin_Auth__Request`)
+        + plugin (`Plugin_Auth__Request`)
 
 + Response 200 (application/json)
     + Attributes (Response_OK)
@@ -770,7 +770,7 @@ If consumer is not identified, rate limit won't apply to it, since it's up to yo
 
 + Request (application/json)
     + Attributes
-        + `rate_limit` (`Plugin_Rate_Limit__Request`)
+        + plugin (`Plugin_Rate_Limit__Request`)
 
 + Response 200 (application/json)
     + Attributes (Response_OK)
@@ -795,7 +795,7 @@ This plugin allows to set requests rate limits for an API and drops requests tha
 
 + Request (application/json)
     + Attributes
-        + `load_shedding` (`Plugin_Load_Shedding__Request`)
+        + plugin (`Plugin_Load_Shedding__Request`)
 
 + Response 200 (application/json)
     + Attributes (Response_OK)
@@ -822,7 +822,7 @@ It can be used to mock service responses or to push common responses to the edge
 
 + Request (application/json)
     + Attributes
-        + `static_responses` (`Plugin_Static_Responses__Request`)
+        + plugin (`Plugin_Static_Responses__Request`)
 
 + Response 200 (application/json)
     + Attributes (Response_OK)
