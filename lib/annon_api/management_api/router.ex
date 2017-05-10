@@ -6,6 +6,7 @@ defmodule Annon.ManagementAPI.Router do
   use Plug.ErrorHandler
   alias Annon.Helpers.Response
   alias Annon.ManagementAPI.Render
+  alias Annon.Monitoring.ClusterStatus
 
   if Confex.get(:annon_api, :sql_sandbox) do
     plug Phoenix.Ecto.SQL.Sandbox
@@ -36,7 +37,7 @@ defmodule Annon.ManagementAPI.Router do
   end
 
   get "/cluster_status" do
-    status = Annon.Monitoring.get_status()
+    status = ClusterStatus.get_cluster_status()
     Render.render_one({:ok, status}, conn)
   end
 
