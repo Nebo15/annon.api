@@ -3,26 +3,12 @@ defmodule Annon.Plugins.MonitoringTest do
   use Annon.UnitCase
 
   setup do
-    :sys.replace_state ExStatsD, fn state ->
+    :sys.replace_state Annon.Monitoring.MetricsCollector, fn state ->
       Map.update!(state, :sink, fn _prev_state -> [] end)
     end
   end
 
   test "metrics work properly" do
-    make_connection()
-
-    assert [
-      "test.response_count:1|c|#http_host:www.example.com,http_method:GET,http_port:80"
-        <> ",api_name:Montoring Test api," <> _,
-      "test.latency:" <> _,
-      "test.request_count:1|c|#http_host:www.example.com,http_method:GET,http_port:80"
-        <> ",api_name:Montoring Test api" <> _,
-      "test.request_size:28|h|#http_host:www.example.com,http_method:GET,http_port:80"
-        <> ",api_name:Montoring Test api" <> _,
-    ] = sent()
-  end
-
-  defp make_connection do
     api = Annon.ConfigurationFactory.insert(:api, %{
       name: "Montoring Test api",
       request: Annon.ConfigurationFactory.build(:api_request, %{host: "www.example.com", path: "/apis"})
@@ -42,9 +28,47 @@ defmodule Annon.Plugins.MonitoringTest do
 
     "/apis"
     |> call_public_router()
+
+    [
+      %{
+          key: "response_count",
+          options: [tags: ["http_host:www.example.com", "http_method:GET",
+                          "http_port:80", "api_name:Montoring Test api",
+                          "api_id:" <> _,
+                          "request_id:" <> _, "http_status:200"]],
+          type: :counter,
+          value: "1"
+        },
+        %{
+          key: "latency",
+          options: [tags: ["http_host:www.example.com", "http_method:GET",
+                          "http_port:80", "api_name:Montoring Test api",
+                          "api_id:" <> _,
+                          "request_id:" <> _, "http_status:200"]],
+          type: :timing, value: _
+        },
+        %{
+          key: "request_count",
+          options: [tags: ["http_host:www.example.com", "http_method:GET",
+                          "http_port:80", "api_name:Montoring Test api",
+                          "api_id:" <> _,
+                          "request_id:" <> _]],
+          type: :counter,
+          value: "1"
+        },
+        %{
+          key: "request_size",
+          options: [tags: ["http_host:www.example.com", "http_method:GET",
+                          "http_port:80", "api_name:Montoring Test api",
+                          "api_id:" <> _,
+                          "request_id:" <> _]],
+          type: :histogram,
+          value: _
+      }
+    ] = sent()
   end
 
-  defp sent(name \\ExStatsD),
+  defp sent(name \\ Annon.Monitoring.MetricsCollector),
     do: state(name).sink
 
   defp state(name),

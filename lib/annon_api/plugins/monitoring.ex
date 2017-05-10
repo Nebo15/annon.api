@@ -8,6 +8,7 @@ defmodule Annon.Plugins.Monitoring do
   """
   use Annon.Plugin, plugin_name: :monitoring
   alias Plug.Conn
+  alias Annon.Monitoring.MetricsCollector
 
   def validate_settings(changeset),
     do: changeset
@@ -18,11 +19,9 @@ defmodule Annon.Plugins.Monitoring do
   def execute(%Conn{} = conn, %{api: api, start_time: request_start_time}, _settings) do
     api_tags = tags(conn, api)
 
-    conn
-    |> get_request_size()
-    |> ExStatsD.histogram("request_size", tags: api_tags)
 
-    ExStatsD.increment("request_count", tags: api_tags)
+    MetricsCollector.histogram("request_size", get_request_size(conn), tags: api_tags)
+    MetricsCollector.increment("request_count", 1, tags: api_tags)
 
     conn
     |> Conn.register_before_send(&write_metrics(&1, api))
@@ -41,8 +40,8 @@ defmodule Annon.Plugins.Monitoring do
 
   defp write_metrics(%Conn{} = conn, api) do
     api_tags = tags(conn, api) ++ ["http_status:#{to_string conn.status}"]
-    ExStatsD.timer(conn.assigns.latencies_client, "latency", tags: api_tags)
-    ExStatsD.increment("response_count", tags: api_tags)
+    MetricsCollector.timing("latency", conn.assigns.latencies_client, tags: api_tags)
+    MetricsCollector.increment("response_count", 1, tags: api_tags)
     conn
   end
 
