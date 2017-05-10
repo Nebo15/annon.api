@@ -4,17 +4,18 @@ defmodule Annon.Plugins.CORS do
   """
   use Annon.Plugin, plugin_name: :cors
 
-  def validate_settings(changeset),
-    do: changeset
-
-  def settings_validation_schema,
-    do: %{}
+  defdelegate validate_settings(changeset), to: Annon.Plugins.CORS.SettingsValidator
+  defdelegate settings_validation_schema(), to: Annon.Plugins.CORS.SettingsValidator
 
   def execute(%Conn{} = conn, _request, settings) do
     settings = settings || %{}
     settings =
       settings
-      |> Enum.map(fn({key, value}) -> {String.to_atom(key), value} end)
+      |> Enum.map(fn
+        {"origin", "*"} -> {:origin, "*"}
+        {"origin", value} when is_binary(value) -> {:origin, Regex.compile!(value)}
+        {key, value} -> {String.to_atom(key), value}
+      end)
       |> CORSPlug.init()
 
     CORSPlug.call(conn, settings)
