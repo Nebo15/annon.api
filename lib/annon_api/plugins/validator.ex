@@ -13,28 +13,29 @@ defmodule Annon.Plugins.Validator do
   defdelegate settings_validation_schema(), to: Annon.Plugins.Validator.SettingsValidator
 
   def execute(conn, %{api: %{request: %{path: api_path}}}, %{"rules" => rules}) do
-    %Conn{body_params: req_body_params, method: req_method, request_path: request_path} = conn
-
-    api_relative_path = String.trim_leading(request_path, api_path)
+    %Conn{body_params: req_body_params, method: req_method, request_path: req_path} = conn
+    api_relative_path = String.trim_leading(req_path, api_path)
 
     with {:ok, schema} <- find_schema(rules, req_method, api_relative_path),
          :ok <- NExJsonSchema.Validator.validate(schema, req_body_params) do
       conn
     else
-      nil -> conn
+      {:error, :no_matching_schema} -> conn
       {:error, invalid} -> Response.send_validation_error(conn, invalid)
     end
   end
 
-  # Returns nil if schema is not found
   defp find_schema(rules, req_method, api_relative_path) do
-    Enum.find_value(rules, fn %{"path" => rule_path, "schema" => schema, "methods" => methods} ->
-      method_matches? = req_method in methods
-      path_matches? = api_relative_path =~ ~r"#{rule_path}"
+    schema =
+      Enum.find_value(rules, fn %{"path" => rule_path, "schema" => schema, "methods" => methods} ->
+        method_matches? = req_method in methods
+        path_matches? = api_relative_path =~ ~r"#{rule_path}"
 
-      if method_matches? && path_matches? do
-        {:ok, schema}
-      end
-    end)
+        if method_matches? && path_matches? do
+          {:ok, schema}
+        end
+      end)
+
+    if is_nil(schema), do: {:error, :no_matching_schema}, else: schema
   end
 end
