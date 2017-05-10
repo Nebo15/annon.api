@@ -45,8 +45,10 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
         |> json_response(200)
         |> Map.get("data")
 
-      assert Enum.at(resp, 0)["id"] == Enum.at(apis, 0).id
-      assert Enum.at(resp, 1)["id"] == Enum.at(apis, 1).id
+      resp_ids = [Enum.at(resp, 0)["id"], Enum.at(resp, 1)["id"]]
+
+      assert Enum.at(apis, 0).id in resp_ids
+      assert Enum.at(apis, 1).id in resp_ids
       assert length(resp) == 2
     end
 
