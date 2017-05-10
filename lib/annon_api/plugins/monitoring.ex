@@ -9,6 +9,12 @@ defmodule Annon.Plugins.Monitoring do
   use Annon.Plugin, plugin_name: :monitoring
   alias Plug.Conn
 
+  def validate_settings(changeset),
+    do: changeset
+
+  def settings_validation_schema,
+    do: %{}
+
   def execute(%Conn{} = conn, %{api: api, start_time: request_start_time}, _settings) do
     api_tags = tags(conn, api)
 

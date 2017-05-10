@@ -9,6 +9,12 @@ defmodule Annon.Plugins.Logger do
   alias Annon.Requests.Log
   require Logger
 
+  def validate_settings(changeset),
+    do: changeset
+
+  def settings_validation_schema,
+    do: %{}
+
   def execute(%Conn{} = conn, %{api: api}, _settings) do
     Conn.register_before_send(conn, &log_request(&1, api))
   end
