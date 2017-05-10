@@ -188,7 +188,8 @@ defmodule Annon.Acceptance.Plugins.ACLTest do
       |> get!(headers)
       |> get_body()
 
-      assert 501 == response["meta"]["code"]
+      assert 403 == response["meta"]["code"]
+      assert "You are not authorized or your token can not be resolved to scope." == response["error"]["message"]
     end
 
     test "token MUST have all scopes", %{api_id: api_id, api_path: api_path} do
@@ -219,37 +220,8 @@ defmodule Annon.Acceptance.Plugins.ACLTest do
       |> get_body()
 
       assert 403 == response["meta"]["code"]
-      assert "Your scopes does not allow to access this resource. Missing scopes: api:request."
+      assert "Your scope does not allow to access this resource. Missing allowances: api:request."
         = response["error"]["message"]
-
-      token = build_jwt_token(%{"scopes" => ["api:access", "api:request"]}, @jwt_secret)
-      headers = [{"authorization", "Bearer #{token}"}]
-
-      api_path
-      |> put_public_url()
-      |> get!(headers)
-      |> assert_status(404)
-    end
-
-    test "multiple rules can be applied", %{api_id: api_id, api_path: api_path} do
-      acl_plugin = build_factory_params(:acl_plugin, %{settings: %{
-        rules: [
-          %{methods: ["GET", "POST"], path: "^.*", scopes: ["super_scope"]},
-          %{methods: ["GET"], path: "^.*", scopes: ["api:access", "api:request"]},
-        ]
-      }})
-
-      "apis/#{api_id}/plugins"
-      |> put_management_url()
-      |> post!(acl_plugin)
-      |> assert_status(201)
-
-      scopes_plugin = build_factory_params(:scopes_plugin, %{settings: %{"strategy": "jwt"}})
-
-      "apis/#{api_id}/plugins"
-      |> put_management_url()
-      |> post!(scopes_plugin)
-      |> assert_status(201)
 
       token = build_jwt_token(%{"scopes" => ["api:access", "api:request"]}, @jwt_secret)
       headers = [{"authorization", "Bearer #{token}"}]
@@ -399,7 +371,7 @@ defmodule Annon.Acceptance.Plugins.ACLTest do
       token = build_jwt_token(%{"app_metadata" => %{"party_id" => "random_party_id"}}, @jwt_secret)
       headers = [{"authorization", "Bearer #{token}"}]
 
-      expected_result = "Your scopes does not allow to access this resource. Missing scopes: api:access."
+      expected_result = "Your scope does not allow to access this resource. Missing allowances: api:access."
 
       actual_result = "#{api_path}/foo"
       |> put_public_url()

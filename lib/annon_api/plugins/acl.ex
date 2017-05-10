@@ -12,71 +12,84 @@ defmodule Annon.Plugins.ACL do
   defdelegate validate_settings(changeset), to: Annon.Plugins.ACL.SettingsValidator
   defdelegate settings_validation_schema(), to: Annon.Plugins.ACL.SettingsValidator
 
-  def execute(%Conn{} = conn, %{api: %{request: %{path: api_path}}}, settings) do
-    settings
-    |> do_execute(api_path, conn)
-    |> send_response(conn)
-  end
+  def execute(%Conn{} = conn, %{api: %{request: %{path: api_path}}}, %{"rules" => rules}) do
+    %Conn{method: request_method, request_path: request_path} = conn
+    api_relative_path = String.trim_leading(request_path, api_path)
 
-  defp do_execute(%{"rules" => rules}, api_path, %Conn{private: %{scopes: scopes}} = conn) do
-    validate_scopes(scopes, rules, api_path, Map.take(conn, [:request_path, :method]))
-  end
-  defp do_execute(%{"rules" => _}, _api_path, _conn),
-    do: {:error, :no_scopes_is_set}
-  defp do_execute(_plugin, _api_path, _conn),
-    do: :ok
-
-  defp validate_scopes(nil, _server_rules, _api_path, _conn_data),
-    do: {:error, :no_scopes_is_set}
-  defp validate_scopes(client_scopes, server_rules, api_path, conn_data) when is_list(client_scopes) do
-    request_path = String.trim_leading(conn_data.request_path, api_path)
-
-    matching_fun = fn server_rules ->
-      method_matches? = conn_data.method in server_rules["methods"]
-      path_matches? = request_path =~ ~r"#{server_rules["path"]}"
-
-      method_matches? && path_matches?
-    end
-
-    result_fun = fn server_rules ->
-      Enum.filter(server_rules["scopes"], fn(server_scope) -> !(server_scope in client_scopes) end)
-    end
-
-    missing_scopes_result = Enum.filter_map(server_rules, matching_fun, result_fun)
-    case Enum.any?(missing_scopes_result, fn(x) -> x == [] end) do
-      true -> :ok
-      false -> {:error, :forbidden, missing_scopes_result |> Enum.find(fn(x) -> x != [] end) |> Enum.at(0)}
+    with {:ok, consumer_scope} <- fetch_scope(conn),
+         {:ok, rule} <- find_rule(rules, request_method, api_relative_path),
+         :ok <- validate_scope(rule, consumer_scope) do
+      conn
+    else
+      {:error, :scope_not_set} -> send_forbidden(conn)
+      {:error, :no_matching_rule} -> send_forbidden(conn)
+      {:error, :forbidden, missing_scopes} -> send_forbidden(conn, missing_scopes)
     end
   end
-  defp validate_scopes(_client_scope, _server_rules, _api_path, _conn_data), do: {:error, :invalid_scopes_type}
 
-  defp get_scopes_message(missing_scopes) when is_list(missing_scopes),
-    do: missing_scopes |> Enum.join(", ") |> get_scopes_message()
-  defp get_scopes_message(missing_scopes) when is_binary(missing_scopes),
-    do: "Your scopes does not allow to access this resource. Missing scopes: #{missing_scopes}."
+  defp fetch_scope(%Conn{private: %{scopes: nil}}),
+    do: {:error, :scope_not_set}
+  defp fetch_scope(%Conn{private: %{scopes: scope}}),
+    do: {:ok, scope}
 
-  defp send_response(:ok, conn), do: conn
-  defp send_response({:error, :forbidden, missing_scopes}, conn) do
+  defp split_scope(scope) when is_binary(scope),
+    do: String.split(scope, " ", trim: true)
+  defp split_scope(scope) when is_list(scope),
+    do: scope
+
+  defp find_rule(rules, request_method, api_relative_path) do
+    rule =
+      Enum.find_value(rules, fn %{"path" => rule_path, "methods" => methods} = rule ->
+        method_matches? = request_method in methods
+        path_matches? = api_relative_path =~ ~r"#{rule_path}"
+
+        if method_matches? && path_matches? do
+          {:ok, rule}
+        end
+      end)
+
+    if is_nil(rule), do: {:error, :no_matching_rule}, else: rule
+  end
+
+  defp validate_scope(%{"scopes" => required_scopes}, []),
+    do: {:error, :forbidden, required_scopes}
+  defp validate_scope(%{"scopes" => required_scopes}, scope) do
+    consumer_scope = split_scope(scope)
+
+    missing_scope =
+      Enum.reject(required_scopes, fn required_scope ->
+        required_scope in consumer_scope
+      end)
+
+    case missing_scope do
+      [] -> :ok
+      missing_scope -> {:error, :forbidden, missing_scope}
+    end
+  end
+
+  defp send_forbidden(conn, missing_scopes \\ nil) do
     "403.json"
     |> ErrorView.render(%{
-      message: get_scopes_message(missing_scopes),
+      message: get_message(missing_scopes),
       invalid: [%{
         entry_type: "header",
         entry: "Authorization",
-        rules: []
+        rules: get_rules(missing_scopes)
       }]
     })
     |> Response.send(conn, 403)
     |> Response.halt()
   end
-  defp send_response({:error, :no_scopes_is_set}, conn) do
-    Logger.error("Scopes are empty!")
-    conn
-    |> Response.send_error(:internal_error)
+
+  defp get_message(nil),
+    do: "You are not authorized or your token can not be resolved to scope."
+  defp get_message(missing_scopes) when is_list(missing_scopes) do
+    missing_scopes = Enum.join(missing_scopes, ", ")
+    "Your scope does not allow to access this resource. Missing allowances: #{missing_scopes}."
   end
-  defp send_response({:error, :invalid_scopes_type}, conn) do
-    Logger.error("Scopes must be a list!")
-    conn
-    |> Response.send_error(:internal_error)
-  end
+
+  defp get_rules(nil),
+    do: []
+  defp get_rules(missing_scopes),
+    do: %{scopes: missing_scopes}
 end
