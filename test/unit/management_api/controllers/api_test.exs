@@ -318,6 +318,35 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
       ]} = errors
     end
 
+    test "with request as a string returns error changeset", %{conn: conn} do
+      id = Ecto.UUID.generate()
+
+      invalid_attrs =
+        ConfigurationFactory.params_for(:api,
+          request: Poison.encode!(ConfigurationFactory.params_for(:api_request, path: "bad_path/"))
+        )
+
+      errors =
+        conn
+        |> put_json(api_path(id), invalid_attrs)
+        |> json_response(422)
+        |> Map.get("error")
+
+      assert %{"invalid" => [
+        %{
+          "entry" => "$.request",
+          "entry_type" => "json_data_property",
+          "rules" => [
+            %{
+              "description" => "is invalid",
+              "params" => ["map"],
+              "rule" => "cast"
+            }
+          ]
+        }
+      ]} = errors
+    end
+
     test "requires all fields to be present on update", %{conn: conn} do
       api = ConfigurationFactory.insert(:api)
       update_attrs = %{}

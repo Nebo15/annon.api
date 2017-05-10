@@ -203,9 +203,9 @@ defmodule Annon.Configuration.API do
     |> validate_required(@required_api_fields)
     |> validate_length(:description, max: 512)
     |> validate_length(:docs_url, max: 512)
-    |> validate_inclusion(:health, @known_health_statuses)
-    |> unique_constraint(:name, name: :apis_name_index)
-    |> unique_constraint(:request, name: :api_unique_request_index)
+    |> validate_inclusion(:health, @known_health_statuses, message: "Health status is not supported")
+    |> unique_constraint(:name, name: :apis_name_index, message: "API name must be unique")
+    |> unique_constraint(:request, name: :api_unique_request_index, message: "API request must be unique")
     |> cast_embed(:request, with: &request_changeset/2)
   end
 

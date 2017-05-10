@@ -142,6 +142,13 @@ defmodule Annon.Configuration.APITest do
       assert api.request.scheme == @create_attrs.request.scheme
     end
 
+    test "with request as a string returns error changeset" do
+      id = Ecto.UUID.generate()
+      invalid_attrs = Map.put(@create_attrs, :request, Poison.encode!(@create_attrs.request))
+      assert {:error, %Ecto.Changeset{errors: errors}} = API.create_api(id, invalid_attrs)
+      assert {:request, {"is invalid", [type: :map]}} in errors
+    end
+
     test "with invalid data returns error changeset" do
       id = Ecto.UUID.generate()
       assert {:error, %Ecto.Changeset{}} = API.create_api(id, %{})
