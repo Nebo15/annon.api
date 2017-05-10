@@ -15,6 +15,7 @@ defmodule Annon do
     children = [
       supervisor(Annon.Configuration.Repo, []),
       supervisor(Annon.Requests.Repo, []),
+      worker(Annon.Monitoring.MetricsCollector, [metrics_collector_opts()]),
       worker(Annon.Configuration.Matcher, [matcher_opts()]),
       worker(Annon.AutoClustering, []),
       management_endpoint_spec(),
@@ -32,6 +33,10 @@ defmodule Annon do
 
   defp matcher_opts do
     Application.get_env(:annon_api, :configuration_cache)
+  end
+
+  defp metrics_collector_opts do
+    Confex.get_map(:annon_api, :metrics_collector)
   end
 
   # Loads configuration in `:on_init` callbacks and replaces `{:system, ..}` tuples via Confex

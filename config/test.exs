@@ -8,10 +8,9 @@ config :annon_api, Annon.Requests.Repo,
   database: System.get_env("MIX_LOGGER_TEST_DATABASE") || "annon_api_logger_test",
   pool: Ecto.Adapters.SQL.Sandbox
 
-config :ex_statsd,
+config :annon_api, :metrics_collector,
   sink: [],
-  namespace: "test",
-  test_mode: true
+  namespace: "test"
 
 config :annon_api, :acceptance,
   management: [

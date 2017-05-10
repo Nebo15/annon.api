@@ -27,12 +27,6 @@ config :annon_api, :configuration_cache,
   adapter: {:system, :module, "CONFIGURATION_CACHE_ADAPTER", Annon.Configuration.CacheAdapters.ETS},
   cache_space: :configuration
 
-# TODO: Replace with statix
-config :ex_statsd,
-  host: "localhost",
-  port: 8125,
-  namespace: "annon"
-
 # Configure Elixir logger
 config :logger,
   level: :debug
@@ -62,6 +56,14 @@ config :skycluster,
 
 config :annon_api,
   sql_sandbox: {:system, :boolean, "SQL_SANDBOX", false}
+
+config :annon_api, :metrics_collector,
+  enabled?: {:system, :boolean, "METRICS_COLLECTOR_ENABLED", true},
+  send_tags: {:system, :boolean, "METRICS_COLLECTOR_SEND_TAGS", true},
+  host: {:system, :string, "METRICS_COLLECTOR_HOST", "localhost"},
+  port: {:system, :number, "METRICS_COLLECTOR_PORT", 32768},
+  namespace: {:system, :string, "METRICS_COLLECTOR_HOST", "annon"},
+  sample_rate: {:system, :float, "METRICS_COLLECTOR_SAMPLE_RATE", 0.25}
 
 import_config "plugins.exs"
 import_config "#{Mix.env}.exs"
