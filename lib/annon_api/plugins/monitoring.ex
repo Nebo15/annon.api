@@ -19,7 +19,6 @@ defmodule Annon.Plugins.Monitoring do
   def execute(%Conn{} = conn, %{api: api, start_time: request_start_time}, _settings) do
     api_tags = tags(conn, api)
 
-
     MetricsCollector.histogram("request_size", get_request_size(conn), tags: api_tags)
     MetricsCollector.increment("request_count", 1, tags: api_tags)
 

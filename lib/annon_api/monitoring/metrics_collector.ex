@@ -7,7 +7,9 @@ defmodule Annon.Monitoring.MetricsCollector do
   use GenServer
   alias AnnonMonitoring.MetricsCollector.Packet
 
-  defstruct [:sock, :header, :config]
+  @type key :: iodata
+  @type options :: [sample_rate: float, tags: [String.t]]
+  @type on_send :: :ok | {:error, term}
 
   @doc """
   Starts a metric collector process.
@@ -41,24 +43,99 @@ defmodule Annon.Monitoring.MetricsCollector do
     }}
   end
 
+  @doc """
+  Increments the StatsD counter identified by `key` by the given `value`.
+
+  `value` is supposed to be zero or positive and `c:decrement/3` should be
+  used for negative values.
+
+  ## Examples
+
+      iex> increment("hits", 1, [])
+      :ok
+
+  """
+  @spec increment(key, value :: number, options) :: on_send
   def increment(key, val \\ 1, options \\ []) when is_number(val) do
     transmit(:counter, key, val, options)
   end
 
+  @doc """
+  Decrements the StatsD counter identified by `key` by the given `value`.
+
+  Works same as `c:increment/3` but subtracts `value` instead of adding it. For
+  this reason `value` should be zero or negative.
+
+  ## Examples
+
+      iex> decrement("open_connections", 1, [])
+      :ok
+
+  """
+  @spec decrement(key, value :: number, options) :: on_send
   def decrement(key, val \\ 1, options \\ []) when is_number(val) do
     transmit(:counter, key, [?-, to_string(val)], options)
   end
 
+  @doc """
+  Writes to the StatsD gauge identified by `key`.
+
+  ## Examples
+
+      iex> gauge("cpu_usage", 0.83, [])
+      :ok
+
+  """
+  @spec gauge(key, value :: String.Chars.t, options) :: on_send
   def gauge(key, val, options \\ [] ) do
     transmit(:gauge, key, val, options)
   end
 
+  @doc """
+  Writes `value` to the histogram identified by `key`.
+
+  Not all StatsD-compatible servers support histograms. An example of a such
+  server [statsite](https://github.com/statsite/statsite).
+
+  ## Examples
+
+      iex> histogram("online_users", 123, [])
+      :ok
+
+  """
+  @spec histogram(key, value :: String.Chars.t, options) :: on_send
   def histogram(key, val, options \\ []) do
     transmit(:histogram, key, val, options)
   end
 
+  @doc """
+  Writes the given `value` to the StatsD timing identified by `key`.
+
+  `value` is expected in milliseconds.
+
+  ## Examples
+
+      iex> timing("rendering", 12, [])
+      :ok
+
+  """
+  @spec timing(key, value :: String.Chars.t, options) :: on_send
   def timing(key, val, options \\ []) do
     transmit(:timing, key, val, options)
+  end
+
+  @doc """
+  Writes the given `value` to the StatsD set identified by `key`.
+
+  ## Examples
+
+      iex> set("unique_visitors", "user1", [])
+      :ok
+
+  """
+  @spec set(key, value :: String.Chars.t, options) :: on_send
+  def set(key, val, options \\ []) do
+    transmit(:set, key, val, options)
   end
 
   @doc false
