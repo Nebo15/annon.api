@@ -1,9 +1,9 @@
-defmodule Annon.Monitoring do
+defmodule Annon.Monitoring.ClusterStatus do
   @moduledoc """
-  Monitoring service for Annons clusters.
+  This module provides functions to collects status from all nodes in Annon cluster.
   """
 
-  def get_status do
+  def get_cluster_status do
     cluster_nodes = :erlang.nodes()
     cluster_strategy = get_cluster_strategy()
     nodes_status =
