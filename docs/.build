@@ -5,7 +5,7 @@ fonts/icomoon.eot
 fonts/icomoon.svg
 fonts/icomoon.ttf
 fonts/icomoon.woff
-dist/sidebar_items-54f5743012.js
+dist/sidebar_items-f929e2386a.js
 api-reference.html
 readme.html
 404.html
@@ -47,6 +47,7 @@ Annon.Plugin.UpstreamRequest.html
 Annon.Plugins.ACL.html
 Annon.Plugins.ACL.SettingsValidator.html
 Annon.Plugins.CORS.html
+Annon.Plugins.CORS.SettingsValidator.html
 Annon.Plugins.IPRestriction.html
 Annon.Plugins.IPRestriction.SettingsValidator.html
 Annon.Plugins.Idempotency.html
