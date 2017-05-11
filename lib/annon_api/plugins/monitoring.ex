@@ -54,7 +54,7 @@ defmodule Annon.Plugins.Monitoring do
     status = conn |> get_conn_status(0) |> Integer.to_string()
 
     MetricsCollector.track_response(request_id, latencies, [
-      tags: ["http_status:#{status}"] ++ collector_opts[:tags],
+      tags: ["http.status:#{status}"] ++ collector_opts[:tags],
       sample_rate: collector_opts[:sample_rate]
     ])
 
@@ -68,16 +68,16 @@ defmodule Annon.Plugins.Monitoring do
     port = Integer.to_string(port)
     request_id = get_request_id(conn, "unknown")
 
-    ["http_host:#{host}", "http_method:#{method}", "http_port:#{port}",
-     "api_name:unknown", "api_id:unknown", "request_id:#{request_id}"]
+    ["http.host:#{host}", "http.method:#{method}", "http.port:#{port}",
+     "api.name:unknown", "api.id:unknown", "request.id:#{request_id}"]
   end
   defp tags(%Conn{host: host, method: method, port: port} = conn, api) do
     port = Integer.to_string(port)
     request_id = get_request_id(conn, "unknown")
     %{id: api_id, name: api_name} = api
 
-    ["http_host:#{host}", "http_method:#{method}", "http_port:#{port}",
-     "api_name:#{api_name}", "api_id:#{api_id}", "request_id:#{request_id}"]
+    ["http.host:#{host}", "http.method:#{method}", "http.port:#{port}",
+     "api.name:#{api_name}", "api.id:#{api_id}", "request.id:#{request_id}"]
   end
 
   defp get_request_id(conn, default) do
