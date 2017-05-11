@@ -21,12 +21,4 @@ defmodule Annon.Monitoring.MetricsCollector do
     histogram("latencies_upstream", upstream, opts)
     histogram("latencies_gateway", gateway, opts)
   end
-
-  def track_repo_activity() do
-
-  end
-
-  def track_latency(name, value, tags) do
-
-  end
 end
