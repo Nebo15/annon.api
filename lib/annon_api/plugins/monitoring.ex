@@ -46,7 +46,7 @@ defmodule Annon.Plugins.Monitoring do
     latencies_gateway = latencies_client - latencies_upstream
 
     latencies = %Latencies{
-      client: latencies_client,
+      client_request: latencies_client,
       upstream: latencies_upstream,
       gateway: latencies_gateway
     }

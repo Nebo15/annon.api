@@ -97,11 +97,8 @@ defmodule Annon.Plugins.Logger do
   end
 
   defp get_latencies_data(conn) do
-    %{
-      gateway: Map.get(conn.assigns, :latencies_gateway),
-      upstream: Map.get(conn.assigns, :latencies_upstream),
-      client_request: Map.get(conn.assigns, :latencies_client)
-    }
+    conn.assigns
+    |> Map.get(:latencies)
     |> prepare_params
   end
 
