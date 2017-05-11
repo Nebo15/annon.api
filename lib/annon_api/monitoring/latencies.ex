@@ -1,8 +1,7 @@
 defmodule Annon.Monitoring.Latencies do
   @moduledoc false
 
-  defstruct request_id: nil,
-            client: nil,
+  defstruct client: nil,
             upstream: nil,
             gateway: nil
 end
