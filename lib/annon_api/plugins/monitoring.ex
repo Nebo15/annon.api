@@ -61,6 +61,7 @@ defmodule Annon.Plugins.Monitoring do
     conn
     |> Conn.assign(:latencies_gateway, latencies_gateway)
     |> Conn.assign(:latencies_client, latencies_client)
+    |> Conn.assign(:latencies, latencies)
   end
 
   defp tags(%Conn{host: host, method: method, port: port} = conn, nil) do
