@@ -10,7 +10,8 @@ config :annon_api, Annon.Requests.Repo,
 
 config :annon_api, :metrics_collector,
   sink: [],
-  namespace: "test"
+  namespace: "test",
+  sample_rate: 1
 
 config :annon_api, :acceptance,
   management: [
