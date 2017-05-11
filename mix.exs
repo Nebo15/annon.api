@@ -26,7 +26,7 @@ defmodule Annon.Mixfile do
   def application do
     [
       extra_applications: [:logger, :logger_json, :confex, :cowboy, :plug, :postgrex, :ecto, :joken,
-                           :nex_json_schema, :poison, :httpoison, :skycluster, :eview,
+                           :nex_json_schema, :poison, :httpoison, :skycluster, :eview, :dogstat,
                            :ecto_paging, :runtime_tools],
       mod: {Annon, []}
     ]
@@ -66,6 +66,7 @@ defmodule Annon.Mixfile do
      {:phoenix_ecto, ">= 0.0.0"},
      {:logger_json, "~> 0.4.0"},
      {:cors_plug, "~> 1.1"},
+     {:dogstat, "~> 0.1.0"},
      {:ex_machina, ">= 1.0.0", only: [:dev, :test]},
      {:dogma, ">= 0.0.0", only: [:dev, :test]},
      {:benchfella, "~> 0.3", only: [:dev, :test]},

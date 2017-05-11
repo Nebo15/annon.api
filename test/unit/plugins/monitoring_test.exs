@@ -3,7 +3,7 @@ defmodule Annon.Plugins.MonitoringTest do
   use Annon.UnitCase
 
   setup do
-    :sys.replace_state Annon.Monitoring.MetricsCollector, fn state ->
+    :sys.replace_state DogStat, fn state ->
       Map.update!(state, :sink, fn _prev_state -> [] end)
     end
   end
@@ -26,49 +26,35 @@ defmodule Annon.Plugins.MonitoringTest do
       }
     })
 
-    "/apis"
-    |> call_public_router()
+    call_public_router("/apis")
 
-    [
-      %{
-          key: "response_count",
-          options: [tags: ["http_host:www.example.com", "http_method:GET",
-                          "http_port:80", "api_name:Montoring Test api",
-                          "api_id:" <> _,
-                          "request_id:" <> _, "http_status:200"]],
-          type: :counter,
-          value: "1"
-        },
-        %{
-          key: "latency",
-          options: [tags: ["http_host:www.example.com", "http_method:GET",
-                          "http_port:80", "api_name:Montoring Test api",
-                          "api_id:" <> _,
-                          "request_id:" <> _, "http_status:200"]],
-          type: :timing, value: _
-        },
-        %{
-          key: "request_count",
-          options: [tags: ["http_host:www.example.com", "http_method:GET",
-                          "http_port:80", "api_name:Montoring Test api",
-                          "api_id:" <> _,
-                          "request_id:" <> _]],
-          type: :counter,
-          value: "1"
-        },
-        %{
-          key: "request_size",
-          options: [tags: ["http_host:www.example.com", "http_method:GET",
-                          "http_port:80", "api_name:Montoring Test api",
-                          "api_id:" <> _,
-                          "request_id:" <> _]],
-          type: :histogram,
-          value: _
-      }
-    ] = sent()
+    [%{header: [_, "test", 46], key: "latencies_gateway",
+       options: [tags: ["http_status:200", "http_host:www.example.com",
+         "http_method:GET", "http_port:80", "api_name:Montoring Test api",
+         "api_id:" <> _,
+         "request_id:" <> _], sample_rate: 1],
+       type: :histogram, value: _},
+     %{header: [_, "test", 46], key: "latencies_upstream",
+       options: [tags: ["http_status:200", "http_host:www.example.com",
+         "http_method:GET", "http_port:80", "api_name:Montoring Test api",
+         "api_id:" <> _,
+         "request_id:" <> _], sample_rate: 1],
+       type: :histogram, value: _},
+     %{header: [_, "test", 46], key: "latencies_client",
+       options: [tags: ["http_status:200", "http_host:www.example.com",
+         "http_method:GET", "http_port:80", "api_name:Montoring Test api",
+         "api_id:" <> _,
+         "request_id:" <> _], sample_rate: 1],
+       type: :histogram, value: _},
+     %{header: [_, "test", 46], key: "request_count",
+       options: [tags: ["http_host:www.example.com", "http_method:GET",
+         "http_port:80", "api_name:Montoring Test api",
+         "api_id:" <> _,
+         "request_id:" <> _], sample_rate: 1],
+       type: :counter, value: "1"}] = sent()
   end
 
-  defp sent(name \\ Annon.Monitoring.MetricsCollector),
+  defp sent(name \\ DogStat),
     do: state(name).sink
 
   defp state(name),

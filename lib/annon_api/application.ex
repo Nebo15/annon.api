@@ -15,7 +15,7 @@ defmodule Annon do
     children = [
       supervisor(Annon.Configuration.Repo, []),
       supervisor(Annon.Requests.Repo, []),
-      worker(Annon.Monitoring.MetricsCollector, [metrics_collector_opts()]),
+      worker(DogStat, [metrics_collector_opts()]),
       worker(Annon.Configuration.Matcher, [matcher_opts()]),
       worker(Annon.AutoClustering, []),
       management_endpoint_spec(),
