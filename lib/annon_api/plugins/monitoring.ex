@@ -58,6 +58,8 @@ defmodule Annon.Plugins.Monitoring do
       sample_rate: collector_opts[:sample_rate]
     ])
 
+    Annon.Monitoring.TraceCollector.send_span(conn)
+
     conn
     |> Conn.assign(:latencies_gateway, latencies_gateway)
     |> Conn.assign(:latencies_client, latencies_client)
