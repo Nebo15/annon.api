@@ -47,23 +47,17 @@ defmodule Annon.Acceptance.Smoke.AclTest do
     |> post!(acl_plugin)
     |> assert_status(201)
 
-    scopes_plugin = :scopes_plugin
-    |> build_factory_params(%{settings: %{"strategy": "jwt"}})
+    auth_plugin = :auth_plugin_with_jwt
+    |> build_factory_params()
+
+    secret = Base.decode64!(auth_plugin.settings["secret"])
 
     "apis/#{api_id}/plugins"
     |> put_management_url()
-    |> post!(scopes_plugin)
+    |> post!(auth_plugin)
     |> assert_status(201)
 
-    jwt_plugin = :jwt_plugin
-    |> build_factory_params(%{settings: %{signature: build_jwt_signature("a_secret_signature")}})
-
-    "apis/#{api_id}/plugins"
-    |> put_management_url()
-    |> post!(jwt_plugin)
-    |> assert_status(201)
-
-    %{api_path: api_path}
+    %{api_path: api_path, secret: secret}
   end
 
   test "A request with incorrect auth header is forbidden to access upstream" do
@@ -74,15 +68,15 @@ defmodule Annon.Acceptance.Smoke.AclTest do
       |> Map.get(:body)
       |> Poison.decode!
 
-    assert "Your JWT token is invalid." == response["error"]["message"]
-    assert "validation_failed" == response["error"]["type"]
-    assert 422 == response["meta"]["code"]
+    assert "JWT token is invalid" == response["error"]["message"]
+    assert "access_denied" == response["error"]["type"]
+    assert 401 == response["meta"]["code"]
 
     assert_logs_are_written(response)
   end
 
-  test "A request with good auth header is allowed to access upstream" do
-    auth_token = build_jwt_token(%{"scopes" => ["httpbin:read"]}, "a_secret_signature")
+  test "A request with good auth header is allowed to access upstream", %{secret: secret} do
+    auth_token = build_jwt_token(%{"consumer_id" => "id", "consumer_scope" => ["httpbin:read"]}, secret)
 
     response =
       "/httpbin?my_param=my_value"
@@ -96,8 +90,8 @@ defmodule Annon.Acceptance.Smoke.AclTest do
     assert_logs_are_written(response)
   end
 
-  test "A valid access scope is required to access upstream" do
-    auth_token = build_jwt_token(%{"scopes" => ["httpbin:read"]}, "a_secret_signature")
+  test "A valid access scope is required to access upstream", %{secret: secret} do
+    auth_token = build_jwt_token(%{"consumer_id" => "id", "consumer_scope" => ["httpbin:read"]}, secret)
     headers = [
       {"authorization", "Bearer #{auth_token}"},
       {"content-type", "application/json"}

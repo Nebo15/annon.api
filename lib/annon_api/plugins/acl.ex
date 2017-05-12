@@ -7,6 +7,7 @@ defmodule Annon.Plugins.ACL do
   use Annon.Plugin, plugin_name: :acl
   alias EView.Views.Error, as: ErrorView
   alias Annon.Helpers.Response
+  alias Annon.PublicAPI.Consumer
   require Logger
 
   defdelegate validate_settings(changeset), to: Annon.Plugins.ACL.SettingsValidator
@@ -27,15 +28,10 @@ defmodule Annon.Plugins.ACL do
     end
   end
 
-  defp fetch_scope(%Conn{private: %{scopes: nil}}),
-    do: {:error, :scope_not_set}
-  defp fetch_scope(%Conn{private: %{scopes: scope}}),
+  defp fetch_scope(%Conn{assigns: %{consumer: %Consumer{scope: scope}}}),
     do: {:ok, scope}
-
-  defp split_scope(scope) when is_binary(scope),
-    do: String.split(scope, " ", trim: true)
-  defp split_scope(scope) when is_list(scope),
-    do: scope
+  defp fetch_scope(_),
+    do: {:error, :scope_not_set}
 
   defp find_rule(rules, request_method, api_relative_path) do
     rule =
@@ -66,6 +62,9 @@ defmodule Annon.Plugins.ACL do
       missing_scope -> {:error, :forbidden, missing_scope}
     end
   end
+
+  defp split_scope(scope) when is_binary(scope),
+    do: String.split(scope, " ", trim: true)
 
   defp send_forbidden(conn, missing_scopes \\ nil) do
     "403.json"
