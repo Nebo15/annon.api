@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Plugin.PipelinePlug – annon_api v0.2.71</title>
+    <title>Annon.Plugins.Auth.Strategy – annon_api v0.2.71</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items-da4828c7f2.js"></script>
@@ -59,14 +59,16 @@
 
       <h1>
         <small class="visible-xs">annon_api v0.2.71</small>
-        Annon.Plugin.PipelinePlug
+        Annon.Plugins.Auth.Strategy
+        
+          <small>behaviour</small>
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>This module inject Plugins pipeline into Plug.Router.</p>
+          <p>Behaviour module for Auth strategies.</p>
 
         </section>
       
@@ -80,21 +82,13 @@
             Summary
           </h1>
           
-
-          
-  <div class="summary-functions summary">
+  <div class="summary-types summary">
     <h2>
-      <a href="#functions">Functions</a>
+      <a href="#types">Types</a>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#call/2">call(conn, opts)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#init/1">init(opts)</a>
+    <a href="#t:token_type/0">token_type()</a>
   </div>
   
 </div>
@@ -104,53 +98,99 @@
 
           
 
+          
+  <div class="summary-callbacks summary">
+    <h2>
+      <a href="#callbacks">Callbacks</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:fetch_consumer/3">fetch_consumer(token_type, token, settings)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Fetch consumer data</p>
+</div>
+  
+</div>
+
+  </div>
+
+
         </section>
       
 
       
-
-      
-        <section id="functions" class="details-list">
+        <section id="types" class="details-list">
           <h1 class="section-heading">
-            <a class="hover-link" href="#functions">
+            <a class="hover-link" href="#types">
               <i class="icon-link"></i>
             </a>
-            Functions
+            Types
           </h1>
-          <div class="detail" id="call/2">
+          <div class="types-list">
+            <div class="detail" id="t:token_type/0">
   
   <div class="detail-header">
-    <a href="#call/2" class="detail-link" title="Link to this function">
+    <a href="#t:token_type/0" class="detail-link" title="Link to this type">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">call(conn, opts)</span>
+    <span class="signature">token_type()</span>
     
     
+    
+      <div class="specs">
+        
+          <pre>token_type() :: :bearer</pre>
+        
+      </div>
     
   </div>
   <section class="docstring">
     
   </section>
 </div>
-<div class="detail" id="init/1">
+
+          </div>
+        </section>
+      
+
+      
+
+      
+        <section id="callbacks" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#callbacks">
+              <i class="icon-link"></i>
+            </a>
+            Callbacks
+          </h1>
+          <div class="detail" id="c:fetch_consumer/3">
   
   <div class="detail-header">
-    <a href="#init/1" class="detail-link" title="Link to this function">
+    <a href="#c:fetch_consumer/3" class="detail-link" title="Link to this callback">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">init(opts)</span>
+    <span class="signature">fetch_consumer(token_type, token, settings)</span>
     
     
+    
+      <div class="specs">
+        
+          <pre>fetch_consumer(token_type :: <a href="#t:token_type/0">token_type</a>, token :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>, settings :: <a href="https://hexdocs.pm/elixir/Map.html#t:t/0">Map.t</a>) ::
+  {:ok, <a href="Annon.PublicAPI.Consumer.html#t:t/0">Annon.PublicAPI.Consumer.t</a>} |
+  {:error, <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>}</pre>
+        
+      </div>
     
   </div>
   <section class="docstring">
-    
+    <p>Fetch consumer data.</p>
+<p>In case error is returned, it’s message will be sent to API consumer.</p>
+
   </section>
 </div>
 
         </section>
-      
-
       
           <footer class="footer">
         <p>
