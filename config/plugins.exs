@@ -7,11 +7,8 @@ config :annon_api, :plugins, [
   {:monitoring, deps: [:cors], features: [], system?: true, module: Annon.Plugins.Monitoring},
   {:ip_restriction, deps: [:logger], features: [:modify_conn], module: Annon.Plugins.IPRestriction},
   {:ua_restriction, deps: [:logger], features: [:modify_conn], module: Annon.Plugins.UARestriction},
-  {:jwt, deps: [:ip_restriction, :ua_restriction], features: [:modify_conn], module: Annon.Plugins.JWT},
-  # {:oauth, deps: [:ip_restriction, :ua_restriction], features: [:modify_conn]},
-  {:scopes, deps: [:jwt, :oauth], features: [:modify_conn], module: Annon.Plugins.Scopes},
   {:auth, deps: [:ip_restriction, :ua_restriction], features: [:modify_conn], module: Annon.Plugins.Auth},
-  {:acl,  deps: [:scopes, :auth], require: [:scopes], features: [:modify_conn], module: Annon.Plugins.ACL},
+  {:acl, deps: [:auth], features: [:modify_conn], module: Annon.Plugins.ACL},
   {:validator, deps: [:acl, :ip_restriction, :ua_restriction, :logger], features: [:decode_body, :modify_conn],
     module: Annon.Plugins.Validator},
   {:proxy, deps: [:validator, :logger, :acl], features: [:modify_conn], module: Annon.Plugins.Proxy}

@@ -42,14 +42,6 @@ defmodule Annon.ConfigurationFactory do
     }
   end
 
-  def scopes_plugin_factory do
-    %Annon.Configuration.Schemas.Plugin{
-      name: "scopes",
-      is_enabled: true,
-      settings: %{}
-    }
-  end
-
   def auth_plugin_with_oauth_factory do
     mock_conf = Confex.get_map(:annon_api, :acceptance)[:mock]
     mock_url = "http://#{mock_conf[:host]}:#{mock_conf[:port]}/"
@@ -74,14 +66,6 @@ defmodule Annon.ConfigurationFactory do
         "third_party_resolver" => false,
         "algorithm" => "HS256"
       }
-    }
-  end
-
-  def jwt_plugin_factory do
-    %Annon.Configuration.Schemas.Plugin{
-      name: "jwt",
-      is_enabled: true,
-      settings: %{"signature" => Annon.AcceptanceCase.build_jwt_signature("secret-sign")}
     }
   end
 

@@ -201,7 +201,7 @@ defmodule Annon.Configuration.APITest do
       assert List.first(plugins).id == plugin1.id
       assert List.first(plugins).is_enabled == true
 
-      ConfigurationFactory.insert(:jwt_plugin, api_id: api.id)
+      ConfigurationFactory.insert(:auth_plugin_with_jwt, api_id: api.id)
       assert [%APISchema{
         id: ^api_id,
         plugins: plugins
@@ -217,7 +217,7 @@ defmodule Annon.Configuration.APITest do
 
       api_id = api.id
 
-      plugin2 = ConfigurationFactory.insert(:jwt_plugin, api_id: api.id, is_enabled: true)
+      plugin2 = ConfigurationFactory.insert(:auth_plugin_with_jwt, api_id: api.id, is_enabled: true)
       assert [%APISchema{
         id: ^api_id,
         plugins: plugins
@@ -272,7 +272,7 @@ defmodule Annon.Configuration.APITest do
         path: "/my_path"
       }))
       ConfigurationFactory.insert(:proxy_plugin, api_id: api.id)
-      ConfigurationFactory.insert(:jwt_plugin, api_id: api.id)
+      ConfigurationFactory.insert(:auth_plugin_with_jwt, api_id: api.id)
 
       assert {:ok, %APISchema{
         id: api_id,

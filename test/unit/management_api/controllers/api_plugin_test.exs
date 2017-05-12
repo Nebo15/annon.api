@@ -24,7 +24,7 @@ defmodule Annon.ManagementAPI.Controllers.APIPluginTest do
         |> Map.get("data")
 
       plugin1_id = ConfigurationFactory.insert(:proxy_plugin, api_id: api.id).id
-      plugin2_id = ConfigurationFactory.insert(:scopes_plugin, api_id: api.id).id
+      plugin2_id = ConfigurationFactory.insert(:auth_plugin_with_jwt, api_id: api.id).id
 
       resp =
         conn
@@ -32,7 +32,9 @@ defmodule Annon.ManagementAPI.Controllers.APIPluginTest do
         |> json_response(200)
         |> Map.get("data")
 
-      assert [%{"id" => ^plugin1_id}, %{"id" => ^plugin2_id}] = resp
+      assert [%{"id" => resp_plugin1_id}, %{"id" => resp_plugin2_id}] = resp
+      assert plugin1_id in [resp_plugin1_id, resp_plugin2_id]
+      assert plugin2_id in [resp_plugin1_id, resp_plugin2_id]
     end
   end
 
