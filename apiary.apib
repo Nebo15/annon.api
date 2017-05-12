@@ -965,37 +965,6 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 + port: 443 (number) - Port on which your upstream recieves requests.
 + path: /json/545708 (string) - Path to your upstream API. You can omit this parameter to preserve path from original request.
 
-## JWT Plugin
-### `Plugin_JWT__Request`
-+ name: jwt (string, required)
-+ is_enabled: true (boolean, required)
-+ settings (Plugin_JWT__Settings, fixed-type)
-
-### `Plugin_JWT__Response`
-+ Include Plugin_JWT__Request
-+ created_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
-+ updated_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
-
-### `Plugin_JWT__Settings`
-+ secret: c3VwZXJfY29vbEhhY2tlcgo= (string, required) - Base64 encoded secret to decode JWT token.
-+ algorythm (enum) - Algorithm that is used to generate signature.
-    - ES256 (string)
-    - ES384 (string)
-    - ES512 (string)
-    - HS256 (string)
-    - HS384 (string)
-    - HS512 (string)
-    - PS256 (string)
-    - PS384 (string)
-    - PS512 (string)
-    - RS256 (string)
-    - RS384 (string)
-    - RS512 (string)
-    - Ed25519 (string)
-    - Ed25519ph (string)
-    - Ed448ph (string)
-    - Ed448 (string)
-
 ## ACL Plugin
 ### `Plugin_ACL__Request`
 + name: acl (string, required)
@@ -1014,25 +983,6 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 + methods (array[`HTTP_Verb`], required)
 + path: ^my_resource/ (string, required) - Regular expression on path. **Warning!** It's relative to API path.
 + scope: `request_api profile:read` (string, required) - Requied scope to request API, delimited by space.
-
-## Scopes Plugin
-### `Plugin_Scopes__Request`
-+ name: scopes (string, required)
-+ is_enabled: true (boolean, required)
-+ settings (Plugin_Scopes__Settings, fixed-type)
-
-### `Plugin_Scopes__Response`
-+ Include Plugin_Scopes__Request
-+ created_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
-+ updated_at: `2017-04-20T19:14:13Z` (string, required) - ISO 8601 date and time in UTC timezone.
-
-### `Plugin_Scopes__Settings`
-+ strategy (`Plugin_Scopes__Settings__Strategies`, required) - Strategy on which Annon should resolve user ID to scopes.
-+ `url_template`: `http://ec2-52-58-60-8.eu-central-1.compute.amazonaws.com:8081/0/api.svc/party/{party_id}/scopes` (string) - Inside `url_template` you can use `{party_id}` to substitle consumer ID in a request path.
-
-### `Plugin_Scopes__Settings__Strategies` (enum)
-– pcm (string)
-- jwt (string)
 
 ## Validator Plugin
 ### `Plugin_Validator__Request`
