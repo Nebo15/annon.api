@@ -50,6 +50,33 @@ defmodule Annon.ConfigurationFactory do
     }
   end
 
+  def auth_plugin_with_oauth_factory do
+    mock_conf = Confex.get_map(:annon_api, :acceptance)[:mock]
+    mock_url = "http://#{mock_conf[:host]}:#{mock_conf[:port]}/"
+
+    %Annon.Configuration.Schemas.Plugin{
+      name: "auth",
+      is_enabled: true,
+      settings: %{
+        "strategy" => "oauth",
+        "url_template" => "#{mock_url}/oauth/tokens/{access_token}"
+      }
+    }
+  end
+
+  def auth_plugin_with_jwt_factory do
+    %Annon.Configuration.Schemas.Plugin{
+      name: "auth",
+      is_enabled: true,
+      settings: %{
+        "strategy" => "jwt",
+        "secret" => Base.encode64("a_secret_signature"),
+        "third_party_resolver" => false,
+        "algorithm" => "HS256"
+      }
+    }
+  end
+
   def jwt_plugin_factory do
     %Annon.Configuration.Schemas.Plugin{
       name: "jwt",

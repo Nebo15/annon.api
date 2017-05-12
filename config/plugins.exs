@@ -10,6 +10,7 @@ config :annon_api, :plugins, [
   {:jwt, deps: [:ip_restriction, :ua_restriction], features: [:modify_conn], module: Annon.Plugins.JWT},
   # {:oauth, deps: [:ip_restriction, :ua_restriction], features: [:modify_conn]},
   {:scopes, deps: [:jwt, :oauth], features: [:modify_conn], module: Annon.Plugins.Scopes},
+  {:auth, deps: [:ip_restriction, :ua_restriction], features: [:modify_conn], module: Annon.Plugins.Auth},
   {:acl,  deps: [:scopes], require: [:scopes], features: [:modify_conn], module: Annon.Plugins.ACL},
   {:validator, deps: [:acl, :ip_restriction, :ua_restriction, :logger], features: [:decode_body, :modify_conn],
     module: Annon.Plugins.Validator},

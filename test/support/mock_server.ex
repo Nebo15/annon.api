@@ -39,6 +39,56 @@ defmodule Annon.MockServer do
     |> Response.send(conn, 200)
   end
 
+  get "auth/mithril/users/:user_id" do
+    response_body = %{
+      "data" => %{
+        "user_id" => user_id,
+        "details" => %{
+          "scope" => "api:access"
+        }
+      }
+    }
+
+    send_resp(conn, 200, Poison.encode!(response_body))
+  end
+
+  get "auth/consumers/:consumer_id" do
+    response_body = %{
+      "data" => %{
+        "consumer_id" => consumer_id,
+        "consumer_scope" => "api:access"
+      }
+    }
+
+    send_resp(conn, 200, Poison.encode!(response_body))
+  end
+
+  get "auth/mithril/tokens/:access_token" do
+    response_body = %{
+      "data" => %{
+        "id" => access_token,
+        "user_id" => "bob",
+        "details" => %{
+          "scope" => "api:access"
+        }
+      }
+    }
+
+    send_resp(conn, 200, Poison.encode!(response_body))
+  end
+
+  get "auth/tokens/:access_token" do
+    response_body = %{
+      "data" => %{
+        "id" => access_token,
+        "consumer_id" => "bob",
+        "consumer_scope" => "api:access"
+      }
+    }
+
+    send_resp(conn, 200, Poison.encode!(response_body))
+  end
+
   match _ do
     conn
     |> debug_conn
