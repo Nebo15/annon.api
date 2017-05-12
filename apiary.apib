@@ -65,7 +65,7 @@ To monitor services status we will use DogStatsD integration, that will receive 
 - `response_count` - (counter) same as `request_count` but sent after request dispatch and additionally tagged with `http_status`.
 - `latency` (gauge) - total request latency for a API consumer, additionally tagged with `http_status`.
 
-All metrics have tags: `http_host`, `http_port`, `http_method`, `api_name` and `api_id` (if matches any), `request_id`. This allows to set different aggregated views on counter data.
+All metrics have tags: `http.host`, `http.port`, `http.method`, `api.name` and `api.id` (if matches any), `request_id`. This allows to set different aggregated views on counter data.
 
 We recommend you to try [DataDog](https://www.datadoghq.com/) for collecting and displaying performance metrics. But this is not a hard constraint, instead you can use any StatsD collector.
 
@@ -76,6 +76,10 @@ Annon guarantees that replayed requests with same `X-Idempotency-Key: <key>` and
 ### Requests Tracing
 
 Annon supports [OpenTracing](http://opentracing.io/) in Erlang via [Otter](https://github.com/Bluehouse-Technology/otter) library. This means that by implementing OpenTracing API in other services you can trace complete request impact for each of your services.
+
+### Management UI
+
+![UI Screenshow](https://github.com/Nebo15/annon.web/raw/master/docs/images/ui-animated.gif)
 
 ## Installation
 
@@ -298,46 +302,84 @@ Request Path | Proxy Path | API Path | `strip_api_path` | Upstream Request
             + code: 201 (number)
         + data (`Plugin_Proxy__Response`)
 
+## Authentication [/apis/{api_id}/plugins/auth]
 
-## JWT Authrozation [/apis/{api_id}/plugins/jwt]
+This plugin authenticates API consumers by using a configured strategy.
 
-**This plugin is deprecated.**
+Right now it supports two strategies:
 
-### General Information
-JWT is a authroization plugin that decodes JWT tokens received from api consumer (with a `signature` field that is set in settings).
+- `jwt` - uses JSON Web Token to resolve consumer ID and scope.
+- `oauth` - uses token from `Authorization: Bearer <token>` header and subsequent request to resolve consumer ID and scope via third-party provider.
 
-This plugin **NEITHER** authorize API resources, **NOR** apply consumer scopes to request. For this purposes use [Scopes Resolver](#reference/plugins/scopes-resolver) and [ACL](#reference/plugins/acl/get-all-requests) plugins.
+### JWT Strategy
 
+Decodes JWT tokens received from API Consumer and validates it signature by a configured secret key.
 If token is invalid, appropriate error response will be send back to api consumer.
+
+It requests `consumer_id` to be present in token itself, but Consumer `scope` can be resolved by:
+
+1. Adding `scope` field in JWT token.
+2. Subsequent request to a third-party provider.
 
 **Warning!** JWT signature should be Base64 encoded. Some providers (for example, Auth0) already encode it for you.
 
-### Consumer Usage
+#### Consumer Usage
 
-Consumer should send `Authorization: Bearer <token>` header with his requests.
+Consumer should send `Authorization: Bearer <jwt_token>` header with his requests.
 
-### Auth0 Support
+#### Subsequent requests
 
-#### Configuration
+You can configure this strategy to resolve consumer scope by a subsequent request to a 
+third-party provider, in this case GET request will be send to `url_template` 
+with substituted `{consumer_id}`. Annon will expect `HTTP 200` response in following format:
+
+```
+{
+  "data": {
+    "user_id": "user-dsljsdflkdflj",
+    "details": {
+        "scope": "originator_loans:upload"
+    }
+  }
+}
+```
+`$.data.user_id` will be mapped to Consumer ID.
+`$.data.details.scope` will be mapped to Consumer Scope.
+
+**OR**
+
+```
+{
+  "data": {
+    "consumer_id": "user-dsljsdflkdflj",
+    "consumer_scope": "originator_loans:upload"
+  }
+}
+```
+
+If any other response is sent, Consumer will have no scopes but `X-Consumer-ID` header will be sent to upstream.
+
+#### Auth0 Support
+
+**Configuration**
+
 To configure Annon copy-paste your `Client Secret` from `Clients` -> `Settings` to plugins `signature` configuration.
 
-#### Issuing a Token
+**Issuing a Token**
 
 To receive an valid JWT with scopes token you must:
 1. Set `app_metadata` for all your users, it should have AT LEAST one array with consumer ID:
     ``` 
     {
-      "party_id": "my_consumer_id"
+      "consumer_id": "my_consumer_id"
     }
     ```
     
 2. (Optional) If you prefer to receive scopes from Auth0 `app_metadata` should also have scopes array:
     ```
     {
-      "party_id": "my_consumer_id",
-      "scopes": [
-        "read:email"
-      ]
+      "consumer_id": "my_consumer_id",
+      "consumer_scope": "email:read email:send"
     }
     ```
 
@@ -346,87 +388,74 @@ To receive an valid JWT with scopes token you must:
 3. When authorizing consumers set correct scope to receive JWT token with `app_metadata`: `scope=openid app_metadata`.
 4. Whenever you make requests to Annon, use `id_token` from Auth0 response (it's a JWT token that we need) in a `Authorization: Bearer <id_token>` header.
 
-### Bind or Update JWT Plugin [PUT]
+### oAuth Strategy
 
-+ Parameters
-    + api_id: 1 (string, required) - API ID.
+Recieves `access_token` from a `Authorization: Bearer <access_token>` header 
+and sends a subsequent request to resolve Consumer ID and scopes via third-party provider (eg. [Mithril](http://docs.mithril1.apiary.io/#)). 
 
-+ Request (application/json)
-    + Attributes
-        + plugin (`Plugin_JWT__Request`)
+#### Consumer Usage
 
-+ Response 200 (application/json)
-    + Attributes (Response_OK)
-        + data (`Plugin_JWT__Response`)
+Consumer should send `Authorization: Bearer <access_token>` header with his requests.
 
-+ Response 201 (application/json)
-    + Attributes (Response_OK)
-        + meta (Response__Meta)
-            + code: 201 (number)
-        + data (`Plugin_JWT__Response`)
+#### Subsequent requests
 
-## Scopes Resolver [/apis/{api_id}/plugins/scopes]
-
-**This plugin is deprecated.**
-
-This plugin resolves scopes based on JWT token contents or by sending upstream request to authorization service.
-
-Right now it supports two strategies:
-
-- `jwt`
-- `pcm`
-
-#### JWT Strategy
-
-Scopes should be part of `app_metadata` in a JWT token. See [JWT Authorization](#reference/plugins/jwt-authrozation) plugin description.
-
-#### PCM Strategy
-
-Resolves token by sending request to authorization service. `url_template` setting is required. 
-
-Remote API service should return HTTP 200 status code and following json structure:
+GET request will be send to `url_template` with substituted `{access_token}`. 
+Annon will expect `HTTP 200` response in following formats:
 
 ```
 {
-  "meta": {
-    "code": 200
-  },
   "data": {
-    "scopes": [
-      "originator_loans:upload", ...
-    ]
+    "user_id": "user-dsljsdflkdflj",
+    "details": {
+        "scope": "originator_loans:upload"
+    }
+  }
+}
+```
+`$.data.user_id` will be mapped to Consumer ID.
+`$.data.details.scope` will be mapped to Consumer Scope.
+
+**OR**
+
+```
+{
+  "data": {
+    "consumer_id": "user-dsljsdflkdflj",
+    "consumer_scope": "originator_loans:upload"
   }
 }
 ```
 
-Inside `url_template` you can use `{party_id}` to substitle consumer ID in a request path, ie.: `http://ec2-52-58-60-8.eu-central-1.compute.amazonaws.com:8081/0/api.svc/party/{party_id}/scopes`.
+If any other response is sent, Consumer will not be autheticated.
 
-### Bind or Update Scopes Plugin [PUT]
+### Bind or Update Authentication Plugin [PUT]
 
 + Parameters
     + api_id: 1 (string, required) - API ID.
 
 + Request (application/json)
     + Attributes
-        + plugin (`Plugin_Scopes__Request`)
+        + plugin (`Plugin_Auth__Request`)
 
 + Response 200 (application/json)
     + Attributes (Response_OK)
-        + data (`Plugin_Scopes__Response`)
+        + data (`Plugin_Auth__Response`)
 
 + Response 201 (application/json)
     + Attributes (Response_OK)
         + meta (Response__Meta)
             + code: 201 (number)
-        + data (`Plugin_Scopes__Response`)
+        + data (`Plugin_Auth__Response`)
 
 ## ACL [/apis/{api_id}/plugins/acl]
 
-ACL allows to protect your API's (or proxy `upstreams`) by a scope-based authorization.
+ACL allows to set scope to access certain subpaths of your API. 
 
-Once enabled it will read `scopes` that is exposed by Scopes Resolver plugin. If there are no scopes, it will send responses with `unathorized` status.
+Once enabled it will restrict access to all subpaths of API, and you 
+need to allow access to them by whitelisting paths or path patterns.
 
-If path is not defined (gateway can not extract list of scopes needed for path), unathorized response is sent.
+It expects scope to be set in Auth plugin, if scope is not set, 
+API consumers will receive responses `unathorized` error.
 
 Proxy configuration consist of pattern matches on request method and path:
 
@@ -498,11 +527,12 @@ Path is relative to API path, so you **don't need to specify API path prefix**!
 
 ## Idempotency [/apis/{api_id}/plugins/idempotency]
 
-Gateway supports idempotency for safely retrying POST requests without accidentally duplicating entity.
+Gateway supports idempotency for safely retrying POST requests without accidentally duplicating entity. Gateway always send back the same response for requests made with the same key. 
+However, you cannot use the same key with different request parameters.
 
-To perform an idempotent request, attach a unique key to any POST request made to the API via the `X-Idempotency-Key: <idempotency_key>` header.
+To perform an idempotent request, send a POST requests with `X-Idempotency-Key: <idempotency_key>` header. `idempotency_key` can be any unique string up to 255 characters, we recommend to use UUIDs.
 
-Gateway always send back the same response for requests made with the same key. However, you cannot use the same key with different request parameters.
+Enabling idempotency will increase response latency - Requests will be created synchronously to enshure read-after-write consistency.
 
 ### Bind or Update Idempotency Plugin [PUT]
 
@@ -623,137 +653,6 @@ On `GET`, `POST`, `PUT` and other requests:
         + meta (Response__Meta)
             + code: 201 (number)
         + data (`Plugin_CORS__Response`)
-
-## Authentication [/apis/{api_id}/plugins/auth]
-
-**This plugin is in development.**
-
-This plugin authenticates API consumers by using a configured strategy.
-
-Right now it supports two strategies:
-
-- `jwt` - uses JSON Web Token to resolve consumer ID and scope.
-- `oauth` - uses token from `Authorization: Bearer <token>` header and subsequent request to resolve consumer ID and scope via third-party provider.
-
-### JWT Strategy
-
-Decodes JWT tokens received from API Consumer and validates it signature by a configured secret key.
-If token is invalid, appropriate error response will be send back to api consumer.
-
-It requests `consumer_id` to be present in token itself, but Consumer `scope` can be resolved by:
-
-1. Adding `scope` field in JWT token.
-2. Subsequent request to a third-party provider.
-
-**Warning!** JWT signature should be Base64 encoded. Some providers (for example, Auth0) already encode it for you.
-
-#### Consumer Usage
-
-Consumer should send `Authorization: Bearer <jwt_token>` header with his requests.
-
-#### Subsequent requests
-
-You can configure this strategy to resolve consumer scope by a subsequent request to a 
-third-party provider, in this case GET request will be send to `url_template` 
-with substituted `{consumer_id}`. Annon will expect `HTTP 200` response in following format:
-
-```
-{
-  "data": {
-    "scope": "originator_loans:upload"
-  }
-}
-```
-
-If any other response is sent, Consumer will have no scopes but `X-Consumer-ID` header will be sent to upstream.
-
-#### Auth0 Support
-
-**Configuration**
-
-To configure Annon copy-paste your `Client Secret` from `Clients` -> `Settings` to plugins `signature` configuration.
-
-**Issuing a Token**
-
-To receive an valid JWT with scopes token you must:
-1. Set `app_metadata` for all your users, it should have AT LEAST one array with consumer ID:
-    ``` 
-    {
-      "consumer_id": "my_consumer_id"
-    }
-    ```
-    
-2. (Optional) If you prefer to receive scopes from Auth0 `app_metadata` should also have scopes array:
-    ```
-    {
-      "consumer_id": "my_consumer_id",
-      "consumer_scope": "email:read email:send"
-    }
-    ```
-
-    You can set default scopes in `Client` -> `Settings` -> `Advanced` -> `App Metadata`.
-    
-3. When authorizing consumers set correct scope to receive JWT token with `app_metadata`: `scope=openid app_metadata`.
-4. Whenever you make requests to Annon, use `id_token` from Auth0 response (it's a JWT token that we need) in a `Authorization: Bearer <id_token>` header.
-
-### oAuth Strategy
-
-Recieves `access_token` from a `Authorization: Bearer <access_token>` header 
-and sends a subsequent request to resolve Consumer ID and scopes via third-party provider (eg. [Mithril](http://docs.mithril1.apiary.io/#)). 
-
-#### Consumer Usage
-
-Consumer should send `Authorization: Bearer <access_token>` header with his requests.
-
-#### Subsequent requests
-
-GET request will be send to `url_template` with substituted `{access_token}`. 
-Annon will expect `HTTP 200` response in following formats:
-
-```
-{
-  "data": {
-    "user_id": "user-dsljsdflkdflj",
-    "details": {
-        "scope": "originator_loans:upload"
-    }
-  }
-}
-```
-`user_id` will be mapped to Consumer ID.
-
-**OR**
-
-```
-{
-  "data": {
-    "consumer_id": "user-dsljsdflkdflj",
-    "consumer_scope": "originator_loans:upload"
-  }
-}
-```
-
-If any other response is sent, Consumer will not be autheticated.
-
-### Bind or Update Authentication Plugin [PUT]
-
-+ Parameters
-    + api_id: 1 (string, required) - API ID.
-
-+ Request (application/json)
-    + Attributes
-        + plugin (`Plugin_Auth__Request`)
-
-+ Response 200 (application/json)
-    + Attributes (Response_OK)
-        + data (`Plugin_Auth__Response`)
-
-+ Response 201 (application/json)
-    + Attributes (Response_OK)
-        + meta (Response__Meta)
-            + code: 201 (number)
-        + data (`Plugin_Auth__Response`)
-
 
 ## Rate Limit [/apis/{api_id}/plugins/rate_limit]
 
@@ -1022,8 +921,8 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 
 ## Plugins
 ### Plugin
-+ name: myplugin (string) - Plugin name
-+ is_enabled: true (boolean) - Flag that shows that plagin is enabled or disabled.
++ name: myplugin (string, required) - Plugin name
++ is_enabled: true (boolean, required) - Flag that shows that plagin is enabled or disabled.
 + settings (object, fixed-type) - Object that describes API plugin settings.
   + key: value - A key-value storage for your API plugins.
 
@@ -1069,7 +968,7 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 ## JWT Plugin
 ### `Plugin_JWT__Request`
 + name: jwt (string, required)
-+ is_enabled: true (boolean)
++ is_enabled: true (boolean, required)
 + settings (Plugin_JWT__Settings, fixed-type)
 
 ### `Plugin_JWT__Response`
@@ -1100,7 +999,7 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 ## ACL Plugin
 ### `Plugin_ACL__Request`
 + name: acl (string, required)
-+ is_enabled: true (boolean)
++ is_enabled: true (boolean, required)
 + settings (Plugin_ACL__Settings, fixed-type)
 
 ### `Plugin_ACL__Response`
@@ -1119,7 +1018,7 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 ## Scopes Plugin
 ### `Plugin_Scopes__Request`
 + name: scopes (string, required)
-+ is_enabled: true (boolean)
++ is_enabled: true (boolean, required)
 + settings (Plugin_Scopes__Settings, fixed-type)
 
 ### `Plugin_Scopes__Response`
@@ -1212,7 +1111,7 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 ## Authentication Plugin
 ### `Plugin_Auth__Request`
 + name: auth (string, required)
-+ is_enabled: true (boolean)
++ is_enabled: true (boolean, required)
 + One of
     + settings (Plugin_Auth__Settings_oAuth, fixed-type)
     + settings (Plugin_Auth__Settings_JWT, fixed-type)
@@ -1225,21 +1124,31 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 
 ### `Plugin_Auth__Settings_oAuth`
 + strategy: oauth (string, required)
-+ `url_template`: `http://ec2-52-58-60-8.eu-central-1.compute.amazonaws.com:8081/0/api.svc/party/{party_id}/scopes` (string, required) - Inside `url_template` you can use `{party_id}` to substitle consumer ID in a request path.
++ `url_template`: `http://ec2-52-58-60-8.eu-central-1.compute.amazonaws.com:8081/0/api.svc/tokens/{access_token}` (string, required) - Inside `url_template` you can use `{access_token}` to substitle with access token in a request path.
 
 ### `Plugin_Auth__Settings_JWT`
 + strategy: jwt (string, required)
 + `third_party_resolver`: false (string, required) - Do not resolve scopes with subsequence request.
++ secret: c3VwZXJfY29vbEhhY2tlcgo= (string, required) - Base64 encoded secret to decode JWT token.
++ algorithm (enum) - Algorithm that is used to generate signature.
+    - HS256 (string)
+    - HS384 (string)
+    - HS512 (string)
 
 ### `Plugin_Auth__Settings_JWTs`
 + strategy: jwt (string, required)
 + `third_party_resolver`: true (boolean, required) - Resolve scopes with subsequent request. 
-+ `url_template`: `http://ec2-52-58-60-8.eu-central-1.compute.amazonaws.com:8081/0/api.svc/party/{party_id}/scopes` (string, optional) - Inside `url_template` you can use `{party_id}` to substitle consumer ID in a request path.
++ `url_template`: `http://ec2-52-58-60-8.eu-central-1.compute.amazonaws.com:8081/0/api.svc/party/{consumer_id}/scopes` (string, optional) - Inside `url_template` you can use `{consumer_id}` to substitle consumer ID in a request path.
++ secret: c3VwZXJfY29vbEhhY2tlcgo= (string, required) - Base64 encoded secret to decode JWT token.
++ algorithm (enum) - Algorithm that is used to generate signature.
+    - HS256 (string)
+    - HS384 (string)
+    - HS512 (string)
 
 ## Rate Limit Plugin
 ### `Plugin_Rate_Limit__Request`
 + name: rate_limit (string, required)
-+ is_enabled: true (boolean)
++ is_enabled: true (boolean, required)
 + settings (Plugin_Rate_Limit__Settings, fixed-type)
 
 ### `Plugin_Rate_Limit__Response`
@@ -1306,7 +1215,7 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 ## Load Shedding Plugin
 ### `Plugin_Load_Shedding__Request`
 + name: load_shedding (string, required)
-+ is_enabled: true (boolean)
++ is_enabled: true (boolean, required)
 + settings (Plugin_Load_Shedding__Settings, fixed-type)
 
 ### `Plugin_Load_Shedding__Response`
@@ -1327,7 +1236,7 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 ## Static Responses Plugin
 ### `Plugin_Static_Responses__Request`
 + name: static_responses (string, required)
-+ is_enabled: true (boolean)
++ is_enabled: true (boolean, required)
 + settings (Plugin_Static_Responses__Settings, fixed-type)
 
 ### `Plugin_Static_Responses__Response`
@@ -1375,6 +1284,6 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
     + headers (array[object]) - List of headers that was sent to a consumer.
     + body (object) - JSON response body that is sent to consumer.
 + latencies
-    + gateway
-    + upstream
-    + client_request
+    + gateway: 100 (number) - Latency in **micro**seconds.
+    + upstream: 100 (number) - Latency in **micro**seconds.
+    + client_request: 100 (number) - Latency in **micro**seconds.
