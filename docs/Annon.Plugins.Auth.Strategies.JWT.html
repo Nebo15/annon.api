@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Plugins.Scopes.JWTStrategy – annon_api v0.2.70</title>
+    <title>Annon.Plugins.Auth.Strategies.JWT – annon_api v0.2.71</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-a16be87b59.js"></script>
+    <script src="dist/sidebar_items-da4828c7f2.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.70
+        v0.2.71
       </h2>
     </div>
     
@@ -58,15 +58,15 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.70</small>
-        Annon.Plugins.Scopes.JWTStrategy
+        <small class="visible-xs">annon_api v0.2.71</small>
+        Annon.Plugins.Auth.Strategies.JWT
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>Helper for retrieving scopes with JWT strategy - getting scopes from token.</p>
+          <p>JWT adapter for Auth strategies.</p>
 
         </section>
       
@@ -88,8 +88,11 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_scopes/1">get_scopes(token)</a>
+    <a href="#fetch_consumer/3">fetch_consumer(atom, token, settings)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Fetch consumer data</p>
+</div>
   
 </div>
 
@@ -111,19 +114,22 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="get_scopes/1">
+          <div class="detail" id="fetch_consumer/3">
   
   <div class="detail-header">
-    <a href="#get_scopes/1" class="detail-link" title="Link to this function">
+    <a href="#fetch_consumer/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_scopes(token)</span>
+    <span class="signature">fetch_consumer(atom, token, settings)</span>
     
     
     
   </div>
   <section class="docstring">
-    
+    <p>Fetch consumer data.</p>
+<p>In case error is returned, it’s message will be sent to API consumer.</p>
+<p>Callback implementation for <a href="Annon.Plugins.Auth.Strategy.html#c:fetch_consumer/3"><code class="inline">Annon.Plugins.Auth.Strategy.fetch_consumer/3</code></a>.</p>
+
   </section>
 </div>
 

@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>API Reference – annon_api v0.2.70</title>
+    <title>API Reference – annon_api v0.2.71</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-a16be87b59.js"></script>
+    <script src="dist/sidebar_items-da4828c7f2.js"></script>
   </head>
   <body data-type="extras">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.70
+        v0.2.71
       </h2>
     </div>
     
@@ -58,7 +58,7 @@
 
 
 <h1>
-  <small class="visible-xs">annon_api v0.2.70</small>
+  <small class="visible-xs">annon_api v0.2.71</small>
   API Reference
 </h1>
 
@@ -280,13 +280,6 @@ whenever there was change done by a Management API</p>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="Annon.PCMMockServer.html">Annon.PCMMockServer</a></div>
-  
-    <div class="summary-synopsis"><p>Mock server that simulates gettings scopes from PCM</p>
-</div>
-  
-</div>
-<div class="summary-row">
   <div class="summary-signature"><a href="Annon.PathHelpers.html">Annon.PathHelpers</a></div>
   
     <div class="summary-synopsis"><p>This module provider path generation helpers for various entities in Management API</p>
@@ -342,6 +335,48 @@ whenever there was change done by a Management API</p>
   
 </div>
 <div class="summary-row">
+  <div class="summary-signature"><a href="Annon.Plugins.Auth.html">Annon.Plugins.Auth</a></div>
+  
+    <div class="summary-synopsis"><p>This plugin authenticates API consumers by using a configured strategy</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Annon.Plugins.Auth.SettingsValidator.html">Annon.Plugins.Auth.SettingsValidator</a></div>
+  
+    <div class="summary-synopsis"><p>Validation helpers for Auth plugin</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Annon.Plugins.Auth.Strategies.JWT.html">Annon.Plugins.Auth.Strategies.JWT</a></div>
+  
+    <div class="summary-synopsis"><p>JWT adapter for Auth strategies</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Annon.Plugins.Auth.Strategies.OAuth.html">Annon.Plugins.Auth.Strategies.OAuth</a></div>
+  
+    <div class="summary-synopsis"><p>JWT adapter for Auth strategies</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Annon.Plugins.Auth.Strategy.html">Annon.Plugins.Auth.Strategy</a></div>
+  
+    <div class="summary-synopsis"><p>Behaviour module for Auth strategies</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Annon.Plugins.Auth.ThirdPartyResolver.html">Annon.Plugins.Auth.ThirdPartyResolver</a></div>
+  
+    <div class="summary-synopsis"><p>Behaviour module for Auth strategies</p>
+</div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature"><a href="Annon.Plugins.CORS.html">Annon.Plugins.CORS</a></div>
   
     <div class="summary-synopsis"><p>This plugin controls cross-origin resource sharing</p>
@@ -373,20 +408,6 @@ whenever there was change done by a Management API</p>
   <div class="summary-signature"><a href="Annon.Plugins.Idempotency.html">Annon.Plugins.Idempotency</a></div>
   
     <div class="summary-synopsis"><p><a href="http://docs.annon.apiary.io/#reference/plugins/idempotency">Request Idempotency plugin</a></p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Annon.Plugins.JWT.html">Annon.Plugins.JWT</a></div>
-  
-    <div class="summary-synopsis"><p><a href="http://docs.annon.apiary.io/#reference/plugins/jwt-authentification">JWT Tokens authorization</a> plugin</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Annon.Plugins.JWT.SettingsValidator.html">Annon.Plugins.JWT.SettingsValidator</a></div>
-  
-    <div class="summary-synopsis"><p>Validation rules for JWT plugin settings</p>
 </div>
   
 </div>
@@ -435,34 +456,6 @@ sends incoming request to an upstream back-ends</p>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="Annon.Plugins.Scopes.html">Annon.Plugins.Scopes</a></div>
-  
-    <div class="summary-synopsis"><p>This plugin receives user scopes from PCM by party_id</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Annon.Plugins.Scopes.JWTStrategy.html">Annon.Plugins.Scopes.JWTStrategy</a></div>
-  
-    <div class="summary-synopsis"><p>Helper for retrieving scopes with JWT strategy - getting scopes from token</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Annon.Plugins.Scopes.PCMStrategy.html">Annon.Plugins.Scopes.PCMStrategy</a></div>
-  
-    <div class="summary-synopsis"><p>Helper for retrieving scopes with PCM strategy - getting scopes from PCM by party_id</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Annon.Plugins.Scopes.SettingsValidator.html">Annon.Plugins.Scopes.SettingsValidator</a></div>
-  
-    <div class="summary-synopsis"><p>Validation rules for Scopes plugin settings</p>
-</div>
-  
-</div>
-<div class="summary-row">
   <div class="summary-signature"><a href="Annon.Plugins.UARestriction.html">Annon.Plugins.UARestriction</a></div>
   
     <div class="summary-synopsis"><p>It allows to white/black-list consumers by user agent</p>
@@ -495,6 +488,13 @@ set validation rules for a path relative to an API</p>
   <div class="summary-signature"><a href="Annon.PrivateRouter.html">Annon.PrivateRouter</a></div>
   
     <div class="summary-synopsis"><p>Router for a private APIs inside you clusters</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Annon.PublicAPI.Consumer.html">Annon.PublicAPI.Consumer</a></div>
+  
+    <div class="summary-synopsis"><p>This module defines struct to carry API consumer,</p>
 </div>
   
 </div>

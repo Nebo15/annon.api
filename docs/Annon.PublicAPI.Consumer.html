@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Plugins.Scopes.PCMStrategy – annon_api v0.2.70</title>
+    <title>Annon.PublicAPI.Consumer – annon_api v0.2.71</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-a16be87b59.js"></script>
+    <script src="dist/sidebar_items-da4828c7f2.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.70
+        v0.2.71
       </h2>
     </div>
     
@@ -58,15 +58,15 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.70</small>
-        Annon.Plugins.Scopes.PCMStrategy
+        <small class="visible-xs">annon_api v0.2.71</small>
+        Annon.PublicAPI.Consumer
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>Helper for retrieving scopes with PCM strategy - getting scopes from PCM by party_id.</p>
+          <p>This module defines struct to carry API consumer,</p>
 
         </section>
       
@@ -80,15 +80,19 @@
             Summary
           </h1>
           
-
-          
-  <div class="summary-functions summary">
+  <div class="summary-types summary">
     <h2>
-      <a href="#functions">Functions</a>
+      <a href="#types">Types</a>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_scopes/2">get_scopes(party_id, url_template)</a>
+    <a href="#t:scope/0">scope()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:t/0">t()</a>
   </div>
   
 </div>
@@ -98,28 +102,56 @@
 
           
 
+          
+
         </section>
       
 
       
-
-      
-        <section id="functions" class="details-list">
+        <section id="types" class="details-list">
           <h1 class="section-heading">
-            <a class="hover-link" href="#functions">
+            <a class="hover-link" href="#types">
               <i class="icon-link"></i>
             </a>
-            Functions
+            Types
           </h1>
-          <div class="detail" id="get_scopes/2">
+          <div class="types-list">
+            <div class="detail" id="t:scope/0">
   
   <div class="detail-header">
-    <a href="#get_scopes/2" class="detail-link" title="Link to this function">
+    <a href="#t:scope/0" class="detail-link" title="Link to this type">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_scopes(party_id, url_template)</span>
+    <span class="signature">scope()</span>
     
     
+    
+      <div class="specs">
+        
+          <pre>scope() :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a> | [<a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>]</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="t:t/0">
+  
+  <div class="detail-header">
+    <a href="#t:t/0" class="detail-link" title="Link to this type">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">t()</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>t() :: %{id: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>, scope: <a href="#t:scope/0">scope</a>, metadata: <a href="https://hexdocs.pm/elixir/Map.html#t:t/0">Map.t</a>}</pre>
+        
+      </div>
     
   </div>
   <section class="docstring">
@@ -127,7 +159,10 @@
   </section>
 </div>
 
+          </div>
         </section>
+      
+
       
 
       
