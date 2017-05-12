@@ -1,7 +1,7 @@
 defmodule Annon.Plugins.Scopes.OAuth2Strategy do
   @moduledoc false
 
-  def token_attributes(nil, _), do: []
+  def token_attributes(nil, _), do: nil
   def token_attributes(scope, url_template) do
     scope
     |> get_url(url_template)
