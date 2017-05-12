@@ -27,9 +27,14 @@ defmodule Annon.Plugins.Scopes do
   defp get_scopes(conn, %{"strategy" => "oauth2", "url_template" => url_template}) do
     case Conn.get_req_header(conn, "authorization") do
       [token] ->
+        extract_token_value = fn
+          "Bearer " <> string -> string
+          _ -> nil
+        end
+
         token_attributes =
           token
-          |> (fn("Bearer " <> string) -> string end).()
+          |> extract_token_value.()
           |> OAuth2Strategy.token_attributes(url_template)
 
         if token_attributes do
