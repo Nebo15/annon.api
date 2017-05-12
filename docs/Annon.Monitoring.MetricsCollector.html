@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Monitoring – annon_api v0.2.69</title>
+    <title>Annon.Monitoring.MetricsCollector – annon_api v0.2.70</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-f929e2386a.js"></script>
+    <script src="dist/sidebar_items-a16be87b59.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.69
+        v0.2.70
       </h2>
     </div>
     
@@ -58,15 +58,16 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.69</small>
-        Annon.Monitoring
+        <small class="visible-xs">annon_api v0.2.70</small>
+        Annon.Monitoring.MetricsCollector
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>Monitoring service for Annons clusters.</p>
+          <p>This module provides helper functions to persist meaningful metrics to StatsD or DogstatsD servers.</p>
+<p>Code is based on <a href="https://github.com/lexmag/statix">Statix</a> library.</p>
 
         </section>
       
@@ -88,13 +89,13 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_node_status/0">get_node_status()</a>
+    <a href="#track_request/3">track_request(request_id, content_length, opts)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_status/0">get_status()</a>
+    <a href="#track_response/3">track_response(request_id, latencies, opts)</a>
   </div>
   
 </div>
@@ -117,13 +118,13 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="get_node_status/0">
+          <div class="detail" id="track_request/3">
   
   <div class="detail-header">
-    <a href="#get_node_status/0" class="detail-link" title="Link to this function">
+    <a href="#track_request/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_node_status()</span>
+    <span class="signature">track_request(request_id, content_length, opts)</span>
     
     
     
@@ -132,13 +133,13 @@
     
   </section>
 </div>
-<div class="detail" id="get_status/0">
+<div class="detail" id="track_response/3">
   
   <div class="detail-header">
-    <a href="#get_status/0" class="detail-link" title="Link to this function">
+    <a href="#track_response/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_status()</span>
+    <span class="signature">track_response(request_id, latencies, opts)</span>
     
     
     
