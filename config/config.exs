@@ -62,7 +62,7 @@ config :annon_api, :metrics_collector,
   send_tags: {:system, :boolean, "METRICS_COLLECTOR_SEND_TAGS", true},
   host: {:system, :string, "METRICS_COLLECTOR_HOST", "localhost"},
   port: {:system, :number, "METRICS_COLLECTOR_PORT", 32768},
-  namespace: {:system, :string, "METRICS_COLLECTOR_HOST", "annon"},
+  namespace: {:system, :string, "METRICS_COLLECTOR_NAMESPACE", "annon"},
   sample_rate: {:system, :float, "METRICS_COLLECTOR_SAMPLE_RATE", 0.25}
 
 import_config "plugins.exs"

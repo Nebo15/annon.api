@@ -71,7 +71,7 @@ defmodule Annon.Requests.LogWriter do
   @doc false
   def handle_cast({:insert_request, changeset}, opts) do
     case Log.insert_request(changeset) do
-      {:ok, request} = message ->
+      {:ok, _request} = message ->
         maybe_notify_subscriber(message, opts)
         {:noreply, opts}
       {:error, changeset} = message ->
