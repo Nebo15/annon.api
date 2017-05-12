@@ -375,27 +375,26 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
         strip_api_path: true
       })
 
-      jwt_plugin = build_factory_params(:jwt_plugin, %{settings: %{signature: build_jwt_signature("secret")}})
+      auth_plugin = :auth_plugin_with_jwt
+      |> build_factory_params()
+
+      secret = Base.decode64!(auth_plugin.settings["secret"])
 
       "apis/#{api_id}/plugins"
       |> put_management_url()
-      |> post!(jwt_plugin)
-      |> assert_status(201)
-
-      scopes_plugin = build_factory_params(:scopes_plugin, %{settings: %{"strategy": "jwt"}})
-
-      "apis/#{api_id}/plugins"
-      |> put_management_url()
-      |> post!(scopes_plugin)
+      |> post!(auth_plugin)
       |> assert_status(201)
 
       expected_scopes = ["scope1", "scope2"]
-      expected_party_id = "random_party_id"
+      expected_consumer_id = "random_consumer_id"
 
       token_data = %{
-        "app_metadata" => %{"party_id" => expected_party_id, "scopes" => expected_scopes}
+        "app_metadata" => %{
+          "consumer_id" => expected_consumer_id,
+          "consumer_scope" => Enum.join(expected_scopes, " ")
+        }
       }
-      token = build_jwt_token(token_data, "secret")
+      token = build_jwt_token(token_data, secret)
       headers = [{"authorization", "Bearer #{token}"}]
 
       headers = api_path
@@ -415,7 +414,7 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
       |> Enum.filter_map(fn(x) -> Map.has_key?(x, "x-consumer-id") end, &(Map.get(&1, "x-consumer-id")))
       |> Enum.at(0)
 
-      assert expected_party_id == actual_party_id
+      assert expected_consumer_id == actual_party_id
     end
 
     test "protected headers cannot be overridden", %{api_id: api_id, api_path: api_path} do

@@ -60,8 +60,6 @@ defmodule Annon.Plugins.Proxy do
     |> put_connection_headers(conn)
     |> put_x_forwarded_for_header(conn)
     |> put_x_forwarded_proto_header(conn)
-    |> put_x_consumer_scopes_header(conn)
-    |> put_x_consumer_id_header(conn)
     |> put_additional_headers(settings)
     |> maybe_preserve_host_header(conn, settings)
     |> drop_stripped_headers(settings)
@@ -110,18 +108,5 @@ defmodule Annon.Plugins.Proxy do
     when not is_nil(headers),
     do: Enum.reduce(headers, upstream_request, &UpstreamRequest.delete_header(&2, &1))
   def drop_stripped_headers(upstream_request, _settings),
-    do: upstream_request
-
-  # TODO: Move to scopes plugin
-  defp put_x_consumer_scopes_header(upstream_request, %Conn{private: %{scopes: scopes}}) when not is_nil(scopes),
-    do: UpstreamRequest.put_header(upstream_request, "x-consumer-scope", Enum.join(scopes, " "))
-  defp put_x_consumer_scopes_header(upstream_request, _conn),
-    do: upstream_request
-
-  # TODO: Move to scopes plugin
-  defp put_x_consumer_id_header(upstream_request, %Conn{private: %{consumer_id: consumer_id}})
-    when not is_nil(consumer_id),
-    do: UpstreamRequest.put_header(upstream_request, "x-consumer-id", consumer_id)
-  defp put_x_consumer_id_header(upstream_request, _conn),
     do: upstream_request
 end

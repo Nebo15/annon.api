@@ -109,10 +109,12 @@ defmodule Annon.Plugins.AuthTest do
       payload = %{"consumer_scope" => consumer_scope, "consumer_id" => consumer_id}
       jwt_token = jwt_token_factory(payload, settings["secret"])
 
-      assert %{assigns: %{consumer: consumer}} =
+      assert %{assigns: %{consumer: consumer}} = conn =
         conn
         |> put_req_header("authorization", "Bearer " <> jwt_token)
         |> Auth.execute(nil, settings)
+
+      assert [{"x-consumer-id", "bob"}, {"x-consumer-scope", "api:request"}] == conn.assigns.upstream_request.headers
 
       assert %Consumer{
         id: "bob",
@@ -138,10 +140,12 @@ defmodule Annon.Plugins.AuthTest do
       payload = %{"consumer_id" => consumer_id}
       jwt_token = jwt_token_factory(payload, settings["secret"])
 
-      assert %{assigns: %{consumer: consumer}} =
+      assert %{assigns: %{consumer: consumer}} = conn =
         conn
         |> put_req_header("authorization", "Bearer " <> jwt_token)
         |> Auth.execute(nil, settings)
+
+      assert [{"x-consumer-id", "bob"}, {"x-consumer-scope", "api:access"}] == conn.assigns.upstream_request.headers
 
       assert %Consumer{
         id: "bob",
@@ -161,10 +165,12 @@ defmodule Annon.Plugins.AuthTest do
         "url_template" => mock_url
       }
 
-      assert %{assigns: %{consumer: consumer}} =
+      assert %{assigns: %{consumer: consumer}} = conn =
         conn
         |> put_req_header("authorization", "Bearer " <> access_token)
         |> Auth.execute(nil, settings)
+
+      assert [{"x-consumer-id", "bob"}, {"x-consumer-scope", "api:access"}] == conn.assigns.upstream_request.headers
 
       assert %Consumer{
         id: "bob",
