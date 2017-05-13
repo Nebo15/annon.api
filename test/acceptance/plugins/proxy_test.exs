@@ -160,6 +160,25 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
     end
   end
 
+  test "works when upstream does not exist", %{api_id: api_id, api_path: api_path} do
+    proxy = :proxy_plugin
+    |> build_factory_params(%{settings: %{host: "exampleabcdewqasdftrewq-does-not-exist.com"}})
+
+    "apis/#{api_id}/plugins"
+    |> put_management_url()
+    |> post!(proxy)
+    |> assert_status(201)
+
+    %{
+      "message" => "Upstream is unavailable with reason :nxdomain",
+      "type" => "upstream_error"
+    } = api_path
+    |> put_public_url()
+    |> get!()
+    |> assert_status(502)
+    |> get_body()
+  end
+
   test "supports additional headers", %{api_id: api_id, api_path: api_path} do
     api_id
     |> create_proxy_to_mock(%{
