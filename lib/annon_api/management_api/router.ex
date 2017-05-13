@@ -7,6 +7,7 @@ defmodule Annon.ManagementAPI.Router do
   alias Annon.Helpers.Response
   alias Annon.ManagementAPI.Render
   alias Annon.Monitoring.ClusterStatus
+  alias Annon.Requests.Analytics
 
   if Confex.get(:annon_api, :sql_sandbox) do
     plug Phoenix.Ecto.SQL.Sandbox
@@ -31,7 +32,16 @@ defmodule Annon.ManagementAPI.Router do
   get "/apis_status" do
     Annon.Configuration.API.list_disclosed_apis()
     |> Enum.map(fn %{id: id, name: name, description: description, docs_url: docs_url, health: health} ->
-      %{id: id, name: name, description: description, docs_url: docs_url, health: health}
+      %{
+        id: id,
+        name: name,
+        description: description,
+        docs_url: docs_url,
+        health: health,
+        metrics: %{
+          day: Analytics.aggregate_latencies([id], {5, :minutes})
+        }
+      }
     end)
     |> Render.render_collection(conn)
   end

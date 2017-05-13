@@ -22,7 +22,7 @@ defmodule Annon.RequestsFactory do
 
   def api_factory do
     %Annon.Requests.Request.API{
-      id: sequence(:api_id, &to_string/1),
+      id: sequence(:request_id, &to_string/1),
       name: sequence(:api_name, &"An API ##{&1}"),
       request: build(:api_request)
     }

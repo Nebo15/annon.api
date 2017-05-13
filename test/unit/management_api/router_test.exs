@@ -34,14 +34,16 @@ defmodule Annon.ManagementAPI.RouterTest do
         "docs_url" => api1.docs_url,
         "health" => api1.health,
         "id" => api1.id,
-        "name" => api1.name
+        "name" => api1.name,
+        "metrics" => %{"day" => []}
       },
       %{
         "description" => api2.description,
         "docs_url" => api2.docs_url,
         "health" => api2.health,
         "id" => api2.id,
-        "name" => api2.name
+        "name" => api2.name,
+        "metrics" => %{"day" => []}
       }
     ]
   end
