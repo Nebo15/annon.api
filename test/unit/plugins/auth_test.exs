@@ -99,7 +99,7 @@ defmodule Annon.Plugins.AuthTest do
       |> json_response(401)
     end
 
-    test "oauth strategy is not found", %{conn: conn} do
+    test "returns 401 when token is not found via third part resolver", %{conn: conn} do
       mock_url = "httpbin.org/status/404"
 
       settings = %{
@@ -114,6 +114,25 @@ defmodule Annon.Plugins.AuthTest do
         }
       } = conn
       |> put_req_header("authorization", "Bearer access_token")
+      |> Auth.execute(nil, settings)
+      |> json_response(401)
+    end
+
+    test "returns 401 when token is not set", %{conn: conn} do
+      mock_conf = Confex.get_map(:annon_api, :acceptance)[:mock]
+      mock_url = "http://#{mock_conf[:host]}:#{mock_conf[:port]}/auth/tokens/random_token"
+
+      settings = %{
+        "strategy" => "oauth",
+        "url_template" => mock_url
+      }
+
+      assert %{
+        "error" => %{
+          "message" => "Authorization header is not set or doesn't contain Bearer token",
+          "type" => "access_denied"
+        }
+      } = conn
       |> Auth.execute(nil, settings)
       |> json_response(401)
     end
