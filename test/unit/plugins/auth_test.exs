@@ -99,6 +99,25 @@ defmodule Annon.Plugins.AuthTest do
       |> json_response(401)
     end
 
+    test "oauth strategy is not found", %{conn: conn} do
+      mock_url = "httpbin.org/status/404"
+
+      settings = %{
+        "strategy" => "oauth",
+        "url_template" => mock_url
+      }
+
+      assert %{
+        "error" => %{
+          "message" => "Invalid access token",
+          "type" => "access_denied"
+        }
+      } = conn
+      |> put_req_header("authorization", "Bearer access_token")
+      |> Auth.execute(nil, settings)
+      |> json_response(401)
+    end
+
     test "jwt strategy is supported", %{conn: conn} do
       consumer_id = "bob"
       consumer_scope = "api:request"
