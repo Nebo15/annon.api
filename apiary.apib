@@ -771,6 +771,18 @@ It can be used to mock service responses or to push common responses to the edge
 
 # Group Service Status
 
+## Requests Metrics [/requests_metrics{?interval,api_ids}]
+
+### Get Requests Metrics [GET]
+
++ Parameters
+    + `interval`: `5 minute` (string, optional) - Interval for time-based aggregation of latencies data. Supports following formats: `5 minites`, `1 minute`, `1 hour, `5 hours`, `1 day`, `5 days`. Term count can be any number.
+    + `api_ids`: `api_id1,api_id2` (string, optional) - List of API IDs to filter Requests, separated by comma.
+
++ Response 200 (application/json)
+    + Attributes (Response_OK)
+        + data (`Metrics`)
+
 ## Cluster Status [/annon_status]
 
 ### Get Cluster Status [GET]
@@ -779,13 +791,16 @@ It can be used to mock service responses or to push common responses to the edge
     + Attributes (Response_OK)
         + data (`Cluster_Status`)
 
-## APIs Status [/apis_status]
+## APIs Status [/apis_status{?interval}]
 
 This endpoint can be publicly available (just configure API for it).
 
 ### Get APIs Status [GET]
 
 This endpoint returns list of disclosed APIs statuses and can be used to render service status page.
+
++ Parameters
+    + `interval`: `5 minute` (string, optional) - Interval for time-based aggregation of latencies data. Supports following formats: `5 minites`, `1 minute`, `1 hour, `5 hours`, `1 day`, `5 days`. Term count can be any number.
 
 + Response 200 (application/json)
     + Attributes (Response_Collection)
@@ -879,6 +894,10 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 + run_queue: 0 (number)
 + uptime: 239.873 (number) - Seconds since node VM start.
 
+### `Metrics`
++ latencies (array[API_Latencies])
++ `status_codes` (array[`Requests_Status_Codes`])
+
 ## APIs
 ### `API__Request`
 + name: my_api (string, required) - Unique name for API.
@@ -912,12 +931,20 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
 + description: `My API example` (string, optional) - Description of an API.
 + docs_url: `http://docs.annon.apiary.io/` (string, optional) - Link to the API documentation page.
 + health (`API_Health`)
++ metrics (object)
+    + latencies (array[API_Latencies])
 
 ### `API_Health` (enum)
 - `operational` (string)
 - `degradated_perfomance` (string)
 - `partial_outage` (string)
 - `major_outage` (string)
+
+### `API_Latencies`
++ `avg_client_request_latency`: 100 (number)
++ `avg_gateway_latency`: 2 (number)
++ `avg_upstream_latency`: 98 (number)
++ tick: `2017-04-20T19:15:00Z` (string, required) - ISO 8601 date and time in UTC timezone.
 
 ## Plugins
 ### Plugin
@@ -1237,3 +1264,9 @@ This endpoint returns list of disclosed APIs statuses and can be used to render 
     + gateway: 100 (number) - Latency in **micro**seconds.
     + upstream: 100 (number) - Latency in **micro**seconds.
     + client_request: 100 (number) - Latency in **micro**seconds.
+
+### `Requests_Status_Codes`
++ api_id: 56c31536a60ad644060041af (string) - Unique ID for API.
++ count: 1 (number) - Count of occurances or `status_code` in a given `tick - interval` range.
++ status_code: 301 (number) - HTTP status code.
++ tick: `2017-04-20T19:15:00Z` (string, required) - ISO 8601 date and time in UTC timezone.
