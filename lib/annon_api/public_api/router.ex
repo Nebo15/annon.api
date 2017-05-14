@@ -17,6 +17,7 @@ defmodule Annon.PublicAPI.Router do
 
   plug Plug.Head
   plug Plug.RequestId
+  plug EView.Plugs.Idempotency
 
   plug Plug.Parsers, parsers: [:multipart, :json],
                      pass: ["*/*"],

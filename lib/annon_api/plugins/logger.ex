@@ -8,6 +8,7 @@ defmodule Annon.Plugins.Logger do
   use Annon.Plugin, plugin_name: :logger
   alias Annon.Requests.Log
   require Logger
+  alias Annon.Helpers.Conn, as: ConnHelpers
 
   def validate_settings(changeset),
     do: changeset
@@ -21,8 +22,8 @@ defmodule Annon.Plugins.Logger do
 
   defp log_request(conn, api) do
     request = %{
-      id: get_request_id(conn),
-      idempotency_key: get_idempotency_key(conn) || "",
+      id: ConnHelpers.get_request_id(conn, nil),
+      idempotency_key: ConnHelpers.get_idempotency_key(conn, ""),
       ip_address: conn.remote_ip |> Tuple.to_list |> Enum.join("."),
       request: get_request_data(conn),
       api: get_api_data(api),
@@ -38,18 +39,6 @@ defmodule Annon.Plugins.Logger do
         Logger.warn fn -> "Can not save request information. Changeset: #{inspect error}" end
         conn
     end
-  end
-
-  defp get_request_id(conn) do
-    conn
-    |> Conn.get_resp_header("x-request-id")
-    |> Enum.at(0)
-  end
-
-  defp get_idempotency_key(conn) do
-    conn
-    |> Conn.get_req_header("x-idempotency-key")
-    |> Enum.at(0)
   end
 
   defp modify_headers_list([]), do: []

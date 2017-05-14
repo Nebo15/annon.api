@@ -18,7 +18,7 @@ defmodule Annon.Plugins.Idempotency do
 
   def execute(%Conn{method: method, body_params: request_body} = conn, _request, _settings)
     when method in @idempotent_methods do
-    with {:ok, idempotency_key} <- fetch_idempotency_key(conn),
+    with {:ok, idempotency_key} <- Annon.Helpers.Conn.fetch_idempotency_key(conn),
          {:ok, saved_request} <- Log.get_request_by(idempotency_key: idempotency_key),
          true <- request_body_equal?(request_body, saved_request) do
 
@@ -32,13 +32,6 @@ defmodule Annon.Plugins.Idempotency do
       :error -> conn
       {:error, :not_found} -> conn
       false -> render_duplicate_idempotency_key(conn)
-    end
-  end
-
-  defp fetch_idempotency_key(conn) do
-    case Conn.get_req_header(conn, "x-idempotency-key") do
-      [] -> :error
-      [idempotency_key|_] -> {:ok, idempotency_key}
     end
   end
 

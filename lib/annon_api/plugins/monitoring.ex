@@ -10,6 +10,7 @@ defmodule Annon.Plugins.Monitoring do
   alias Plug.Conn
   alias Annon.Monitoring.MetricsCollector
   alias Annon.Monitoring.Latencies
+  import Annon.Helpers.Conn
 
   def validate_settings(changeset),
     do: changeset
@@ -35,8 +36,7 @@ defmodule Annon.Plugins.Monitoring do
 
     MetricsCollector.track_request(request_id, content_length, collector_opts)
 
-    conn
-    |> Conn.register_before_send(&track_latencies(&1, request_id, request_start_time, collector_opts))
+    Conn.register_before_send(conn, &track_latencies(&1, request_id, request_start_time, collector_opts))
   end
 
   defp track_latencies(conn, request_id, request_start_time, collector_opts) do
@@ -76,23 +76,4 @@ defmodule Annon.Plugins.Monitoring do
     ["http.host:#{host}", "http.method:#{method}", "http.port:#{port}",
      "api.name:#{api_name}", "api.id:#{api_id}", "request.id:#{request_id}"]
   end
-
-  defp get_request_id(conn, default) do
-    case Conn.get_resp_header(conn, "x-request-id") do
-      [] -> default
-      [id | _] -> id
-    end
-  end
-
-  defp get_content_length(conn, default) do
-    case Conn.get_resp_header(conn, "content-length") do
-      [] -> default
-      [id | _] -> id
-    end
-  end
-
-  def get_conn_status(%{status: nil}, default),
-    do: default
-  def get_conn_status(%{status: status}, _default),
-    do: status
 end
