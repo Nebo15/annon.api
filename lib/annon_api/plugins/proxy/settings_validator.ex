@@ -29,7 +29,8 @@ defmodule Annon.Plugins.Proxy.SettingsValidator do
         },
         "path" => %{
           "type" => "string",
-          "pattern" => "^/.*"
+          "pattern" => "^/.*",
+          "minLength": 1
         },
         "strip_api_path" => %{
           "type" => "boolean"

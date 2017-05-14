@@ -31,7 +31,8 @@ defmodule Annon.Plugins.Validator.SettingsValidator do
                 }
               },
               "path" => %{
-                "type" => "string"
+                "type" => "string",
+                "minLength": 1
               },
               "schema" => %{
                 "type" => "object"

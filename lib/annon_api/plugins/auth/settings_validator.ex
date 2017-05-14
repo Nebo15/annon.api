@@ -23,7 +23,8 @@ defmodule Annon.Plugins.Auth.SettingsValidator do
               "enum" => ["oauth"]
             },
             "url_template" => %{
-              "type" => "string"
+              "type" => "string",
+              "minLength": 6
             }
           },
         },
@@ -41,7 +42,8 @@ defmodule Annon.Plugins.Auth.SettingsValidator do
               "enum" => [false]
             },
             "secret" => %{
-              "type" => "string"
+              "type" => "string",
+              "minLength": 1
             },
             "algorithm" => %{
               "type" => "string",
@@ -65,10 +67,12 @@ defmodule Annon.Plugins.Auth.SettingsValidator do
               "enum" => [true]
             },
             "url_template" => %{
-              "type" => "string"
+              "type" => "string",
+              "minLength": 6
             },
             "secret" => %{
-              "type" => "string"
+              "type" => "string",
+              "minLength": 1
             },
             "algorithm" => %{
               "type" => "string",
