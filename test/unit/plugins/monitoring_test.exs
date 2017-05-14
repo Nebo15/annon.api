@@ -16,7 +16,7 @@ defmodule Annon.Plugins.MonitoringTest do
     %{conn: conn}
   end
 
-  test "metrics work properly", %{conn: conn} do
+  test "metrics are collected", %{conn: conn} do
     api = ConfigurationFactory.insert(:api, %{
       name: "Montoring Test api",
       request: ConfigurationFactory.build(:api_request, %{host: "www.example.com", path: "/apis"})

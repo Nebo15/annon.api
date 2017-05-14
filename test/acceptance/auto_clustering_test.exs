@@ -1,4 +1,4 @@
-defmodule Annon.Acceptance.Cluster.ConfigReloaderPlugTest do
+defmodule Annon.AutoClusteringTest do
   @moduledoc false
   # Integration test to check that the config cache is reloaded across cluster after a config change
   use Annon.AcceptanceCase
