@@ -126,7 +126,7 @@ defmodule Annon.Acceptance.Plugins.IPRestrictionTest do
     |> assert_status(201)
 
     assert %{
-      "error" => %{"message" => "You has been blocked from accessing this resource.", "type" => "forbidden"}
+      "error" => %{"message" => "You has been blocked from accessing this resource", "type" => "forbidden"}
     } = api_path
     |> put_public_url()
     |> get!()

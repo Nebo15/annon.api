@@ -87,7 +87,7 @@ defmodule Annon.Acceptance.Plugins.UARestrictionTest do
     |> get_body()
     |> Map.get("error")
 
-    expected_result = %{"message" => "You have been blocked from accessing this resource.", "type" => "forbidden"}
+    expected_result = %{"message" => "You has been blocked from accessing this resource", "type" => "forbidden"}
     assert expected_result == actual_result
   end
 

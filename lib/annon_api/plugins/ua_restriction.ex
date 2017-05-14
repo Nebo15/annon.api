@@ -56,7 +56,7 @@ defmodule Annon.Plugins.UARestriction do
 
   def render_forbidden(conn) do
     "403.json"
-    |> ErrorView.render(%{message: "You have been blocked from accessing this resource."})
+    |> ErrorView.render(%{message: "You has been blocked from accessing this resource"})
     |> Response.send(conn, 403)
     |> Response.halt()
   end

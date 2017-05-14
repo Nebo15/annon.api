@@ -19,7 +19,7 @@ defmodule Annon.Plugins.IPRestriction do
       conn
     else
       "403.json"
-      |> ErrorView.render(%{message: "You has been blocked from accessing this resource."})
+      |> ErrorView.render(%{message: "You has been blocked from accessing this resource"})
       |> Response.send(conn, 403)
       |> Response.halt()
     end
