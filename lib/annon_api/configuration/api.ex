@@ -219,6 +219,7 @@ defmodule Annon.Configuration.API do
     |> cast(attrs, @required_api_request_fields)
     |> validate_required(@required_api_request_fields)
     |> validate_subset(:methods, @known_http_verbs)
+    |> validate_length(:methods, min: 1)
     |> validate_exclusion(:port, [management_api_port], message: "This port is reserver for Management API")
     |> validate_format(:path, ~r/^\//, message: "API request path should start with `/`.")
   end

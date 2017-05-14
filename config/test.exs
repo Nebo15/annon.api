@@ -2,11 +2,13 @@ use Mix.Config
 
 config :annon_api, Annon.Configuration.Repo,
   database: System.get_env("MIX_TEST_DATABASE") || "annon_api_configs_test",
-  pool: Ecto.Adapters.SQL.Sandbox
+  pool: Ecto.Adapters.SQL.Sandbox,
+  pool_size: 10
 
 config :annon_api, Annon.Requests.Repo,
   database: System.get_env("MIX_LOGGER_TEST_DATABASE") || "annon_api_logger_test",
-  pool: Ecto.Adapters.SQL.Sandbox
+  pool: Ecto.Adapters.SQL.Sandbox,
+  pool_size: 10
 
 config :annon_api, :metrics_collector,
   sink: [],
