@@ -11,6 +11,18 @@ defmodule Annon.Plugins.IPRestrictionTest do
       }}}
 
       assert %Ecto.Changeset{valid?: true} = IPRestriction.validate_settings(changeset)
+
+      changeset = %Ecto.Changeset{valid?: true, changes: %{settings: %{
+        "blacklist" => ["127.0.0.*"]
+      }}}
+
+      assert %Ecto.Changeset{valid?: true} = IPRestriction.validate_settings(changeset)
+
+      changeset = %Ecto.Changeset{valid?: true, changes: %{settings: %{
+        "whitelist" => ["127.0.0.*"]
+      }}}
+
+      assert %Ecto.Changeset{valid?: true} = IPRestriction.validate_settings(changeset)
     end
 
     test "validate IP patterns" do

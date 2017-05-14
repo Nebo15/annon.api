@@ -13,6 +13,18 @@ defmodule Annon.Plugins.UARestrictionTest do
       }}}
 
       assert %Ecto.Changeset{valid?: true} = UARestriction.validate_settings(changeset)
+
+      changeset = %Ecto.Changeset{valid?: true, changes: %{settings: %{
+        "whitelist" => [@user_agent]
+      }}}
+
+      assert %Ecto.Changeset{valid?: true} = UARestriction.validate_settings(changeset)
+
+      changeset = %Ecto.Changeset{valid?: true, changes: %{settings: %{
+        "blacklist" => [@user_agent]
+      }}}
+
+      assert %Ecto.Changeset{valid?: true} = UARestriction.validate_settings(changeset)
     end
   end
 
