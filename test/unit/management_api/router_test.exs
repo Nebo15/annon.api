@@ -35,7 +35,7 @@ defmodule Annon.ManagementAPI.RouterTest do
         "health" => api1.health,
         "id" => api1.id,
         "name" => api1.name,
-        "metrics" => %{"day" => []}
+        "metrics" => %{"latencies" => []}
       },
       %{
         "description" => api2.description,
@@ -43,9 +43,19 @@ defmodule Annon.ManagementAPI.RouterTest do
         "health" => api2.health,
         "id" => api2.id,
         "name" => api2.name,
-        "metrics" => %{"day" => []}
+        "metrics" => %{"latencies" => []}
       }
     ]
+  end
+
+  test "validates query params for listing of disclosed apis", %{conn: conn} do
+    conn
+    |> get("/apis_status?latencies_interval=hola")
+    |> json_response(422)
+
+    conn
+    |> get("/apis_status?latencies_interval=5+minute")
+    |> json_response(200)
   end
 
   test "shows cluster status", %{conn: conn} do

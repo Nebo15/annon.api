@@ -5,9 +5,6 @@ defmodule Annon.ManagementAPI.Router do
   use Plug.Router
   use Plug.ErrorHandler
   alias Annon.Helpers.Response
-  alias Annon.ManagementAPI.Render
-  alias Annon.Monitoring.ClusterStatus
-  alias Annon.Requests.Analytics
 
   if Confex.get(:annon_api, :sql_sandbox) do
     plug Phoenix.Ecto.SQL.Sandbox
@@ -29,27 +26,8 @@ defmodule Annon.ManagementAPI.Router do
   forward "/requests", to: Annon.ManagementAPI.Controllers.Request
   forward "/dictionaries", to: Annon.ManagementAPI.Controllers.Dictionaries
 
-  get "/apis_status" do
-    Annon.Configuration.API.list_disclosed_apis()
-    |> Enum.map(fn %{id: id, name: name, description: description, docs_url: docs_url, health: health} ->
-      %{
-        id: id,
-        name: name,
-        description: description,
-        docs_url: docs_url,
-        health: health,
-        metrics: %{
-          day: Analytics.aggregate_latencies([id], {5, :minutes})
-        }
-      }
-    end)
-    |> Render.render_collection(conn)
-  end
-
-  get "/cluster_status" do
-    status = ClusterStatus.get_cluster_status()
-    Render.render_one({:ok, status}, conn)
-  end
+  get "/apis_status", do: Annon.ManagementAPI.Controllers.Monitoring.list_apis_status(conn)
+  get "/cluster_status", do: Annon.ManagementAPI.Controllers.Monitoring.list_cluster_status(conn)
 
   match _ do
     Response.send_error(conn, :not_found)

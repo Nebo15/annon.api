@@ -6,11 +6,11 @@ defmodule Annon.Requests.Analytics do
   alias Annon.Requests.Repo
   alias Annon.Requests.Request
 
-  def aggregate_latencies(api_ids, interval) when is_list(api_ids) do
-    {epoch, limit} = by(interval)
+  def aggregate_latencies(api_ids \\ [], interval) when is_list(api_ids) do
+    {interval_seconds, interval_limit} = interval_lexer(interval)
 
     Request
-    |> where([request], fragment("?->'id' \\?| ?", request.api, ^api_ids))
+    |> maybe_filter_by_api_ids(api_ids)
     |> select([request], %{
       api_id: fragment("?->'id'", request.api),
       avg_client_request_latency: avg(fragment("(?->>'client_request')::numeric", request.latencies)),
@@ -18,22 +18,36 @@ defmodule Annon.Requests.Analytics do
       avg_upstream_latency: avg(fragment("(?->>'upstream')::numeric", request.latencies)),
       tick: fragment(~S|(
         date_trunc('seconds', (inserted_at - timestamptz 'epoch') / ?) * ? + timestamptz 'epoch'
-      ) as tick|, ^epoch, ^epoch),
+      ) as tick|, ^interval_seconds, ^interval_seconds),
     })
     |> group_by([request], fragment("tick"))
     |> group_by([request], fragment("?->'id'", request.api))
     |> order_by(desc: fragment("tick"))
-    |> limit(^limit)
+    |> limit(^interval_limit)
     |> Repo.all()
     |> Enum.map(fn %{tick: tick} = span ->
       Map.put(span, :tick, Ecto.DateTime.cast!(tick))
     end)
   end
 
-  defp by({n, :minutes}),
-    do: {n * 60, 288}
-  defp by({n, :hours}),
-    do: {n * 60, 288}
-  defp by({n, :days}),
-    do: {n * 60, 288}
+  defp maybe_filter_by_api_ids(query, []),
+    do: query
+  defp maybe_filter_by_api_ids(query, api_ids),
+    do: where(query, [request], fragment("?->'id' \\?| ?", request.api, ^api_ids))
+
+  defp interval_lexer(interval) do
+    case String.split(interval, " ") do
+      [n, min] when min in ["minute", "minutes"] ->
+        {n, ""} = Integer.parse(n)
+        {n * 60, round(86_400 / n)}
+      [n, hour] when hour in ["hour", "hours"] ->
+        {n, ""} = Integer.parse(n)
+        {n * 3600, round(604_800 / n)}
+      [n, day] when day in ["day", "days"] ->
+        {n, ""} = Integer.parse(n)
+        {n * 86_400, round(2_678_400 / n)}
+      _ ->
+        {5 * 60, round(86_400 / 5)}
+    end
+  end
 end

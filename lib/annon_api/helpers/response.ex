@@ -29,6 +29,12 @@ defmodule Annon.Helpers.Response do
     |> send_error_template(conn, status)
   end
 
+  def send_validation_error(conn, %Ecto.Changeset{} = changeset) do
+    "422.json"
+    |> EView.Views.ValidationError.render(%{changeset: changeset})
+    |> send(conn, 422)
+    |> halt()
+  end
   def send_validation_error(conn, invalid) do
     "422.json"
     |> EView.Views.ValidationError.render(%{schema: invalid})
