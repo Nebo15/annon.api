@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Plugin.PipelinePlug – annon_api v0.2.80</title>
+    <title>Annon.Helpers.Conn – annon_api v0.2.80</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items-9bc21222ea.js"></script>
@@ -59,14 +59,14 @@
 
       <h1>
         <small class="visible-xs">annon_api v0.2.80</small>
-        Annon.Plugin.PipelinePlug
+        Annon.Helpers.Conn
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>This module inject Plugins pipeline into Plug.Router.</p>
+          <p>Connection helpers.</p>
 
         </section>
       
@@ -88,13 +88,31 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#call/2">call(conn, opts)</a>
+    <a href="#fetch_idempotency_key/1">fetch_idempotency_key(conn)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#init/1">init(opts)</a>
+    <a href="#get_conn_status/2">get_conn_status(map, default)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_content_length/2">get_content_length(conn, default)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_idempotency_key/2">get_idempotency_key(conn, default)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_request_id/2">get_request_id(conn, default)</a>
   </div>
   
 </div>
@@ -117,13 +135,13 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="call/2">
+          <div class="detail" id="fetch_idempotency_key/1">
   
   <div class="detail-header">
-    <a href="#call/2" class="detail-link" title="Link to this function">
+    <a href="#fetch_idempotency_key/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">call(conn, opts)</span>
+    <span class="signature">fetch_idempotency_key(conn)</span>
     
     
     
@@ -132,13 +150,58 @@
     
   </section>
 </div>
-<div class="detail" id="init/1">
+<div class="detail" id="get_conn_status/2">
   
   <div class="detail-header">
-    <a href="#init/1" class="detail-link" title="Link to this function">
+    <a href="#get_conn_status/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">init(opts)</span>
+    <span class="signature">get_conn_status(map, default)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="get_content_length/2">
+  
+  <div class="detail-header">
+    <a href="#get_content_length/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">get_content_length(conn, default)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="get_idempotency_key/2">
+  
+  <div class="detail-header">
+    <a href="#get_idempotency_key/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">get_idempotency_key(conn, default)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="get_request_id/2">
+  
+  <div class="detail-header">
+    <a href="#get_request_id/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">get_request_id(conn, default)</span>
     
     
     
