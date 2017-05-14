@@ -50,15 +50,15 @@ defmodule Annon.ManagementAPI.RouterTest do
 
   test "validates query params for listing of disclosed apis", %{conn: conn} do
     conn
-    |> get("/apis_status?latencies_interval=hola")
+    |> get("/apis_status?interval=hola")
     |> json_response(422)
 
     conn
-    |> get("/apis_status?latencies_interval=5+minute")
+    |> get("/apis_status?interval=5+minute")
     |> json_response(200)
   end
 
-  test "shows cluster status", %{conn: conn} do
+  test "renders cluster status", %{conn: conn} do
     status =
       conn
       |> get("/cluster_status")
@@ -80,5 +80,15 @@ defmodule Annon.ManagementAPI.RouterTest do
       ],
       "open_ports" => []
     } = status
+  end
+
+  test "renders requests metrics", %{conn: conn} do
+    conn
+    |> get("/requests_metrics?interval=hola")
+    |> json_response(422)
+
+    conn
+    |> get("/requests_metrics?interval=5+minute")
+    |> json_response(200)
   end
 end

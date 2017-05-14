@@ -18,7 +18,7 @@ defmodule Annon.ManagementAPI.Controllers.Monitoring do
     with %Changeset{valid?: true} = changeset <- params_changeset(conn.query_params),
          disclosed_apis <- API.list_disclosed_apis(),
          disclosed_apis_ids <- Enum.map(disclosed_apis, fn %{id: id} -> id end),
-         interval <- Changeset.get_change(changeset, :latencies_interval, "5 minutes"),
+         interval <- Changeset.get_change(changeset, :interval, "5 minutes"),
          latencies <- Analytics.aggregate_latencies(disclosed_apis_ids, interval) do
       render_apis_status(conn, disclosed_apis, latencies)
     else
@@ -26,14 +26,34 @@ defmodule Annon.ManagementAPI.Controllers.Monitoring do
     end
   end
 
+  def get_requests_metrics(%{query_params: query_params} = conn) do
+    api_ids =
+      query_params
+      |> Map.get("api_ids", "")
+      |> String.split(",")
+      |> Enum.map(&String.trim/1)
+
+    with %Changeset{valid?: true} = changeset <- params_changeset(query_params),
+         interval <- Changeset.get_change(changeset, :interval, "5 minutes"),
+         latencies <- Analytics.aggregate_latencies(api_ids, interval),
+         status_codes <- Analytics.aggregate_status_codes(api_ids, interval) do
+      Render.render_one({:ok, %{
+        latencies: latencies,
+        status_codes: status_codes
+      }}, conn)
+    else
+      %Changeset{valid?: false} = changeset -> Response.send_validation_error(conn, changeset)
+    end
+  end
+
   defp params_changeset(params) do
     types = %{
-      latencies_interval: :string
+      interval: :string
     }
 
     {params, types}
     |> Changeset.cast(params, Map.keys(types))
-    |> Changeset.validate_format(:latencies_interval, ~r/[0-9]{1,2} (day[s]?|hour[s]?|minute[s]?)/)
+    |> Changeset.validate_format(:interval, ~r/[0-9]{1,2} (day[s]?|hour[s]?|minute[s]?)/)
   end
 
   defp render_apis_status(conn, disclosed_apis, latencies) do

@@ -28,6 +28,7 @@ defmodule Annon.ManagementAPI.Router do
 
   get "/apis_status", do: Annon.ManagementAPI.Controllers.Monitoring.list_apis_status(conn)
   get "/cluster_status", do: Annon.ManagementAPI.Controllers.Monitoring.list_cluster_status(conn)
+  get "/requests_metrics", do: Annon.ManagementAPI.Controllers.Monitoring.get_requests_metrics(conn)
 
   match _ do
     Response.send_error(conn, :not_found)

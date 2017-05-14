@@ -30,6 +30,30 @@ defmodule Annon.Requests.Analytics do
     end)
   end
 
+  def aggregate_status_codes(api_ids \\ [], interval) when is_list(api_ids) do
+    {epoch, limit} = interval_lexer(interval)
+
+    Request
+    |> maybe_filter_by_api_ids(api_ids)
+    |> select([request], %{
+      api_id: fragment("?->'id'", request.api),
+      status_code: request.status_code,
+      count: count(request.status_code),
+      tick: fragment(~S|(
+        date_trunc('seconds', (inserted_at - timestamptz 'epoch') / ?) * ? + timestamptz 'epoch'
+      ) as tick|, ^epoch, ^epoch),
+    })
+    |> group_by([request], fragment("tick"))
+    |> group_by([request], fragment("?->'id'", request.api))
+    |> group_by([request], request.status_code)
+    |> order_by(desc: fragment("tick"))
+    |> limit(^limit)
+    |> Repo.all()
+    |> Enum.map(fn %{tick: tick} = span ->
+      Map.put(span, :tick, Ecto.DateTime.cast!(tick))
+    end)
+  end
+
   defp maybe_filter_by_api_ids(query, []),
     do: query
   defp maybe_filter_by_api_ids(query, api_ids),
@@ -47,7 +71,7 @@ defmodule Annon.Requests.Analytics do
         {n, ""} = Integer.parse(n)
         {n * 86_400, round(2_678_400 / n)}
       _ ->
-        {5 * 60, round(86_400 / 5)}
+        {300, 17280}
     end
   end
 end

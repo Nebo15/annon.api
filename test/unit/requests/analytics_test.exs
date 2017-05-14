@@ -133,7 +133,6 @@ defmodule Annon.Requests.AnalyticsTest do
     test "calculates average latencies by 5 minute intervals", %{api_ids: [api_id1, _api_id2]} do
       assert [
         %{
-
           avg_client_request_latency: avg_client_request_latency1,
           avg_gateway_latency: avg_gateway_latency1,
           avg_upstream_latency: avg_upstream_latency1
@@ -161,6 +160,95 @@ defmodule Annon.Requests.AnalyticsTest do
       assert Decimal.to_float(avg_gateway_latency1) == 0.5
       assert Decimal.to_float(avg_gateway_latency2) == 4.5
       assert Decimal.to_float(avg_gateway_latency3) == 3
+    end
+  end
+
+  describe "aggregate_status_codes/2" do
+    setup do
+      api_id1 = Ecto.UUID.generate()
+      api_id2 = Ecto.UUID.generate()
+
+      [
+        # Tick one
+        {"2017-05-13T06:01:00.000000Z", 200},
+        {"2017-05-13T06:04:00.000000Z", 200},
+        # Tick two
+        {"2017-05-13T06:05:00.000000Z", 200},
+        {"2017-05-13T06:09:00.000000Z", 404},
+        # Tick three
+        {"2017-05-13T06:10:00.000000Z", 500},
+        {"2017-05-13T06:13:57.000000Z", 301},
+      ]
+      |> Enum.map(fn {utc_datetime, status_code} ->
+        {:ok, datetime, 0} = DateTime.from_iso8601(utc_datetime)
+        RequestsFactory.insert(:request,
+          inserted_at: datetime,
+          api: RequestsFactory.build(:api, id: api_id1),
+          status_code: status_code
+        )
+      end)
+
+      [
+        # Tick one
+        {"2017-05-13T06:03:00.000000Z", 200},
+        {"2017-05-13T06:04:00.000000Z", 201},
+        # Tick two
+        {"2017-05-13T06:07:00.000000Z", 401},
+        {"2017-05-13T06:08:00.000000Z", 500},
+        # Tick three
+        {"2017-05-13T06:10:00.000000Z", 200},
+        # Tick four
+        {"2017-05-13T06:15:00.000000Z", 404},
+      ]
+      |> Enum.map(fn {utc_datetime, status_code} ->
+        {:ok, datetime, 0} = DateTime.from_iso8601(utc_datetime)
+        RequestsFactory.insert(:request,
+          inserted_at: datetime,
+          api: RequestsFactory.build(:api, id: api_id2),
+          status_code: status_code
+        )
+      end)
+
+      %{api_ids: [api_id1, api_id2]}
+    end
+
+    test "returns aggregated list", %{api_ids: [api_id1, api_id2]} do
+      assert [] == Analytics.aggregate_status_codes([Ecto.UUID.generate()], "5 minutes")
+      assert 11 == length(Analytics.aggregate_status_codes([], "5 minutes"))
+      assert 11 == length(Analytics.aggregate_status_codes("5 minutes"))
+      assert 11 == length(Analytics.aggregate_status_codes([api_id1, api_id2], "5 minutes"))
+
+      assert [
+        %{api_id: ^api_id1,
+          count: 1,
+          status_code: 301,
+          tick: tick1
+        },
+        %{
+          api_id: ^api_id1,
+          count: 1,
+          status_code: 500,
+          tick: tick1
+        },
+        %{
+          api_id: ^api_id1,
+          count: 1,
+          status_code: 200,
+          tick: tick2
+        },
+        %{
+          api_id: ^api_id1,
+          count: 1,
+          status_code: 404,
+          tick: tick2
+        },
+        %{
+          api_id: ^api_id1,
+          count: 2,
+          status_code: 200,
+          tick: _
+        }
+      ] = Analytics.aggregate_status_codes([api_id1], "5 minutes")
     end
   end
 end
