@@ -34,6 +34,8 @@ defmodule Annon.Plugins.Idempotency do
       false -> render_duplicate_idempotency_key(conn)
     end
   end
+  def execute(%Conn{} = conn, _request, _settings),
+    do: conn
 
   defp request_body_equal?(body_params, %RequestSchema{request: %{body: body}}) do
     case Poison.decode(body) do
