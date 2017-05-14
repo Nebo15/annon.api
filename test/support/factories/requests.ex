@@ -42,7 +42,7 @@ defmodule Annon.Factories.Requests do
       method: "GET",
       uri: "/my_api/",
       query: %{"key" => "value"},
-      headers: [%{"content-type" => "application/json"}],
+      headers: %{"content-type" => "application/json"},
       body: "{}"
     }
   end
@@ -50,7 +50,7 @@ defmodule Annon.Factories.Requests do
   def http_response_factory do
     %Annon.Requests.Request.HTTPResponse{
       status_code: 200,
-      headers: [%{"content-type" => "application/json"}],
+      headers: %{"content-type" => "application/json"},
       body: ""
     }
   end

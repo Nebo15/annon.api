@@ -31,15 +31,13 @@ defmodule Annon.Plugins.IPRestriction do
     whitelisted || (whitelisted === nil && !blacklisted)
   end
 
-  defp whitelisted?(%{"whitelist" => list}, ip) do
-    Enum.any?(list, &ip_matches?(&1, ip))
-  end
+  defp whitelisted?(%{"whitelist" => list}, ip),
+    do: Enum.any?(list, &ip_matches?(&1, ip))
   defp whitelisted?(_plugin, _ip),
     do: nil
 
-  defp blacklisted?(%{"blacklist" => list}, ip) do
-    Enum.any?(list, &ip_matches?(&1, ip))
-  end
+  defp blacklisted?(%{"blacklist" => list}, ip),
+    do: Enum.any?(list, &ip_matches?(&1, ip))
   defp blacklisted?(_plugin, _ip),
     do: nil
 

@@ -26,23 +26,23 @@ defmodule Annon.Plugin.JsonSchemaValidator do
   end
 
   defp build_changeset_errors(changeset, field, failed_validations) do
-    failed_validations
-    |> Enum.reduce(changeset, fn({%{description: message, rule: rule, params: params}, json_path}, changeset) ->
-      fake_field =
-        json_path
-        |> String.replace_leading("$", Atom.to_string(field))
-        |> String.to_atom()
+    Enum.reduce(failed_validations, changeset, fn
+      {%{description: message, rule: rule, params: params}, json_path}, changeset ->
+        fake_field =
+          json_path
+          |> String.replace_leading("$", Atom.to_string(field))
+          |> String.to_atom()
 
-      errors = [{fake_field, {message, [validation: rule]}}] ++ changeset.errors
+        errors = [{fake_field, {message, [validation: rule]}}] ++ changeset.errors
 
-      validations =
-        if changeset.validations,
-          do: [{fake_field, {rule, params}}] ++ changeset.validations,
-        else: [{fake_field, {rule, params}}]
+        validations =
+          if changeset.validations,
+            do: [{fake_field, {rule, params}}] ++ changeset.validations,
+          else: [{fake_field, {rule, params}}]
 
-      %{changeset |
-        errors: errors,
-        validations: validations}
+        %{changeset |
+          errors: errors,
+          validations: validations}
     end)
   end
 end

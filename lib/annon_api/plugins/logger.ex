@@ -41,8 +41,13 @@ defmodule Annon.Plugins.Logger do
     end
   end
 
-  defp modify_headers_list([]), do: []
-  defp modify_headers_list([{key, value}|t]), do: [%{key => value}] ++ modify_headers_list(t)
+  defp modify_headers_list([]),
+    do: []
+  defp modify_headers_list(headers) when is_list(headers) do
+    Enum.reduce(headers, %{}, fn {key, value}, acc ->
+      Map.put(acc, key, value)
+    end)
+  end
 
   defp get_api_data(nil),
     do: nil

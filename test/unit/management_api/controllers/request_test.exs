@@ -367,14 +367,14 @@ defmodule Annon.ManagementAPI.Controllers.RequestTest do
         "latencies" => %{"client_request" => 102, "gateway" => 2, "upstream" => 100},
         "request" => %{
           "body" => "{}",
-          "headers" => [%{"content-type" => "application/json"}],
+          "headers" => %{"content-type" => "application/json"},
           "method" => "GET",
           "query" => %{"key" => "value"},
           "uri" => "/my_api/"
         },
         "response" => %{
           "body" => "",
-          "headers" => [%{"content-type" => "application/json"}],
+          "headers" => %{"content-type" => "application/json"},
           "status_code" => 200
         },
         "status_code" => 200,

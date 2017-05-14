@@ -25,7 +25,7 @@ defmodule Annon.Plugins.Idempotency do
       %RequestSchema{response: %{headers: headers, body: body}, status_code: status_code} = saved_request
 
       conn
-      |> Conn.merge_resp_headers(format_headers(headers))
+      |> Conn.merge_resp_headers(headers)
       |> Conn.send_resp(status_code, body)
       |> Conn.halt()
     else
@@ -58,9 +58,4 @@ defmodule Annon.Plugins.Idempotency do
     |> Response.send(conn, 409)
     |> Response.halt()
   end
-
-  defp format_headers([]),
-    do: []
-  defp format_headers([head | t]),
-    do: [Enum.at(head, 0)] ++ format_headers(t)
 end

@@ -23,13 +23,13 @@ defmodule Annon.Requests.Request do
       field :method, :string
       field :uri, :string
       field :query, :map
-      field :headers, {:array, :map}
+      field :headers, :map
       field :body, :string
     end
 
     embeds_one :response, HTTPResponse, primary_key: false do
       field :status_code, :integer
-      field :headers, {:array, :map}
+      field :headers, :map
       field :body, :string
     end
 

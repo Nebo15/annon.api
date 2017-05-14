@@ -38,15 +38,13 @@ defmodule Annon.Plugins.UARestriction do
     whitelisted || (whitelisted === nil && !blacklisted)
   end
 
-  defp whitelisted?(%{"whitelist" => list}, user_agent) do
-    Enum.any?(list, &user_agent_matches?(&1, user_agent))
-  end
+  defp whitelisted?(%{"whitelist" => list}, user_agent),
+    do: Enum.any?(list, &user_agent_matches?(&1, user_agent))
   defp whitelisted?(_plugin, _user_agent),
     do: nil
 
-  defp blacklisted?(%{"blacklist" => list}, user_agent) do
-    Enum.any?(list, &user_agent_matches?(&1, user_agent))
-  end
+  defp blacklisted?(%{"blacklist" => list}, user_agent),
+    do: Enum.any?(list, &user_agent_matches?(&1, user_agent))
   defp blacklisted?(_plugin, _user_agent),
     do: nil
 

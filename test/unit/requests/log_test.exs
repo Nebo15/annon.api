@@ -163,14 +163,14 @@ defmodule Annon.Requests.LogTest do
         },
         request: %{
           body: "{}",
-          headers: [%{"content-type" => "application/json"}],
+          headers: %{"content-type" => "application/json"},
           method: "GET",
           query: %{"key" => "value"},
           uri: "/my_api/"
         },
         response: %{
           body: "{}",
-          headers: [%{"content-type" => "application/json"}],
+          headers: %{"content-type" => "application/json"},
           status_code: 200
         }
       }
@@ -216,14 +216,14 @@ defmodule Annon.Requests.LogTest do
         },
         request: %{
           body: "{}",
-          headers: [%{"content-type" => "application/json"}],
+          headers: %{"content-type" => "application/json"},
           method: "GET",
           query: %{"key" => "value"},
           uri: "/my_api/"
         },
         response: %{
           body: "{}",
-          headers: [%{"content-type" => "application/json"}],
+          headers: %{"content-type" => "application/json"},
           status_code: 200
         }
       }
