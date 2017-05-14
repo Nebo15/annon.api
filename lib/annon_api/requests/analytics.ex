@@ -71,7 +71,7 @@ defmodule Annon.Requests.Analytics do
         {n, ""} = Integer.parse(n)
         {n * 86_400, round(2_678_400 / n)}
       _ ->
-        {300, 17280}
+        {300, 17_280}
     end
   end
 end
