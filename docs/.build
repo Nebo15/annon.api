@@ -5,7 +5,7 @@ fonts/icomoon.eot
 fonts/icomoon.svg
 fonts/icomoon.ttf
 fonts/icomoon.woff
-dist/sidebar_items-da4828c7f2.js
+dist/sidebar_items-d500038adc.js
 api-reference.html
 readme.html
 404.html
@@ -31,6 +31,7 @@ Annon.ManagementAPI.ConfigReloaderPlug.html
 Annon.ManagementAPI.Controllers.API.html
 Annon.ManagementAPI.Controllers.APIPlugin.html
 Annon.ManagementAPI.Controllers.Dictionaries.html
+Annon.ManagementAPI.Controllers.Monitoring.html
 Annon.ManagementAPI.Controllers.Request.html
 Annon.ManagementAPI.ControllersRouter.html
 Annon.ManagementAPI.Pagination.html
@@ -72,6 +73,7 @@ Annon.PublicAPI.Consumer.html
 Annon.PublicAPI.ServerSupervisor.html
 Annon.PublicRouter.html
 Annon.ReleaseTasks.html
+Annon.Requests.Analytics.html
 Annon.Requests.Log.html
 Annon.Requests.LogWriter.html
 Annon.Requests.Repo.html
