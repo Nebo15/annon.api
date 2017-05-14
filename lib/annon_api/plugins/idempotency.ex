@@ -43,7 +43,10 @@ defmodule Annon.Plugins.Idempotency do
   end
 
   defp request_body_equal?(body_params, %RequestSchema{request: %{body: body}}) do
-    Map.equal?(body_params, body)
+    case Poison.decode(body) do
+      {:ok, request_body_params} -> Map.equal?(body_params, request_body_params)
+      {:error, _} -> false
+    end
   end
 
   defp render_duplicate_idempotency_key(conn) do

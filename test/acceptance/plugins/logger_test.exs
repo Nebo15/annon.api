@@ -74,7 +74,7 @@ defmodule Annon.Acceptance.Plugins.LoggerTest do
       |> Map.from_struct
       |> Map.get(:body)
 
-      assert(body_to_check === @random_data, "Invalid body has been logged")
+      assert(body_to_check === Poison.encode!(@random_data), "Invalid body has been logged")
 
       latencies_to_check = result
       |> Map.get(:latencies)

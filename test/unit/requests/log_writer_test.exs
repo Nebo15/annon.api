@@ -26,7 +26,7 @@ defmodule Annon.Requests.LogWriterTest do
           upstream: 100
         },
         request: %{
-          body: %{},
+          body: "{}",
           headers: [%{"content-type" => "application/json"}],
           method: "GET",
           query: %{"key" => "value"},
@@ -88,7 +88,7 @@ defmodule Annon.Requests.LogWriterTest do
           upstream: 100
         },
         request: %{
-          body: %{},
+          body: "{}",
           headers: [%{"content-type" => "application/json"}],
           method: "GET",
           query: %{"key" => "value"},

@@ -71,7 +71,7 @@ defmodule Annon.Plugins.Logger do
       uri: conn.request_path,
       query: Plug.Conn.Query.decode(conn.query_string),
       headers: modify_headers_list(conn.req_headers),
-      body: conn.body_params
+      body: Poison.encode!(conn.body_params)
     }
     |> prepare_params
   end

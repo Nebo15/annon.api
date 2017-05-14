@@ -30,12 +30,10 @@ defmodule Annon.PublicAPI.Router do
   plug :dispatch
 
   match _ do
-    conn
-    |> Annon.Helpers.Response.send_error(:not_found)
+    Annon.Helpers.Response.send_error(conn, :not_found)
   end
 
   def handle_errors(%Plug.Conn{halted: false} = conn, error) do
-    conn
-    |> Annon.Helpers.Response.send_error(error)
+    Annon.Helpers.Response.send_error(conn, error)
   end
 end

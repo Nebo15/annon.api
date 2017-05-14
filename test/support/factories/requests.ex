@@ -43,7 +43,7 @@ defmodule Annon.Factories.Requests do
       uri: "/my_api/",
       query: %{"key" => "value"},
       headers: [%{"content-type" => "application/json"}],
-      body: %{}
+      body: "{}"
     }
   end
 

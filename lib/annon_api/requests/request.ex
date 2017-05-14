@@ -24,7 +24,7 @@ defmodule Annon.Requests.Request do
       field :uri, :string
       field :query, :map
       field :headers, {:array, :map}
-      field :body, :map
+      field :body, :string
     end
 
     embeds_one :response, HTTPResponse, primary_key: false do

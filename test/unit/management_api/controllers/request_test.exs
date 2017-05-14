@@ -366,7 +366,7 @@ defmodule Annon.ManagementAPI.Controllers.RequestTest do
         "ip_address" => "129.168.1.10",
         "latencies" => %{"client_request" => 102, "gateway" => 2, "upstream" => 100},
         "request" => %{
-          "body" => %{},
+          "body" => "{}",
           "headers" => [%{"content-type" => "application/json"}],
           "method" => "GET",
           "query" => %{"key" => "value"},
