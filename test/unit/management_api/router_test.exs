@@ -1,7 +1,7 @@
 defmodule Annon.ManagementAPI.RouterTest do
   @moduledoc false
   use Annon.ConnCase, async: true
-  alias Annon.ConfigurationFactory
+  alias Annon.Factories.Configuration, as: ConfigurationFactory
 
   setup %{conn: conn} do
     conn =

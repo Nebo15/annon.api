@@ -1,8 +1,18 @@
 defmodule Annon.Plugins.ValidatorTest do
   @moduledoc false
-  use Annon.UnitCase, async: true
+  use Annon.ConnCase, async: true, router: Annon.PublicAPI.Router
+  alias Annon.Factories.Configuration, as: ConfigurationFactory
 
-  test "validator plugin" do
+  setup %{conn: conn} do
+    conn =
+      conn
+      |> put_req_header("accept", "application/json")
+      |> put_req_header("content-type", "application/json")
+
+    %{conn: conn}
+  end
+
+  test "validator plugin", %{conn: conn} do
     schema = %{
       "type" => "object",
       "additionalProperties" => false,
@@ -19,9 +29,9 @@ defmodule Annon.Plugins.ValidatorTest do
 
     settings = %{"rules" => [%{"methods" => ["POST"], "path" => ".*", "schema" => schema}]}
 
-    api = Annon.ConfigurationFactory.build(:api, %{
+    api = ConfigurationFactory.build(:api, %{
       plugins: [
-        Annon.ConfigurationFactory.build(:validator_plugin, %{
+        ConfigurationFactory.build(:validator_plugin, %{
           settings: settings
         })
       ]
@@ -29,25 +39,21 @@ defmodule Annon.Plugins.ValidatorTest do
 
     request = %{api: api}
 
-    conn = :post
-    |> conn("/", Poison.encode!(%{}))
+    conn = Plug.Adapters.Test.Conn.conn(conn, :post, "/", Poison.encode!(%{}))
 
-    conn
-    |> Map.put(:body_params, %{"foo" =>  "100500", "bar" => "a"})
-    |> Annon.Plugins.Validator.execute(request, settings)
-    |> assert_conn_status(422)
-    |> assert_halt
+    assert %Plug.Conn{halted: true, status: 422} =
+      conn
+      |> Map.put(:body_params, %{"foo" =>  "100500", "bar" => "a"})
+      |> Annon.Plugins.Validator.execute(request, settings)
 
-    conn
-    |> Map.put(:body_params, %{"foo" =>  100500, "bar" => "a"})
-    |> Annon.Plugins.Validator.execute(request, settings)
-    |> assert_conn_status(nil)
-    |> assert_not_halt
+    assert %Plug.Conn{halted: false, status: nil} =
+      conn
+      |> Map.put(:body_params, %{"foo" =>  100500, "bar" => "a"})
+      |> Annon.Plugins.Validator.execute(request, settings)
 
-    conn
-    |> Map.put(:body_params, %{"foo" =>  100500})
-    |> Annon.Plugins.Validator.execute(request, settings)
-    |> assert_conn_status(422)
-    |> assert_halt
+    assert %Plug.Conn{halted: true, status: 422} =
+      conn
+      |> Map.put(:body_params, %{"foo" =>  100500})
+      |> Annon.Plugins.Validator.execute(request, settings)
   end
 end

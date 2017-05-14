@@ -2,7 +2,7 @@ defmodule Annon.Requests.AnalyticsTest do
   @moduledoc false
   use Annon.DataCase, async: true
   alias Annon.Requests.Analytics
-  alias Annon.RequestsFactory
+  alias Annon.Factories.Requests, as: RequestsFactory
 
   describe "aggregate_latencies/2" do
     setup do

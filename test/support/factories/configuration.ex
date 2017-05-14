@@ -1,4 +1,4 @@
-defmodule Annon.ConfigurationFactory do
+defmodule Annon.Factories.Configuration do
   @moduledoc """
   This module lists Configuration-related factories, a mean suitable
   for tests that involve preparation of DB data.

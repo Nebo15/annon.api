@@ -1,7 +1,7 @@
 defmodule Annon.Plugins.Auth.Strategies.JWTTest do
   @moduledoc false
   use Annon.ConnCase, async: true
-  import Annon.TestHelpers
+  import Annon.Factories.JWT
   alias Annon.PublicAPI.Consumer
   alias Annon.Plugins.Auth.Strategies.JWT, as: JWTStrategy
 

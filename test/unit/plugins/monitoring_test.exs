@@ -1,20 +1,28 @@
 defmodule Annon.Plugins.MonitoringTest do
   @moduledoc false
-  use Annon.UnitCase
+  use Annon.ConnCase, router: Annon.PublicAPI.Router
+  alias Annon.Factories.Configuration, as: ConfigurationFactory
 
-  setup do
+  setup %{conn: conn} do
     :sys.replace_state DogStat, fn state ->
       Map.update!(state, :sink, fn _prev_state -> [] end)
     end
+
+    conn =
+      conn
+      |> put_req_header("accept", "application/json")
+      |> put_req_header("content-type", "application/json")
+
+    %{conn: conn}
   end
 
-  test "metrics work properly" do
-    api = Annon.ConfigurationFactory.insert(:api, %{
+  test "metrics work properly", %{conn: conn} do
+    api = ConfigurationFactory.insert(:api, %{
       name: "Montoring Test api",
-      request: Annon.ConfigurationFactory.build(:api_request, %{host: "www.example.com", path: "/apis"})
+      request: ConfigurationFactory.build(:api_request, %{host: "www.example.com", path: "/apis"})
     })
 
-    Annon.ConfigurationFactory.insert(:proxy_plugin, %{
+    ConfigurationFactory.insert(:proxy_plugin, %{
       name: "proxy",
       is_enabled: true,
       api: api,
@@ -26,7 +34,9 @@ defmodule Annon.Plugins.MonitoringTest do
       }
     })
 
-    call_public_router("/apis")
+    conn
+    |> get("/apis")
+    |> json_response(200)
 
     [%{header: [_, "test", 46], key: "latencies_gateway",
        options: [tags: ["http.status:200", "http.host:www.example.com",

@@ -1,4 +1,4 @@
-defmodule Annon.TestHelpers do
+defmodule Annon.Factories.JWT do
   @moduledoc false
   def jwt_token_factory(payload, signature, algorithm \\ :hs256) do
     signature = apply(Joken, algorithm, [Base.decode64!(signature)])

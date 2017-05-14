@@ -1,6 +1,6 @@
 # TODO: move to plugins tests
 defmodule Annon.Validators.SettingsTest do
-  use Annon.UnitCase, async: true
+  use ExUnit.Case, async: true
 
   describe "ACL plugin validation" do
     test "Valid settings" do

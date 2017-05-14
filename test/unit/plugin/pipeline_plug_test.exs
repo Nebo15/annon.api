@@ -2,12 +2,13 @@
 # defmodule Annon.Plugin.APILoaderTest do
 #   @moduledoc false
 #   use Annon.UnitCase
+#   alias Annon.Factories.Configuration, as: ConfigurationFactory
 
 #   describe "writes config to conn.private" do
 #     test "with plugins" do
-#       %{request: request} = api = Annon.ConfigurationFactory.insert(:api)
-#       Annon.ConfigurationFactory.insert(:jwt_plugin, api: api)
-#       Annon.ConfigurationFactory.insert(:acl_plugin, api: api)
+#       %{request: request} = api = ConfigurationFactory.insert(:api)
+#       ConfigurationFactory.insert(:jwt_plugin, api: api)
+#       ConfigurationFactory.insert(:acl_plugin, api: api)
 
 #       %{private: %{api_config: %{} = config}} =
 #         :get
@@ -24,7 +25,7 @@
 #     end
 
 #     test "without plugins" do
-#       %{request: request} = Annon.ConfigurationFactory.insert(:api)
+#       %{request: request} = ConfigurationFactory.insert(:api)
 
 #       %{private: %{api_config: nil}} =
 #         :get
@@ -39,9 +40,9 @@
 
 #   describe "find API by request" do
 #     test "with matching by path" do
-#       api = Annon.ConfigurationFactory.insert(:api, %{
+#       api = ConfigurationFactory.insert(:api, %{
 #         name: "API loader Test api",
-#         request: Annon.ConfigurationFactory.build(:api_request, %{
+#         request: ConfigurationFactory.build(:api_request, %{
 #           methods: ["GET"],
 #           scheme: "http",
 #           host: "www.example.com",
@@ -50,7 +51,7 @@
 #         })
 #       })
 
-#       Annon.ConfigurationFactory.insert(:proxy_plugin, %{
+#       ConfigurationFactory.insert(:proxy_plugin, %{
 #         name: "proxy",
 #         is_enabled: true,
 #         api: api,
@@ -78,9 +79,9 @@
 #     end
 
 #     test "with matching by overrided host" do
-#       api = Annon.ConfigurationFactory.insert(:api, %{
+#       api = ConfigurationFactory.insert(:api, %{
 #         name: "API loader Test api",
-#         request: Annon.ConfigurationFactory.build(:api_request, %{
+#         request: ConfigurationFactory.build(:api_request, %{
 #           methods: ["GET"],
 #           scheme: "http",
 #           host: "www.example.com",
@@ -89,7 +90,7 @@
 #         })
 #       })
 
-#       Annon.ConfigurationFactory.insert(:proxy_plugin, %{
+#       ConfigurationFactory.insert(:proxy_plugin, %{
 #         name: "proxy",
 #         is_enabled: true,
 #         api: api,
@@ -107,7 +108,7 @@
 #       |> conn("/mockbin")
 #       |> put_req_header("content-type", "application/json")
 #       |> Map.put(:host, "other_host")
-#       |> Annon.PublicRouter.call([])
+#       |> Annon.PublicAPI.Router.call([])
 
 #       assert 404 == resp.status
 
@@ -116,7 +117,7 @@
 #       |> put_req_header("content-type", "application/json")
 #       |> put_req_header("x-host-override", "www.example.com")
 #       |> Map.put(:host, "other_host")
-#       |> Annon.PublicRouter.call([])
+#       |> Annon.PublicAPI.Router.call([])
 
 #       assert 200 == resp.status
 #     end

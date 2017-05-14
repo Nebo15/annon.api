@@ -10,7 +10,7 @@ defmodule Annon.PublicAPI.ServerSupervisor do
 
   def init(_) do
     children = [
-      http_endpoint_spec(Annon.PublicRouter, :public_http),
+      http_endpoint_spec(Annon.PublicAPI.Router, :public_http),
       http_endpoint_spec(Annon.PrivateRouter, :private_http),
     ]
 

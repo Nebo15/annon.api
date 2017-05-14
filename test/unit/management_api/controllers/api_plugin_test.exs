@@ -1,7 +1,7 @@
 defmodule Annon.ManagementAPI.Controllers.APIPluginTest do
   @moduledoc false
   use Annon.ConnCase, async: true
-  alias Annon.ConfigurationFactory
+  alias Annon.Factories.Configuration, as: ConfigurationFactory
 
   setup %{conn: conn} do
     conn =
@@ -11,7 +11,7 @@ defmodule Annon.ManagementAPI.Controllers.APIPluginTest do
 
     %{
       conn: conn,
-      api: Annon.ConfigurationFactory.insert(:api)
+      api: ConfigurationFactory.insert(:api)
     }
   end
 

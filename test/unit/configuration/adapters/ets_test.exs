@@ -3,7 +3,7 @@ defmodule Annon.Configuration.CacheAdapter.ETSTest do
   use Annon.DataCase, async: true
   alias Annon.Configuration.CacheAdapters.ETS
   alias Annon.Configuration.Schemas.API, as: APISchema
-  alias Annon.ConfigurationFactory
+  alias Annon.Factories.Configuration, as: ConfigurationFactory
 
   @test_table_name :test_configuration
 

@@ -3,7 +3,7 @@ defmodule Annon.Configuration.CacheAdapter.DatabaseTest do
   use Annon.DataCase, async: true
   alias Annon.Configuration.CacheAdapters.Database
   alias Annon.Configuration.Schemas.API, as: APISchema
-  alias Annon.ConfigurationFactory
+  alias Annon.Factories.Configuration, as: ConfigurationFactory
 
   test "init/0 returns ok" do
     assert :ok == Database.init([])

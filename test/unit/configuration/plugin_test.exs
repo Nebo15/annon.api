@@ -3,7 +3,7 @@ defmodule Annon.Configuration.PluginTest do
   use Annon.DataCase, async: true
   alias Annon.Configuration.Plugin
   alias Annon.Configuration.Schemas.Plugin, as: PluginSchema
-  alias Annon.ConfigurationFactory
+  alias Annon.Factories.Configuration, as: ConfigurationFactory
 
   setup do
     %{api: ConfigurationFactory.insert(:api)}

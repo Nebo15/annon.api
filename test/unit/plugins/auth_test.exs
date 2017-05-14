@@ -1,8 +1,8 @@
 defmodule Annon.Plugins.AuthTest do
   @moduledoc false
   use Annon.ConnCase, async: true
-  import Annon.TestHelpers
-  alias Annon.ConfigurationFactory
+  import Annon.Factories.JWT
+  alias Annon.Factories.Configuration, as: ConfigurationFactory
   alias Annon.PublicAPI.Consumer
   alias Annon.Plugins.Auth
 

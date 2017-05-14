@@ -1,4 +1,4 @@
-defmodule Annon.RequestsFactory do
+defmodule Annon.Factories.Requests do
   @moduledoc """
   This module lists Requests-related factories, a mean suitable
   for tests that involve preparation of DB data.

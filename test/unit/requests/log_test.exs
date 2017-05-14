@@ -3,7 +3,7 @@ defmodule Annon.Requests.LogTest do
   use Annon.DataCase, async: true
   alias Annon.Requests.Log
   alias Annon.Requests.Request
-  alias Annon.RequestsFactory
+  alias Annon.Factories.Requests, as: RequestsFactory
   alias Ecto.Paging
   alias Ecto.Paging.Cursors
 

@@ -1,4 +1,4 @@
-defmodule Annon.PublicRouter do
+defmodule Annon.PublicAPI.Router do
   @moduledoc """
   Router for a Annons public API.
 

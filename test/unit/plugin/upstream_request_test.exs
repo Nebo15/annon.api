@@ -1,6 +1,6 @@
 defmodule Annon.Plugin.UpstreamRequestTest do
   @moduledoc false
-  use Annon.UnitCase, async: true
+  use ExUnit.Case, async: true
   import Annon.Plugin.UpstreamRequest
   alias Annon.Plugin.UpstreamRequest
 

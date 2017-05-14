@@ -8,9 +8,8 @@ defmodule Annon.Configuration.CacheAdapters.Database do
   def init(_opts),
     do: :ok
 
-  def match_request(scheme, method, host, port, path, _opts) do
-    API.find_api(scheme, method, host, port, path)
-  end
+  def match_request(scheme, method, host, port, path, _opts),
+    do: API.find_api(scheme, method, host, port, path)
 
   def config_change(_opts),
     do: :ok

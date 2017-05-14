@@ -7,5 +7,5 @@ defmodule Annon.PrivateRouter do
   plug :match
   plug :dispatch
 
-  forward "/", to: Annon.PublicRouter
+  forward "/", to: Annon.PublicAPI.Router
 end

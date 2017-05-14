@@ -1,7 +1,7 @@
 defmodule Annon.ManagementAPI.Controllers.RequestTest do
   @moduledoc false
   use Annon.ConnCase, async: true
-  alias Annon.RequestsFactory
+  alias Annon.Factories.Requests, as: RequestsFactory
 
   setup %{conn: conn} do
     conn =

@@ -3,7 +3,7 @@ defmodule Annon.Configuration.APITest do
   use Annon.DataCase, async: true
   alias Annon.Configuration.API
   alias Annon.Configuration.Schemas.API, as: APISchema
-  alias Annon.ConfigurationFactory
+  alias Annon.Factories.Configuration, as: ConfigurationFactory
   alias Ecto.Paging
   alias Ecto.Paging.Cursors
 

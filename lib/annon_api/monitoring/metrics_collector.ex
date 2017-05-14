@@ -1,8 +1,6 @@
 defmodule Annon.Monitoring.MetricsCollector do
   @moduledoc """
   This module provides helper functions to persist meaningful metrics to StatsD or DogstatsD servers.
-
-  Code is based on [Statix](https://github.com/lexmag/statix) library.
   """
   import DogStat
   alias Annon.Monitoring.Latencies

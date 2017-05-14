@@ -1,7 +1,6 @@
 defmodule Annon.Plugins.Proxy.MultipartFormTest do
   @moduledoc false
-  use Annon.UnitCase, async: true
-
+  use ExUnit.Case, async: true
   import Annon.Plugins.Proxy.MultipartForm, only: [reconstruct_using: 1]
 
   describe "reconstruct_using/1" do

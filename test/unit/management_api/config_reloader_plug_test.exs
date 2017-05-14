@@ -2,7 +2,7 @@ defmodule Annon.ManagementAPI.ConfigReloaderPlugTest do
   @moduledoc false
   use Annon.ConnCase, async: false
   import ExUnit.CaptureLog
-  alias Annon.ConfigurationFactory
+  alias Annon.Factories.Configuration, as: ConfigurationFactory
 
   setup %{conn: conn} do
     conn =
@@ -79,7 +79,7 @@ defmodule Annon.ManagementAPI.ConfigReloaderPlugTest do
   end
 
   test "reloads the config cache if plugin is deleted", %{conn: conn} do
-    api = Annon.ConfigurationFactory.insert(:api)
+    api = ConfigurationFactory.insert(:api)
     plugin = ConfigurationFactory.insert(:proxy_plugin, api_id: api.id)
 
     update_config =
