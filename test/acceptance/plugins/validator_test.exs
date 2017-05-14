@@ -209,7 +209,7 @@ defmodule Annon.Acceptance.Plugins.ValidatorTest do
       |> post!(validator_plugin)
       |> assert_status(201)
 
-      "#{api_path}/foo"
+      "#{api_path}foo"
       |> put_public_url()
       |> post!(%{data: "aaaa"})
       |> assert_status(422)

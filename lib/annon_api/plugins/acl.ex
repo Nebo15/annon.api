@@ -15,7 +15,7 @@ defmodule Annon.Plugins.ACL do
 
   def execute(%Conn{} = conn, %{api: %{request: %{path: api_path}}}, %{"rules" => rules}) do
     %Conn{method: request_method, request_path: request_path} = conn
-    api_relative_path = String.trim_leading(request_path, api_path)
+    api_relative_path = String.trim_leading(request_path, String.trim_trailing(api_path, "/"))
 
     with {:ok, consumer_scope} <- fetch_scope(conn),
          {:ok, rule} <- find_rule(rules, request_method, api_relative_path),
@@ -37,7 +37,7 @@ defmodule Annon.Plugins.ACL do
     rule =
       Enum.find_value(rules, fn %{"path" => rule_path, "methods" => methods} = rule ->
         method_matches? = request_method in methods
-        path_matches? = api_relative_path =~ ~r"#{rule_path}"
+        path_matches? = api_relative_path =~ ~r"^#{rule_path}"
 
         if method_matches? && path_matches? do
           {:ok, rule}

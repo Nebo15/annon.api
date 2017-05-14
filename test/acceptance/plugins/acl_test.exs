@@ -236,7 +236,7 @@ defmodule Annon.Acceptance.Plugins.ACLTest do
       token = build_jwt_token(%{"consumer_id" => "bob", "consumer_scope" => ["super_scope"]}, secret)
       headers = [{"authorization", "Bearer #{token}"}]
 
-      "#{api_path}/foo"
+      "#{api_path}foo"
       |> put_public_url()
       |> get!(headers)
       |> assert_status(404)

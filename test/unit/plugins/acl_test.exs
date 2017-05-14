@@ -224,7 +224,7 @@ defmodule Annon.Plugins.ACLTest do
       assert conn == ACL.execute(conn, %{api: api}, settings)
     end
 
-    test "filters rules by path pattern", %{api: api} do
+    test "filters rules by path", %{api: api} do
       settings = %{
         "rules" => [
           %{
@@ -243,6 +243,56 @@ defmodule Annon.Plugins.ACLTest do
       conn =
         :get
         |> build_conn("/bar", nil)
+        |> Conn.assign(:consumer, %Consumer{id: "bob", scope: "other_scope:read"})
+
+      assert conn == ACL.execute(conn, %{api: api}, settings)
+    end
+
+    test "filters rules by path pattern", %{api: api} do
+      settings = %{
+        "rules" => [
+          %{
+            "methods" => ["GET"],
+            "path" => "/foo",
+            "scopes" => ["some_resource:read", "some_resource:access"]
+          },
+          %{
+            "methods" => ["GET"],
+            "path" => ".*",
+            "scopes" => ["other_scope:read"]
+          }
+        ]
+      }
+
+      conn =
+        :get
+        |> build_conn("/bar", nil)
+        |> Conn.assign(:consumer, %Consumer{id: "bob", scope: "other_scope:read"})
+
+      assert conn == ACL.execute(conn, %{api: api}, settings)
+    end
+
+    test "filters rules by path relative to api path" do
+      api = ConfigurationFactory.build(:api, request: ConfigurationFactory.build(:api_request, path: "/baz/"))
+
+      settings = %{
+        "rules" => [
+          %{
+            "methods" => ["GET"],
+            "path" => "/foo",
+            "scopes" => ["some_resource:read", "some_resource:access"]
+          },
+          %{
+            "methods" => ["GET"],
+            "path" => "/bar",
+            "scopes" => ["other_scope:read"]
+          }
+        ]
+      }
+
+      conn =
+        :get
+        |> build_conn("/baz/bar", nil)
         |> Conn.assign(:consumer, %Consumer{id: "bob", scope: "other_scope:read"})
 
       assert conn == ACL.execute(conn, %{api: api}, settings)
