@@ -46,7 +46,6 @@ defmodule Annon.Plugins.Auth.SettingsValidator do
               "minLength": 1
             },
             "algorithm" => %{
-              "type" => "string",
               "enum" => [
                 "HS256", "HS384", "HS512"
               ]
@@ -75,7 +74,6 @@ defmodule Annon.Plugins.Auth.SettingsValidator do
               "minLength": 1
             },
             "algorithm" => %{
-              "type" => "string",
               "enum" => [
                 "HS256", "HS384", "HS512"
               ]
