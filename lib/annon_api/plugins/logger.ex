@@ -20,7 +20,7 @@ defmodule Annon.Plugins.Logger do
     Conn.register_before_send(conn, &log_request(&1, api))
   end
 
-  defp log_request(conn, api) do
+  defp log_request(%Conn{} = conn, api) do
     request = %{
       id: ConnHelpers.get_request_id(conn, nil),
       idempotency_key: ConnHelpers.get_idempotency_key(conn, ""),
@@ -28,7 +28,7 @@ defmodule Annon.Plugins.Logger do
       request: get_request_data(conn),
       api: get_api_data(api),
       response: get_response_data(conn),
-      latencies: get_latencies_data(conn),
+      latencies: Map.take(conn.assigns.latencies, [:client_request, :upstream, :gateway]),
       status_code: conn.status
     }
 
@@ -48,9 +48,9 @@ defmodule Annon.Plugins.Logger do
     do: nil
   defp get_api_data(%{id: id, name: name, request: request}) do
     %{
-      id: to_string(id),
+      id: id,
       name: name,
-      request: prepare_params(request)
+      request: Map.take(request, [:scheme, :host, :port, :path, :methods])
     }
   end
 
@@ -62,7 +62,6 @@ defmodule Annon.Plugins.Logger do
       headers: modify_headers_list(conn.req_headers),
       body: Poison.encode!(conn.body_params)
     }
-    |> prepare_params
   end
 
   defp get_response_body(conn) do
@@ -82,19 +81,5 @@ defmodule Annon.Plugins.Logger do
       headers: modify_headers_list(conn.resp_headers),
       body: get_response_body(conn)
     }
-    |> prepare_params
   end
-
-  defp get_latencies_data(conn) do
-    conn.assigns
-    |> Map.get(:latencies)
-    |> prepare_params
-  end
-
-  defp prepare_params(nil), do: %{}
-  defp prepare_params(%{__struct__: _} = params), do: params |> Map.delete(:__struct__) |> prepare_params()
-  defp prepare_params(params), do: for {key, val} <- params, into: %{}, do: {key_to_atom(key), val}
-
-  defp key_to_atom(key) when is_binary(key), do: String.to_atom(key)
-  defp key_to_atom(key) when is_atom(key), do: key
 end
