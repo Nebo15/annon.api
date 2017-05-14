@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.RequestsFactory – annon_api v0.2.76</title>
+    <title>Annon.Factories.Configuration – annon_api v0.2.77</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-ffdfdfc7e4.js"></script>
+    <script src="dist/sidebar_items-1ea94fd69c.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.76
+        v0.2.77
       </h2>
     </div>
     
@@ -58,15 +58,15 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.76</small>
-        Annon.RequestsFactory
+        <small class="visible-xs">annon_api v0.2.77</small>
+        Annon.Factories.Configuration
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>This module lists Requests-related factories, a mean suitable
+          <p>This module lists Configuration-related factories, a mean suitable
 for tests that involve preparation of DB data.</p>
 
         </section>
@@ -89,6 +89,12 @@ for tests that involve preparation of DB data.</p>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
+    <a href="#acl_plugin_factory/0">acl_plugin_factory()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#api_factory/0">api_factory()</a>
   </div>
   
@@ -96,6 +102,18 @@ for tests that involve preparation of DB data.</p>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#api_request_factory/0">api_request_factory()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#auth_plugin_with_jwt_factory/0">auth_plugin_with_jwt_factory()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#auth_plugin_with_oauth_factory/0">auth_plugin_with_oauth_factory()</a>
   </div>
   
 </div>
@@ -114,6 +132,12 @@ for tests that involve preparation of DB data.</p>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#build_pair/2">build_pair(factory_name, attrs \\ %{})</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#cors_plugin_factory/0">cors_plugin_factory()</a>
   </div>
   
 </div>
@@ -158,13 +182,7 @@ for tests that involve preparation of DB data.</p>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#http_request_factory/0">http_request_factory()</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#http_response_factory/0">http_response_factory()</a>
+    <a href="#idempotency_plugin_factory/0">idempotency_plugin_factory()</a>
   </div>
   
 </div>
@@ -194,7 +212,7 @@ for tests that involve preparation of DB data.</p>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#latencies_factory/0">latencies_factory()</a>
+    <a href="#ip_restriction_plugin_factory/0">ip_restriction_plugin_factory()</a>
   </div>
   
 </div>
@@ -212,7 +230,7 @@ for tests that involve preparation of DB data.</p>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#request_factory/0">request_factory()</a>
+    <a href="#proxy_plugin_factory/0">proxy_plugin_factory()</a>
   </div>
   
 </div>
@@ -225,6 +243,18 @@ for tests that involve preparation of DB data.</p>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#string_params_with_assocs/2">string_params_with_assocs(factory_name, attrs \\ %{})</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#ua_restriction_plugin_factory/0">ua_restriction_plugin_factory()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#validator_plugin_factory/0">validator_plugin_factory()</a>
   </div>
   
 </div>
@@ -247,7 +277,22 @@ for tests that involve preparation of DB data.</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="api_factory/0">
+          <div class="detail" id="acl_plugin_factory/0">
+  
+  <div class="detail-header">
+    <a href="#acl_plugin_factory/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">acl_plugin_factory()</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="api_factory/0">
   
   <div class="detail-header">
     <a href="#api_factory/0" class="detail-link" title="Link to this function">
@@ -269,6 +314,36 @@ for tests that involve preparation of DB data.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">api_request_factory()</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="auth_plugin_with_jwt_factory/0">
+  
+  <div class="detail-header">
+    <a href="#auth_plugin_with_jwt_factory/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">auth_plugin_with_jwt_factory()</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="auth_plugin_with_oauth_factory/0">
+  
+  <div class="detail-header">
+    <a href="#auth_plugin_with_oauth_factory/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">auth_plugin_with_oauth_factory()</span>
     
     
     
@@ -320,6 +395,21 @@ for tests that involve preparation of DB data.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">build_pair(factory_name, attrs \\ %{})</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="cors_plugin_factory/0">
+  
+  <div class="detail-header">
+    <a href="#cors_plugin_factory/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">cors_plugin_factory()</span>
     
     
     
@@ -451,28 +541,13 @@ for tests that involve preparation of DB data.</p>
     
   </section>
 </div>
-<div class="detail" id="http_request_factory/0">
+<div class="detail" id="idempotency_plugin_factory/0">
   
   <div class="detail-header">
-    <a href="#http_request_factory/0" class="detail-link" title="Link to this function">
+    <a href="#idempotency_plugin_factory/0" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">http_request_factory()</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="http_response_factory/0">
-  
-  <div class="detail-header">
-    <a href="#http_response_factory/0" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">http_response_factory()</span>
+    <span class="signature">idempotency_plugin_factory()</span>
     
     
     
@@ -547,13 +622,13 @@ for tests that involve preparation of DB data.</p>
     
   </section>
 </div>
-<div class="detail" id="latencies_factory/0">
+<div class="detail" id="ip_restriction_plugin_factory/0">
   
   <div class="detail-header">
-    <a href="#latencies_factory/0" class="detail-link" title="Link to this function">
+    <a href="#ip_restriction_plugin_factory/0" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">latencies_factory()</span>
+    <span class="signature">ip_restriction_plugin_factory()</span>
     
     
     
@@ -596,13 +671,13 @@ for tests that involve preparation of DB data.</p>
     
   </section>
 </div>
-<div class="detail" id="request_factory/0">
+<div class="detail" id="proxy_plugin_factory/0">
   
   <div class="detail-header">
-    <a href="#request_factory/0" class="detail-link" title="Link to this function">
+    <a href="#proxy_plugin_factory/0" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">request_factory()</span>
+    <span class="signature">proxy_plugin_factory()</span>
     
     
     
@@ -637,6 +712,36 @@ for tests that involve preparation of DB data.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">string_params_with_assocs(factory_name, attrs \\ %{})</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="ua_restriction_plugin_factory/0">
+  
+  <div class="detail-header">
+    <a href="#ua_restriction_plugin_factory/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">ua_restriction_plugin_factory()</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="validator_plugin_factory/0">
+  
+  <div class="detail-header">
+    <a href="#validator_plugin_factory/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">validator_plugin_factory()</span>
     
     
     
