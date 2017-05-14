@@ -81,10 +81,10 @@ defmodule Annon.Plugins.ACL do
   end
 
   defp get_message(nil),
-    do: "You are not authorized or your token can not be resolved to scope."
+    do: "You are not authorized or your token can not be resolved to scope"
   defp get_message(missing_scopes) when is_list(missing_scopes) do
     missing_scopes = Enum.join(missing_scopes, ", ")
-    "Your scope does not allow to access this resource. Missing allowances: #{missing_scopes}."
+    "Your scope does not allow to access this resource. Missing allowances: #{missing_scopes}"
   end
 
   defp get_rules(nil),

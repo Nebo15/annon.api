@@ -187,7 +187,7 @@ defmodule Annon.Acceptance.Plugins.ACLTest do
       |> get_body()
 
       assert 403 == response["meta"]["code"]
-      assert "Your scope does not allow to access this resource. Missing allowances: api:request."
+      assert "Your scope does not allow to access this resource. Missing allowances: api:request"
         = response["error"]["message"]
 
       token = build_jwt_token(%{"consumer_id" => "bob", "consumer_scope" => ["api:access", "api:request"]}, secret)
