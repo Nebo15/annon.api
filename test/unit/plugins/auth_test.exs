@@ -118,9 +118,8 @@ defmodule Annon.Plugins.AuthTest do
       |> json_response(401)
     end
 
-    test "returns 401 when token is not set", %{conn: conn} do
-      mock_conf = Confex.get_map(:annon_api, :acceptance)[:mock]
-      mock_url = "http://#{mock_conf[:host]}:#{mock_conf[:port]}/auth/tokens/random_token"
+    test "returns 401 when token is not set", %{conn: conn, mock_url: mock_url} do
+      mock_url = "#{mock_url}auth/tokens/random_token"
 
       settings = %{
         "strategy" => "oauth",
@@ -133,6 +132,25 @@ defmodule Annon.Plugins.AuthTest do
           "type" => "access_denied"
         }
       } = conn
+      |> Auth.execute(nil, settings)
+      |> json_response(401)
+    end
+
+    test "proxies 401 error from upstream backend when token is not found via third part resolver", %{conn: conn} do
+      mock_url = "httpbin.org/status/404"
+
+      settings = %{
+        "strategy" => "oauth",
+        "url_template" => mock_url
+      }
+
+      assert %{
+        "error" => %{
+          "message" => "Invalid access token",
+          "type" => "access_denied"
+        }
+      } = conn
+      |> put_req_header("authorization", "Bearer access_token")
       |> Auth.execute(nil, settings)
       |> json_response(401)
     end
@@ -161,11 +179,10 @@ defmodule Annon.Plugins.AuthTest do
       } = consumer
     end
 
-    test "jwt strategy with third-party resolver is supported", %{conn: conn} do
+    test "jwt strategy with third-party resolver is supported", %{conn: conn, mock_url: mock_url} do
       consumer_id = "bob"
 
-      mock_conf = Confex.get_map(:annon_api, :acceptance)[:mock]
-      mock_url = "http://#{mock_conf[:host]}:#{mock_conf[:port]}/auth/consumers/" <> consumer_id
+      mock_url = "#{mock_url}auth/consumers/" <> consumer_id
 
       settings = %{
         "strategy" => "jwt",
@@ -192,11 +209,10 @@ defmodule Annon.Plugins.AuthTest do
       } = consumer
     end
 
-    test "oauth strategy is supported", %{conn: conn} do
+    test "oauth strategy is supported", %{conn: conn, mock_url: mock_url} do
       access_token = "random_token"
 
-      mock_conf = Confex.get_map(:annon_api, :acceptance)[:mock]
-      mock_url = "http://#{mock_conf[:host]}:#{mock_conf[:port]}/auth/tokens/" <> access_token
+      mock_url = "#{mock_url}auth/tokens/" <> access_token
 
       settings = %{
         "strategy" => "oauth",

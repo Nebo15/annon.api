@@ -45,5 +45,12 @@ defmodule Annon.Plugins.Auth.Strategies.OAuthTest do
       settings = Map.put(settings, "url_template", "http://httpbin.org/ip")
       assert {:error, "Invalid access token"} = OAuthStrategy.fetch_consumer(:bearer, acces_token, settings)
     end
+
+    test "returns error with third party resolver message", settings do
+      acces_token = "random_token"
+
+      settings = Map.put(settings, "url_template", settings["url_template"] <> "auth/unathorized")
+      assert {:error, "Hi boys!"} = OAuthStrategy.fetch_consumer(:bearer, acces_token, settings)
+    end
   end
 end

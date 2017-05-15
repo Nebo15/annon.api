@@ -17,7 +17,9 @@ defmodule Annon.Plugins.Auth.Strategies.OAuth do
     case resp do
       {:ok, %Consumer{} = consumer} ->
         {:ok, consumer}
-      {:error, _reason} ->
+      {:error, message} when is_binary(message) ->
+        {:error, message}
+      {:error, reason} when is_atom(reason) ->
         {:error, "Invalid access token"}
     end
   end

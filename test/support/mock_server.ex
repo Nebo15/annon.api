@@ -89,6 +89,17 @@ defmodule Annon.MockServer do
     send_resp(conn, 200, Poison.encode!(response_body))
   end
 
+  get "auth/unathorized" do
+    response_body = %{
+      "error" => %{
+        "type" => "unathorized",
+        "message" => "Hi boys!"
+      }
+    }
+
+    send_resp(conn, 401, Poison.encode!(response_body))
+  end
+
   match _ do
     conn
     |> debug_conn

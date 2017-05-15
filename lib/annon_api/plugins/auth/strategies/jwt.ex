@@ -28,7 +28,8 @@ defmodule Annon.Plugins.Auth.Strategies.JWT do
     else
       %Token{error: _message} -> {:error, "JWT token is invalid"}
       {:error, :consumer_id_is_not_set} -> {:error, "JWT token does not contain Consumer ID"}
-      {:error, :third_party_resolver} -> {:error, "JWT token can not be authorized"}
+      {:error, reason} when is_atom(reason) -> {:error, "JWT token can not be authorized"}
+      {:error, message} when is_binary(message) -> {:error, message}
     end
   end
 
@@ -100,8 +101,8 @@ defmodule Annon.Plugins.Auth.Strategies.JWT do
     case resp do
       {:ok, %Consumer{scope: scope}} ->
         Map.put(consumer, :scope, scope)
-      {:error, _reason} ->
-        {:error, :third_party_resolver}
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 

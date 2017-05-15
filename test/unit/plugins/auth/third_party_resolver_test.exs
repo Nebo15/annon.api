@@ -26,19 +26,19 @@ defmodule Annon.Plugins.Auth.ThirdPartyResolverTest do
   end
 
   test "returns error on non-200 status codes" do
-    assert {:error, "Third party resolver is unavailable"}
+    assert {:error, :invalid_response}
       == ThirdPartyResolver.call_third_party_resolver("http://httpbin.org/status/418")
   end
 
   test "returns error when third party is not available" do
-    assert {:error, "Can not get third party resolver response."}
+    assert {:error, :unavailable}
       == ThirdPartyResolver.call_third_party_resolver("http://localhost:31001/")
   end
 
   test "returns error when response is not valid" do
-    assert {:error, "Third party resolver is unavailable"}
+    assert {:error, :invalid_response}
       == ThirdPartyResolver.call_third_party_resolver("http://httpbin.org/status/200")
-    assert {:error, "Can not process third party resolver response, " <> _}
+    assert {:error, :invalid_response}
       = ThirdPartyResolver.call_third_party_resolver("http://httpbin.org/ip")
   end
 end

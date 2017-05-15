@@ -163,15 +163,12 @@ defmodule Annon.Plugins.Auth.Strategies.JWTTest do
       }} = JWTStrategy.fetch_consumer(:bearer, jwt_token, settings)
     end
 
-    test "returns error when token is not resolved", settings do
+    test "returns error with third party resolver message", settings do
       payload = %{"consumer_id" => "bob"}
       jwt_token = jwt_token_factory(payload, settings["secret"])
 
-      settings = Map.put(settings, "url_template", "http://httpbin.org/status/200")
-      assert {:error, "JWT token can not be authorized"} = JWTStrategy.fetch_consumer(:bearer, jwt_token, settings)
-
-      settings = Map.put(settings, "url_template", "http://httpbin.org/ip")
-      assert {:error, "JWT token can not be authorized"} = JWTStrategy.fetch_consumer(:bearer, jwt_token, settings)
+      settings = Map.put(settings, "url_template", settings["url_template"] <> "auth/unathorized")
+      assert {:error, "Hi boys!"} = JWTStrategy.fetch_consumer(:bearer, jwt_token, settings)
     end
   end
 end
