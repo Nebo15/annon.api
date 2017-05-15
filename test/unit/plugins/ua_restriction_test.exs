@@ -29,6 +29,15 @@ defmodule Annon.Plugins.UARestrictionTest do
   end
 
   describe "execute/3" do
+    test "skips request when no user agent is present", %{conn: conn} do
+      settings = %{
+        "blacklist" => ["Mozilla"],
+        "whitelist" => ["Firefox"]
+      }
+
+      assert conn == UARestriction.execute(conn, nil, settings)
+    end
+
     test "blacklists user agents", %{conn: conn} do
       settings = %{
         "blacklist" => ["Mozilla"],
