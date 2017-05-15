@@ -14,8 +14,6 @@ defmodule Annon.Plugins.IPRestriction do
   defdelegate validate_settings(changeset), to: Annon.Plugins.IPRestriction.SettingsValidator
   defdelegate settings_validation_schema(), to: Annon.Plugins.IPRestriction.SettingsValidator
 
-  def execute(%Conn{halted: true} = conn, _request, _settings),
-    do: conn
   def execute(%Conn{remote_ip: remote_ip} = conn, _request, settings) do
     if check_ip(settings, ip_to_string(remote_ip)) do
       conn

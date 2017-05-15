@@ -12,8 +12,6 @@ defmodule Annon.Plugins.UARestriction do
   defdelegate validate_settings(changeset), to: Annon.Plugins.UARestriction.SettingsValidator
   defdelegate settings_validation_schema(), to: Annon.Plugins.UARestriction.SettingsValidator
 
-  def execute(%Conn{halted: true} = conn, _request, _settings),
-    do: conn
   def execute(%Conn{} = conn, _request, settings) do
     with {:ok, user_agent} <- fetch_user_agent(conn),
          true <- check_user_agent(settings, user_agent) do

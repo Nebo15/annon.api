@@ -16,8 +16,6 @@ defmodule Annon.Plugins.Auth do
     "oauth" => Annon.Plugins.Auth.Strategies.OAuth
   }
 
-  def execute(%Conn{halted: true} = conn, _request, _settings),
-    do: conn
   def execute(%Conn{} = conn, _request, %{"strategy" => strategy} = settings) do
     adapter = Map.fetch!(@strategies, strategy)
 

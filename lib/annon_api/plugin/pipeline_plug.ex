@@ -116,8 +116,11 @@ defmodule Annon.Plugin.PipelinePlug do
   end
 
   defp execute_plugins(conn, %{plugins: plugins} = request) when is_list(plugins) do
-    Enum.reduce(plugins, conn, fn %{module: module, settings: settings}, conn ->
-      module.execute(conn, request, settings)
+    Enum.reduce(plugins, conn, fn
+      _plugin, %Conn{halted: true} = conn ->
+        conn
+      %{module: module, settings: settings}, conn ->
+        module.execute(conn, request, settings)
     end)
   end
 end

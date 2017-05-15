@@ -13,8 +13,6 @@ defmodule Annon.Plugins.ACL do
   defdelegate validate_settings(changeset), to: Annon.Plugins.ACL.SettingsValidator
   defdelegate settings_validation_schema(), to: Annon.Plugins.ACL.SettingsValidator
 
-  def execute(%Conn{halted: true} = conn, _request, _settings),
-    do: conn
   def execute(%Conn{} = conn, %{api: %{request: %{path: api_path}}}, %{"rules" => rules}) do
     %Conn{method: request_method, request_path: request_path} = conn
     api_relative_path = String.trim_leading(request_path, String.trim_trailing(api_path, "/"))
