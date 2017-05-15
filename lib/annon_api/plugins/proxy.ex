@@ -10,6 +10,8 @@ defmodule Annon.Plugins.Proxy do
   defdelegate validate_settings(changeset), to: Annon.Plugins.Proxy.SettingsValidator
   defdelegate settings_validation_schema(), to: Annon.Plugins.Proxy.SettingsValidator
 
+  def execute(%Conn{halted: true} = conn, _request, _settings),
+    do: conn
   def execute(%Conn{} = conn, %{api: api}, settings) do
     upstream_request = build_upstream_request(conn, api, settings)
     proxy_adapter = Annon.Plugins.Proxy.Adapters.HTTP

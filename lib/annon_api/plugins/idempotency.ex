@@ -16,6 +16,8 @@ defmodule Annon.Plugins.Idempotency do
   def settings_validation_schema,
     do: %{}
 
+  def execute(%Conn{halted: true} = conn, _request, _settings),
+    do: conn
   def execute(%Conn{method: method, body_params: request_body} = conn, _request, _settings)
     when method in @idempotent_methods do
     with {:ok, idempotency_key} <- Annon.Helpers.Conn.fetch_idempotency_key(conn),

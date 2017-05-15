@@ -7,6 +7,8 @@ defmodule Annon.Plugins.CORS do
   defdelegate validate_settings(changeset), to: Annon.Plugins.CORS.SettingsValidator
   defdelegate settings_validation_schema(), to: Annon.Plugins.CORS.SettingsValidator
 
+  def execute(%Conn{halted: true} = conn, _request, _settings),
+    do: conn
   def execute(%Conn{} = conn, _request, settings) do
     settings = settings || %{}
     settings =
