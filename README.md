@@ -59,12 +59,12 @@ Also, idempotency plug is relying on this logs to provide idempotency guarantees
 
 To monitor services status we will use DogStatsD integration, that will receive following metrics:
 
-- `request_count` - (counter) [API](#reference/apis) hit rate.
-- `request_size` - (gauge) HTTP request size.
-- `response_count` - (counter) same as `request_count` but sent after request dispatch and additionally tagged with `http_status`.
-- `latency` (gauge) - total request latency for a API consumer, additionally tagged with `http_status`.
+- `request.count` (counter) - [API](#reference/apis) hit rate.
+- `request.size` (gauge) - HTTP request size.
+- `responses.count` (counter) - same as `request.count` but sent after request dispatch and additionally tagged with `http.status`.
+- `latencies.{client,upstream,gateway}` (gauge) - total request latency for a API consumer, additionally tagged with `http.status`.
 
-All metrics have tags: `http_host`, `http_port`, `http_method`, `api_name` and `api_id` (if matches any), `request_id`. This allows to set different aggregated views on counter data.
+All metrics have tags: `http.host`, `http.port`, `http.method`, `api.name` and `api.id` (if matches any), `request.id`. This allows to set different aggregated views on counter data.
 
 We recommend you to try [DataDog](https://www.datadoghq.com/) for collecting and displaying performance metrics. But this is not a hard constraint, instead you can use any StatsD collector.
 
