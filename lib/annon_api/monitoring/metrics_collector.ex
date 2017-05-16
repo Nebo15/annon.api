@@ -15,7 +15,7 @@ defmodule Annon.Monitoring.MetricsCollector do
   def track_response(_request_id, latencies, opts) do
     %Latencies{client_request: client, upstream: upstream, gateway: gateway} = latencies
 
-    increment("responses.count", client, opts)
+    increment("responses.count", 1, opts)
     histogram("latencies.client", client, opts)
     histogram("latencies.upstream", upstream, opts)
     histogram("latencies.gateway", gateway, opts)
