@@ -1,0 +1,22 @@
+version: '2'
+services:
+  api:
+    build: ./
+    links:
+      - "postgres:postgres"
+    depends_on:
+      - postgres
+    env_file: ./.env
+    environment:
+      - DB_HOST=postgres
+    ports:
+      - "4000:4000"
+      - "4001:4001"
+  postgres:
+    image: "postgres:alpine"
+    ports:
+      - "5432"
+    environment:
+      - POSTGRES_DB=gateway
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
