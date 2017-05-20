@@ -16,6 +16,7 @@ defmodule Annon do
       supervisor(Annon.Configuration.Repo, []),
       supervisor(Annon.Requests.Repo, []),
       worker(DogStat, [metrics_collector_opts()]),
+      worker(Annon.Requests.LogWriter, []),
       worker(Annon.Configuration.Matcher, [matcher_opts()]),
       worker(Annon.AutoClustering, []),
       management_endpoint_spec(),

@@ -6,7 +6,7 @@ defmodule Annon.Plugins.Logger do
   All stored records can be accessible via [management API](http://docs.annon.apiary.io/#reference/requests).
   """
   use Annon.Plugin, plugin_name: :logger
-  alias Annon.Requests.Log
+  alias Annon.Requests.LogWriter
   require Logger
   alias Annon.Helpers.Conn, as: ConnHelpers
 
@@ -16,11 +16,11 @@ defmodule Annon.Plugins.Logger do
   def settings_validation_schema,
     do: %{}
 
-  def execute(%Conn{} = conn, %{api: api}, _settings) do
-    Conn.register_before_send(conn, &log_request(&1, api))
+  def execute(%Conn{} = conn, %{api: api, feature_requirements: feature_requirements}, _settings) do
+    Conn.register_before_send(conn, &log_request(&1, api, feature_requirements))
   end
 
-  defp log_request(%Conn{} = conn, api) do
+  defp log_request(conn, api, feature_requirements) do
     request = %{
       id: ConnHelpers.get_request_id(conn, nil),
       idempotency_key: ConnHelpers.get_idempotency_key(conn, ""),
@@ -32,7 +32,13 @@ defmodule Annon.Plugins.Logger do
       status_code: conn.status
     }
 
-    case Log.create_request(request) do
+    if Map.get(feature_requirements, :log_consistency, false),
+      do: sync_insert_request(request, conn),
+    else: async_insert_request(request, conn)
+  end
+
+  defp sync_insert_request(request, conn) do
+    case LogWriter.create_request(request) do
       {:ok, _} ->
         conn
       {:error, error} ->
@@ -41,12 +47,14 @@ defmodule Annon.Plugins.Logger do
     end
   end
 
-  defp modify_headers_list([]),
-    do: []
-  defp modify_headers_list(headers) when is_list(headers) do
-    Enum.reduce(headers, %{}, fn {key, value}, acc ->
-      Map.put(acc, key, value)
-    end)
+  defp async_insert_request(request, conn) do
+    case LogWriter.create_request_async(request) do
+      :ok ->
+        conn
+      {:error, error} ->
+        Logger.warn fn -> "Can not save request information. Changeset: #{inspect error}" end
+        conn
+    end
   end
 
   defp get_api_data(nil),
@@ -86,5 +94,13 @@ defmodule Annon.Plugins.Logger do
       headers: modify_headers_list(conn.resp_headers),
       body: get_response_body(conn)
     }
+  end
+
+  defp modify_headers_list([]),
+    do: []
+  defp modify_headers_list(headers) when is_list(headers) do
+    Enum.reduce(headers, %{}, fn {key, value}, acc ->
+      Map.put(acc, key, value)
+    end)
   end
 end

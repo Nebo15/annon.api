@@ -57,6 +57,9 @@ config :skycluster,
 config :annon_api,
   sql_sandbox: {:system, :boolean, "SQL_SANDBOX", false}
 
+config :annon_api, :plugin_pipeline,
+  default_features: []
+
 config :annon_api, :metrics_collector,
   enabled?: {:system, :boolean, "METRICS_COLLECTOR_ENABLED", true},
   send_tags: {:system, :boolean, "METRICS_COLLECTOR_SEND_TAGS", true},

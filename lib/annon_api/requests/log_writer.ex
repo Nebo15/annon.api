@@ -10,7 +10,7 @@ defmodule Annon.Requests.LogWriter do
   @doc """
   Start a LogWriter worker.
   """
-  def start_link() do
+  def start_link do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 

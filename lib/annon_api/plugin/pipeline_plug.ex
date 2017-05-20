@@ -3,16 +3,20 @@ defmodule Annon.Plugin.PipelinePlug do
   This module inject Plugins pipeline into Plug.Router.
   """
   alias Plug.Conn
+  alias Annon.Plugin
   alias Annon.Plugin.Request
   alias Annon.Plugin.UpstreamRequest
   alias Annon.Configuration.Matcher
 
   @plugins Application.fetch_env!(:annon_api, :plugins)
 
-  def init(opts),
-    do: opts
+  def init(_opts) do
+    :annon_api
+    |> Application.get_env(:plugin_pipeline)
+    |> Keyword.fetch!(:default_features)
+  end
 
-  def call(%Conn{} = conn, _opts) do
+  def call(%Conn{} = conn, default_features) do
     api = resolve_api(conn)
     plugins = resolve_plugins(api)
 
@@ -20,6 +24,7 @@ defmodule Annon.Plugin.PipelinePlug do
       api
       |> build_request(plugins)
       |> prepare_plugins()
+      |> Plugin.update_feature_requirements(default_features)
 
     conn
     |> put_upstream_request()
