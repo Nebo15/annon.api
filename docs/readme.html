@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon – annon_api v0.2.91</title>
+    <title>Annon – annon_api v0.2.92</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-9bc21222ea.js"></script>
+    <script src="dist/sidebar_items-4cb381da73.js"></script>
   </head>
   <body data-type="extras">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.91
+        v0.2.92
       </h2>
     </div>
     
@@ -122,16 +122,16 @@ It support different discovery strategies:</p>
 <h3>Monitoring</h3>
 <p>To monitor services status we will use DogStatsD integration, that will receive following metrics:</p>
 <ul>
-<li><code class="inline">request_count</code> - (counter) <a href="#reference/apis">API</a> hit rate.
+<li><code class="inline">request.count</code> (counter) - <a href="#reference/apis">API</a> hit rate.
 </li>
-<li><code class="inline">request_size</code> - (gauge) HTTP request size.
+<li><code class="inline">request.size</code> (gauge) - HTTP request size.
 </li>
-<li><code class="inline">response_count</code> - (counter) same as <code class="inline">request_count</code> but sent after request dispatch and additionally tagged with <code class="inline">http_status</code>.
+<li><code class="inline">responses.count</code> (counter) - same as <code class="inline">request.count</code> but sent after request dispatch and additionally tagged with <code class="inline">http.status</code>.
 </li>
-<li><code class="inline">latency</code> (gauge) - total request latency for a API consumer, additionally tagged with <code class="inline">http_status</code>.
+<li><code class="inline">latencies.{client,upstream,gateway}</code> (gauge) - total request latency for a API consumer, additionally tagged with <code class="inline">http.status</code>.
 </li>
 </ul>
-<p>All metrics have tags: <code class="inline">http_host</code>, <code class="inline">http_port</code>, <code class="inline">http_method</code>, <code class="inline">api_name</code> and <code class="inline">api_id</code> (if matches any), <code class="inline">request_id</code>. This allows to set different aggregated views on counter data.</p>
+<p>All metrics have tags: <code class="inline">http.host</code>, <code class="inline">http.port</code>, <code class="inline">http.method</code>, <code class="inline">api.name</code> and <code class="inline">api.id</code> (if matches any), <code class="inline">request.id</code>. This allows to set different aggregated views on counter data.</p>
 <p>We recommend you to try <a href="https://www.datadoghq.com/">DataDog</a> for collecting and displaying performance metrics. But this is not a hard constraint, instead you can use any StatsD collector.</p>
 <h3>Requests Idempotency</h3>
 <p>Annon guarantees that replayed requests with same <code class="inline">X-Idempotency-Key: &lt;key&gt;</code> and same request will get permanent response. This is useful in a financial application, where you need good protection from duplicate user actions.</p>

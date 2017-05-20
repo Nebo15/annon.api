@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Requests.LogWriter – annon_api v0.2.91</title>
+    <title>Annon.Requests.LogWriter – annon_api v0.2.92</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-9bc21222ea.js"></script>
+    <script src="dist/sidebar_items-4cb381da73.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -26,7 +26,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.91
+        v0.2.92
       </h2>
     </div>
     
@@ -58,7 +58,7 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.91</small>
+        <small class="visible-xs">annon_api v0.2.92</small>
         Annon.Requests.LogWriter
         
         
@@ -97,7 +97,7 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#create_request_async/2">create_request_async(attrs, opts \\ [])</a>
+    <a href="#create_request_async/1">create_request_async(attrs)</a>
   </div>
   
     <div class="summary-synopsis"><p>Asynchronously creates a Request.
@@ -107,11 +107,23 @@ If request insert operations is failed, error is logged to a console</p>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#start_link/1">start_link(opts \\ [])</a>
+    <a href="#start_link/0">start_link()</a>
   </div>
   
     <div class="summary-synopsis"><p>Start a LogWriter worker</p>
 </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#subscribe/1">subscribe(name_or_pid)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#unsubscribe/1">unsubscribe(name_or_pid)</a>
+  </div>
   
 </div>
 
@@ -159,15 +171,13 @@ iex&gt; create_request(%{field: bad_value})
 
   </section>
 </div>
-<div class="detail" id="create_request_async/2">
-  
-    <span id="create_request_async/1" />
+<div class="detail" id="create_request_async/1">
   
   <div class="detail-header">
-    <a href="#create_request_async/2" class="detail-link" title="Link to this function">
+    <a href="#create_request_async/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">create_request_async(attrs, opts \\ [])</span>
+    <span class="signature">create_request_async(attrs)</span>
     
     
     
@@ -175,13 +185,8 @@ iex&gt; create_request(%{field: bad_value})
   <section class="docstring">
     <p>Asynchronously creates a Request.
 If request insert operations is failed, error is logged to a console.</p>
-<p>Accepts optional <code class="inline">opts</code> as <a href="https://hexdocs.pm/elixir/Keyword.html"><code class="inline">Keyword</code></a>:</p>
-<ul>
-<li><code class="inline">name</code> - name or pid of a worker process.
-</li>
-</ul>
-<h2 id="create_request_async/2-examples" class="section-heading">
-  <a href="#create_request_async/2-examples" class="hover-link"><i class="icon-link"></i></a>
+<h2 id="create_request_async/1-examples" class="section-heading">
+  <a href="#create_request_async/1-examples" class="hover-link"><i class="icon-link"></i></a>
   Examples
 </h2>
 
@@ -193,30 +198,50 @@ iex&gt; create_request(%{field: bad_value})
 
   </section>
 </div>
-<div class="detail" id="start_link/1">
-  
-    <span id="start_link/0" />
+<div class="detail" id="start_link/0">
   
   <div class="detail-header">
-    <a href="#start_link/1" class="detail-link" title="Link to this function">
+    <a href="#start_link/0" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">start_link(opts \\ [])</span>
+    <span class="signature">start_link()</span>
     
     
     
   </div>
   <section class="docstring">
     <p>Start a LogWriter worker.</p>
-<p><code class="inline">start_link</code> accepts optional <code class="inline">opts</code> as <a href="https://hexdocs.pm/elixir/Keyword.html"><code class="inline">Keyword</code></a>:</p>
-<ul>
-<li><code class="inline">name</code> - name for a worker process;
-</li>
-<li><code class="inline">subscriber</code> - name or pid of a process that wants to be notified when log is
-  written with <a href="#create_request_async/1"><code class="inline">create_request_async/1</code></a>.
-</li>
-</ul>
 
+  </section>
+</div>
+<div class="detail" id="subscribe/1">
+  
+  <div class="detail-header">
+    <a href="#subscribe/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">subscribe(name_or_pid)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="unsubscribe/1">
+  
+  <div class="detail-header">
+    <a href="#unsubscribe/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">unsubscribe(name_or_pid)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
   </section>
 </div>
 
