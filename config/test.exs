@@ -46,6 +46,9 @@ config :annon_api, :private_http,
 config :annon_api, :management_http,
   port: {:system, :integer, "GATEWAY_MANAGEMENT_PORT", 5001}
 
+config :annon_api, :plugin_pipeline,
+  default_features: [:log_consistency]
+
 config :logger, level: :debug
 
 config :ex_unit, capture_log: true

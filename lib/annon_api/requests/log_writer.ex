@@ -9,20 +9,14 @@ defmodule Annon.Requests.LogWriter do
 
   @doc """
   Start a LogWriter worker.
-
-  `start_link` accepts optional `opts` as `Keyword`:
-    * `name` - name for a worker process;
-    * `subscriber` - name or pid of a process that wants to be notified when log is
-    written with `create_request_async/1`.
   """
-  def start_link(opts \\ []) do
-    name = Keyword.get(opts, :name, __MODULE__)
-    GenServer.start_link(__MODULE__, opts, name: name)
+  def start_link do
+    GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 
   @doc false
-  def init(opts) do
-    {:ok, opts}
+  def init(_) do
+    {:ok, [subscribers: []]}
   end
 
   @doc """
@@ -45,9 +39,6 @@ defmodule Annon.Requests.LogWriter do
   Asynchronously creates a Request.
   If request insert operations is failed, error is logged to a console.
 
-  Accepts optional `opts` as `Keyword`:
-    * `name` - name or pid of a worker process.
-
   ## Examples
 
       iex> create_request(%{field: value})
@@ -57,35 +48,65 @@ defmodule Annon.Requests.LogWriter do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_request_async(attrs, opts \\ []) do
-    name_or_pid = Keyword.get(opts, :name, __MODULE__)
+  def create_request_async(attrs) do
     case Log.change_request(attrs) do
       %Changeset{valid?: false} = changeset ->
         {:error, changeset}
       changeset ->
-        GenServer.cast(name_or_pid, {:insert_request, changeset})
+        GenServer.cast(__MODULE__, {:insert_request, changeset})
         :ok
     end
+  end
+
+  def subscribe(name_or_pid) do
+    GenServer.call(__MODULE__, {:subscribe, name_or_pid})
+  end
+
+  def unsubscribe(name_or_pid) do
+    GenServer.call(__MODULE__, {:unsubscribe, name_or_pid})
   end
 
   @doc false
   def handle_cast({:insert_request, changeset}, opts) do
     case Log.insert_request(changeset) do
       {:ok, _request} = message ->
-        maybe_notify_subscriber(message, opts)
+        maybe_notify_subscribers(message, opts)
         {:noreply, opts}
       {:error, changeset} = message ->
         Logger.error("Failed to log request: #{inspect changeset}")
-        maybe_notify_subscriber(message, opts)
+        maybe_notify_subscribers(message, opts)
         {:noreply, opts}
     end
   end
 
-  defp maybe_notify_subscriber(message, opts) do
-    case Keyword.fetch(opts, :subscriber) do
-      :error -> :ok
-      {:ok, subscriber} ->
-        send(subscriber, message)
+  @doc false
+  def handle_call({:subscribe, name_or_pid}, _from, opts) do
+    subscribers =
+      opts
+      |> Keyword.get(:subscribers)
+      |> List.insert_at(0, name_or_pid)
+
+    opts = [subscribers: subscribers]
+    {:reply, opts, opts}
+  end
+
+  @doc false
+  def handle_call({:unsubscribe, name_or_pid}, _from, opts) do
+    subscribers =
+      opts
+      |> Keyword.get(:subscribers)
+      |> List.delete(name_or_pid)
+
+    opts = [subscribers: subscribers]
+    {:reply, opts, opts}
+  end
+
+  defp maybe_notify_subscribers(message, opts) do
+    case Keyword.fetch(opts, :subscribers) do
+      :error ->
+        :ok
+      {:ok, subscribers} ->
+        Enum.map(subscribers, &send(&1, message))
     end
   end
 end

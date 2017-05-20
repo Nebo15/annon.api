@@ -7,6 +7,7 @@ defmodule Annon.ManagementAPI.Router do
   alias Annon.Helpers.Response
 
   if Confex.get(:annon_api, :sql_sandbox) do
+    plug Annon.Requests.Sandbox
     plug Phoenix.Ecto.SQL.Sandbox
   end
 
