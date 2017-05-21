@@ -72,7 +72,7 @@ defmodule Annon.ManagementAPI.Controllers.APIPluginTest do
 
       resp =
         conn
-        |> put_json(plugin_path(api.id, create_attrs.name), create_attrs)
+        |> put_json(plugin_path(api.id, create_attrs.name), %{"plugin" => create_attrs})
         |> json_response(201)
         |> Map.get("data")
 
@@ -95,7 +95,7 @@ defmodule Annon.ManagementAPI.Controllers.APIPluginTest do
 
       resp =
         conn
-        |> put_json(plugin_path(api.id, update_attrs.name), update_attrs)
+        |> put_json(plugin_path(api.id, update_attrs.name), %{"plugin" => update_attrs})
         |> json_response(200)
         |> Map.get("data")
 
@@ -119,7 +119,7 @@ defmodule Annon.ManagementAPI.Controllers.APIPluginTest do
       update_attrs = %{name: plugin.name}
 
       conn
-      |> put_json(plugin_path(api.id, update_attrs.name), update_attrs)
+      |> put_json(plugin_path(api.id, update_attrs.name), %{"plugin" => update_attrs})
       |> json_response(422)
     end
 
@@ -128,7 +128,7 @@ defmodule Annon.ManagementAPI.Controllers.APIPluginTest do
 
       resp =
         conn
-        |> put_json(plugin_path(api.id, "proxy"), create_attrs)
+        |> put_json(plugin_path(api.id, "proxy"), %{"plugin" => create_attrs})
         |> json_response(201)
 
       assert %{"data" => %{"name" => "proxy"}} = resp
@@ -139,7 +139,7 @@ defmodule Annon.ManagementAPI.Controllers.APIPluginTest do
 
       resp =
         conn
-        |> put_json(plugin_path(Ecto.UUID.generate(), create_attrs.name), create_attrs)
+        |> put_json(plugin_path(Ecto.UUID.generate(), create_attrs.name), %{"plugin" => create_attrs})
         |> json_response(404)
 
       assert %{"meta" => %{"code" => 404}} = resp
@@ -152,7 +152,7 @@ defmodule Annon.ManagementAPI.Controllers.APIPluginTest do
 
       resp =
         conn
-        |> put_json(plugin_path(Ecto.UUID.generate(), create_attrs.name), create_attrs)
+        |> put_json(plugin_path(Ecto.UUID.generate(), create_attrs.name), %{"plugin" => create_attrs})
         |> json_response(404)
 
       assert %{"meta" => %{"code" => 404}} = resp

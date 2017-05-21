@@ -70,7 +70,7 @@ defmodule Annon.AcceptanceCase do
       def create_api(data) do
         api = "apis/#{data.id}"
         |> put_management_url()
-        |> put!(data)
+        |> put!(%{"api" => data})
         |> assert_status(201)
 
         api
@@ -79,16 +79,16 @@ defmodule Annon.AcceptanceCase do
       def update_api(api_id, data) do
         api = "apis/#{api_id}"
         |> put_management_url()
-        |> put!(data)
+        |> put!(%{"api" => data})
         |> assert_status(200)
 
         api
       end
 
       def update_plugin(api_id, plugin_name, params) do
-        plugin = "apis/#{api_id}/plugins/proxy"
+        plugin = "apis/#{api_id}/plugins/#{plugin_name}"
         |> put_management_url()
-        |> put!(params)
+        |> put!(%{"plugin" => params})
         |> assert_status(200)
 
         plugin
@@ -112,7 +112,7 @@ defmodule Annon.AcceptanceCase do
 
         proxy = "apis/#{api_id}/plugins/proxy"
         |> put_management_url()
-        |> put!(params)
+        |> put!(%{"plugin" => params})
         |> assert_status(201)
 
         proxy

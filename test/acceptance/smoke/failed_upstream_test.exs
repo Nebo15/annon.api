@@ -30,7 +30,7 @@ defmodule Annon.Acceptance.Smoke.FailedUpstreamTest do
 
     "apis/#{api_id}/plugins/proxy"
     |> put_management_url()
-    |> put!(proxy_plugin)
+    |> put!(%{"plugin" => proxy_plugin})
     |> assert_status(201)
 
     :ok

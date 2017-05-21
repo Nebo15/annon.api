@@ -29,16 +29,20 @@ defmodule Annon.ManagementAPI.Controllers.API do
   end
 
   put "/:api_id" do
-    case ConfigurationAPI.get_api(api_id) do
-      {:ok, %APISchema{} = api} ->
-        api
-        |> ConfigurationAPI.update_api(conn.body_params)
-        |> render_one(conn, 200)
+    with {:ok, api_params} <- Map.fetch(conn.body_params, "api") do
+      case ConfigurationAPI.get_api(api_id) do
+        {:ok, %APISchema{} = api} ->
+          api
+          |> ConfigurationAPI.update_api(api_params)
+          |> render_one(conn, 200)
 
-      {:error, :not_found} ->
-        api_id
-        |> ConfigurationAPI.create_api(conn.body_params)
-        |> render_one(conn, 201)
+        {:error, :not_found} ->
+          api_id
+          |> ConfigurationAPI.create_api(api_params)
+          |> render_one(conn, 201)
+      end
+    else
+      :error -> send_error(conn, :no_root_object, "api")
     end
   end
 

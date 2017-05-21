@@ -27,7 +27,7 @@ defmodule Annon.Acceptance.Plugins.ACLTest do
 
     "apis/#{api_id}/plugins/auth"
     |> put_management_url()
-    |> put!(auth_plugin)
+    |> put!(%{"plugin" => auth_plugin})
     |> assert_status(201)
 
     %{api_id: api_id, api_path: api_path, secret: secret}
@@ -43,7 +43,7 @@ defmodule Annon.Acceptance.Plugins.ACLTest do
 
       "apis/#{api_id}/plugins/acl"
       |> put_management_url()
-      |> put!(acl_plugin)
+      |> put!(%{"plugin" => acl_plugin})
       |> assert_status(201)
 
       token_data = %{
@@ -72,7 +72,7 @@ defmodule Annon.Acceptance.Plugins.ACLTest do
 
       "apis/#{api_id}/plugins/acl"
       |> put_management_url()
-      |> put!(acl_plugin)
+      |> put!(%{"plugin" => acl_plugin})
       |> assert_status(201)
 
       token_data = %{
@@ -101,7 +101,7 @@ defmodule Annon.Acceptance.Plugins.ACLTest do
 
       "apis/#{api_id}/plugins/acl"
       |> put_management_url()
-      |> put!(acl_plugin)
+      |> put!(%{"plugin" => acl_plugin})
       |> assert_status(201)
 
       token_without_scopes = build_jwt_token(%{"name" => "Alice"}, secret)

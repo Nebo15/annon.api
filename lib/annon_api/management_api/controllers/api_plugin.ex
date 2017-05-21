@@ -26,24 +26,28 @@ defmodule Annon.ManagementAPI.Controllers.APIPlugin do
   end
 
   put "/:api_id/plugins/:name" do
-    # Name from URI path has bigger priority since we are accessing resource
-    attrs = Map.put(conn.body_params, "name", name)
+    with {:ok, plugin_params} <- Map.fetch(conn.body_params, "plugin") do
+      # Name from URI path has higher priority since we are accessing resource
+      attrs = Map.put(plugin_params, "name", name)
 
-    case ConfigurationPlugin.get_plugin(api_id, name) do
-      {:ok, %PluginSchema{} = plugin} ->
-        plugin
-        |> ConfigurationPlugin.update_plugin(attrs)
-        |> render_one(conn, 200)
+      case ConfigurationPlugin.get_plugin(api_id, name) do
+        {:ok, %PluginSchema{} = plugin} ->
+          plugin
+          |> ConfigurationPlugin.update_plugin(attrs)
+          |> render_one(conn, 200)
 
-      {:error, :not_found} ->
-        with {:ok, %APISchema{} = api} <- ConfigurationAPI.get_api(api_id) do
-          api
-          |> ConfigurationPlugin.create_plugin(attrs)
-          |> render_one(conn, 201)
-        else
-          {:error, :not_found} = err ->
-            render_one(err, conn)
-        end
+        {:error, :not_found} ->
+          with {:ok, %APISchema{} = api} <- ConfigurationAPI.get_api(api_id) do
+            api
+            |> ConfigurationPlugin.create_plugin(attrs)
+            |> render_one(conn, 201)
+          else
+            {:error, :not_found} = err ->
+              render_one(err, conn)
+          end
+      end
+    else
+      :error -> send_error(conn, :no_root_object, "plugin")
     end
   end
 

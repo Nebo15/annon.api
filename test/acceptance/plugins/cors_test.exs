@@ -33,7 +33,7 @@ defmodule Annon.Acceptance.Plugins.CORSTest do
 
     "apis/#{api_id}/plugins/cors"
     |> put_management_url()
-    |> put!(cors_plugin)
+    |> put!(%{"plugin" => cors_plugin})
     |> assert_status(201)
 
     Annon.AutoClustering.do_reload_config()

@@ -20,7 +20,7 @@ defmodule Annon.ManagementAPI.ConfigReloaderPlugTest do
 
     update_config = fn ->
       conn
-      |> put_json(api_path(id), attrs)
+      |> put_json(api_path(id), %{"api" => attrs})
       |> json_response(201)
     end
 
@@ -34,7 +34,7 @@ defmodule Annon.ManagementAPI.ConfigReloaderPlugTest do
 
     update_config = fn ->
       conn
-      |> put_json(api_path(api.id), attrs)
+      |> put_json(api_path(api.id), %{"api" => attrs})
       |> json_response(200)
     end
 
@@ -61,7 +61,7 @@ defmodule Annon.ManagementAPI.ConfigReloaderPlugTest do
 
     update_config = fn ->
       conn
-      |> put_json(plugin_path(api.id, attrs.name), attrs)
+      |> put_json(plugin_path(api.id, attrs.name), %{"plugin" => attrs})
       |> json_response(201)
     end
 
@@ -71,7 +71,7 @@ defmodule Annon.ManagementAPI.ConfigReloaderPlugTest do
 
     update_config = fn ->
       conn
-      |> put_json(plugin_path(api.id, attrs.name), attrs)
+      |> put_json(plugin_path(api.id, attrs.name), %{"plugin" => attrs})
       |> json_response(200)
     end
 

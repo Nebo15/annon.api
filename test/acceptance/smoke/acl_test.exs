@@ -31,7 +31,7 @@ defmodule Annon.Acceptance.Smoke.AclTest do
 
     "apis/#{api_id}/plugins/proxy"
     |> put_management_url()
-    |> put!(proxy_plugin)
+    |> put!(%{"plugin" => proxy_plugin})
     |> assert_status(201)
 
     acl_plugin = :acl_plugin
@@ -44,7 +44,7 @@ defmodule Annon.Acceptance.Smoke.AclTest do
 
     "apis/#{api_id}/plugins/acl"
     |> put_management_url()
-    |> put!(acl_plugin)
+    |> put!(%{"plugin" => acl_plugin})
     |> assert_status(201)
 
     auth_plugin = :auth_plugin_with_jwt
@@ -54,7 +54,7 @@ defmodule Annon.Acceptance.Smoke.AclTest do
 
     "apis/#{api_id}/plugins/auth"
     |> put_management_url()
-    |> put!(auth_plugin)
+    |> put!(%{"plugin" => auth_plugin})
     |> assert_status(201)
 
     %{api_path: api_path, secret: secret}

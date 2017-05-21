@@ -252,7 +252,7 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
 
       resp =
         conn
-        |> put_json(api_path(id), create_attrs)
+        |> put_json(api_path(id), %{"api" => create_attrs})
         |> json_response(201)
         |> Map.get("data")
 
@@ -272,7 +272,7 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
 
       resp =
         conn
-        |> put_json(api_path(api.id), update_attrs)
+        |> put_json(api_path(api.id), %{"api" => update_attrs})
         |> json_response(200)
         |> Map.get("data")
 
@@ -301,7 +301,7 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
 
       errors =
         conn
-        |> put_json(api_path(id), create_attrs)
+        |> put_json(api_path(id), %{"api" => create_attrs})
         |> json_response(422)
         |> Map.get("error")
 
@@ -330,7 +330,7 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
 
       errors =
         conn
-        |> put_json(api_path(id), invalid_attrs)
+        |> put_json(api_path(id), %{"api" => invalid_attrs})
         |> json_response(422)
         |> Map.get("error")
 
@@ -354,7 +354,7 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
       update_attrs = %{}
 
       conn
-      |> put_json(api_path(api.id), update_attrs)
+      |> put_json(api_path(api.id), %{"api" => update_attrs})
       |> json_response(422)
     end
   end

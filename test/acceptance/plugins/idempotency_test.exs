@@ -29,7 +29,7 @@ defmodule Annon.Acceptance.Plugins.IdempotencyTest do
 
     "apis/#{api_id}/plugins/idempotency"
     |> put_management_url()
-    |> put!(idempotency_plugin)
+    |> put!(%{"plugin" => idempotency_plugin})
     |> assert_status(201)
 
     %{api_id: api_id, api_path: api_path, api: api}

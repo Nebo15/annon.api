@@ -30,7 +30,7 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
 
       "apis/#{api_id}/plugins/proxy"
       |> put_management_url()
-      |> put!(proxy)
+      |> put!(%{"plugin" => proxy})
       |> assert_status(201)
 
       %{
@@ -47,12 +47,12 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
     test "create with invalid settings", %{api_id: api_id} do
       "apis/#{api_id}/plugins/proxy"
       |> put_management_url()
-      |> put!(%{})
+      |> put!(%{"plugin" => %{}})
       |> assert_status(422)
 
       "apis/#{api_id}/plugins/proxy"
       |> put_management_url()
-      |> put!(build_invalid_plugin("proxy"))
+      |> put!(%{"plugin" => build_invalid_plugin("proxy")})
       |> assert_status(422)
 
       %{
@@ -64,7 +64,7 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
         }
       } = "apis/#{api_id}/plugins/proxy"
       |> put_management_url()
-      |> put!(%{name: "proxy", is_enabled: false, settings: %{host: "localhost", path: 100}})
+      |> put!(%{"plugin" => %{name: "proxy", is_enabled: false, settings: %{host: "localhost", path: 100}}})
       |> assert_status(422)
       |> get_body()
     end
@@ -95,7 +95,7 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
 
       "apis/#{api_id}/plugins/proxy"
       |> put_management_url()
-      |> put!(params)
+      |> put!(%{"plugin" => params})
       |> assert_status(422) # TODO: Check response structure. And it should have ALL errors, not first one!
     end
   end
@@ -166,7 +166,7 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
 
     "apis/#{api_id}/plugins/proxy"
     |> put_management_url()
-    |> put!(proxy)
+    |> put!(%{"plugin" => proxy})
     |> assert_status(201)
 
     %{
@@ -401,7 +401,7 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
 
       "apis/#{api_id}/plugins/auth"
       |> put_management_url()
-      |> put!(auth_plugin)
+      |> put!(%{"plugin" => auth_plugin})
       |> assert_status(201)
 
       expected_scopes = ["scope1", "scope2"]
