@@ -36,9 +36,9 @@ defmodule Annon.Acceptance.Plugins.LoggerTest do
       path: "/latency"
     }})
 
-    "apis/#{api_id}/plugins"
+    "apis/#{api_id}/plugins/proxy"
     |> put_management_url()
-    |> post!(proxy_plugin)
+    |> put!(proxy_plugin)
     |> assert_status(201)
 
     Annon.AutoClustering.do_reload_config()

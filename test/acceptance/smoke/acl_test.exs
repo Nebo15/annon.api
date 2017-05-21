@@ -29,9 +29,9 @@ defmodule Annon.Acceptance.Smoke.AclTest do
       strip_api_path: true
     }})
 
-    "apis/#{api_id}/plugins"
+    "apis/#{api_id}/plugins/proxy"
     |> put_management_url()
-    |> post!(proxy_plugin)
+    |> put!(proxy_plugin)
     |> assert_status(201)
 
     acl_plugin = :acl_plugin
@@ -42,9 +42,9 @@ defmodule Annon.Acceptance.Smoke.AclTest do
       ]
     }})
 
-    "apis/#{api_id}/plugins"
+    "apis/#{api_id}/plugins/acl"
     |> put_management_url()
-    |> post!(acl_plugin)
+    |> put!(acl_plugin)
     |> assert_status(201)
 
     auth_plugin = :auth_plugin_with_jwt
@@ -52,9 +52,9 @@ defmodule Annon.Acceptance.Smoke.AclTest do
 
     secret = Base.decode64!(auth_plugin.settings["secret"])
 
-    "apis/#{api_id}/plugins"
+    "apis/#{api_id}/plugins/auth"
     |> put_management_url()
-    |> post!(auth_plugin)
+    |> put!(auth_plugin)
     |> assert_status(201)
 
     %{api_path: api_path, secret: secret}

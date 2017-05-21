@@ -33,9 +33,9 @@ defmodule Annon.Acceptance.Plugins.ValidatorTest do
         rules: [%{methods: ["POST", "PUT", "PATCH"], path: ".*", schema: %{}}]
       }})
 
-      "apis/#{api_id}/plugins"
+      "apis/#{api_id}/plugins/validator"
       |> put_management_url()
-      |> post!(validator)
+      |> put!(validator)
       |> assert_status(201)
 
       %{
@@ -50,14 +50,14 @@ defmodule Annon.Acceptance.Plugins.ValidatorTest do
     end
 
     test "create with invalid settings", %{api_id: api_id} do
-      "apis/#{api_id}/plugins"
+      "apis/#{api_id}/plugins/validator"
       |> put_management_url()
-      |> post!(%{})
+      |> put!(%{})
       |> assert_status(422)
 
-      "apis/#{api_id}/plugins"
+      "apis/#{api_id}/plugins/validator"
       |> put_management_url()
-      |> post!(build_invalid_plugin("validator"))
+      |> put!(build_invalid_plugin("validator"))
       |> assert_status(422)
 
       %{
@@ -75,9 +75,9 @@ defmodule Annon.Acceptance.Plugins.ValidatorTest do
           ]
 
         }
-      } = "apis/#{api_id}/plugins"
+      } = "apis/#{api_id}/plugins/validator"
       |> put_management_url()
-      |> post!(%{
+      |> put!(%{
         name: "validator",
         is_enabled: false,
         settings: %{
@@ -95,9 +95,9 @@ defmodule Annon.Acceptance.Plugins.ValidatorTest do
       rules: [%{methods: ["POST", "PUT"], path: ".*", schema: @schema}]
     }})
 
-    "apis/#{api_id}/plugins"
+    "apis/#{api_id}/plugins/validator"
     |> put_management_url()
-    |> post!(validator_plugin)
+    |> put!(validator_plugin)
     |> assert_status(201)
 
     assert %{
@@ -120,9 +120,9 @@ defmodule Annon.Acceptance.Plugins.ValidatorTest do
       rules: [%{methods: ["PATCH"], path: ".*", schema: @schema}]
     }})
 
-    "apis/#{api_id}/plugins"
+    "apis/#{api_id}/plugins/validator"
     |> put_management_url()
-    |> post!(validator_plugin)
+    |> put!(validator_plugin)
     |> assert_status(201)
 
     api_path
@@ -141,9 +141,9 @@ defmodule Annon.Acceptance.Plugins.ValidatorTest do
       ]
     }})
 
-    "apis/#{api_id}/plugins"
+    "apis/#{api_id}/plugins/validator"
     |> put_management_url()
-    |> post!(validator_plugin)
+    |> put!(validator_plugin)
     |> assert_status(201)
 
     api_path
@@ -162,9 +162,9 @@ defmodule Annon.Acceptance.Plugins.ValidatorTest do
       ]
     }})
 
-    "apis/#{api_id}/plugins"
+    "apis/#{api_id}/plugins/validator"
     |> put_management_url()
-    |> post!(validator_plugin)
+    |> put!(validator_plugin)
     |> assert_status(201)
 
     api_path
@@ -184,9 +184,9 @@ defmodule Annon.Acceptance.Plugins.ValidatorTest do
       ]
     }})
 
-    "apis/#{api_id}/plugins"
+    "apis/#{api_id}/plugins/validator"
     |> put_management_url()
-    |> post!(validator_plugin)
+    |> put!(validator_plugin)
     |> assert_status(201)
 
     api_path
@@ -204,9 +204,9 @@ defmodule Annon.Acceptance.Plugins.ValidatorTest do
         ]
       }})
 
-      "apis/#{api_id}/plugins"
+      "apis/#{api_id}/plugins/validator"
       |> put_management_url()
-      |> post!(validator_plugin)
+      |> put!(validator_plugin)
       |> assert_status(201)
 
       "#{api_path}foo"

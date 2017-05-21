@@ -10,13 +10,11 @@ defmodule Annon.Helpers.Response do
   template to a API consumer and halt connection.
   """
   def send_error(conn, :not_found) do
-    "404.json"
-    |> send_error_template(conn, 404)
+    send_error_template("404.json", conn, 404)
   end
 
   def send_error(conn, :internal_error) do
-    "501.json"
-    |> send_error_template(conn, 501)
+    send_error_template("501.json", conn, 501)
   end
 
   # This method is used in Plug.ErrorHandler.
@@ -56,16 +54,17 @@ defmodule Annon.Helpers.Response do
   if you want to stop rest of plugins from processing rests.
   """
   def send(resource, conn, status) do
-    conn = conn
-    |> Plug.Conn.put_status(status)
-    |> Plug.Conn.put_resp_content_type("application/json")
+    conn =
+      conn
+      |> Plug.Conn.put_status(status)
+      |> Plug.Conn.put_resp_content_type("application/json")
 
-    body = resource
-    |> EView.wrap_body(conn)
-    |> Poison.encode!()
+    body =
+      resource
+      |> EView.wrap_body(conn)
+      |> Poison.encode!()
 
-    conn
-    |> Plug.Conn.send_resp(status, body)
+    Plug.Conn.send_resp(conn, status, body)
   end
 
   def send(conn, :no_content) do

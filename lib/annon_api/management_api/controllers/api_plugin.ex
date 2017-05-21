@@ -19,18 +19,6 @@ defmodule Annon.ManagementAPI.Controllers.APIPlugin do
     |> render_collection(conn)
   end
 
-  # TODO: deprecated
-  post "/:api_id/plugins" do
-    with {:ok, %APISchema{} = api} <- ConfigurationAPI.get_api(api_id) do
-      api
-      |> ConfigurationPlugin.create_plugin(conn.body_params)
-      |> render_one(conn, 201)
-    else
-      {:error, :not_found} = err ->
-        render_one(err, conn)
-    end
-  end
-
   get "/:api_id/plugins/:name" do
     api_id
     |> ConfigurationPlugin.get_plugin(name)

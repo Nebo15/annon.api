@@ -5,7 +5,7 @@ defmodule Annon.Helpers.IP do
 
   def ip_to_string(ip) when is_tuple(ip) do
     ip
-    |> Tuple.to_list
+    |> Tuple.to_list()
     |> Enum.join(".")
   end
 end

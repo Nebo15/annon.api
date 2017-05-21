@@ -42,13 +42,6 @@ defmodule Annon.ManagementAPI.Controllers.API do
     end
   end
 
-  # TODO: deprecated
-  post "/" do
-    Ecto.UUID.generate()
-    |> ConfigurationAPI.create_api(conn.body_params)
-    |> render_one(conn, 201)
-  end
-
   delete "/:api_id" do
     case ConfigurationAPI.get_api(api_id) do
       {:ok, api} ->

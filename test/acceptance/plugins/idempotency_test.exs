@@ -27,9 +27,9 @@ defmodule Annon.Acceptance.Plugins.IdempotencyTest do
     idempotency_plugin = :idempotency_plugin
     |> build_factory_params()
 
-    "apis/#{api_id}/plugins"
+    "apis/#{api_id}/plugins/idempotency"
     |> put_management_url()
-    |> post!(idempotency_plugin)
+    |> put!(idempotency_plugin)
     |> assert_status(201)
 
     %{api_id: api_id, api_path: api_path, api: api}

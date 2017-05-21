@@ -28,9 +28,9 @@ defmodule Annon.Acceptance.Smoke.ProxyTest do
       strip_api_path: true
     }})
 
-    "apis/#{api_id}/plugins"
+    "apis/#{api_id}/plugins/proxy"
     |> put_management_url()
-    |> post!(proxy_plugin)
+    |> put!(proxy_plugin)
     |> assert_status(201)
 
     :ok

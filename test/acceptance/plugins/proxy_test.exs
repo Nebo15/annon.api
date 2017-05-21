@@ -28,9 +28,9 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
       proxy = :proxy_plugin
       |> build_factory_params(%{settings: %{host: "host.com"}})
 
-      "apis/#{api_id}/plugins"
+      "apis/#{api_id}/plugins/proxy"
       |> put_management_url()
-      |> post!(proxy)
+      |> put!(proxy)
       |> assert_status(201)
 
       %{
@@ -45,14 +45,14 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
     end
 
     test "create with invalid settings", %{api_id: api_id} do
-      "apis/#{api_id}/plugins"
+      "apis/#{api_id}/plugins/proxy"
       |> put_management_url()
-      |> post!(%{})
+      |> put!(%{})
       |> assert_status(422)
 
-      "apis/#{api_id}/plugins"
+      "apis/#{api_id}/plugins/proxy"
       |> put_management_url()
-      |> post!(build_invalid_plugin("proxy"))
+      |> put!(build_invalid_plugin("proxy"))
       |> assert_status(422)
 
       %{
@@ -62,9 +62,9 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
             %{"entry" => "$.settings.path", "rules" => [%{"rule" => "cast"}]},
           ]
         }
-      } = "apis/#{api_id}/plugins"
+      } = "apis/#{api_id}/plugins/proxy"
       |> put_management_url()
-      |> post!(%{name: "proxy", is_enabled: false, settings: %{host: "localhost", path: 100}})
+      |> put!(%{name: "proxy", is_enabled: false, settings: %{host: "localhost", path: 100}})
       |> assert_status(422)
       |> get_body()
     end
@@ -93,9 +93,9 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
         additional_headers: "string"
       }})
 
-      "apis/#{api_id}/plugins"
+      "apis/#{api_id}/plugins/proxy"
       |> put_management_url()
-      |> post!(params)
+      |> put!(params)
       |> assert_status(422) # TODO: Check response structure. And it should have ALL errors, not first one!
     end
   end
@@ -164,9 +164,9 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
     proxy = :proxy_plugin
     |> build_factory_params(%{settings: %{host: "exampleabcdewqasdftrewq-does-not-exist.com"}})
 
-    "apis/#{api_id}/plugins"
+    "apis/#{api_id}/plugins/proxy"
     |> put_management_url()
-    |> post!(proxy)
+    |> put!(proxy)
     |> assert_status(201)
 
     %{
@@ -399,9 +399,9 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
 
       secret = Base.decode64!(auth_plugin.settings["secret"])
 
-      "apis/#{api_id}/plugins"
+      "apis/#{api_id}/plugins/auth"
       |> put_management_url()
-      |> post!(auth_plugin)
+      |> put!(auth_plugin)
       |> assert_status(201)
 
       expected_scopes = ["scope1", "scope2"]

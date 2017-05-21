@@ -68,9 +68,9 @@ defmodule Annon.AcceptanceCase do
       end
 
       def create_api(data) do
-        api = "apis"
+        api = "apis/#{data.id}"
         |> put_management_url()
-        |> post!(data)
+        |> put!(data)
         |> assert_status(201)
 
         api
@@ -110,9 +110,9 @@ defmodule Annon.AcceptanceCase do
         params = :proxy_plugin
         |> build_factory_params(%{settings: settings})
 
-        proxy = "apis/#{api_id}/plugins"
+        proxy = "apis/#{api_id}/plugins/proxy"
         |> put_management_url()
-        |> post!(params)
+        |> put!(params)
         |> assert_status(201)
 
         proxy
