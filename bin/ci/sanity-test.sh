@@ -3,7 +3,7 @@ set -e
 
 # Create API
 API_ID=$(uuidgen)
-API=$(curl --silent --request PUT --header "Content-Type: application/json" http://localhost:4001/apis/$API_ID -d '{"request":{"scheme":"http","port":4000,"path":"/world","methods":["GET","POST"],"host":"localhost"},"name":"Sanity check"}')
+API=$(curl --silent --request PUT --header "Content-Type: application/json" http://localhost:4001/apis/$API_ID -d '{"api": {"request":{"scheme":"http","port":4000,"path":"/world","methods":["GET","POST"],"host":"localhost"},"name":"Sanity check"}}')
 API_NAME=$(echo $API | jq -r '.data.name')
 
 if [ "$API_NAME" != "Sanity check" ]; then
@@ -12,7 +12,7 @@ if [ "$API_NAME" != "Sanity check" ]; then
 fi
 
 # Add proxy plugin
-PROXY=$(curl --silent --request PUT --header "Content-Type: application/json" http://localhost:4001/apis/$API_ID/plugins/proxy -d '{"name":"proxy","is_enabled":true,"settings":{"scheme":"http","port":80,"path":"/","host":"httpbin.org","strip_api_path":true}}')
+PROXY=$(curl --silent --request PUT --header "Content-Type: application/json" http://localhost:4001/apis/$API_ID/plugins/proxy -d '{"plugin": {"name":"proxy","is_enabled":true,"settings":{"scheme":"http","port":80,"path":"/","host":"httpbin.org","strip_api_path":true}}}')
 PROXY_HOST=$(echo $PROXY | jq -r '.data.settings.host')
 
 if [ "$PROXY_HOST" != "httpbin.org" ]; then
