@@ -2,14 +2,20 @@ defmodule Annon.Monitoring.ClusterStatus do
   @moduledoc """
   This module provides functions to collects status from all nodes in Annon cluster.
   """
+  require Logger
 
   def get_cluster_status do
     cluster_nodes = :erlang.nodes()
     cluster_strategy = get_cluster_strategy()
     nodes_status =
       Enum.reduce(Node.list(), [get_node_status()], fn remote_node, acc ->
-        remote_node_status = :rpc.call(remote_node, Annon.Monitoring, :get_node_status, [])
-        [remote_node_status] ++ acc
+        case :rpc.call(remote_node, Annon.Monitoring, :get_node_status, []) do
+          {:badrpc, reason} ->
+            Logger.error("Unable to fetch status of remote node #{inspect remote_node}, reason: #{inspect reason}")
+            acc
+          remote_node_status ->
+            [remote_node_status] ++ acc
+        end
       end)
 
     %{
