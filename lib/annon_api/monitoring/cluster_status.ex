@@ -9,7 +9,7 @@ defmodule Annon.Monitoring.ClusterStatus do
     cluster_strategy = get_cluster_strategy()
     nodes_status =
       Enum.reduce(Node.list(), [get_node_status()], fn remote_node, acc ->
-        case :rpc.call(remote_node, Annon.Monitoring, :get_node_status, []) do
+        case :rpc.call(remote_node, Annon.Monitoring.ClusterStatus, :get_node_status, []) do
           {:badrpc, reason} ->
             Logger.error("Unable to fetch status of remote node #{inspect remote_node}, reason: #{inspect reason}")
             acc
