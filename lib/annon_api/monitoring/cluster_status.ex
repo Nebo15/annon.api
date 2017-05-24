@@ -10,8 +10,9 @@ defmodule Annon.Monitoring.ClusterStatus do
     nodes_status =
       Enum.reduce(Node.list(), [get_node_status()], fn remote_node, acc ->
         case :rpc.call(remote_node, Annon.Monitoring, :get_node_status, []) do
-          {:badrpc, reason} ->
-            Logger.error("Unable to fetch status of remote node #{inspect remote_node}, reason: #{inspect reason}")
+          {:badrpc, reason, rpc_err} ->
+            Logger.error("Unable to fetch status of remote node #{inspect remote_node}, reason: #{inspect reason}. " <>
+                         "RPC error: rpc_err")
             acc
           remote_node_status ->
             [remote_node_status] ++ acc
