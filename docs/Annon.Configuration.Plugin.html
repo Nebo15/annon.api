@@ -1,21 +1,22 @@
     <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Configuration.Plugin – annon_api v0.2.94</title>
+    <meta name="generator" content="ExDoc v0.16.0">
+    <title>Annon.Configuration.Plugin – annon_api v0.2.95</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-4cb381da73.js"></script>
+    <script src="dist/sidebar_items-2b1e2ab655.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
 
     <div class="main">
 <button class="sidebar-toggle">
-  <i class="icon-menu"></i>
+  <span class="icon-menu" aria-hidden="true"></span>
+  <span class="sr-only">Toggle Sidebar</span>
 </button>
 <section class="sidebar">
 
@@ -26,15 +27,15 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.94
+        v0.2.95
       </h2>
     </div>
     
   </a>
 
   <div class="sidebar-search">
-    <i class="icon-search"></i>
-    <input type="text" class="sidebar-searchInput" placeholder="search" autocomplete="off" />
+    <span class="icon-search" aria-hidden="true"></span>
+    <input type="text" class="sidebar-searchInput" placeholder="search" aria-label="Search" autocomplete="off" />
   </div>
 
   <ul class="sidebar-listNav">
@@ -42,6 +43,8 @@
 
     
       <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
     
 
     
@@ -58,9 +61,8 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.94</small>
+        <small class="visible-xs">annon_api v0.2.95</small>
         Annon.Configuration.Plugin
-        
         
       </h1>
 
@@ -75,7 +77,8 @@
         <section id="summary" class="details-list">
           <h1 class="section-heading">
             <a class="hover-link" href="#summary">
-              <i class="icon-link"></i>
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
             </a>
             Summary
           </h1>
@@ -146,7 +149,8 @@
         <section id="functions" class="details-list">
           <h1 class="section-heading">
             <a class="hover-link" href="#functions">
-              <i class="icon-link"></i>
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
             </a>
             Functions
           </h1>
@@ -154,7 +158,8 @@
   
   <div class="detail-header">
     <a href="#create_plugin/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">create_plugin(api, attrs)</span>
     
@@ -164,7 +169,7 @@
   <section class="docstring">
     <p>Creates a Plugin.</p>
 <h2 id="create_plugin/2-examples" class="section-heading">
-  <a href="#create_plugin/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#create_plugin/2-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Examples
 </h2>
 
@@ -183,7 +188,8 @@ iex&gt; create_plugin(api, &quot;proxy&quot;, %{field: value, name: &quot;not_a_
   
   <div class="detail-header">
     <a href="#delete_plugin/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">delete_plugin(plugin)</span>
     
@@ -193,7 +199,7 @@ iex&gt; create_plugin(api, &quot;proxy&quot;, %{field: value, name: &quot;not_a_
   <section class="docstring">
     <p>Deletes a Plugin.</p>
 <h2 id="delete_plugin/1-examples" class="section-heading">
-  <a href="#delete_plugin/1-examples" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#delete_plugin/1-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Examples
 </h2>
 
@@ -209,7 +215,8 @@ iex&gt; delete_plugin(007)
   
   <div class="detail-header">
     <a href="#get_plugin/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">get_plugin(api_id, name)</span>
     
@@ -219,7 +226,7 @@ iex&gt; delete_plugin(007)
   <section class="docstring">
     <p>Gets a single Plugin.</p>
 <h2 id="get_plugin/2-examples" class="section-heading">
-  <a href="#get_plugin/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#get_plugin/2-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Examples
 </h2>
 
@@ -235,7 +242,8 @@ iex&gt; get_plugin(123, &quot;jwt&quot;)
   
   <div class="detail-header">
     <a href="#list_plugins/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">list_plugins(api_id)</span>
     
@@ -245,7 +253,7 @@ iex&gt; get_plugin(123, &quot;jwt&quot;)
   <section class="docstring">
     <p>Returns the list of Plugins by API ID.</p>
 <h2 id="list_plugins/1-examples" class="section-heading">
-  <a href="#list_plugins/1-examples" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#list_plugins/1-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Examples
 </h2>
 
@@ -258,7 +266,8 @@ iex&gt; get_plugin(123, &quot;jwt&quot;)
   
   <div class="detail-header">
     <a href="#update_plugin/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">update_plugin(plugin, attrs)</span>
     
@@ -270,7 +279,7 @@ iex&gt; get_plugin(123, &quot;jwt&quot;)
 <p>Update requires all fields to be present.
 Old Plugin will be deleted, but <code class="inline">id</code>, <code class="inline">api_id</code> and <code class="inline">inserted_at</code> values will be persisted in new record.</p>
 <h2 id="update_plugin/2-examples" class="section-heading">
-  <a href="#update_plugin/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#update_plugin/2-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Examples
 </h2>
 
@@ -291,20 +300,20 @@ iex&gt; update_plugin(%PluginSchema{}, %{field: bad_value})
         <p>
           <span class="line">
             Built using
-            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.15.1),
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.16.0),
           </span>
           <span class="line">
             designed by
             <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
             </span>
         </p>
-        <button class="night-mode-toggle" />
+        <button class="night-mode-toggle"><span class="sr-only">Switch theme</span></button>
       </footer>
     </div>
   </div>
 </section>
 </div>
-  <script src="dist/app-574613960f.js"></script>
+  <script src="dist/app-126b5f0e90.js"></script>
   </body>
 </html>
 

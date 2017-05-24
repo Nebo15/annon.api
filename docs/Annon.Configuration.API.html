@@ -1,21 +1,22 @@
     <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.Configuration.API – annon_api v0.2.94</title>
+    <meta name="generator" content="ExDoc v0.16.0">
+    <title>Annon.Configuration.API – annon_api v0.2.95</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-4cb381da73.js"></script>
+    <script src="dist/sidebar_items-2b1e2ab655.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
 
     <div class="main">
 <button class="sidebar-toggle">
-  <i class="icon-menu"></i>
+  <span class="icon-menu" aria-hidden="true"></span>
+  <span class="sr-only">Toggle Sidebar</span>
 </button>
 <section class="sidebar">
 
@@ -26,15 +27,15 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.94
+        v0.2.95
       </h2>
     </div>
     
   </a>
 
   <div class="sidebar-search">
-    <i class="icon-search"></i>
-    <input type="text" class="sidebar-searchInput" placeholder="search" autocomplete="off" />
+    <span class="icon-search" aria-hidden="true"></span>
+    <input type="text" class="sidebar-searchInput" placeholder="search" aria-label="Search" autocomplete="off" />
   </div>
 
   <ul class="sidebar-listNav">
@@ -42,6 +43,8 @@
 
     
       <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
     
 
     
@@ -58,9 +61,8 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.94</small>
+        <small class="visible-xs">annon_api v0.2.95</small>
         Annon.Configuration.API
-        
         
       </h1>
 
@@ -75,7 +77,8 @@
         <section id="summary" class="details-list">
           <h1 class="section-heading">
             <a class="hover-link" href="#summary">
-              <i class="icon-link"></i>
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
             </a>
             Summary
           </h1>
@@ -179,7 +182,8 @@
         <section id="functions" class="details-list">
           <h1 class="section-heading">
             <a class="hover-link" href="#functions">
-              <i class="icon-link"></i>
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
             </a>
             Functions
           </h1>
@@ -187,7 +191,8 @@
   
   <div class="detail-header">
     <a href="#create_api/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">create_api(id, attrs)</span>
     
@@ -198,7 +203,7 @@
     <p>Creates a API.</p>
 <p>ID is not auto-generated, we recommend to use Ecto UUID’s: <a href="https://hexdocs.pm/ecto/2.1.4/Ecto.UUID.html#generate/0"><code class="inline">Ecto.UUID.generate/0</code></a>.</p>
 <h2 id="create_api/2-examples" class="section-heading">
-  <a href="#create_api/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#create_api/2-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Examples
 </h2>
 
@@ -214,7 +219,8 @@ iex&gt; create_api(id, %{field: bad_value})
   
   <div class="detail-header">
     <a href="#delete_api/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">delete_api(api)</span>
     
@@ -224,7 +230,7 @@ iex&gt; create_api(id, %{field: bad_value})
   <section class="docstring">
     <p>Deletes a API.</p>
 <h2 id="delete_api/1-examples" class="section-heading">
-  <a href="#delete_api/1-examples" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#delete_api/1-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Examples
 </h2>
 
@@ -240,7 +246,8 @@ iex&gt; delete_api(007)
   
   <div class="detail-header">
     <a href="#dump_apis/0" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">dump_apis()</span>
     
@@ -250,7 +257,7 @@ iex&gt; delete_api(007)
   <section class="docstring">
     <p>Returns all APIs that have at least one enabled Plugin and preloads Plugins.</p>
 <h2 id="dump_apis/0-examples" class="section-heading">
-  <a href="#dump_apis/0-examples" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#dump_apis/0-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Examples
 </h2>
 
@@ -263,7 +270,8 @@ iex&gt; delete_api(007)
   
   <div class="detail-header">
     <a href="#find_api/5" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">find_api(scheme, method, host, port, path)</span>
     
@@ -275,7 +283,7 @@ iex&gt; delete_api(007)
 <p>APIs are ordered by <code class="inline">inserted_at</code> field to make sure that new overlapping
 settings don’t break old gateway behaviors.</p>
 <h2 id="find_api/5-examples" class="section-heading">
-  <a href="#find_api/5-examples" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#find_api/5-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Examples
 </h2>
 
@@ -288,7 +296,8 @@ settings don’t break old gateway behaviors.</p>
   
   <div class="detail-header">
     <a href="#get_api/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">get_api(id)</span>
     
@@ -298,7 +307,7 @@ settings don’t break old gateway behaviors.</p>
   <section class="docstring">
     <p>Gets a single API.</p>
 <h2 id="get_api/1-examples" class="section-heading">
-  <a href="#get_api/1-examples" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#get_api/1-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Examples
 </h2>
 
@@ -312,13 +321,14 @@ iex&gt; get_api(456)
 </div>
 <div class="detail" id="list_apis/2">
   
-    <span id="list_apis/0" />
+    <span id="list_apis/0"></span>
   
-    <span id="list_apis/1" />
+    <span id="list_apis/1"></span>
   
   <div class="detail-header">
     <a href="#list_apis/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">list_apis(conditions \\ %{}, paging \\ %Ecto.Paging{limit: 50})</span>
     
@@ -329,7 +339,7 @@ iex&gt; get_api(456)
     <p>Returns the list of APIs.</p>
 <p>Response can be filtered by title if there is a <code class="inline">&quot;title&quot;</code> filed in <code class="inline">conditions</code>.</p>
 <h2 id="list_apis/2-examples" class="section-heading">
-  <a href="#list_apis/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#list_apis/2-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Examples
 </h2>
 
@@ -342,7 +352,8 @@ iex&gt; get_api(456)
   
   <div class="detail-header">
     <a href="#list_disclosed_apis/0" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">list_disclosed_apis()</span>
     
@@ -358,7 +369,8 @@ iex&gt; get_api(456)
   
   <div class="detail-header">
     <a href="#request_changeset/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">request_changeset(request, attrs)</span>
     
@@ -373,7 +385,8 @@ iex&gt; get_api(456)
   
   <div class="detail-header">
     <a href="#update_api/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">update_api(a_p_i, attrs)</span>
     
@@ -385,7 +398,7 @@ iex&gt; get_api(456)
 <p>Update requires all fields to be present.
 Old API will be deleted, but <code class="inline">id</code> and <code class="inline">inserted_at</code> values will be persisted in new record.</p>
 <h2 id="update_api/2-examples" class="section-heading">
-  <a href="#update_api/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#update_api/2-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Examples
 </h2>
 
@@ -406,20 +419,20 @@ iex&gt; update_api(api, %{field: bad_value})
         <p>
           <span class="line">
             Built using
-            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.15.1),
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.16.0),
           </span>
           <span class="line">
             designed by
             <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
             </span>
         </p>
-        <button class="night-mode-toggle" />
+        <button class="night-mode-toggle"><span class="sr-only">Switch theme</span></button>
       </footer>
     </div>
   </div>
 </section>
 </div>
-  <script src="dist/app-574613960f.js"></script>
+  <script src="dist/app-126b5f0e90.js"></script>
   </body>
 </html>
 

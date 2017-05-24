@@ -1,21 +1,22 @@
     <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.15.1">
-    <title>Annon.ConnCase – annon_api v0.2.94</title>
+    <meta name="generator" content="ExDoc v0.16.0">
+    <title>Annon.ConnCase – annon_api v0.2.95</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-4cb381da73.js"></script>
+    <script src="dist/sidebar_items-2b1e2ab655.js"></script>
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
 
     <div class="main">
 <button class="sidebar-toggle">
-  <i class="icon-menu"></i>
+  <span class="icon-menu" aria-hidden="true"></span>
+  <span class="sr-only">Toggle Sidebar</span>
 </button>
 <section class="sidebar">
 
@@ -26,15 +27,15 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.94
+        v0.2.95
       </h2>
     </div>
     
   </a>
 
   <div class="sidebar-search">
-    <i class="icon-search"></i>
-    <input type="text" class="sidebar-searchInput" placeholder="search" autocomplete="off" />
+    <span class="icon-search" aria-hidden="true"></span>
+    <input type="text" class="sidebar-searchInput" placeholder="search" aria-label="Search" autocomplete="off" />
   </div>
 
   <ul class="sidebar-listNav">
@@ -42,6 +43,8 @@
 
     
       <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
     
 
     
@@ -58,9 +61,8 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.2.94</small>
+        <small class="visible-xs">annon_api v0.2.95</small>
         Annon.ConnCase
-        
         
       </h1>
 
@@ -69,7 +71,7 @@
           <p>This module defines the test case to be used by
 tests that require setting up a connection.</p>
 <h2 id="module-credentials" class="section-heading">
-  <a href="#module-credentials" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#module-credentials" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Credentials
 </h2>
 
@@ -77,7 +79,7 @@ tests that require setting up a connection.</p>
 it’s already contains great tests suite, but we don’t
 want to depend on Phoenix.</p>
 <h2 id="module-endpoint-testing" class="section-heading">
-  <a href="#module-endpoint-testing" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#module-endpoint-testing" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Endpoint testing
 </h2>
 
@@ -101,7 +103,7 @@ follows:</p>
 <p>The router being tested is accessed via the <code class="inline">@router</code> module
 attribute.</p>
 <h2 id="module-controller-testing" class="section-heading">
-  <a href="#module-controller-testing" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#module-controller-testing" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Controller testing
 </h2>
 
@@ -122,7 +124,8 @@ assert conn.resp_body =~ &quot;Welcome!&quot;</code></pre>
         <section id="summary" class="details-list">
           <h1 class="section-heading">
             <a class="hover-link" href="#summary">
-              <i class="icon-link"></i>
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
             </a>
             Summary
           </h1>
@@ -387,7 +390,8 @@ returns the response body if one was set or sent</p>
         <section id="functions" class="details-list">
           <h1 class="section-heading">
             <a class="hover-link" href="#functions">
-              <i class="icon-link"></i>
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
             </a>
             Functions
           </h1>
@@ -395,7 +399,8 @@ returns the response body if one was set or sent</p>
   
   <div class="detail-header">
     <a href="#assert_error_sent/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">assert_error_sent(status_int_or_atom, func)</span>
     
@@ -419,7 +424,7 @@ atom, such as <code class="inline">404</code> or <code class="inline">:not_found
 status, headers, and body of the response:</p>
 <pre><code class="elixir">{404, [{&quot;content-type&quot;, &quot;text/html&quot;} | _], &quot;Page not found&quot;}</code></pre>
 <h2 id="assert_error_sent/2-examples" class="section-heading">
-  <a href="#assert_error_sent/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#assert_error_sent/2-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Examples
 </h2>
 
@@ -438,7 +443,8 @@ assert {404, [_h | _t], &quot;Page not found&quot;} = response</code></pre>
   
   <div class="detail-header">
     <a href="#build_conn/0" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">build_conn()</span>
     
@@ -458,11 +464,12 @@ assert {404, [_h | _t], &quot;Page not found&quot;} = response</code></pre>
 </div>
 <div class="detail" id="build_conn/3">
   
-    <span id="build_conn/2" />
+    <span id="build_conn/2"></span>
   
   <div class="detail-header">
     <a href="#build_conn/3" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">build_conn(method, path, params_or_body \\ nil)</span>
     
@@ -487,7 +494,8 @@ for testing a plug or a particular function.</p>
   
   <div class="detail-header">
     <a href="#conn/0" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">conn()</span>
     
@@ -507,11 +515,12 @@ for testing a plug or a particular function.</p>
 </div>
 <div class="detail" id="connect/3">
   
-    <span id="connect/2" />
+    <span id="connect/2"></span>
   
   <div class="detail-header">
     <a href="#connect/3" class="detail-link" title="Link to this macro">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this macro</span>
     </a>
     <span class="signature">connect(conn, path_or_action, params_or_body \\ nil)</span>
     
@@ -528,11 +537,12 @@ for testing a plug or a particular function.</p>
 </div>
 <div class="detail" id="delete/3">
   
-    <span id="delete/2" />
+    <span id="delete/2"></span>
   
   <div class="detail-header">
     <a href="#delete/3" class="detail-link" title="Link to this macro">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this macro</span>
     </a>
     <span class="signature">delete(conn, path_or_action, params_or_body \\ nil)</span>
     
@@ -551,7 +561,8 @@ for testing a plug or a particular function.</p>
   
   <div class="detail-header">
     <a href="#delete_req_cookie/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">delete_req_cookie(conn, key)</span>
     
@@ -571,11 +582,12 @@ for testing a plug or a particular function.</p>
 </div>
 <div class="detail" id="dispatch/5">
   
-    <span id="dispatch/4" />
+    <span id="dispatch/4"></span>
   
   <div class="detail-header">
     <a href="#dispatch/5" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">dispatch(conn, router, method, path_or_action, params_or_body \\ nil)</span>
     
@@ -594,7 +606,7 @@ request path and stored as so in the connection. If an atom,
 it is assumed to be an action and the connection is dispatched
 to the given action.</p>
 <h2 id="dispatch/5-parameters-and-body" class="section-heading">
-  <a href="#dispatch/5-parameters-and-body" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#dispatch/5-parameters-and-body" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Parameters and body
 </h2>
 
@@ -623,11 +635,12 @@ without normalizing its entries</p>
 </div>
 <div class="detail" id="get/3">
   
-    <span id="get/2" />
+    <span id="get/2"></span>
   
   <div class="detail-header">
     <a href="#get/3" class="detail-link" title="Link to this macro">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this macro</span>
     </a>
     <span class="signature">get(conn, path_or_action, params_or_body \\ nil)</span>
     
@@ -644,11 +657,12 @@ without normalizing its entries</p>
 </div>
 <div class="detail" id="head/3">
   
-    <span id="head/2" />
+    <span id="head/2"></span>
   
   <div class="detail-header">
     <a href="#head/3" class="detail-link" title="Link to this macro">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this macro</span>
     </a>
     <span class="signature">head(conn, path_or_action, params_or_body \\ nil)</span>
     
@@ -667,7 +681,8 @@ without normalizing its entries</p>
   
   <div class="detail-header">
     <a href="#html_response/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">html_response(conn, status)</span>
     
@@ -686,7 +701,7 @@ without normalizing its entries</p>
     <p>Asserts the given status code, that we have an html response and
 returns the response body if one was set or sent.</p>
 <h2 id="html_response/2-examples" class="section-heading">
-  <a href="#html_response/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#html_response/2-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Examples
 </h2>
 
@@ -696,11 +711,12 @@ returns the response body if one was set or sent.</p>
 </div>
 <div class="detail" id="json_response/3">
   
-    <span id="json_response/2" />
+    <span id="json_response/2"></span>
   
   <div class="detail-header">
     <a href="#json_response/3" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">json_response(conn, status, opts \\ [])</span>
     
@@ -711,7 +727,7 @@ returns the response body if one was set or sent.</p>
     <p>Asserts the given status code, that we have an json response and
 returns the decoded JSON response if one was set or sent.</p>
 <h2 id="json_response/3-examples" class="section-heading">
-  <a href="#json_response/3-examples" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#json_response/3-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Examples
 </h2>
 
@@ -722,11 +738,12 @@ assert &quot;can&#39;t be blank&quot; in body[&quot;errors&quot;]</code></pre>
 </div>
 <div class="detail" id="options/3">
   
-    <span id="options/2" />
+    <span id="options/2"></span>
   
   <div class="detail-header">
     <a href="#options/3" class="detail-link" title="Link to this macro">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this macro</span>
     </a>
     <span class="signature">options(conn, path_or_action, params_or_body \\ nil)</span>
     
@@ -743,11 +760,12 @@ assert &quot;can&#39;t be blank&quot; in body[&quot;errors&quot;]</code></pre>
 </div>
 <div class="detail" id="patch/3">
   
-    <span id="patch/2" />
+    <span id="patch/2"></span>
   
   <div class="detail-header">
     <a href="#patch/3" class="detail-link" title="Link to this macro">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this macro</span>
     </a>
     <span class="signature">patch(conn, path_or_action, params_or_body \\ nil)</span>
     
@@ -766,7 +784,8 @@ assert &quot;can&#39;t be blank&quot; in body[&quot;errors&quot;]</code></pre>
   
   <div class="detail-header">
     <a href="#patch_json/3" class="detail-link" title="Link to this macro">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this macro</span>
     </a>
     <span class="signature">patch_json(conn, path_or_action, params)</span>
     
@@ -783,11 +802,12 @@ assert &quot;can&#39;t be blank&quot; in body[&quot;errors&quot;]</code></pre>
 </div>
 <div class="detail" id="post/3">
   
-    <span id="post/2" />
+    <span id="post/2"></span>
   
   <div class="detail-header">
     <a href="#post/3" class="detail-link" title="Link to this macro">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this macro</span>
     </a>
     <span class="signature">post(conn, path_or_action, params_or_body \\ nil)</span>
     
@@ -806,7 +826,8 @@ assert &quot;can&#39;t be blank&quot; in body[&quot;errors&quot;]</code></pre>
   
   <div class="detail-header">
     <a href="#post_json/3" class="detail-link" title="Link to this macro">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this macro</span>
     </a>
     <span class="signature">post_json(conn, path_or_action, params)</span>
     
@@ -823,11 +844,12 @@ assert &quot;can&#39;t be blank&quot; in body[&quot;errors&quot;]</code></pre>
 </div>
 <div class="detail" id="put/3">
   
-    <span id="put/2" />
+    <span id="put/2"></span>
   
   <div class="detail-header">
     <a href="#put/3" class="detail-link" title="Link to this macro">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this macro</span>
     </a>
     <span class="signature">put(conn, path_or_action, params_or_body \\ nil)</span>
     
@@ -846,7 +868,8 @@ assert &quot;can&#39;t be blank&quot; in body[&quot;errors&quot;]</code></pre>
   
   <div class="detail-header">
     <a href="#put_json/3" class="detail-link" title="Link to this macro">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this macro</span>
     </a>
     <span class="signature">put_json(conn, path_or_action, params)</span>
     
@@ -865,7 +888,8 @@ assert &quot;can&#39;t be blank&quot; in body[&quot;errors&quot;]</code></pre>
   
   <div class="detail-header">
     <a href="#put_req_cookie/3" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">put_req_cookie(conn, key, value)</span>
     
@@ -887,7 +911,8 @@ assert &quot;can&#39;t be blank&quot; in body[&quot;errors&quot;]</code></pre>
   
   <div class="detail-header">
     <a href="#recycle/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">recycle(conn)</span>
     
@@ -914,11 +939,12 @@ recycled.</p>
 </div>
 <div class="detail" id="redirected_to/2">
   
-    <span id="redirected_to/1" />
+    <span id="redirected_to/1"></span>
   
   <div class="detail-header">
     <a href="#redirected_to/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">redirected_to(conn, status \\ 302)</span>
     
@@ -936,7 +962,7 @@ recycled.</p>
 <p>Raises if the response does not match the redirect status code
 (defaults to 302).</p>
 <h2 id="redirected_to/2-examples" class="section-heading">
-  <a href="#redirected_to/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#redirected_to/2-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Examples
 </h2>
 
@@ -950,7 +976,8 @@ assert redirected_to(conn, :moved_permanently) =~ &quot;/foo/bar&quot;</code></p
   
   <div class="detail-header">
     <a href="#response/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">response(conn, given)</span>
     
@@ -969,7 +996,7 @@ assert redirected_to(conn, :moved_permanently) =~ &quot;/foo/bar&quot;</code></p
     <p>Asserts the given status code and returns the response body
 if one was set or sent.</p>
 <h2 id="response/2-examples" class="section-heading">
-  <a href="#response/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#response/2-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Examples
 </h2>
 
@@ -982,7 +1009,8 @@ assert response(conn, 200) =~ &quot;hello world&quot;</code></pre>
   
   <div class="detail-header">
     <a href="#response_content_type/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">response_content_type(conn, format)</span>
     
@@ -1000,7 +1028,7 @@ assert response(conn, 200) =~ &quot;hello world&quot;</code></pre>
   <section class="docstring">
     <p>Returns the content type as long as it matches the given format.</p>
 <h2 id="response_content_type/2-examples" class="section-heading">
-  <a href="#response_content_type/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#response_content_type/2-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Examples
 </h2>
 
@@ -1013,7 +1041,8 @@ assert response_content_type(conn, :html) =~ &quot;charset=utf-8&quot;</code></p
   
   <div class="detail-header">
     <a href="#text_response/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
     </a>
     <span class="signature">text_response(conn, status)</span>
     
@@ -1032,7 +1061,7 @@ assert response_content_type(conn, :html) =~ &quot;charset=utf-8&quot;</code></p
     <p>Asserts the given status code, that we have an text response and
 returns the response body if one was set or sent.</p>
 <h2 id="text_response/2-examples" class="section-heading">
-  <a href="#text_response/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  <a href="#text_response/2-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   Examples
 </h2>
 
@@ -1042,11 +1071,12 @@ returns the response body if one was set or sent.</p>
 </div>
 <div class="detail" id="trace/3">
   
-    <span id="trace/2" />
+    <span id="trace/2"></span>
   
   <div class="detail-header">
     <a href="#trace/3" class="detail-link" title="Link to this macro">
-      <i class="icon-link"></i>
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this macro</span>
     </a>
     <span class="signature">trace(conn, path_or_action, params_or_body \\ nil)</span>
     
@@ -1070,20 +1100,20 @@ returns the response body if one was set or sent.</p>
         <p>
           <span class="line">
             Built using
-            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.15.1),
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.16.0),
           </span>
           <span class="line">
             designed by
             <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
             </span>
         </p>
-        <button class="night-mode-toggle" />
+        <button class="night-mode-toggle"><span class="sr-only">Switch theme</span></button>
       </footer>
     </div>
   </div>
 </section>
 </div>
-  <script src="dist/app-574613960f.js"></script>
+  <script src="dist/app-126b5f0e90.js"></script>
   </body>
 </html>
 
