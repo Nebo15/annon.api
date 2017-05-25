@@ -12,6 +12,7 @@ defmodule Annon.Configuration.Schemas.API do
     field :docs_url, :string, default: ""
     field :health, :string, default: "operational"
     field :disclose_status, :boolean, default: false
+    field :matching_priority, :integer, default: 1
 
     embeds_one :request, Request, primary_key: false, on_replace: :update do
       field :scheme, :string

@@ -9,7 +9,7 @@ defmodule Annon.Configuration.API do
   alias Ecto.Multi
   alias Ecto.Paging
 
-  @api_fields [:name, :description, :health, :docs_url, :disclose_status]
+  @api_fields [:name, :description, :health, :docs_url, :disclose_status, :matching_priority]
   @required_api_fields [:name]
   @required_api_request_fields [:scheme, :host, :port, :path, :methods]
   @known_http_verbs ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
@@ -188,7 +188,7 @@ defmodule Annon.Configuration.API do
 
   defp apis_dump_query do
     from apis in APISchema,
-      order_by: apis.inserted_at
+      order_by: [desc: apis.matching_priority, asc: apis.inserted_at]
   end
 
   defp join_enabled_plugins(query) do
