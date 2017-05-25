@@ -23,7 +23,9 @@ defmodule Annon.Plugins.ACL do
       conn
     else
       {:error, :scope_not_set} -> send_forbidden(conn)
-      {:error, :no_matching_rule} -> send_forbidden(conn)
+      {:error, :no_matching_rule} ->
+        Logger.debug(fn -> "ACL: No matching rule was found for path #{api_relative_path}." end)
+        send_forbidden(conn)
       {:error, :forbidden, missing_scopes} -> send_forbidden(conn, missing_scopes)
     end
   end
