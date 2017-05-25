@@ -64,6 +64,7 @@ defmodule Annon.Configuration.CacheAdapters.ETS do
         host
         |> Regex.escape()
         |> String.replace("%", ".*")
+        |> String.replace("_", ".{1}")
 
     Regex.compile!("^#{host_pattern}$")
   end
@@ -79,6 +80,7 @@ defmodule Annon.Configuration.CacheAdapters.ETS do
       path
       |> Regex.escape()
       |> String.replace("%", ".*")
+      |> String.replace("_", ".{1}")
 
     Regex.compile!("^#{path_pattern}")
   end
