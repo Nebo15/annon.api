@@ -41,7 +41,7 @@ defmodule Annon.Configuration.CacheAdapters.ETS do
     table_name = Keyword.fetch!(opts, :cache_space)
 
     objects = Enum.map(API.dump_apis(), fn api ->
-      {{:api, api.id}, api, compile_host_regex(api.request.host), compile_path_regex(api.request.path)}
+      {{-api.matching_priority, :api, api.id}, api, compile_host_regex(api.request.host), compile_path_regex(api.request.path)}
     end)
 
     case objects do
