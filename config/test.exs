@@ -1,5 +1,9 @@
 use Mix.Config
 
+config :annon_api,
+  sql_sandbox: {:system, :boolean, "SQL_SANDBOX", true},
+  enable_ssl?: true
+
 config :annon_api, Annon.Configuration.Repo,
   database: System.get_env("MIX_TEST_DATABASE") || "annon_api_configs_test",
   pool: Ecto.Adapters.SQL.Sandbox,
@@ -24,6 +28,10 @@ config :annon_api, :acceptance,
     port: {:system, :integer, "MIX_TEST_PUBLIC_PORT", 5000},
     host: {:system, "MIX_TEST_HOST", "localhost"}
   ],
+  public_https: [
+    port: {:system, :integer, "MIX_TEST_PUBLIC_HTTPS_PORT", 5443},
+    host: {:system, "MIX_TEST_HOST", "localhost"}
+  ],
   private: [
     port: {:system, :integer, "MIX_TEST_PUBLIC_PORT", 5002},
     host: {:system, "MIX_TEST_HOST", "localhost"}
@@ -39,6 +47,12 @@ config :annon_api, :acceptance,
 
 config :annon_api, :public_http,
   port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 5000}
+
+config :annon_api, :public_https,
+  port: {:system, :integer, "GATEWAY_PUBLIC_SSL_PORT", 5443},
+  keyfile: "priv/ssl/localhost.key",
+  certfile: "priv/ssl/localhost.cert",
+  dhfile: "priv/ssl/dhparam.pem"
 
 config :annon_api, :private_http,
   port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 5002}
@@ -58,6 +72,3 @@ config :hackney, use_default_pool: false
 config :annon_api, :configuration_cache,
   adapter: {:system, :module, "CONFIGURATION_CACHE_ADAPTER", Annon.Configuration.CacheAdapters.Database},
   cache_space: :configuration
-
-config :annon_api,
-  sql_sandbox: {:system, :boolean, "SQL_SANDBOX", true}

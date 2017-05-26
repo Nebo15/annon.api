@@ -1,5 +1,13 @@
 use Mix.Config
 
+config :annon_api,
+  ecto_repos: [Annon.Configuration.Repo, Annon.Requests.Repo],
+  sql_sandbox: {:system, :boolean, "SQL_SANDBOX", false},
+  protected_headers: {:system, :list, "PROTECTED_HEADERS", [
+    "x-consumer-id", "x-consumer-scope", "x-consumer-token", "x-consumer-token-id"
+  ]},
+  enable_ssl?: {:system, :boolean, "GATEWAY_SSL_ENABLED", false}
+
 config :annon_api, Annon.Configuration.Repo,
   adapter: Ecto.Adapters.Postgres,
   priv: "priv/repos/configuration",
@@ -20,42 +28,24 @@ config :annon_api, Annon.Requests.Repo,
   port: {:system, :integer, "DB_PORT", 5432},
   pool_size: 50
 
-config :annon_api,
-  ecto_repos: [Annon.Configuration.Repo, Annon.Requests.Repo]
-
 config :annon_api, :configuration_cache,
   adapter: {:system, :module, "CONFIGURATION_CACHE_ADAPTER", Annon.Configuration.CacheAdapters.ETS},
   cache_space: :configuration
 
-# Configure Elixir logger
-config :logger,
-  level: :debug
-
-# Configure JSON Logger back-end
-config :logger_json, :backend,
-  on_init: {Annon, :load_from_system_env, []},
-  json_encoder: Poison,
-  metadata: :all
-
 config :annon_api, :public_http,
   port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 4000}
+
+config :annon_api, :public_https,
+  port: {:system, :integer, "GATEWAY_PUBLIC_SSL_PORT", 4443},
+  keyfile: {:system, :string, "SSL_KEY_PATH"},
+  certfile: {:system, :string, "SSL_CERT_PATH"},
+  dhfile: {:system, :string, "SSL_DHFILE_PATH"}
 
 config :annon_api, :private_http,
   port: {:system, :integer, "GATEWAY_PRIVATE_PORT", 8000}
 
 config :annon_api, :management_http,
   port: {:system, :integer, "GATEWAY_MANAGEMENT_PORT", 4001}
-
-config :annon_api,
-  protected_headers: {:system, :list, "PROTECTED_HEADERS", [
-    "x-consumer-id", "x-consumer-scope", "x-consumer-token", "x-consumer-token-id"
-  ]}
-
-config :skycluster,
-  strategy: {:system, :module, "SKYCLUSTER_STRATEGY", Cluster.Strategy.Epmd}
-
-config :annon_api,
-  sql_sandbox: {:system, :boolean, "SQL_SANDBOX", false}
 
 config :annon_api, :plugin_pipeline,
   default_features: []
@@ -67,6 +57,20 @@ config :annon_api, :metrics_collector,
   port: {:system, :integer, "METRICS_COLLECTOR_PORT", 8125},
   namespace: {:system, :string, "METRICS_COLLECTOR_NAMESPACE", "annon"},
   sample_rate: {:system, :float, "METRICS_COLLECTOR_SAMPLE_RATE", 0.25}
+
+# Configure Elixir logger
+config :logger,
+  level: :debug
+
+# Configure JSON Logger back-end
+config :logger_json, :backend,
+  on_init: {Annon, :load_from_system_env, []},
+  json_encoder: Poison,
+  metadata: :all
+
+# Configure autoclustering
+config :skycluster,
+  strategy: {:system, :module, "SKYCLUSTER_STRATEGY", Cluster.Strategy.Epmd}
 
 import_config "plugins.exs"
 import_config "#{Mix.env}.exs"

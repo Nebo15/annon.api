@@ -14,14 +14,20 @@ defmodule Annon.PublicAPI.ServerSupervisor do
       http_endpoint_spec(Annon.PublicAPI.Router, :http, :private_http),
     ]
 
+    children =
+      if Confex.get(:annon_api, :enable_ssl?, false),
+        do: [http_endpoint_spec(Annon.PublicAPI.Router, :https, :public_https)] ++ children,
+      else: children
+
     opts = [strategy: :one_for_one, name: Annon.PublicAPI.ServerSupervisor]
     supervise(children, opts)
   end
 
-  def http_endpoint_spec(router, scheme, endpoint) do
+  defp http_endpoint_spec(router, scheme, endpoint) do
     config =
       :annon_api
       |> Confex.get_map(endpoint)
+      |> Keyword.put_new(:otp_app, :annon_api)
       |> Keyword.put(:ref, build_ref(router, endpoint))
 
     Plug.Adapters.Cowboy.child_spec(scheme, router, [], config)
