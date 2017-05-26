@@ -23,16 +23,6 @@ defmodule Annon.RoutersTest do
 
       assert 404 == conn.status
     end
-
-    test "on private router" do
-      conn =
-        :get
-        |> conn("/foo")
-        |> put_req_header("content-type", "application/json")
-        |> Annon.PrivateRouter.call([])
-
-      assert 404 == conn.status
-    end
   end
 
   describe "error match works" do
