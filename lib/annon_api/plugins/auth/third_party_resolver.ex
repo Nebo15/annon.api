@@ -31,8 +31,8 @@ defmodule Annon.Plugins.Auth.ThirdPartyResolver do
     end
   end
 
-  defp parse_success_response(%{"user_id" => consumer_id, "details" => %{"scope" => consumer_scope}}),
-    do: {:ok, %Consumer{id: consumer_id, scope: consumer_scope}}
+  defp parse_success_response(%{"user_id" => consumer_id, "details" => %{"scope" => consumer_scope} = metadata}),
+    do: {:ok, %Consumer{id: consumer_id, scope: consumer_scope, metadata: metadata}}
   defp parse_success_response(%{"consumer_id" => consumer_id, "consumer_scope" => consumer_scope}),
     do: {:ok, %Consumer{id: consumer_id, scope: consumer_scope}}
   defp parse_success_response(%{"data" => data}),

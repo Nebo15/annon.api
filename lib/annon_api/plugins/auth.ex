@@ -25,6 +25,7 @@ defmodule Annon.Plugins.Auth do
       |> Conn.assign(:consumer, consumer)
       |> put_x_consumer_id_header(consumer.id)
       |> put_x_consumer_scope_header(consumer.scope)
+      |> put_x_consumer_metadata_header(consumer.metadata)
     else
       :error -> send_unathorized(conn, "Authorization header is not set or doesn't contain Bearer token")
       {:error, message} -> send_unathorized(conn, message)
@@ -45,6 +46,11 @@ defmodule Annon.Plugins.Auth do
 
   defp put_x_consumer_id_header(%Conn{assigns: %{upstream_request: upstream_request}} = conn, consumer_id) do
     upstream_request = UpstreamRequest.put_header(upstream_request, "x-consumer-id", consumer_id)
+    Conn.assign(conn, :upstream_request, upstream_request)
+  end
+
+  defp put_x_consumer_metadata_header(%Conn{assigns: %{upstream_request: upstream_request}} = conn, consumer_md) do
+    upstream_request = UpstreamRequest.put_header(upstream_request, "x-consumer-metadata", Poison.encode!(consumer_md))
     Conn.assign(conn, :upstream_request, upstream_request)
   end
 

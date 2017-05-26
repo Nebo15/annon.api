@@ -7,6 +7,7 @@ defmodule Annon.Plugins.CORS do
   defdelegate validate_settings(changeset), to: Annon.Plugins.CORS.SettingsValidator
   defdelegate settings_validation_schema(), to: Annon.Plugins.CORS.SettingsValidator
 
+  # TODO: If API does not expose OPTIONS requests won't hit here
   def execute(%Conn{} = conn, _request, settings) do
     settings = settings || %{}
     settings =

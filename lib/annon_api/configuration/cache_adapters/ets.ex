@@ -65,7 +65,7 @@ defmodule Annon.Configuration.CacheAdapters.ETS do
         host
         |> Regex.escape()
         |> String.replace("%", ".*")
-        |> String.replace("_", ".{1}")
+        |> String.replace("_", ".{1}") # TODO: Paths like /my_path/ will match /myXpath/ which is BAD
 
     Regex.compile!("^#{host_pattern}$")
   end
