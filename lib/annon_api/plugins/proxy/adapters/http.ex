@@ -5,6 +5,8 @@ defmodule Annon.Plugins.Proxy.Adapters.HTTP do
   alias Annon.Plugin.UpstreamRequest
   alias Plug.Conn
 
+  @drop_headers Application.get_env(:annon_api, :dropped_upstream_headers, [])
+
   def dispatch(%UpstreamRequest{} = upstream_request, %Conn{method: method} = conn) do
     upstream_url = UpstreamRequest.to_upstream_url!(upstream_request)
 
@@ -23,7 +25,7 @@ defmodule Annon.Plugins.Proxy.Adapters.HTTP do
   defp do_fileupload_request_cont(upstream_url, upstream_request, conn, _method) do
     req_headers =
       Enum.reject(upstream_request.headers, fn {k, _} ->
-        String.downcase(k) in ["content-type", "content-disposition", "content-length", "host"]
+        String.downcase(k) in ["content-type", "content-disposition", "content-length"] ++ @drop_headers
       end)
 
     multipart = Annon.Plugins.Proxy.MultipartForm.reconstruct_using(conn.body_params)
@@ -40,9 +42,12 @@ defmodule Annon.Plugins.Proxy.Adapters.HTTP do
 
     timeout_opts = [connect_timeout: 30_000, recv_timeout: 30_000, timeout: 30_000]
 
-    headers = Enum.reject(upstream_request.headers, fn {k, _} -> k == "host" end)
+    req_headers =
+      Enum.reject(upstream_request.headers, fn {k, _} ->
+        String.downcase(k) in @drop_headers
+      end)
 
-    case HTTPoison.request(method, upstream_url, body, headers, timeout_opts) do
+    case HTTPoison.request(method, upstream_url, body, req_headers, timeout_opts) do
       {:ok, response} ->
         response
       {:error, %{reason: reason}} ->
