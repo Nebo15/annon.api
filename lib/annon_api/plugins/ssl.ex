@@ -14,7 +14,7 @@ defmodule Annon.Plugins.SSL do
     if Confex.get(:annon_api, :enable_ssl?) do
       settings = Confex.get_map(:annon_api, :ssl)
       %{request | plugins: Enum.map(request.plugins, fn
-        %{name: :ssl} = plugin -> Map.put(plugin, "settings", settings)
+        %{name: :ssl} = plugin -> Map.put(plugin, :settings, settings)
         plugin -> plugin
       end)}
     else
@@ -25,17 +25,17 @@ defmodule Annon.Plugins.SSL do
   def execute(%Conn{} = conn, _request, settings) do
     rewrite_on =
       settings
-      |> Map.get(:rewrite_on, [])
+      |> Keyword.get(:rewrite_on, [])
       |> Enum.map(&String.to_atom/1)
 
     Plug.SSL.call(conn, {hsts_header(settings), {Annon.Plugins.SSL, :resolve_host, [conn, settings]}, rewrite_on})
   end
 
   defp hsts_header(settings) do
-    if Map.get(settings, :hsts, true) do
-      expires = Map.get(settings, :expires, 31_536_000)
-      preload = Map.get(settings, :preload, false)
-      subdomains = Map.get(settings, :subdomains, false)
+    if Keyword.get(settings, :hsts, true) do
+      expires = Keyword.get(settings, :expires, 31_536_000)
+      preload = Keyword.get(settings, :preload, false)
+      subdomains = Keyword.get(settings, :subdomains, false)
 
       "max-age=#{expires}" <>
         if(preload, do: "; preload", else: "") <>
