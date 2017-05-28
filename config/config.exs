@@ -70,6 +70,7 @@ config :annon_api, :public_https,
   ]
 
 config :annon_api, :ssl,
+  redirect_port: {:system, :integer, "GATEWAY_SSL_REDIRECT_PORT", 443},
   hsts: {:system, :boolean, "GATEWAY_SSL_HSTS", false},
   expires: {:system, :integer, "GATEWAY_SSL_HSTS_EXPIRES", 31_536_000},
   preload: {:system, :boolean, "GATEWAY_SSL_HSTS_PRELOAD", false},

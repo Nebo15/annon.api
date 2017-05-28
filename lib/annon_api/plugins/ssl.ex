@@ -28,7 +28,7 @@ defmodule Annon.Plugins.SSL do
       |> Map.get(:rewrite_on, [])
       |> Enum.map(&String.to_atom/1)
 
-    Plug.SSL.call(conn, {hsts_header(setting), {Annon.Plugins.SSL, :resolve_host, [conn]}, rewrite_on})
+    Plug.SSL.call(conn, {hsts_header(setting), {Annon.Plugins.SSL, :resolve_host, [conn, setting]}, rewrite_on})
   end
 
   defp hsts_header(setting) do
@@ -43,13 +43,12 @@ defmodule Annon.Plugins.SSL do
     end
   end
 
-  def resolve_host(conn) do
+  def resolve_host(%{host: host}, setting) do
     ssl_port =
-      :annon_api
-      |> Confex.get_map(:public_https)
-      |> Keyword.fetch!(:port)
+      setting
+      |> Keyword.fetch!(:redirect_port)
       |> to_string()
 
-    conn.host <> ":" <> ssl_port
+    host <> ":" <> ssl_port
   end
 end
