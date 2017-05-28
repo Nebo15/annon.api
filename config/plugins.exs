@@ -1,6 +1,7 @@
 use Mix.Config
 
 config :annon_api, :plugins, [
+  {:ssl, deps: [], features: [:modify_conn], module: Annon.Plugins.SSL, system?: true},
   {:cors, deps: [], features: [:modify_conn], module: Annon.Plugins.CORS},
   {:idempotency, deps: [:cors], features: [:modify_conn, :log_consistency], module: Annon.Plugins.Idempotency},
   {:logger, deps: [:idempotency, :monitoring], features: [], system?: true, module: Annon.Plugins.Logger},

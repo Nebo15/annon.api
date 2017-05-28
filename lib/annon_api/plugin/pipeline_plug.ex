@@ -124,7 +124,7 @@ defmodule Annon.Plugin.PipelinePlug do
     Enum.reduce(plugins, conn, fn
       _plugin, %Conn{halted: true} = conn ->
         conn
-      %{module: module, settings: settings}, conn ->
+      %{module: module, settings: settings, is_enabled: true}, conn ->
         module.execute(conn, request, settings)
     end)
   end

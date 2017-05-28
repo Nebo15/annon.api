@@ -69,6 +69,13 @@ config :annon_api, :public_https,
     :sect233r1, :secp224k1, :secp224r1
   ]
 
+config :annon_api, :ssl,
+  hsts: {:system, :boolean, "GATEWAY_SSL_HSTS", false},
+  expires: {:system, :integer, "GATEWAY_SSL_HSTS_EXPIRES", 31_536_000},
+  preload: {:system, :boolean, "GATEWAY_SSL_HSTS_PRELOAD", false},
+  subdomains: {:system, :boolean, "GATEWAY_SSL_HSTS_INCLUDE_SUBDOMAINS", false},
+  rewrite_on: {:system, :list, "GATEWAY_SSL_REWRITE_ON", []}
+
 config :annon_api, :private_http,
   port: {:system, :integer, "GATEWAY_PRIVATE_PORT", 8000}
 

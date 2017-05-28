@@ -5,11 +5,7 @@ defmodule Annon.Plugin do
   Example:
 
       use Annon.Plugin,
-        plugin_name: "my_plugin"
-
-  It will add
-    * `init/1` settings required by Plug behavior, that will pass opts to `init/2` methods.
-    * `find_plugin_settings/1` method that allows to find plugin settings and make sure that it's enabled.
+        plugin_name: :my_plugin
   """
   alias Annon.Plugin.Request
 
@@ -39,6 +35,8 @@ defmodule Annon.Plugin do
         def prepare(%Request{} = request),
           do: update_feature_requirements(request, @plugin_features)
       end
+
+      defoverridable [prepare: 1]
     end
   end
 
