@@ -43,6 +43,7 @@ config :annon_api, :public_https,
   dhfile: {:system, :string, "SSL_DHFILE_PATH"},
   versions: [:'tlsv1.2', :'tlsv1.1', :'tlsv1'],
   secure_renegotiate: true,
+  client_renegotiation: false,
   reuse_sessions: true,
   honor_cipher_order: true,
   max_connections: :infinity,
@@ -67,7 +68,6 @@ config :annon_api, :public_https,
     :brainpoolP256r1, :secp256k1, :secp256r1, :sect239k1, :sect233k1,
     :sect233r1, :secp224k1, :secp224r1
   ]
-
 
 config :annon_api, :private_http,
   port: {:system, :integer, "GATEWAY_PRIVATE_PORT", 8000}
