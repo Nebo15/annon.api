@@ -1,6 +1,6 @@
 defmodule Annon.Plugin.UpstreamRequest do
   @moduledoc """
-
+  This module provides struct and utils to build upstream requests.
   """
   alias Annon.Plugin.UpstreamRequest
 
