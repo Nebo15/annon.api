@@ -52,7 +52,8 @@ config :annon_api, :public_https,
   port: {:system, :integer, "GATEWAY_PUBLIC_SSL_PORT", 5443},
   keyfile: "priv/ssl/localhost.key",
   certfile: "priv/ssl/localhost.cert",
-  dhfile: "priv/ssl/dhparam.pem"
+  dhfile: "priv/ssl/dhparam.pem",
+  cacertfile: "priv/ssl/localhost_ca.cert"
 
 config :annon_api, :private_http,
   port: {:system, :integer, "GATEWAY_PUBLIC_PORT", 5002}
