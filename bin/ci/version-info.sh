@@ -50,8 +50,8 @@ if [[ "${MAJOR_CHANGES}" == "0" && "${FEATURE_CHANGES}" == "0" && "${MINOR_CHANG
 fi;
 
 # Do not allow to build new versions in master when release is in maintenance mode
-MAINTENANCE_BRANCH="v${parts[0]}.${parts[1]}"
-BUILD_REQUIRES_MAINTENANCE=$(git branch --list | grep "${MAINTENANCE_BRANCH}" | wc -l)
+MAINTENANCE_BRANCH="v${NEXT_MAJOR_VERSION}.${NEXT_FEATURE_VERSION}"
+BUILD_REQUIRES_MAINTENANCE=$(git branch --list | grep "v${parts[0]}.${parts[1]}" | wc -l)
 BUILD_REQUIRES_MAINTENANCE=$(expr $BUILD_REQUIRES_MAINTENANCE + 0)
 
 if [[ "${BUILD_REQUIRES_MAINTENANCE}" == "1" ]]; then
