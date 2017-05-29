@@ -23,7 +23,7 @@ fi
 sleep 1
 
 # Issue a real request to proxy
-REQUEST=$(curl --silent --request GET http://localhost:4000/world/get?my_param=my_value -H X-Host-Override: httpbin.org)
+REQUEST=$(curl --silent --request GET http://localhost:4000/world/get?my_param=my_value)
 REQUEST_VALUE=$(echo $REQUEST | jq -r '.args.my_param')
 
 if [ "$REQUEST_VALUE" != "my_value" ]; then
