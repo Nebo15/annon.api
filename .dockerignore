@@ -1,6 +1,9 @@
 # The directory Mix will write compiled artifacts to.
 _build
 
+# Tests
+test/
+
 # The directory Mix downloads your dependencies sources to.
 deps
 
