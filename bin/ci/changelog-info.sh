@@ -5,7 +5,7 @@ FEATURE_CHANGES=$(echo "${GIT_HISTORY_CLEANED}" | grep '\[feature\]')
 MINOR_CHANGES=$(echo "${GIT_HISTORY_CLEANED}" | grep '\[minor\]')
 
 OTHER_CHANGES=$(grep -vo '\[major\]' <<< "${GIT_HISTORY_CLEANED}" | grep -vo '\[feature\]' | grep -vo '\[minor\]' | wc -l)
-OTHER_CHANGES=$(expr $MINOR_CHANGES + $OTHER_CHANGES)
+OTHER_CHANGES=$(expr $OTHER_CHANGES + 0)
 
 CHANGELOG=""
 if [[ "${MAJOR_CHANGES}" != "" ]]; then
@@ -22,7 +22,9 @@ fi;
 
 if [[ "${OTHER_CHANGES}" != "0" ]]; then
   CHANGELOG="${CHANGELOG}\n **${OTHER_CHANGES} other** changes."
-elif [[ "${CHANGELOG}" == "" ]]; then
+fi;
+
+if [[ "${CHANGELOG}" == "" ]]; then
   CHANGELOG="${GIT_HISTORY_CLEANED}"
 fi;
 
