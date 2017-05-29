@@ -50,6 +50,7 @@ defmodule Annon.Configuration.CacheAdapters.ETS do
       [] ->
         :ok
       objects when is_list(objects) ->
+        true = :ets.delete_all_objects(table_name)
         true = :ets.insert(table_name, objects)
         :ok
     end
