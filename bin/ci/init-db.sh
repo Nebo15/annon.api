@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 POSTGRES_VERSION=9.5
 

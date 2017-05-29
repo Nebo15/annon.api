@@ -30,11 +30,17 @@ before_install:
   - sudo /bin/bash ./bin/ci/init-db.sh
 before_script:
   - epmd -daemon
+  # Extract project name and version from mix.exs
+  - PROJECT_DIR=${TRAVIS_BUILD_DIR};
+    PROJECT_NAME=$(sed -n 's/.*app: :\([^, ]*\).*/\1/pg' "mix.exs");
+    PROJECT_VERSION=$(sed -n 's/.*@version "\([^"]*\)".*/\1/pg' "mix.exs");
+  # Load information about new version
+  - source ./bin/ci/version-info.sh
+  # Load information about changelog
+  - source ./bin/ci/changelog-info.sh
 script:
   # Increment version in mix.exs
-  - ./bin/ci/version-increment.sh
-  # Install dependencies
-  # - mix deps.get
+  - ./bin/ci/version-change.sh
   # Run all tests except pending ones
   - mix test --exclude pending --trace
   # Submit code coverage report to Coveralls
@@ -59,10 +65,10 @@ script:
     fi;
   # Run acceptance tests on Docker container
   - ./bin/ci/sanity-test.sh
-  # Rebuild docs
-  - "mix docs --output docs"
 after_failure:
   - docker logs annon_api --details --since 5h
 after_success:
+  # Rebuild docs
+  - "mix docs --output docs"
   # Submit Docker container to Docker Hub and create GitHub Release by pushing tag with changelog
   - ./bin/ci/push.sh
