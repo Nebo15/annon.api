@@ -24,6 +24,7 @@ defmodule Annon.Configuration.CacheAdapters.ETS do
 
     apis =
       table_name
+      # TODO: Try QLC to filter by methods
       |> :ets.match_object({:_, match_spec, :_, :_})
       |> filter_by_method(method)
       |> filter_by_host(host)
@@ -42,7 +43,7 @@ defmodule Annon.Configuration.CacheAdapters.ETS do
 
     objects = Enum.map(API.dump_apis(), fn api ->
       priority = -api.matching_priority
-      {{priority, :api, api.id}, api, compile_host_regex(api.request.host), compile_path_regex(api.request.path)}
+      {{priority, api.id}, api, compile_host_regex(api.request.host), compile_path_regex(api.request.path)}
     end)
 
     case objects do
