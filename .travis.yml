@@ -31,9 +31,7 @@ before_install:
 before_script:
   - epmd -daemon
   # Extract project name and version from mix.exs
-  - PROJECT_DIR=${TRAVIS_BUILD_DIR};
-    PROJECT_NAME=$(sed -n 's/.*app: :\([^, ]*\).*/\1/pg' "mix.exs");
-    PROJECT_VERSION=$(sed -n 's/.*@version "\([^"]*\)".*/\1/pg' "mix.exs");
+  - source ./bin/ci/project-info.sh
   # Load information about new version
   - source ./bin/ci/version-info.sh
   # Load information about changelog
@@ -64,7 +62,7 @@ script:
       exit 1;
     fi;
   # Run acceptance tests on Docker container
-  - ./bin/ci/sanity-test.sh
+  - ./test/sanity-test.sh
 after_failure:
   - docker logs annon_api --details --since 5h
 after_success:
