@@ -20,6 +20,7 @@ OPTIND=1 # Reset in case getopts has been used previously in the shell.
 # Default settings
 IS_LATEST=0
 IS_STABLE=0
+RELEASE_VERSION=$NEXT_VERSION
 
 if git diff-index --quiet HEAD --; then
   PASS_GIT=1
@@ -33,7 +34,7 @@ while getopts "v:la:ft:" opt; do
   case "$opt" in
     a)  HUB_ACCOUNT=$OPTARG
         ;;
-    v)  PROJECT_VERSION=$OPTARG
+    v)  RELEASE_VERSION=$OPTARG
         ;;
     t)  REPO_TAG=$OPTARG
         ;;
@@ -51,42 +52,36 @@ if [ ! $HUB_ACCOUNT  ]; then
   exit 1
 fi
 
-# Get release notes
-PREVIOUS_TAG=$(git describe HEAD^1 --abbrev=0 --tags)
-
 # Create git tag that matches release version
-if [ `git tag --list ${NEXT_VERSION}` ]; then
-  echo "[W] Git tag '${PROJECT_VERSION}' already exists. It won't be created during release."
+if [ `git tag --list ${RELEASE_VERSION}` ]; then
+  echo "[W] Git tag '${RELEASE_VERSION}' already exists. It won't be created during release."
 else
   if [ ! $PASS_GIT ]; then
     echo "[E] Working tree contains uncommitted changes. This may cause wrong relation between image tag and git tag."
     echo "    You can skip this check with '-f' option."
     exit 1
   else
-    echo "[I] Creating git tag '${PROJECT_VERSION}'.."
-    echo "    Release Notes: "
-    echo -e "${CHANGELOG}"
-
-    git tag -a ${NEXT_VERSION} -m "${CHANGELOG}\n\nContainer URL: https://hub.docker.com/r/${DOCKER_HUB_ACCOUNT}/${PROJECT_NAME}/tags/"
+    echo "[I] Creating git tag '${RELEASE_VERSION}'.."
+    git tag -a ${RELEASE_VERSION} -m "${CHANGELOG}\n\nContainer URL: https://hub.docker.com/r/${DOCKER_HUB_ACCOUNT}/${PROJECT_NAME}/tags/"
   fi
 fi
 
-if [ "${REPO_TAG}" != "${PROJECT_VERSION}" ]; then
-  echo "[I] Tagging image '${PROJECT_NAME}:${PROJECT_VERSION}' into a Docker Hub repository '${HUB_ACCOUNT}/${PROJECT_NAME}:${REPO_TAG}'.."
-  docker tag "${PROJECT_NAME}:${PROJECT_VERSION}" "${HUB_ACCOUNT}/${PROJECT_NAME}:${REPO_TAG}"
+if [ "${REPO_TAG}" != "${RELEASE_VERSION}" ]; then
+  echo "[I] Tagging image '${PROJECT_NAME}:${RELEASE_VERSION}' into a Docker Hub repository '${HUB_ACCOUNT}/${PROJECT_NAME}:${REPO_TAG}'.."
+  docker tag "${PROJECT_NAME}:${RELEASE_VERSION}" "${HUB_ACCOUNT}/${PROJECT_NAME}:${REPO_TAG}"
 fi
 
-echo "[I] Tagging image '${PROJECT_NAME}:${PROJECT_VERSION}' into a Docker Hub repository '${HUB_ACCOUNT}/${PROJECT_NAME}:${PROJECT_VERSION}'.."
-docker tag "${PROJECT_NAME}:${PROJECT_VERSION}" "${HUB_ACCOUNT}/${PROJECT_NAME}:${PROJECT_VERSION}"
+echo "[I] Tagging image '${PROJECT_NAME}:${RELEASE_VERSION}' into a Docker Hub repository '${HUB_ACCOUNT}/${PROJECT_NAME}:${RELEASE_VERSION}'.."
+docker tag "${PROJECT_NAME}:${RELEASE_VERSION}" "${HUB_ACCOUNT}/${PROJECT_NAME}:${RELEASE_VERSION}"
 
 if [ $IS_LATEST == 1 ]; then
   echo "[I] Assigning additional tag '${HUB_ACCOUNT}/${PROJECT_NAME}:latest'.."
-  docker tag "${PROJECT_NAME}:${PROJECT_VERSION}" "${HUB_ACCOUNT}/${PROJECT_NAME}:latest"
+  docker tag "${PROJECT_NAME}:${RELEASE_VERSION}" "${HUB_ACCOUNT}/${PROJECT_NAME}:latest"
 fi
 
 if [ $IS_LATEST == 1 ]; then
   echo "[I] Assigning additional tag '${HUB_ACCOUNT}/${PROJECT_NAME}:stable'.."
-  docker tag "${PROJECT_NAME}:${PROJECT_VERSION}" "${HUB_ACCOUNT}/${PROJECT_NAME}:stable"
+  docker tag "${PROJECT_NAME}:${RELEASE_VERSION}" "${HUB_ACCOUNT}/${PROJECT_NAME}:stable"
 fi
 
 echo "[I] Pushing changes to Docker Hub.."

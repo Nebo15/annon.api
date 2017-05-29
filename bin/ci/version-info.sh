@@ -49,6 +49,23 @@ if [[ "${MAJOR_CHANGES}" == "0" && "${FEATURE_CHANGES}" == "0" && "${MINOR_CHANG
   exit 1
 fi;
 
+# Do not allow to build new versions in master when release is in maintenance mode
+MAINTENANCE_BRANCH="v${parts[0]}.${parts[1]}"
+BUILD_REQUIRES_MAINTENANCE=$(git branch --list | grep "${MAINTENANCE_BRANCH}" | wc -l)
+BUILD_REQUIRES_MAINTENANCE=$(expr $BUILD_REQUIRES_MAINTENANCE + 0)
+
+if [[ "${BUILD_REQUIRES_MAINTENANCE}" == "1" ]]; then
+  echo " - This build changes version that is in maintenance mode"
+
+  if [[ "${MAJOR_CHANGES}" != "0" || "${FEATURE_CHANGES}" != "0" ]]; then
+    echo
+    echo "[ERROR] You can not add features or breaking changes to the version that is in maintenance mode."
+    exit 1
+  fi;
+fi;
+
 export GIT_HISTORY=$GIT_HISTORY
 export PREVIOUS_VERSION=$PREVIOUS_VERSION
 export NEXT_VERSION=$NEXT_VERSION
+export BUILD_REQUIRES_MAINTENANCE=$BUILD_REQUIRES_MAINTENANCE
+export MAINTENANCE_BRANCH=$MAINTENANCE_BRANCH
