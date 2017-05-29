@@ -24,7 +24,7 @@ if [[ "${TRAVIS_PULL_REQUEST}" == "false" ]]; then
 
   echo "Current branch: ${TRAVIS_BRANCH}"
   echo "Trunk branch: ${TRUNK_BRANCH}"
-  echo "Build requires maintenance?: ${TRUNK_BRANCH}"
+  echo "Build requires maintenance?: ${BUILD_REQUIRES_MAINTENANCE}"
   echo "Maintenance branch: ${MAINTENANCE_BRANCH}"
 
   if [[ "${TRAVIS_BRANCH}" == "${TRUNK_BRANCH}" && "${BUILD_REQUIRES_MAINTENANCE}" == "0" || "${TRAVIS_BRANCH}" == "${MAINTENANCE_BRANCH}" ]]; then
