@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -xe
 
 # Create API
 API_ID=$(uuidgen)
