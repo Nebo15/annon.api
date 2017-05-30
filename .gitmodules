@@ -1,0 +1,4 @@
+[submodule "bin/ci/release"]
+	path = bin/ci/release
+	url = https://github.com/Nebo15/ci-utils.git
+	branch = elixir
