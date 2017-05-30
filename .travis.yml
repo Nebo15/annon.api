@@ -15,6 +15,7 @@ otp_release:
 env:
   global:
     - MIX_ENV=test
+    - REQUIRE_VERSION_TAGS="true"
     - TRUNK_BRANCH="master"
     # Docker Hub token
     - DOCKER_HUB_ACCOUNT=nebo15
@@ -47,11 +48,11 @@ script:
   # Check code style
   - mix dogma
   # Build Docker container
-  - ./bin/ci/release/build.sh
+  - ./bin/ci/release/build-container.sh
   # Initialize DB for Docker container
   - source .env; PGPASSWORD="${DB_PASSWORD}"; psql -U ${DB_USER} -w -c"CREATE DATABASE ${DB_NAME}"
   # Run Docker container
-  - sudo ./bin/ci/release/start.sh
+  - sudo ./bin/ci/release/start-container.sh
   - sleep 5
   - docker ps
   - RUNNING_CONTAINERS=`docker ps | wc -l`;
@@ -68,4 +69,4 @@ after_success:
   # Rebuild docs
   - "mix docs --output docs"
   # Submit Docker container to Docker Hub and create GitHub Release by pushing tag with changelog
-  - ./bin/ci/push.sh
+  - ./bin/ci/release/push-changes.sh
