@@ -33,9 +33,11 @@ defmodule Annon.Plugins.Validator.SettingsValidator do
               "path" => %{
                 "type" => "string",
                 "minLength": 1
+                # TODO: Add regex
               },
               "schema" => %{
                 "type" => "object"
+                # TODO: add enum
               }
             }
           }

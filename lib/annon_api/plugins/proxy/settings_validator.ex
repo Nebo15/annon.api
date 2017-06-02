@@ -14,6 +14,7 @@ defmodule Annon.Plugins.Proxy.SettingsValidator do
       "required" => ["host"],
       "additionalProperties" => false,
       "properties" => %{
+        # ADD: upstream object
         "host" => %{
           "type" => "string",
           "oneOf" => [
