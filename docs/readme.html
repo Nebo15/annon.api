@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.16.1">
-    <title>Annon – annon_api v0.2.109</title>
+    <title>Annon – annon_api v0.3.0</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items-7a50fee409.js"></script>
@@ -27,7 +27,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.109
+        v0.3.0
       </h2>
     </div>
     
@@ -71,6 +71,8 @@
 <li><a href="https://github.com/Nebo15/annon.api">Annon API Gateway</a>.
 </li>
 <li><a href="https://github.com/Nebo15/annon.web">Annon Dashboard</a> - UI that allows to manage Annon settings, review and analyze Requests.
+</li>
+<li><a href="https://github.com/Nebo15/annon.ktl">annonktl</a> - CLI management utility.
 </li>
 <li><a href="https://github.com/Nebo15/annon.status.web">Annon Status Pages</a> - UI that renders APIs status pages;
 </li>
@@ -119,7 +121,7 @@ It support different discovery strategies:</p>
 <p>When receiving request gateway will generate unique <code class="inline">request_id</code>. It is used to log request and this request is sent to all upstream, so whole back-ends that is affected by a request will create logs with same request id’s.</p>
 <p>Optionally, you can send <code class="inline">X-Request-ID</code> header with your own request id, but you need to make sure that its length not less than 20 characters. Also, if should be unique, or you will receive error response.</p>
 <h3>Request Logger</h3>
-<p>Annon stores all requests and responses by their unique Request ID’s in a Cassandra database. You use this information to query requests and get base analytics via <a href="#reference/requests/collection/get-all-requests">Requests API</a>.</p>
+<p>Annon stores all requests and responses by their unique Request ID’s in a PostgreSQL database. You use this information to query requests and get base analytics via <a href="#reference/requests/collection/get-all-requests">Requests API</a>.</p>
 <p>API consumers may provide a custom request ID by sending <code class="inline">X-Request-ID: &lt;request_id&gt;</code> header. Thus, your Front-End and upstream back-ends can log information with a single unique ID.</p>
 <p>Also, idempotency plug is relying on this logs to provide idempotency guarantees for requests with same <code class="inline">X-Idempotency-Key: &lt;idempotency_key&gt;</code> headers.</p>
 <h3>Monitoring</h3>
@@ -153,7 +155,7 @@ It support different discovery strategies:</p>
 </li>
 <li><a href="https://hub.docker.com/r/nebo15/annon.status.web/">Annon Status Pages</a>;
 </li>
-<li><a href="https://hub.docker.com/r/nebo15/alpine-cassandra/">Cassandra</a>.
+<li><a href="https://hub.docker.com/r/nebo15/alpine-postgres/">PostgreSQL</a>.
 </li>
 </ul>
 <p>Our containers are based on Alpine Linux wich is a security-oriented, lightweight Linux distribution based on musl libc and busybox.</p>
