@@ -16,6 +16,7 @@ defmodule Annon.ManagementAPI.Controllers.Request do
   get "/" do
     paging = Pagination.page_info_from(conn.query_params)
 
+    # TODO: Do not load whole data in list
     conn
     |> Map.fetch!(:query_params)
     |> Map.take(["idempotency_key", "api_ids", "status_codes", "ip_addresses"])

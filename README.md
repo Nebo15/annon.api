@@ -12,6 +12,7 @@ Annon consist of multiple main parts:
 
 - [Annon API Gateway](https://github.com/Nebo15/annon.api).
 - [Annon Dashboard](https://github.com/Nebo15/annon.web) - UI that allows to manage Annon settings, review and analyze Requests.
+- [annonktl](https://github.com/Nebo15/annon.ktl) - CLI management utility.
 - [Annon Status Pages](https://github.com/Nebo15/annon.status.web) - UI that renders APIs status pages;
 - [EView](https://hex.pm/packages/eview) - hex package that allows to receive and modify client responses from Elixir application to match [Nebo #15 API Manifest](http://docs.apimanifest.apiary.io/). So your back-ends will respond in a same way as Annon does.
 - [Mithril](https://github.com/Nebo15/mithril.api) - authentication and role management service.
@@ -49,7 +50,7 @@ Optionally, you can send `X-Request-ID` header with your own request id, but you
 
 ### Request Logger
 
-Annon stores all requests and responses by their unique Request ID's in a Cassandra database. You use this information to query requests and get base analytics via [Requests API](#reference/requests/collection/get-all-requests).
+Annon stores all requests and responses by their unique Request ID's in a PostgreSQL database. You use this information to query requests and get base analytics via [Requests API](#reference/requests/collection/get-all-requests).
 
 API consumers may provide a custom request ID by sending `X-Request-ID: <request_id>` header. Thus, your Front-End and upstream back-ends can log information with a single unique ID.
 
@@ -83,7 +84,7 @@ Annon can be installed by compiling it from sources, but we recommend you to use
 - [Annon API Gateway](https://hub.docker.com/r/nebo15/annon_api/);
 - [Annon Dashboard](https://hub.docker.com/r/nebo15/annon.web/);
 - [Annon Status Pages](https://hub.docker.com/r/nebo15/annon.status.web/);
-- [Cassandra](https://hub.docker.com/r/nebo15/alpine-cassandra/).
+- [PostgreSQL](https://hub.docker.com/r/nebo15/alpine-postgres/).
 
 Our containers are based on Alpine Linux wich is a security-oriented, lightweight Linux distribution based on musl libc and busybox.
 
