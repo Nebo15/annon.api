@@ -6,8 +6,6 @@ defmodule Annon.Plugins.Proxy.Adapters.HTTP do
   alias Plug.Conn
   require Logger
 
-  @drop_headers Application.get_env(:annon_api, :dropped_upstream_headers, [])
-
   @stream_opts [
     length: :infinity,      # Read whole response
     read_length: 1_049_600, # in 1 Mb chunks
@@ -22,15 +20,9 @@ defmodule Annon.Plugins.Proxy.Adapters.HTTP do
 
   def dispatch(%UpstreamRequest{} = upstream_request, %Conn{body_params: %Plug.Conn.Unfetched{}} = conn) do
     upstream_url = UpstreamRequest.to_upstream_url!(upstream_request)
-
-    req_headers =
-      Enum.reject(upstream_request.headers, fn {k, _} ->
-        String.downcase(k) in @drop_headers
-      end)
-
     method = String.to_atom(conn.method)
 
-    with {:ok, client_ref} <- :hackney.request(method, upstream_url, req_headers, :stream, []),
+    with {:ok, client_ref} <- :hackney.request(method, upstream_url, upstream_request.headers, :stream, []),
          {:ok, client_ref, conn} <- stream_request_body(client_ref, upstream_request, conn),
          %Conn{} = conn <- stream_response_body(client_ref, conn) do
       {:ok, conn}
@@ -42,13 +34,6 @@ defmodule Annon.Plugins.Proxy.Adapters.HTTP do
 
   def dispatch(%UpstreamRequest{} = upstream_request, %Conn{method: method} = conn) do
     upstream_url = UpstreamRequest.to_upstream_url!(upstream_request)
-
-    # TODO: find better solution that dropping this for broken HTTPBin
-    req_headers =
-      Enum.reject(upstream_request.headers, fn {k, _} ->
-        String.downcase(k) in @drop_headers
-      end)
-
     method = String.to_atom(method)
 
     body =
@@ -56,7 +41,7 @@ defmodule Annon.Plugins.Proxy.Adapters.HTTP do
       |> Map.get(:body_params)
       |> Poison.encode!()
 
-    case HTTPoison.request(method, upstream_url, body, req_headers, @buffer_opts) do
+    case HTTPoison.request(method, upstream_url, body, upstream_request.headers, @buffer_opts) do
       {:ok, %{headers: resp_headers, status_code: resp_status_code, body: resp_body}} ->
         conn =
           conn

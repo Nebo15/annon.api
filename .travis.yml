@@ -8,6 +8,8 @@ services:
   - postgresql
 addons:
   postgresql: "9.5"
+  hosts:
+    - httpbin.org
 elixir:
   - 1.4.2
 otp_release:
@@ -29,6 +31,9 @@ branches:
 before_install:
   # Expose DB to Docker container
   - sudo /bin/bash ./bin/ci/init-db.sh
+  # Run HTTPBin locally
+  - docker pull citizenstig/httpbin:latest
+  - docker run -d -p 80:8000 --name httpbin citizenstig/httpbin:latest
 before_script:
   # Extract project name and version from mix.exs
   - source ./bin/ci/release/fetch-project-environment.sh
@@ -52,11 +57,11 @@ script:
   # Initialize DB for Docker container
   - source .env; PGPASSWORD="${DB_PASSWORD}"; psql -U ${DB_USER} -w -c"CREATE DATABASE ${DB_NAME}"
   # Run Docker container
-  - sudo ./bin/ci/release/start-container.sh
+  - sudo ./bin/ci/release/start-container.sh -a '--add-host=httpbin.org:$HOST_IP'
   - sleep 5
   - docker ps
   - RUNNING_CONTAINERS=`docker ps | wc -l`;
-    if [ "${RUNNING_CONTAINERS//[[:space:]]/}" == "1" ]; then
+    if [ "${RUNNING_CONTAINERS//[[:space:]]/}" == "2" ]; then
       echo "[E] Container is not started\!";
       docker logs annon_api --details --since 5h;
       exit 1;
@@ -64,6 +69,7 @@ script:
   # Run acceptance tests on Docker container
   - ./test/sanity-test.sh
 after_failure:
+  - docker logs httpbin --details --since 5h
   - docker logs annon_api --details --since 5h
 after_success:
   # Rebuild docs

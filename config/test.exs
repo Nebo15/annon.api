@@ -2,8 +2,7 @@ use Mix.Config
 
 config :annon_api,
   sql_sandbox: {:system, :boolean, "SQL_SANDBOX", true},
-  enable_ssl?: false,
-  dropped_upstream_headers: ["host"]
+  enable_ssl?: false
 
 config :annon_api, Annon.Configuration.Repo,
   database: System.get_env("MIX_TEST_DATABASE") || "annon_api_configs_test",
