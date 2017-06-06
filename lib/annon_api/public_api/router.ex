@@ -25,7 +25,7 @@ defmodule Annon.PublicAPI.Router do
                      json_decoder: Poison,
                      length: 8_388_608,       # Read maximum of 8 MB of JSON data
                      read_length: 1_048_576,  # in 1 Mb chinks
-                     read_timeout: 15_000     # 15 seconds with timeout between chinks
+                     read_timeout: 15_000     # 15 seconds with timeout between chunks
 
   plug Annon.Plugin.PipelinePlug
 

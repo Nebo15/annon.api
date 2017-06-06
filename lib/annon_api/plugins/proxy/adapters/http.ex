@@ -81,13 +81,13 @@ defmodule Annon.Plugins.Proxy.Adapters.HTTP do
         stream_request_body(client_ref, upstream_request, conn)
 
       {:error, reason} ->
-        {:error, reason}  # TODO: return 502
+        {:error, reason}
     end
   end
 
   defp stream_response_body(client_ref, conn) do
     case :hackney.start_response(client_ref) do
-      {:ok, status_code, headers} -> # empty body
+      {:ok, status_code, headers} ->
         conn
         |> put_response_headers(headers)
         |> Conn.send_resp(status_code, "")
@@ -104,8 +104,7 @@ defmodule Annon.Plugins.Proxy.Adapters.HTTP do
   end
 
   defp put_response_headers(conn, headers) do
-    headers
-    |> Enum.reduce(conn, fn
+    Enum.reduce(headers, conn, fn
       {"x-request-id", _header_value}, conn ->
         conn
       {header_key, header_value}, conn ->
