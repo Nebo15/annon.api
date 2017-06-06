@@ -59,7 +59,7 @@ defmodule Annon.Mixfile do
      {:ecto, "~> 2.1"},
      {:poison, "~> 3.1", override: true}, # TODO: Try jiffy for performance boost
      {:joken, "~> 1.4"},
-     {:nex_json_schema, "~> 0.6.0"},
+     {:nex_json_schema, "~> 0.7.0"},
      {:httpoison, ">= 0.0.0"},
      {:eview,  ">= 0.0.0"},
      {:ecto_paging, ">= 0.0.0"},
