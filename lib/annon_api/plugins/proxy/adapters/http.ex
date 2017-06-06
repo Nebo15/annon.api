@@ -4,58 +4,126 @@ defmodule Annon.Plugins.Proxy.Adapters.HTTP do
   """
   alias Annon.Plugin.UpstreamRequest
   alias Plug.Conn
+  require Logger
 
   @drop_headers Application.get_env(:annon_api, :dropped_upstream_headers, [])
 
-  def dispatch(%UpstreamRequest{} = upstream_request, %Conn{method: method} = conn) do
+  @stream_opts [
+    length: :infinity,      # Read whole response
+    read_length: 1_049_600, # in 1 Mb chunks
+    read_timeout: 15_000    # with 15 seconds timeout between chunks
+  ]
+
+  @buffer_opts [
+    connect_timeout: 30_000,
+    recv_timeout: 30_000,
+    timeout: 30_000
+  ]
+
+  def dispatch(%UpstreamRequest{} = upstream_request, %Conn{body_params: %Plug.Conn.Unfetched{}} = conn) do
     upstream_url = UpstreamRequest.to_upstream_url!(upstream_request)
-
-    case Conn.get_req_header(conn, "content-type") do
-      [content_type | _] ->
-        if String.starts_with?(content_type, "multipart/form-data") do
-          do_fileupload_request_cont(upstream_url, upstream_request, conn, method)
-        else
-          do_request_cont(upstream_url, upstream_request, conn, method)
-        end
-      _ ->
-        do_request_cont(upstream_url, upstream_request, conn, method)
-    end
-  end
-
-  defp do_fileupload_request_cont(upstream_url, upstream_request, conn, _method) do
-    req_headers =
-      Enum.reject(upstream_request.headers, fn {k, _} ->
-        String.downcase(k) in ["content-type", "content-disposition", "content-length"] ++ @drop_headers
-      end)
-
-    multipart = Annon.Plugins.Proxy.MultipartForm.reconstruct_using(conn.body_params)
-
-    HTTPoison.post!(upstream_url, {:multipart, multipart}, req_headers)
-  end
-
-  defp do_request_cont(upstream_url, upstream_request, conn, method) do
-    method = String.to_atom(method)
-    body =
-      conn
-      |> Map.get(:body_params)
-      |> Poison.encode!()
-
-    timeout_opts = [connect_timeout: 30_000, recv_timeout: 30_000, timeout: 30_000]
 
     req_headers =
       Enum.reject(upstream_request.headers, fn {k, _} ->
         String.downcase(k) in @drop_headers
       end)
 
-    case HTTPoison.request(method, upstream_url, body, req_headers, timeout_opts) do
-      {:ok, response} ->
-        response
+    method = String.to_atom(conn.method)
+
+    with {:ok, client_ref} <- :hackney.request(method, upstream_url, req_headers, :stream, []),
+         {:ok, client_ref, conn} <- stream_request_body(client_ref, upstream_request, conn),
+         %Conn{} = conn <- stream_response_body(client_ref, conn) do
+      {:ok, conn}
+    else
+      {:error, term} ->
+        Conn.send_resp(conn, 502, Annon.Helpers.Response.build_upstream_error(to_string(term)))
+    end
+  end
+
+  def dispatch(%UpstreamRequest{} = upstream_request, %Conn{method: method} = conn) do
+    upstream_url = UpstreamRequest.to_upstream_url!(upstream_request)
+
+    # TODO: find better solution that dropping this for broken HTTPBin
+    req_headers =
+      Enum.reject(upstream_request.headers, fn {k, _} ->
+        String.downcase(k) in @drop_headers
+      end)
+
+    method = String.to_atom(method)
+
+    body =
+      conn
+      |> Map.get(:body_params)
+      |> Poison.encode!()
+
+    case HTTPoison.request(method, upstream_url, body, req_headers, @buffer_opts) do
+      {:ok, %{headers: resp_headers, status_code: resp_status_code, body: resp_body}} ->
+        conn =
+          conn
+          |> put_response_headers(resp_headers)
+          |> Conn.send_resp(resp_status_code, resp_body)
+
+        {:ok, conn}
       {:error, %{reason: reason}} ->
-        %{
-          status_code: 502,
-          body: Annon.Helpers.Response.build_upstream_error(reason),
-          headers: []
-        }
+        conn = Conn.send_resp(conn, 502, Annon.Helpers.Response.build_upstream_error(reason))
+        {:ok, conn}
+    end
+  end
+
+  defp stream_request_body(client_ref, upstream_request, conn) do
+    case Conn.read_body(conn, @stream_opts) do
+      {:ok, body, conn} ->
+        :hackney.send_body(client_ref, body)
+        {:ok, client_ref, conn}
+
+      {:more, body, conn} ->
+        :hackney.send_body(client_ref, body)
+        stream_request_body(client_ref, upstream_request, conn)
+
+      {:error, reason} ->
+        {:error, reason}  # TODO: return 502
+    end
+  end
+
+  defp stream_response_body(client_ref, conn) do
+    case :hackney.start_response(client_ref) do
+      {:ok, status_code, headers} -> # empty body
+        conn
+        |> put_response_headers(headers)
+        |> Conn.send_resp(status_code, "")
+
+      {:ok, status_code, headers, client_ref} ->
+        conn
+        |> put_response_headers(headers)
+        |> Conn.send_chunked(status_code)
+        |> stream_response_chunk(client_ref)
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  defp put_response_headers(conn, headers) do
+    headers
+    |> Enum.reduce(conn, fn
+      {"x-request-id", _header_value}, conn ->
+        conn
+      {header_key, header_value}, conn ->
+        Conn.put_resp_header(conn, String.downcase(header_key), header_value)
+    end)
+  end
+
+  defp stream_response_chunk(conn, client_ref) do
+    case :hackney.stream_body(client_ref) do
+      {:ok, body} ->
+        {:ok, conn} = Conn.chunk(conn, body)
+        stream_response_chunk(conn, client_ref)
+
+      :done ->
+        conn
+
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 end

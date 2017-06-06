@@ -88,7 +88,7 @@ defmodule Annon.Acceptance.Plugins.LoggerTest do
       assert nil != gateway_latency
       assert nil != upstream_latency
 
-      assert upstream_latency >= 200
+      assert upstream_latency == client_latency - gateway_latency
       assert client_latency == gateway_latency + upstream_latency
     end
 

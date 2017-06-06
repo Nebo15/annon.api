@@ -20,12 +20,12 @@ defmodule Annon.PublicAPI.Router do
   plug Plug.RequestId
   plug EView.Plugs.Idempotency
 
-  plug Plug.Parsers, parsers: [:multipart, :json],
+  plug Plug.Parsers, parsers: [:json],
                      pass: ["*/*"],
                      json_decoder: Poison,
-                     length: 4_294_967_296,
-                     read_length: 2_000_000,
-                     read_timeout: 108_000
+                     length: 8_388_608,       # Read maximum of 8 MB of JSON data
+                     read_length: 1_048_576,  # in 1 Mb chinks
+                     read_timeout: 15_000     # 15 seconds with timeout between chinks
 
   plug Annon.Plugin.PipelinePlug
 
