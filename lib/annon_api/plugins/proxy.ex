@@ -16,22 +16,13 @@ defmodule Annon.Plugins.Proxy do
 
     request_start_time = System.monotonic_time()
 
-    %{
-      headers: resp_headers,
-      body: resp_body,
-      status_code: resp_status_code
-    } = proxy_adapter.dispatch(upstream_request, conn)
+    {:ok, conn} = proxy_adapter.dispatch(upstream_request, conn)
 
     request_end_time = System.monotonic_time()
     upstream_latency = System.convert_time_unit(request_end_time - request_start_time, :native, :micro_seconds)
 
-    resp_headers
-    |> Enum.reduce(conn, fn
-      {"x-request-id", _header_value}, conn -> conn
-      {header_key, header_value}, conn -> Conn.put_resp_header(conn, String.downcase(header_key), header_value)
-    end)
+    conn
     |> Conn.assign(:latencies_upstream, upstream_latency)
-    |> Conn.send_resp(resp_status_code, resp_body)
     |> Conn.halt
   end
 
