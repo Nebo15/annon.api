@@ -30,7 +30,7 @@ defmodule Annon.Acceptance.Plugins.ValidatorTest do
     test "create", %{api_id: api_id} do
       validator = :validator_plugin
       |> build_factory_params(%{settings: %{
-        rules: [%{methods: ["POST", "PUT", "PATCH"], path: ".*", schema: %{}}]
+        rules: [%{methods: ["POST", "PUT", "PATCH"], path: "/.*", schema: %{}}]
       }})
 
       "apis/#{api_id}/plugins/validator"
@@ -92,7 +92,7 @@ defmodule Annon.Acceptance.Plugins.ValidatorTest do
   test "validates versus schema", %{api_id: api_id, api_path: api_path} do
     validator_plugin = :validator_plugin
     |> build_factory_params(%{settings: %{
-      rules: [%{methods: ["POST", "PUT"], path: ".*", schema: @schema}]
+      rules: [%{methods: ["POST", "PUT"], path: "/.*", schema: @schema}]
     }})
 
     "apis/#{api_id}/plugins/validator"
@@ -117,7 +117,7 @@ defmodule Annon.Acceptance.Plugins.ValidatorTest do
   test "works without matching rules", %{api_id: api_id, api_path: api_path} do
     validator_plugin = :validator_plugin
     |> build_factory_params(%{settings: %{
-      rules: [%{methods: ["PATCH"], path: ".*", schema: @schema}]
+      rules: [%{methods: ["PATCH"], path: "/.*", schema: @schema}]
     }})
 
     "apis/#{api_id}/plugins/validator"
@@ -136,8 +136,8 @@ defmodule Annon.Acceptance.Plugins.ValidatorTest do
     validator_plugin = :validator_plugin
     |> build_factory_params(%{settings: %{
       rules: [
-        %{methods: ["POST", "PUT", "PATCH"], path: ".*", schema: %{}}, # Allow request
-        %{methods: ["POST", "PUT", "PATCH"], path: ".*", schema: @schema} # And deny it
+        %{methods: ["POST", "PUT", "PATCH"], path: "/.*", schema: %{}}, # Allow request
+        %{methods: ["POST", "PUT", "PATCH"], path: "/.*", schema: @schema} # And deny it
       ]
     }})
 
@@ -157,8 +157,8 @@ defmodule Annon.Acceptance.Plugins.ValidatorTest do
     validator_plugin = :validator_plugin
     |> build_factory_params(%{settings: %{
       rules: [
-        %{methods: ["POST", "PUT"], path: ".*", schema: @schema},
-        %{methods: ["POST", "PUT"], path: ".*", schema: %{}}
+        %{methods: ["POST", "PUT"], path: "/.*", schema: @schema},
+        %{methods: ["POST", "PUT"], path: "/.*", schema: %{}}
       ]
     }})
 
@@ -179,8 +179,8 @@ defmodule Annon.Acceptance.Plugins.ValidatorTest do
     validator_plugin = :validator_plugin
     |> build_factory_params(%{settings: %{
       rules: [
-        %{methods: ["PUT", "PATCH"], path: ".*", schema: @schema},
-        %{methods: ["POST"], path: ".*", schema: %{}}
+        %{methods: ["PUT", "PATCH"], path: "/.*", schema: @schema},
+        %{methods: ["POST"], path: "/.*", schema: %{}}
       ]
     }})
 
@@ -200,7 +200,7 @@ defmodule Annon.Acceptance.Plugins.ValidatorTest do
       validator_plugin = :validator_plugin
       |> build_factory_params(%{settings: %{
         rules: [
-          %{methods: ["POST"], path: "^/foo$", schema: @schema}
+          %{methods: ["POST"], path: "/foo$", schema: @schema}
         ]
       }})
 

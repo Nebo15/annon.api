@@ -5,7 +5,7 @@ defmodule Annon.Validators.SettingsTest do
   describe "Validator plugin validation" do
     test "Valid settings" do
       rules = [
-        %{"methods" => ["POST", "PUT"], "path" => "*", "schema" => %{"some_field" => "some_value"}},
+        %{"methods" => ["POST", "PUT"], "path" => "/*", "schema" => %{"some_field" => "some_value"}},
         %{"methods" => ["PUT"], "path" => "/profiles/me", "schema" => %{"some_field" => "some_value"}},
         %{"methods" => ["POST", "PUT"], "path" => "/profiles/me", "schema" => %{"some_field" => "some_value"}},
         %{"methods" => ["PATCH"], "path" => "/profiles/me", "schema" => %{"some_field" => "some_value"}}
@@ -20,7 +20,7 @@ defmodule Annon.Validators.SettingsTest do
 
     test "Invalid settings" do
       rules = [
-        %{"methods" => [], "path" => ".*", "schema" => %{"some_field" => "some_value"}}
+        %{"methods" => [], "path" => "/.*", "schema" => %{"some_field" => "some_value"}}
       ]
 
       changeset =
