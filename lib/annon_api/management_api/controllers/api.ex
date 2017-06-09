@@ -46,7 +46,6 @@ defmodule Annon.ManagementAPI.Controllers.API do
     end
   end
 
-  # TODO: Delete plugins
   delete "/:api_id" do
     case ConfigurationAPI.get_api(api_id) do
       {:ok, api} ->

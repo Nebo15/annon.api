@@ -22,7 +22,7 @@ defmodule Annon.Configuration.Schemas.API do
       field :methods, {:array, :string}
     end
 
-    has_many :plugins, Annon.Configuration.Schemas.Plugin
+    has_many :plugins, Annon.Configuration.Schemas.Plugin, on_delete: :delete_all
 
     timestamps(type: :utc_datetime)
   end
