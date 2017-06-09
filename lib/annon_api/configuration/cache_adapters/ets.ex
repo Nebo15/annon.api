@@ -63,12 +63,7 @@ defmodule Annon.Configuration.CacheAdapters.ETS do
   end
 
   defp compile_host_regex(host) do
-    host_pattern =
-        host
-        |> Regex.escape()
-        |> String.replace("%", ".*")
-        |> String.replace("_", ".{1}") # TODO: Paths like /my_path/ will match /myXpath/ which is BAD
-
+    host_pattern = prepare_regex(host)
     Regex.compile!("^#{host_pattern}$")
   end
 
@@ -79,12 +74,7 @@ defmodule Annon.Configuration.CacheAdapters.ETS do
   end
 
   defp compile_path_regex(path) do
-    path_pattern =
-      path
-      |> Regex.escape()
-      |> String.replace("%", ".*")
-      |> String.replace("_", ".{1}")
-
+    path_pattern = prepare_regex(path)
     Regex.compile!("^#{path_pattern}")
   end
 
@@ -92,5 +82,12 @@ defmodule Annon.Configuration.CacheAdapters.ETS do
     Enum.filter(apis, fn({_, _, _, path_regex}) ->
       Regex.match?(path_regex, path)
     end)
+  end
+
+  defp prepare_regex(string) do
+    string
+    |> Regex.escape()
+    |> String.replace("%", ".*")
+    |> String.replace("_", ".{1}") # TODO: Paths like /my_path/ will match /myXpath/ which is BAD
   end
 end
