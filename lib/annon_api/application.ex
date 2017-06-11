@@ -47,6 +47,7 @@ defmodule Annon do
   end
 
   # Configures Logger level via LOG_LEVEL environment variable.
+  @doc false
   def configure_log_level(nil),
     do: :ok
   def configure_log_level(level) when level in ["debug", "info", "warn", "error"],
