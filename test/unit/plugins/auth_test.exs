@@ -243,5 +243,33 @@ defmodule Annon.Plugins.AuthTest do
         scope: "api:access"
       } = consumer
     end
+
+    test "mithril oauth strategy is supported", %{conn: conn, mock_url: mock_url} do
+      access_token = "random_token"
+
+      mock_url = "#{mock_url}auth/mithril/tokens/" <> access_token
+
+      settings = %{
+        "strategy" => "oauth",
+        "url_template" => mock_url
+      }
+
+      assert %{assigns: %{consumer: consumer}} = conn =
+        conn
+        |> put_req_header("authorization", "Bearer " <> access_token)
+        |> Auth.execute(nil, settings)
+
+      assert [
+        {"x-consumer-id", "bob"},
+        {"x-consumer-scope", "api:access"},
+        {"x-consumer-metadata", ~s/{"scope":"api:access"}/}
+      ] == conn.assigns.upstream_request.headers
+
+      assert %Consumer{
+        id: "bob",
+        scope: "api:access",
+        metadata: %{"scope" => "api:access"}
+      } = consumer
+    end
   end
 end
