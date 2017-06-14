@@ -72,17 +72,14 @@ defmodule Annon.Requests.LogTest do
       assert {[^request5, ^request4], _paging} =
         Log.list_requests(%{}, %Paging{limit: 2})
 
-      # TODO: https://github.com/Nebo15/ecto_paging/issues/14
       # assert {[^request3, ^request2], _paging} =
       #   Log.list_requests(%{}, %Paging{limit: 2, cursors: %Cursors{starting_after: request4.id}})
       # assert {[^request3, ^request2], _paging} =
       #   Log.list_requests(%{}, %Paging{limit: 2, cursors: %Cursors{ending_before: request1.id}})
     end
 
-    # TODO: https://github.com/Nebo15/ecto_paging/issues/14
-    @tag :pending
     test "paginates with filters" do
-      RequestsFactory.insert(:request,
+      request1 = RequestsFactory.insert(:request,
         api: RequestsFactory.build(:api, id: "my_api_1"), status_code: 202)
       RequestsFactory.insert(:request,
         api: RequestsFactory.build(:api, id: "my_api_1"), status_code: 201)
@@ -96,10 +93,10 @@ defmodule Annon.Requests.LogTest do
         RequestsFactory.insert(:request,
           api: RequestsFactory.build(:api, id: "my_api_1"), idempotency_key: "my_idempotency_key_one")
 
-      assert {[^request4, ^request3], _paging} =
+      assert {[^request4, ^request5], _paging} =
         Log.list_requests(
           %{"api_ids" => "my_api_1"},
-          %Paging{limit: 2, cursors: %Cursors{ending_before: request5.id}}
+          %Paging{limit: 2, cursors: %Cursors{ending_before: request3.id}}
         )
 
       assert {[], _paging} =
@@ -114,16 +111,10 @@ defmodule Annon.Requests.LogTest do
           %Paging{limit: 2, cursors: %Cursors{starting_after: request4.id}}
         )
 
-      assert {[^request4, ^request3], _paging} =
-        Log.list_requests(
-          %{"api_ids" => "my_api_1"},
-          %Paging{limit: 2, cursors: %Cursors{ending_before: request5.id}}
-        )
-
       assert {[^request3], _paging} =
         Log.list_requests(
           %{"status_codes" => "202"},
-          %Paging{limit: 1, cursors: %Cursors{ending_before: request5.id}}
+          %Paging{limit: 1, cursors: %Cursors{ending_before: request1.id}}
         )
     end
   end

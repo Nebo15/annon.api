@@ -132,17 +132,9 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
       assert length(resp) == 2
     end
 
-    # TODO: https://github.com/Nebo15/ecto_paging/issues/14
-    @tag :pending
     test "paginates results", %{conn: conn} do
       # Ending Before
       apis = ConfigurationFactory.insert_list(10, :api)
-
-      # Enum.reduce(apis, 0, fn %{id: id, name: name}, i ->
-      #   IO.inspect i
-      #   IO.inspect [id: id, name: name]
-      #   i + 1
-      # end)
 
       pagination_query = URI.encode_query(%{
         "limit" => 2,
@@ -154,7 +146,6 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
         |> get(apis_path() <> "?" <> pagination_query)
         |> json_response(200)
         |> Map.get("data")
-        |> IO.inspect
 
       assert Enum.at(resp, 0)["id"] == Enum.at(apis, 7).id
       assert Enum.at(resp, 1)["id"] == Enum.at(apis, 8).id
@@ -162,7 +153,7 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
 
       # Without Limit
       pagination_query = URI.encode_query(%{
-        "ending_before" => Enum.at(apis, 0).id
+        "ending_before" => Enum.at(apis, 9).id
       })
 
       resp =

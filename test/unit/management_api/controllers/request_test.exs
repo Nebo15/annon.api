@@ -256,7 +256,6 @@ defmodule Annon.ManagementAPI.Controllers.RequestTest do
       assert length(resp) == 2
     end
 
-    # TODO: https://github.com/Nebo15/ecto_paging/issues/14
     @tag :pending
     test "paginates results", %{conn: conn} do
       # Ending Before

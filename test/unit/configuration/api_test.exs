@@ -57,13 +57,10 @@ defmodule Annon.Configuration.APITest do
 
       assert {[^api2, ^api3], _paging} =
         API.list_apis(%{}, %Paging{limit: 2, cursors: %Cursors{starting_after: api1.id}})
-      # TODO: https://github.com/Nebo15/ecto_paging/issues/14
-      # assert {[^api3, ^api4], _paging} =
-      #   API.list_apis(%{}, %Paging{limit: 2, cursors: %Cursors{ending_before: api5.id}})
+      assert {[^api3, ^api4], _paging} =
+        API.list_apis(%{}, %Paging{limit: 2, cursors: %Cursors{ending_before: api5.id}})
     end
 
-    # TODO: https://github.com/Nebo15/ecto_paging/issues/14
-    @tag :pending
     test "paginates with filters" do
       api1 = ConfigurationFactory.insert(:api, name: "one")
       api2 = ConfigurationFactory.insert(:api, name: "one two")
@@ -78,7 +75,7 @@ defmodule Annon.Configuration.APITest do
 
       assert {[^api2, ^api3], _paging} =
         API.list_apis(
-          %{"name" => "my_api_1"},
+          %{"name" => "one"},
           %Paging{limit: 2, cursors: %Cursors{ending_before: api4.id}}
         )
     end
