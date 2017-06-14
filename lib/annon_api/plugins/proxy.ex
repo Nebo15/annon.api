@@ -15,7 +15,9 @@ defmodule Annon.Plugins.Proxy do
     upstream_request = build_upstream_request(conn, api, settings)
     proxy_adapter = Annon.Plugins.Proxy.Adapters.HTTP
 
-    Logger.debug("Upstream request is sent to upstream: #{inspect upstream_request}. Settings: #{inspect settings}")
+    Logger.debug(fn ->
+      "Upstream request is sent to upstream: #{inspect upstream_request}. Settings: #{inspect settings}"
+    end)
 
     request_start_time = System.monotonic_time()
 
