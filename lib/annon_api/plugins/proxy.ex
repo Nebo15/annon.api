@@ -6,6 +6,7 @@ defmodule Annon.Plugins.Proxy do
   use Annon.Plugin, plugin_name: :proxy
   import Annon.Helpers.IP
   alias Annon.Plugin.UpstreamRequest
+  require Logger
 
   defdelegate validate_settings(changeset), to: Annon.Plugins.Proxy.SettingsValidator
   defdelegate settings_validation_schema(), to: Annon.Plugins.Proxy.SettingsValidator
@@ -13,6 +14,8 @@ defmodule Annon.Plugins.Proxy do
   def execute(%Conn{} = conn, %{api: api}, settings) do
     upstream_request = build_upstream_request(conn, api, settings)
     proxy_adapter = Annon.Plugins.Proxy.Adapters.HTTP
+
+    Logger.debug("Upstream request is sent to upstream: #{inspect upstream_request}. Settings: #{inspect settings}")
 
     request_start_time = System.monotonic_time()
 
