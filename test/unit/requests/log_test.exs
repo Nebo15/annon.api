@@ -72,10 +72,10 @@ defmodule Annon.Requests.LogTest do
       assert {[^request5, ^request4], _paging} =
         Log.list_requests(%{}, %Paging{limit: 2})
 
-      # assert {[^request3, ^request2], _paging} =
-      #   Log.list_requests(%{}, %Paging{limit: 2, cursors: %Cursors{starting_after: request4.id}})
-      # assert {[^request3, ^request2], _paging} =
-      #   Log.list_requests(%{}, %Paging{limit: 2, cursors: %Cursors{ending_before: request1.id}})
+      assert {[^request3, ^request2], _paging} =
+        Log.list_requests(%{}, %Paging{limit: 2, cursors: %Cursors{starting_after: request4.id}})
+      assert {[^request3, ^request2], _paging} =
+        Log.list_requests(%{}, %Paging{limit: 2, cursors: %Cursors{ending_before: request1.id}})
     end
 
     test "paginates with filters" do
