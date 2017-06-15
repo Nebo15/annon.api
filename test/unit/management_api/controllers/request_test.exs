@@ -256,7 +256,6 @@ defmodule Annon.ManagementAPI.Controllers.RequestTest do
       assert length(resp) == 2
     end
 
-    @tag :pending
     test "paginates results", %{conn: conn} do
       # Ending Before
       requests = RequestsFactory.insert_list(10, :request)
@@ -272,8 +271,8 @@ defmodule Annon.ManagementAPI.Controllers.RequestTest do
         |> json_response(200)
         |> Map.get("data")
 
-      assert Enum.at(resp, 0)["id"] == Enum.at(requests, 1).id
-      assert Enum.at(resp, 1)["id"] == Enum.at(requests, 2).id
+      assert Enum.at(resp, 0)["id"] == Enum.at(requests, 2).id
+      assert Enum.at(resp, 1)["id"] == Enum.at(requests, 1).id
       assert length(resp) == 2
 
       # Without Limit

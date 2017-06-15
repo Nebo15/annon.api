@@ -72,10 +72,10 @@ defmodule Annon.Requests.LogTest do
       assert {[^request5, ^request4], _paging} =
         Log.list_requests(%{}, %Paging{limit: 2})
 
-      # assert {[^request3, ^request2], _paging} =
-      #   Log.list_requests(%{}, %Paging{limit: 2, cursors: %Cursors{starting_after: request4.id}})
-      # assert {[^request3, ^request2], _paging} =
-      #   Log.list_requests(%{}, %Paging{limit: 2, cursors: %Cursors{ending_before: request1.id}})
+      assert {[^request3, ^request2], _paging} =
+        Log.list_requests(%{}, %Paging{limit: 2, cursors: %Cursors{starting_after: request4.id}})
+      assert {[^request3, ^request2], _paging} =
+        Log.list_requests(%{}, %Paging{limit: 2, cursors: %Cursors{ending_before: request1.id}})
     end
 
     test "paginates with filters" do
@@ -93,22 +93,16 @@ defmodule Annon.Requests.LogTest do
         RequestsFactory.insert(:request,
           api: RequestsFactory.build(:api, id: "my_api_1"), idempotency_key: "my_idempotency_key_one")
 
-      assert {[^request4, ^request5], _paging} =
+      assert {[^request5, ^request4], _paging} =
         Log.list_requests(
           %{"api_ids" => "my_api_1"},
           %Paging{limit: 2, cursors: %Cursors{ending_before: request3.id}}
         )
 
-      assert {[], _paging} =
-        Log.list_requests(
-          %{"idempotency_key" => "my_idempotency_key_one"},
-          %Paging{limit: 2, cursors: %Cursors{ending_before: request5.id}}
-        )
-
       assert {[^request5], _paging} =
         Log.list_requests(
-          %{"title" => "five"},
-          %Paging{limit: 2, cursors: %Cursors{starting_after: request4.id}}
+          %{"idempotency_key" => "my_idempotency_key_one"},
+          %Paging{limit: 2, cursors: %Cursors{ending_before: request1.id}}
         )
 
       assert {[^request3], _paging} =
