@@ -7,7 +7,7 @@ defmodule Annon.Configuration.Repo do
   """
 
   use Ecto.Repo, otp_app: :annon_api
-  use Ecto.Pagging.Repo
+  use Ecto.Paging.Repo
 
   @doc """
   Dynamically loads the repository configuration from the environment variables.
