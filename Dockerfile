@@ -49,6 +49,8 @@ RUN \
 
 RUN epmd -daemon
 
+RUN apk del --no-cache make
+
 # Change user to "default"
 USER default
 
