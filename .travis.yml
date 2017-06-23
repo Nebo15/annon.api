@@ -11,9 +11,9 @@ addons:
   hosts:
     - httpbin.org
 elixir:
-  - 1.4.4
+  - 1.4.5
 otp_release:
-  - 19.3
+  - 20.0
 env:
   global:
     - MIX_ENV=test
