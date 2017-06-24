@@ -25,9 +25,6 @@ defmodule Annon.Plugins.CORS.SettingsValidator do
         "credentials" => %{
           "type" => "boolean"
         },
-        "credentials" => %{
-          "type" => "number"
-        },
         "headers" => %{
           "type" => "array"
         },
