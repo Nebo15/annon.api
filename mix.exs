@@ -64,7 +64,7 @@ defmodule Annon.Mixfile do
      {:eview,  ">= 0.0.0"},
      {:ecto_paging, ">= 0.0.0"},
      {:phoenix_ecto, ">= 0.0.0"},
-     {:logger_json, "~> 0.4.0"},
+     {:logger_json, "~> 0.5.0"},
      {:cors_plug, "~> 1.1"},
      {:dogstat, "~> 0.1.0"},
      {:ex_machina, ">= 1.0.0", only: [:dev, :test]},
