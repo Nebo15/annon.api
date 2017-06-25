@@ -8,7 +8,9 @@ ENV TERM=xterm \
     MIX_ENV=prod \
     APP_NAME=annon_api \
     GATEWAY_PUBLIC_PORT=4000 \
-    GATEWAY_MANAGEMENT_PORT=4001
+    GATEWAY_PUBLIC_HTTPS_PORT=4000 \
+    GATEWAY_MANAGEMENT_PORT=4001 \
+    GATEWAY_PRIVATE_PORT=4443
 
 WORKDIR ${HOME}
 
@@ -47,8 +49,6 @@ RUN \
     chmod -R 777 /opt/$APP_NAME && \
     chmod -R 777 /var/log
 
-RUN epmd -daemon
-
 RUN apk del --no-cache make
 
 # Change user to "default"
@@ -58,7 +58,7 @@ USER default
 ENV REPLACE_OS_VARS=true
 
 # Exposes this port from the docker container to the host machine
-EXPOSE ${GATEWAY_PUBLIC_PORT} ${GATEWAY_MANAGEMENT_PORT}
+EXPOSE ${GATEWAY_PUBLIC_PORT} ${GATEWAY_PUBLIC_HTTPS_PORT} ${GATEWAY_MANAGEMENT_PORT} ${GATEWAY_PRIVATE_PORT}
 
 # Change workdir to a released directory
 WORKDIR /opt
