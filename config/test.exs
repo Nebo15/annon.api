@@ -1,18 +1,20 @@
 use Mix.Config
 
+# Configure autoclustering
+config :skycluster,
+  strategy: {:system, :module, "SKYCLUSTER_STRATEGY", Cluster.Strategy.Epmd}
+
 config :annon_api,
-  sql_sandbox: {:system, :boolean, "SQL_SANDBOX", true},
+  sql_sandbox: true,
   enable_ssl?: false
 
 config :annon_api, Annon.Configuration.Repo,
-  database: System.get_env("MIX_TEST_DATABASE") || "annon_api_configs_test",
-  pool: Ecto.Adapters.SQL.Sandbox,
-  pool_size: 10
+  database: "annon_api_configs_test",
+  pool: Ecto.Adapters.SQL.Sandbox
 
 config :annon_api, Annon.Requests.Repo,
-  database: System.get_env("MIX_LOGGER_TEST_DATABASE") || "annon_api_logger_test",
-  pool: Ecto.Adapters.SQL.Sandbox,
-  pool_size: 10
+  database: "annon_api_logger_test",
+  pool: Ecto.Adapters.SQL.Sandbox
 
 config :annon_api, :metrics_collector,
   sink: [],
@@ -64,7 +66,9 @@ config :annon_api, :management_http,
 config :annon_api, :plugin_pipeline,
   default_features: [:log_consistency]
 
-config :logger, level: :debug
+config :logger,
+  backends: [:console],
+  level: :debug
 
 config :ex_unit, capture_log: true
 
