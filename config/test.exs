@@ -64,6 +64,7 @@ config :annon_api, :management_http,
   port: {:system, :integer, "GATEWAY_MANAGEMENT_PORT", 5001}
 
 config :annon_api, :plugin_pipeline,
+  # TODO: Improve tests to run without forced log consistency
   default_features: [:log_consistency]
 
 config :logger,
