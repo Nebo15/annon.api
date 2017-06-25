@@ -4,7 +4,7 @@ config :annon_api,
   ecto_repos: [Annon.Configuration.Repo, Annon.Requests.Repo],
   sql_sandbox: {:system, :boolean, "SQL_SANDBOX", false},
   protected_headers: {:system, :list, "PROTECTED_HEADERS", [
-    "x-consumer-id", "x-consumer-scope", "x-consumer-token", "x-consumer-token-id"
+    "x-consumer-id", "x-consumer-scope", "x-consumer-token", "x-consumer-token-id", "x-consumer-metadata"
   ]}
 
 config :annon_api, Annon.Configuration.Repo,

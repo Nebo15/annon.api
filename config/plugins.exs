@@ -1,4 +1,5 @@
 use Mix.Config
+# This file configures Annon's plugin system
 
 config :annon_api, :plugins, [
   {:ssl, deps: [], features: [:modify_conn], module: Annon.Plugins.SSL, system?: true},
