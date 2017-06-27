@@ -33,6 +33,3 @@
 
 # Set min and max ports for EPMD
 -kernel inet_dist_listen_min ${LISTEN_DIST_MIN} inet_dist_listen_max ${LISTEN_DIST_MAX}
-
-
-
