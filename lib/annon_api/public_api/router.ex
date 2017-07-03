@@ -7,7 +7,7 @@ defmodule Annon.PublicAPI.Router do
   """
   use Plug.Router
 
-  if Confex.get(:annon_api, :sql_sandbox) do
+  if Confex.get_env(:annon_api, :sql_sandbox) do
     plug Annon.Requests.Sandbox
     plug Phoenix.Ecto.SQL.Sandbox
   end

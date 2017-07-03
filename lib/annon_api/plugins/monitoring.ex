@@ -25,7 +25,7 @@ defmodule Annon.Plugins.Monitoring do
       :annon_api
       |> Application.get_env(:metrics_collector)
       |> Keyword.get(:sample_rate, 1)
-      |> Confex.process_env()
+      |> Confex.Resolver.resolve!()
 
     collector_opts = [
       tags: tags(conn, api),

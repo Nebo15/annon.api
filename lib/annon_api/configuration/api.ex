@@ -212,7 +212,7 @@ defmodule Annon.Configuration.API do
   def request_changeset(%APISchema.Request{} = request, attrs) do
     management_api_port =
       :annon_api
-      |> Confex.get_map(:management_http)
+      |> Confex.fetch_env!(:management_http)
       |> Keyword.fetch!(:port)
 
     request

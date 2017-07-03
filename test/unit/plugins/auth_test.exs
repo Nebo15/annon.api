@@ -60,7 +60,7 @@ defmodule Annon.Plugins.AuthTest do
         |> put_req_header("accept", "application/json")
         |> put_req_header("content-type", "application/json")
 
-      mock_conf = Confex.get_map(:annon_api, :acceptance)[:mock]
+      mock_conf = Confex.get_env(:annon_api, :acceptance)[:mock]
       mock_url = "http://#{mock_conf[:host]}:#{mock_conf[:port]}/"
 
       %{

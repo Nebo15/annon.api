@@ -71,7 +71,7 @@ defmodule Annon.Plugins.Proxy do
   end
 
   defp put_connection_headers(upstream_request, %Conn{req_headers: headers}) do
-    protected_headers = Confex.get(:annon_api, :protected_headers)
+    protected_headers = Confex.get_env(:annon_api, :protected_headers)
 
     Enum.reduce(headers, upstream_request, fn {header, value}, upstream_request ->
       if header in protected_headers,

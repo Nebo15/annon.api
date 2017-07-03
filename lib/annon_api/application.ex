@@ -28,7 +28,7 @@ defmodule Annon do
   end
 
   def management_endpoint_spec do
-    config = Confex.get_map(:annon_api, :management_http)
+    config = Confex.get_env(:annon_api, :management_http)
     Plug.Adapters.Cowboy.child_spec(:http, Annon.ManagementAPI.Router, [], config)
   end
 
@@ -37,13 +37,13 @@ defmodule Annon do
   end
 
   defp metrics_collector_opts do
-    Confex.get_map(:annon_api, :metrics_collector)
+    Confex.get_env(:annon_api, :metrics_collector)
   end
 
   # Loads configuration in `:on_init` callbacks and replaces `{:system, ..}` tuples via Confex
   @doc false
   def load_from_system_env(config) do
-    {:ok, Confex.process_env(config)}
+    {:ok, _} = Confex.Resolver.resolve(config)
   end
 
   # Configures Logger level via LOG_LEVEL environment variable.

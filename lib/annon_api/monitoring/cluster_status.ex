@@ -46,7 +46,7 @@ defmodule Annon.Monitoring.ClusterStatus do
   end
 
   defp get_cluster_strategy do
-    case Confex.get(:skycluster, :strategy) do
+    case Confex.get_env(:skycluster, :strategy) do
       Cluster.Strategy.Epmd -> "epmd"
       Cluster.Strategy.Kubernetes -> "kubernetes"
       Cluster.Strategy.Gossip -> "gossip"

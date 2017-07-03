@@ -24,7 +24,7 @@ defmodule Annon.AutoClustering do
   def init(_opts) do
     Cluster.Events.subscribe(self())
 
-    case Confex.get(:skycluster, :strategy) do
+    case Confex.get_env(:skycluster, :strategy) do
       Cluster.Strategy.Epmd ->
         :net_adm.world_list([:'127.0.0.1'])
       Cluster.Strategy.Kubernetes = s ->

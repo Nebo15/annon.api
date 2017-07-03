@@ -11,8 +11,8 @@ defmodule Annon.Plugins.SSL do
     do: %{}
 
   def prepare(%Request{} = request) do
-    if Confex.get(:annon_api, :enable_ssl?) do
-      settings = Confex.get_map(:annon_api, :ssl)
+    if Confex.get_env(:annon_api, :enable_ssl?) do
+      settings = Confex.get_env(:annon_api, :ssl)
       %{request | plugins: Enum.map(request.plugins, fn
         %{name: :ssl} = plugin -> Map.put(plugin, :settings, settings)
         plugin -> plugin

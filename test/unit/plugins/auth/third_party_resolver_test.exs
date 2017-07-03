@@ -5,7 +5,7 @@ defmodule Annon.Plugins.Auth.ThirdPartyResolverTest do
   alias Annon.Plugins.Auth.ThirdPartyResolver
 
   setup do
-    mock_conf = Confex.get_map(:annon_api, :acceptance)[:mock]
+    mock_conf = Confex.get_env(:annon_api, :acceptance)[:mock]
     mock_url = "http://#{mock_conf[:host]}:#{mock_conf[:port]}/"
 
     {:ok, %{mock_url: mock_url}}

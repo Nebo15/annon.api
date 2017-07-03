@@ -6,7 +6,7 @@ defmodule Annon.Plugins.Auth.Strategies.OAuthTest do
 
   describe "fetch_consumer/3" do
     setup do
-      mock_conf = Confex.get_map(:annon_api, :acceptance)[:mock]
+      mock_conf = Confex.get_env(:annon_api, :acceptance)[:mock]
       mock_url = "http://#{mock_conf[:host]}:#{mock_conf[:port]}/"
 
       {:ok, %{

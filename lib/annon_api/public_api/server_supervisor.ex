@@ -15,7 +15,7 @@ defmodule Annon.PublicAPI.ServerSupervisor do
     ]
 
     children =
-      if Confex.get(:annon_api, :enable_ssl?, false),
+      if Confex.get_env(:annon_api, :enable_ssl?, false),
         do: [http_endpoint_spec(Annon.PublicAPI.Router, :https, :public_https)] ++ children,
       else: children
 
@@ -26,7 +26,7 @@ defmodule Annon.PublicAPI.ServerSupervisor do
   defp http_endpoint_spec(router, scheme, endpoint) do
     config =
       :annon_api
-      |> Confex.get_map(endpoint)
+      |> Confex.get_env(endpoint)
       |> Keyword.put_new(:otp_app, :annon_api)
       |> Keyword.put(:ref, build_ref(router, endpoint))
 

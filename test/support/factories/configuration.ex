@@ -43,7 +43,7 @@ defmodule Annon.Factories.Configuration do
   end
 
   def auth_plugin_with_oauth_factory do
-    mock_conf = Confex.get_map(:annon_api, :acceptance)[:mock]
+    mock_conf = Confex.get_env(:annon_api, :acceptance)[:mock]
     mock_url = "http://#{mock_conf[:host]}:#{mock_conf[:port]}/"
 
     %Annon.Configuration.Schemas.Plugin{

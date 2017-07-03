@@ -14,7 +14,7 @@ defmodule Annon.AcceptanceCase do
       import Annon.AcceptanceCase
 
       # Load configuration from environment that allows to test Docker containers that run on another port
-      @config Confex.get_map(:annon_api, :acceptance)
+      @config Confex.get_env(:annon_api, :acceptance)
 
       def process_request_body(body) do
         body

@@ -14,7 +14,10 @@ defmodule Annon.Configuration.Repo do
   """
   def init(_, config) do
     url = System.get_env("CONFIGURATION_DATABASE_URL")
-    config = if url, do: Keyword.merge(config, Ecto.Repo.Supervisor.parse_url(url)), else: Confex.process_env(config)
+    config =
+      if url,
+        do: Keyword.merge(config, Ecto.Repo.Supervisor.parse_url(url)),
+      else: Confex.Resolver.resolve!(config)
 
     unless config[:database] do
       raise "Set DB_NAME environment variable!"
