@@ -37,8 +37,8 @@ defmodule Annon.Acceptance.Smoke.AclTest do
     acl_plugin = :acl_plugin
     |> build_factory_params(%{settings: %{
       rules: [
-        %{methods: ["GET"], path: "^.*", scopes: ["httpbin:read"]},
-        %{methods: ["PUT", "POST", "DELETE"], path: "^.*", scopes: ["httpbin:write"]},
+        %{methods: ["GET"], path: ".*", scopes: ["httpbin:read"]},
+        %{methods: ["PUT", "POST", "DELETE"], path: ".*", scopes: ["httpbin:write"]},
       ]
     }})
 

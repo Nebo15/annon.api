@@ -37,7 +37,7 @@ defmodule Annon.Acceptance.Plugins.ACLTest do
     test "Auth0 Flow is supported", %{api_id: api_id, api_path: api_path, secret: secret} do
       acl_plugin = build_factory_params(:acl_plugin, %{settings: %{
         rules: [
-          %{methods: ["GET"], path: "^.*", scopes: ["api:access"]},
+          %{methods: ["GET"], path: ".*", scopes: ["api:access"]},
         ]
       }})
 
@@ -66,7 +66,7 @@ defmodule Annon.Acceptance.Plugins.ACLTest do
     test "Auth0 Flow is supported when scopes is string", %{api_id: api_id, api_path: api_path, secret: secret} do
       acl_plugin = build_factory_params(:acl_plugin, %{settings: %{
         rules: [
-          %{methods: ["GET"], path: "^.*", scopes: ["api:access"]},
+          %{methods: ["GET"], path: ".*", scopes: ["api:access"]},
         ]
       }})
 
@@ -95,7 +95,7 @@ defmodule Annon.Acceptance.Plugins.ACLTest do
     test "token MUST have scopes", %{api_id: api_id, api_path: api_path, secret: secret} do
       acl_plugin = build_factory_params(:acl_plugin, %{settings: %{
         rules: [
-          %{methods: ["GET"], path: "^.*", scopes: ["api:access"]},
+          %{methods: ["GET"], path: ".*", scopes: ["api:access"]},
         ]
       }})
 

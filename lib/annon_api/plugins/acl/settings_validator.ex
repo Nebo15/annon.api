@@ -32,6 +32,7 @@ defmodule Annon.Plugins.ACL.SettingsValidator do
               },
               "path" => %{
                 "type" => "string",
+                "pattern" => "^(?!\\^).*",
                 "minLength" => 1
               },
               "scopes" => %{
