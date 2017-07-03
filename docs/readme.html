@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.16.1">
-    <title>Annon – annon_api v0.11.3</title>
+    <meta name="generator" content="ExDoc v0.16.2">
+    <title>Annon – annon_api v0.11.5</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items-8eb823b159.js"></script>
@@ -27,7 +27,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.11.3
+        v0.11.5
       </h2>
     </div>
     
@@ -103,7 +103,11 @@
   General Features
 </h2>
 
-<h3>Caching and Performance</h3>
+<h3 id="caching-and-performance" class="section-heading">
+  <a href="#caching-and-performance" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Caching and Performance
+</h3>
+
 <p>For performance issues Annon has build-in cache manager, it will load data from DB only once, all further work will be based on this cached data.</p>
 <p>Whenever a single node receives request that changes cached data, it’s responsible to notify all other nodes in cluster about change, and they should reload configurations from DB.</p>
 <p>Whenever new node joins to a cluster, all other nodes should drop their cache, to resolve consistency issues.</p>
@@ -117,14 +121,26 @@ It support different discovery strategies:</p>
 <li><code class="inline">epmd</code> - using standart Erlang Port Mapper Daemon.
 </li>
 </ul>
-<h3>Request ID’s</h3>
+<h3 id="request-id-s" class="section-heading">
+  <a href="#request-id-s" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Request ID’s
+</h3>
+
 <p>When receiving request gateway will generate unique <code class="inline">request_id</code>. It is used to log request and this request is sent to all upstream, so whole back-ends that is affected by a request will create logs with same request id’s.</p>
 <p>Optionally, you can send <code class="inline">X-Request-ID</code> header with your own request id, but you need to make sure that its length not less than 20 characters. Also, if should be unique, or you will receive error response.</p>
-<h3>Request Logger</h3>
+<h3 id="request-logger" class="section-heading">
+  <a href="#request-logger" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Request Logger
+</h3>
+
 <p>Annon stores all requests and responses by their unique Request ID’s in a PostgreSQL database. You use this information to query requests and get base analytics via <a href="#reference/requests/collection/get-all-requests">Requests API</a>.</p>
 <p>API consumers may provide a custom request ID by sending <code class="inline">X-Request-ID: &lt;request_id&gt;</code> header. Thus, your Front-End and upstream back-ends can log information with a single unique ID.</p>
 <p>Also, idempotency plug is relying on this logs to provide idempotency guarantees for requests with same <code class="inline">X-Idempotency-Key: &lt;idempotency_key&gt;</code> headers.</p>
-<h3>Monitoring</h3>
+<h3 id="monitoring" class="section-heading">
+  <a href="#monitoring" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Monitoring
+</h3>
+
 <p>To monitor services status we will use DogStatsD integration, that will receive following metrics:</p>
 <ul>
 <li><code class="inline">request.count</code> (counter) - <a href="#reference/apis">API</a> hit rate.
@@ -138,9 +154,17 @@ It support different discovery strategies:</p>
 </ul>
 <p>All metrics have tags: <code class="inline">http.host</code>, <code class="inline">http.port</code>, <code class="inline">http.method</code>, <code class="inline">api.name</code> and <code class="inline">api.id</code> (if matches any), <code class="inline">request.id</code>. This allows to set different aggregated views on counter data.</p>
 <p>We recommend you to try <a href="https://www.datadoghq.com/">DataDog</a> for collecting and displaying performance metrics. But this is not a hard constraint, instead you can use any StatsD collector.</p>
-<h3>Requests Idempotency</h3>
+<h3 id="requests-idempotency" class="section-heading">
+  <a href="#requests-idempotency" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Requests Idempotency
+</h3>
+
 <p>Annon guarantees that replayed requests with same <code class="inline">X-Idempotency-Key: &lt;key&gt;</code> and same request will get permanent response. This is useful in a financial application, where you need good protection from duplicate user actions.</p>
-<h3>Requests Tracing</h3>
+<h3 id="requests-tracing" class="section-heading">
+  <a href="#requests-tracing" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Requests Tracing
+</h3>
+
 <p>Annon supports <a href="http://opentracing.io/">OpenTracing</a> in Erlang via <a href="https://github.com/Bluehouse-Technology/otter">Otter</a> library. This means that by implementing OpenTracing API in other services you can trace complete request impact for each of your services.</p>
 <h2 id="installation" class="section-heading">
   <a href="#installation" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
@@ -159,9 +183,17 @@ It support different discovery strategies:</p>
 </li>
 </ul>
 <p>Our containers are based on Alpine Linux wich is a security-oriented, lightweight Linux distribution based on musl libc and busybox.</p>
-<h3>Kubernetes</h3>
+<h3 id="kubernetes" class="section-heading">
+  <a href="#kubernetes" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Kubernetes
+</h3>
+
 <p>You can deploy it to Kubernetes using <a href="https://github.com/Nebo15/annon.infra/blob/master/kubernetes">example configs from Annon’s Infra repo</a>.</p>
-<h3>Docker Compose</h3>
+<h3 id="docker-compose" class="section-heading">
+  <a href="#docker-compose" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Docker Compose
+</h3>
+
 <p>For local environments we provide an <a href="https://github.com/Nebo15/annon.infra/tree/master/docker-compose">example Docket Compose configuration</a>. You can use this one-liner to deploy all Annon components on a local machine:</p>
 <p><code class="inline">curl -L http://bit.ly/annon_compose | bash</code></p>
 <h2 id="documentation" class="section-heading">
@@ -182,7 +214,7 @@ It support different discovery strategies:</p>
         <p>
           <span class="line">
             Built using
-            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.16.1),
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.16.2),
           </span>
           <span class="line">
             designed by
@@ -195,7 +227,7 @@ It support different discovery strategies:</p>
   </div>
 </section>
 </div>
-  <script src="dist/app-126b5f0e90.js"></script>
+  <script src="dist/app-4988ddd06b.js"></script>
   </body>
 </html>
 
