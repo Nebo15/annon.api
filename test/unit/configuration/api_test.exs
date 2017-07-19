@@ -195,7 +195,7 @@ defmodule Annon.Configuration.APITest do
       }] = API.dump_apis()
 
       assert length(plugins) == 1
-      assert List.first(plugins).id == plugin1.id
+      assert List.first(plugins).name == plugin1.name
       assert List.first(plugins).is_enabled == true
 
       ConfigurationFactory.insert(:auth_plugin_with_jwt, api_id: api.id)
@@ -221,7 +221,7 @@ defmodule Annon.Configuration.APITest do
       }] = API.dump_apis()
 
       assert length(plugins) == 1
-      assert List.first(plugins).id == plugin2.id
+      assert List.first(plugins).name == plugin2.name
       assert List.first(plugins).is_enabled == true
     end
 
@@ -246,11 +246,11 @@ defmodule Annon.Configuration.APITest do
       ] = API.dump_apis()
 
       assert length(plugins1) == 1
-      assert List.first(plugins1).id == plugin1.id
+      assert List.first(plugins1).name == plugin1.name
       assert List.first(plugins1).is_enabled == true
 
       assert length(plugins2) == 1
-      assert List.first(plugins2).id == plugin2.id
+      assert List.first(plugins2).name == plugin2.name
       assert List.first(plugins2).is_enabled == true
     end
   end

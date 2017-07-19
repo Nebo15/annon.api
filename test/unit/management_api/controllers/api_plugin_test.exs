@@ -23,8 +23,8 @@ defmodule Annon.ManagementAPI.Controllers.APIPluginTest do
         |> json_response(200)
         |> Map.get("data")
 
-      plugin1_id = ConfigurationFactory.insert(:proxy_plugin, api_id: api.id).id
-      plugin2_id = ConfigurationFactory.insert(:auth_plugin_with_jwt, api_id: api.id).id
+      plugin1_name = ConfigurationFactory.insert(:proxy_plugin, api_id: api.id).name
+      plugin2_name = ConfigurationFactory.insert(:auth_plugin_with_jwt, api_id: api.id).name
 
       resp =
         conn
@@ -32,9 +32,9 @@ defmodule Annon.ManagementAPI.Controllers.APIPluginTest do
         |> json_response(200)
         |> Map.get("data")
 
-      assert [%{"id" => resp_plugin1_id}, %{"id" => resp_plugin2_id}] = resp
-      assert plugin1_id in [resp_plugin1_id, resp_plugin2_id]
-      assert plugin2_id in [resp_plugin1_id, resp_plugin2_id]
+      assert [%{"name" => resp_plugin1_name}, %{"name" => resp_plugin2_name}] = resp
+      assert plugin1_name in [resp_plugin1_name, resp_plugin2_name]
+      assert plugin2_name in [resp_plugin1_name, resp_plugin2_name]
     end
   end
 
@@ -99,7 +99,6 @@ defmodule Annon.ManagementAPI.Controllers.APIPluginTest do
         |> json_response(200)
         |> Map.get("data")
 
-      assert plugin.id == resp["id"]
       assert DateTime.to_iso8601(plugin.inserted_at) == resp["inserted_at"]
       assert plugin.name == update_attrs.name
       assert update_attrs.api_id == resp["api_id"]

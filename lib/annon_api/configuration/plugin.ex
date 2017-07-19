@@ -96,9 +96,9 @@ defmodule Annon.Configuration.Plugin do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_plugin(%PluginSchema{id: id, inserted_at: inserted_at, api_id: api_id, name: name}, attrs) do
+  def update_plugin(%PluginSchema{inserted_at: inserted_at, api_id: api_id, name: name}, attrs) do
     plugin =
-      %PluginSchema{id: id}
+      %PluginSchema{name: name}
       |> plugin_changeset(attrs)
       |> put_change(:inserted_at, inserted_at)
       |> put_change(:api_id, api_id)

@@ -6,8 +6,8 @@ defmodule Annon.Configuration.Schemas.Plugin do
   alias Annon.Configuration.Schemas.API, as: APISchema
 
   @derive {Poison.Encoder, except: [:__meta__, :api]}
+  @primary_key {:name, :string, autogenerate: false}
   schema "plugins" do
-    field :name, :string
     field :is_enabled, :boolean
     field :settings, :map
 
