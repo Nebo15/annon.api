@@ -3,6 +3,7 @@ defmodule Annon.Configuration.APITest do
   use Annon.DataCase, async: true
   alias Annon.Configuration.API
   alias Annon.Configuration.Schemas.API, as: APISchema
+  alias Annon.Configuration.Schemas.Plugin, as: PluginSchema
   alias Annon.Factories.Configuration, as: ConfigurationFactory
   alias Ecto.Paging
   alias Ecto.Paging.Cursors
@@ -412,9 +413,39 @@ defmodule Annon.Configuration.APITest do
     end
   end
 
-  test "delete_api/1 deletes the api" do
-    api = ConfigurationFactory.insert(:api)
-    assert {:ok, %APISchema{}} = API.delete_api(api)
-    assert {:error, :not_found} = API.get_api(api.id)
+  describe "delete_api/1" do
+    test "deletes the api" do
+      api = ConfigurationFactory.insert(:api)
+      assert {:ok, %APISchema{}} = API.delete_api(api)
+      assert {:error, :not_found} = API.get_api(api.id)
+    end
+
+    test "deletes associated plugins" do
+      api = ConfigurationFactory.insert(:api)
+      ConfigurationFactory.insert(:proxy_plugin, api_id: api.id)
+      ConfigurationFactory.insert(:auth_plugin_with_jwt, api_id: api.id)
+
+      assert {:ok, %APISchema{}} = API.delete_api(api)
+      assert {:error, :not_found} = API.get_api(api.id)
+      assert [] == ConfigurationRepo.all(PluginSchema)
+    end
+
+    test "does not affect other APIs" do
+      api1 = ConfigurationFactory.insert(:api)
+      ConfigurationFactory.insert(:proxy_plugin, api_id: api1.id)
+      ConfigurationFactory.insert(:auth_plugin_with_jwt, api_id: api1.id)
+
+      api2 = ConfigurationFactory.insert(:api)
+      ConfigurationFactory.insert(:proxy_plugin, api_id: api2.id)
+      ConfigurationFactory.insert(:auth_plugin_with_jwt, api_id: api2.id)
+
+      assert {:ok, %APISchema{}} = API.delete_api(api1)
+      assert {:error, :not_found} = API.get_api(api1.id)
+      assert {:ok, %APISchema{}} = API.get_api(api2.id)
+
+      persisted_plugins = ConfigurationRepo.all(PluginSchema)
+      assert Enum.all?(persisted_plugins, &(&1.api_id == api2.id))
+      assert 2 == length(persisted_plugins)
+    end
   end
 end
