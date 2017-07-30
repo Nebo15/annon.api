@@ -13,7 +13,7 @@ addons:
 elixir:
   - 1.4.5
 otp_release:
-  - 20.0
+  - 19.3
 env:
   global:
     - MIX_ENV=test
