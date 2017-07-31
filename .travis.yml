@@ -35,11 +35,11 @@ before_install:
   - docker run -d -p 80:8000 --name httpbin citizenstig/httpbin:latest
 before_script:
   # Extract project name and version from mix.exs
-  - source ./bin/ci/release/fetch-project-environment.sh
+  # - source ./bin/ci/release/fetch-project-environment.sh
   # Load information about new version
-  - source ./bin/ci/release/fetch-source-version.sh
+  # - source ./bin/ci/release/fetch-source-version.sh
   # Load information about changelog
-  - source ./bin/ci/release/fetch-changelog.sh
+  # - source ./bin/ci/release/fetch-changelog.sh
 script:
   # Increment version in mix.exs
   - ./bin/ci/release/put-source-version.sh
