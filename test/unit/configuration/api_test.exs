@@ -411,6 +411,48 @@ defmodule Annon.Configuration.APITest do
       assert api_id == api1.id
       assert length(plugins) == 1
     end
+
+    test "ignores methods when matches are prioritized" do
+      api2 = ConfigurationFactory.insert(:api,
+        matching_priority: 1,
+        request: ConfigurationFactory.build(:api_request, %{
+          scheme: "http",
+          methods: ["POST"],
+          host: "example.com",
+          port: 80,
+          path: "/my_path"
+        }
+      ))
+      ConfigurationFactory.insert(:proxy_plugin, api_id: api2.id)
+
+      api1 = ConfigurationFactory.insert(:api,
+        matching_priority: 2,
+        request: ConfigurationFactory.build(:api_request, %{
+          scheme: "http",
+          methods: ["GET"],
+          host: "example.com",
+          port: 80,
+          path: "/my_path/_%"
+        }
+      ))
+      ConfigurationFactory.insert(:proxy_plugin, api_id: api1.id)
+
+      assert {:ok, %APISchema{
+        id: api_id,
+        plugins: plugins
+      }} = API.find_api("http", "POST", "example.com", 80, "/my_path/")
+
+      assert api_id == api2.id
+      assert length(plugins) == 1
+
+      assert {:ok, %APISchema{
+        id: api_id,
+        plugins: plugins
+      }} = API.find_api("http", "POST", "example.com", 80, "/my_path/random_id")
+
+      assert api_id == api2.id
+      assert length(plugins) == 1
+    end
   end
 
   describe "delete_api/1" do

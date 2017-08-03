@@ -192,5 +192,50 @@ defmodule Annon.Configuration.CacheAdapter.ETSTest do
       assert api_id == api1.id
       assert length(plugins) == 1
     end
+
+    test "ignores methods when matches are prioritized" do
+      api2 = ConfigurationFactory.insert(:api,
+        matching_priority: 1,
+        request: ConfigurationFactory.build(:api_request, %{
+          scheme: "http",
+          methods: ["POST"],
+          host: "example.com",
+          port: 80,
+          path: "/my_path"
+        }
+      ))
+      ConfigurationFactory.insert(:proxy_plugin, api_id: api2.id)
+
+      api1 = ConfigurationFactory.insert(:api,
+        matching_priority: 2,
+        request: ConfigurationFactory.build(:api_request, %{
+          scheme: "http",
+          methods: ["GET"],
+          host: "example.com",
+          port: 80,
+          path: "/my_path/_%"
+        }
+      ))
+      ConfigurationFactory.insert(:proxy_plugin, api_id: api1.id)
+
+      opts = [cache_space: @test_table_name]
+      :ok = ETS.config_change(opts)
+
+      assert {:ok, %APISchema{
+        id: api_id,
+        plugins: plugins
+      }} = ETS.match_request("http", "POST", "example.com", 80, "/my_path/", opts)
+
+      assert api_id == api2.id
+      assert length(plugins) == 1
+
+      assert {:ok, %APISchema{
+        id: api_id,
+        plugins: plugins
+      }} = ETS.match_request("http", "POST", "example.com", 80, "/my_path/random_id", opts)
+
+      assert api_id == api2.id
+      assert length(plugins) == 1
+    end
   end
 end
