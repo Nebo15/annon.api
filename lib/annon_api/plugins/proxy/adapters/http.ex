@@ -28,7 +28,7 @@ defmodule Annon.Plugins.Proxy.Adapters.HTTP do
       {:ok, conn}
     else
       {:error, term} ->
-        Conn.send_resp(conn, 502, Annon.Helpers.Response.build_upstream_error(to_string(term)))
+        {:ok, Conn.send_resp(conn, 502, Annon.Helpers.Response.build_upstream_error(to_string(term)))}
     end
   end
 
