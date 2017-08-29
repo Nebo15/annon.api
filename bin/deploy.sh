@@ -19,10 +19,10 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
 			PROJECT_NAME=$(sed -n 's/.*app: :\([^, ]*\).*/\1/pg' "$TRAVIS_BUILD_DIR/mix.exs")
 			PROJECT_VERSION=$(sed -n 's/.*@version "\([^"]*\)".*/\1/pg' "$TRAVIS_BUILD_DIR/mix.exs")
 			#PROJECT_VERSION="0.1.261"
-			sed -i'' -e "1,10s/tag:.*/tag: \"$PROJECT_VERSION\"/g" "report/values.yaml"
+			sed -i'' -e "1,10s/tag:.*/tag: \"$PROJECT_VERSION\"/g" "$Chart/values.yaml"
 			helm init --upgrade
 			sleep 15
-			helm upgrade  -f report/values.yaml $Chart report
+			helm upgrade  -f $Chart/values.yaml $Chart $Chart
 			cd $TRAVIS_BUILD_DIR/bin
 			./wait-for-deployment.sh api $Chart 180
    				if [ "$?" -eq 0 ]; then
