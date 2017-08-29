@@ -19,18 +19,18 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ];  then
 			PROJECT_NAME=$(sed -n 's/.*app: :\([^, ]*\).*/\1/pg' "$TRAVIS_BUILD_DIR/mix.exs")
 			PROJECT_VERSION=$(sed -n 's/.*@version "\([^"]*\)".*/\1/pg' "$TRAVIS_BUILD_DIR/mix.exs")
 			#PROJECT_VERSION="0.1.261"
-			sed -i'' -e "1,10s/tag:.*/tag: \"$PROJECT_VERSION\"/g" "$Chart/values.yaml"
+			sed -i'' -e "20,35s/tag:.*/tag: \"$PROJECT_VERSION\"/g" "$Chart/values.yaml"
 			helm init --upgrade
 			sleep 15
 			helm upgrade  -f $Chart/values.yaml $Chart $Chart
 			cd $TRAVIS_BUILD_DIR/bin
-			./wait-for-deployment.sh api $Chart 180
+			./wait-for-deployment.sh $Chart  $Chart 180
    				if [ "$?" -eq 0 ]; then
-     				kubectl get pod -n$Chart | grep api 
+     				kubectl get pod -n$Chart | grep $Chart 
      				cd $TRAVIS_BUILD_DIR/ehealth.charts && git add . && sudo  git commit -m "Bump $Chart api to $PROJECT_VERSION" && sudo git pull && sudo git push
      				exit 0;
    				else 
-   	 				kubectl logs $(sudo kubectl get pod -n$Chart | awk '{ print $1 }' | grep api) -n$Chart 
+   	 				kubectl logs $(sudo kubectl get pod -n$Chart | awk '{ print $1 }' | grep $Chart) -n$Chart 
    	 				helm rollback $Chart  $(($(helm ls | grep $Chart | awk '{ print $2 }') -1)) 
    	 				exit 1;
    				fi;
