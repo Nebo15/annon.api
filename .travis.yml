@@ -21,7 +21,7 @@ notifications:
     on_success: always
 env:
   global:
-    - Chart=il
+    - Chart=gateway
     - MIX_ENV=test
     - REQUIRE_VERSION_TAGS="true"
     - TRUNK_BRANCH="master"
