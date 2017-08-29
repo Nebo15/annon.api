@@ -14,8 +14,14 @@ elixir:
   - 1.4.5
 otp_release:
   - 19.3
+notifications:
+  slack: 
+    rooms:
+      - secure: "j6bC+QrahfmM8yh8YXaITJMJYX7XtvtE6T2vJLKU4nDrYMc02i8RHAeYD4bid91412DVMgBymYyKHs/5PVLBV5U7y465Uyu1F5cY+SDk1E8NfaY16l2lq3ptUIaOCxZRIC4pKg2CcR5/3pRuT+2j389iSTTMHNnncozTqDY2hLhCqx1agNpSMqtMVTq7ihZqm7dfq5BRR98RMT3Y8yfXY0rpk78gs7lMCCqEqXNysdQ4CaEE8r8syj2nHtAqf78JUIVgaItp257zRhgjEUOyRdA4Z197t4uoiOAeyXI6sChW5dlpDDLsxiXU6Dt3hVSjE+iud5MxbbeJimK9MhpCvnqK4W4B+LKItygmyEYW4eWdHrqA7GIjD4UfH5DCSKldHiOPtP8EnuQURxectHw9s3Ddx+wcxrObawBj7+hTGd04ZgBh6HdvJiJYW1ga/H6lQzbP9puxsArsUuWl2ZGdNjkg5W4O/0X3PFg/eL1T3QlBK4PLBcYzpfArp6af+iwQ3BBtQwOZ5F3WwFOD/DKqnJ7asbQfDUtBni0q8XE0KzqHg2eVfRye/c0NRE8h+20i+VqAyW3yqiZCKctCAbDcBOBRaSwxVZoKgUKhdHwGRrJcl0YMNBmgmQgNHqFO62FcBZrjxOBIZGpOHDgoQknaVXDxzNSyeRyh3pr3tl23Qoo="
+    on_success: always
 env:
   global:
+    - Chart=il
     - MIX_ENV=test
     - REQUIRE_VERSION_TAGS="true"
     - TRUNK_BRANCH="master"
@@ -28,6 +34,7 @@ env:
   except:
     - /^[0-9]*\.[0-9]*\.[0-9]*/
 before_install:
+  - openssl aes-256-cbc -K $encrypted_8dd9ff6971ec_key -iv $encrypted_8dd9ff6971ec_iv -in eHealth-eef414faa06b.json.enc -out eHealth-eef414faa06b.json -d
   # Expose DB to Docker container
   - sudo /bin/bash ./bin/ci/init-db.sh
   # Run HTTPBin locally
@@ -52,7 +59,7 @@ script:
   # Check code style
   - mix dogma
   # Build Docker container
-  - ./bin/ci/release/build-container.sh
+  - ./bin/ci/release/build-container.sh || travis_terminate 1
   # Initialize DB for Docker container
   - source .env; PGPASSWORD="${DB_PASSWORD}"; psql -U ${DB_USER} -w -c"CREATE DATABASE ${DB_NAME}"
   # Run Docker container
@@ -66,12 +73,10 @@ script:
       exit 1;
     fi;
   # Run acceptance tests on Docker container
-  - ./test/sanity-test.sh
-after_failure:
-  - docker logs httpbin --details --since 5h
-  - docker logs annon_api --details --since 5h
+  - ./test/sanity-test.sh || travis_terminate 1
+    # Submit Docker container to Docker Hub and create GitHub Release by pushing tag with changelog
+  - ./bin/ci/release/push-changes.sh || travis_terminate 1
+  - sudo ./bin/deploy.sh || travis_terminate 1
 after_success:
   # Rebuild docs
   - "mix docs --output docs"
-  # Submit Docker container to Docker Hub and create GitHub Release by pushing tag with changelog
-  - ./bin/ci/release/push-changes.sh
