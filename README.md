@@ -2,7 +2,7 @@
 
 [![Coverage Status](https://coveralls.io/repos/github/edenlabllc/annon.api/badge.svg?branch=master&t=y562b4)](https://coveralls.io/github/Nebo15/annon.api?branch=master) [![Build Status](https://travis-ci.org/edenlabllc/annon.api.svg?branch=master)](https://travis-ci.org/Nebo15/annon.api)
 
-# Annon API Gateway
+# Annon API Gateway 
 
 Annon is a configurable API gateway that acts as a reverse proxy with a plugin system. Plugins are reducing boilerplate that must be done in each service, making overall development faster. Also it stores all requests, responses and key metrics, making it easy to debug your application. Inspired by [Kong](https://getkong.org/).
 
