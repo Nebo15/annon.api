@@ -32,7 +32,7 @@ RUN set -xe; \
     RELEASE_APPLICATION_NAME="${RELEASE_TARBALL_FILENAME%%.*}" && \
     cp ${RELEASE_TARBALL_PATH} /opt/${RELEASE_TARBALL_FILENAME} && \
     cd /opt && \
-    rm -rf /otp/app/ && \
+    rm -rf /opt/app/ && \
     mkdir -p /opt/${RELEASE_APPLICATION_NAME} && \
     tar -xzf ${RELEASE_TARBALL_FILENAME} -C ${RELEASE_APPLICATION_NAME} && \
     rm ${RELEASE_TARBALL_FILENAME}
