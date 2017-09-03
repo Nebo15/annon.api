@@ -10,6 +10,9 @@ addons:
   postgresql: "9.6"
   hosts:
     - httpbin.org
+  apt:
+    packages:
+      - docker-ce
 elixir:
   - 1.5.0
 otp_release:
