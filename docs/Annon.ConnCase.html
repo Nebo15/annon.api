@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.16.2">
-    <title>Annon.ConnCase – annon_api v0.12.1</title>
+    <meta name="generator" content="ExDoc v0.16.3">
+    <title>Annon.ConnCase – annon_api v0.13.0</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-8eb823b159.js"></script>
+    <script src="dist/sidebar_items-fbdd956947.js"></script>
+    
   </head>
   <body data-type="modules">
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
@@ -27,16 +28,18 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.12.1
+        v0.13.0
       </h2>
     </div>
     
   </a>
 
-  <div class="sidebar-search">
-    <span class="icon-search" aria-hidden="true"></span>
-    <input type="text" class="sidebar-searchInput" placeholder="search" aria-label="Search" autocomplete="off" />
-  </div>
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button">
+      <span class="icon-search" aria-hidden="true"></span>
+    </button>
+    <input name="q" type="text" id="search-list" class="search-input" placeholder="search" aria-label="Search" autocomplete="off" />
+  </form>
 
   <ul class="sidebar-listNav">
     <li><a id="extras-list" href="#full-list">Pages</a></li>
@@ -61,7 +64,7 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.12.1</small>
+        <small class="visible-xs">annon_api v0.13.0</small>
         Annon.ConnCase
         
       </h1>
@@ -397,6 +400,7 @@ returns the response body if one was set or sent</p>
           </h1>
           <div class="detail" id="assert_error_sent/2">
   
+  
   <div class="detail-header">
     <a href="#assert_error_sent/2" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
@@ -441,6 +445,7 @@ assert {404, [_h | _t], &quot;Page not found&quot;} = response</code></pre>
 </div>
 <div class="detail" id="build_conn/0">
   
+  
   <div class="detail-header">
     <a href="#build_conn/0" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
@@ -463,6 +468,7 @@ assert {404, [_h | _t], &quot;Page not found&quot;} = response</code></pre>
   </section>
 </div>
 <div class="detail" id="build_conn/3">
+  
   
     <span id="build_conn/2"></span>
   
@@ -492,6 +498,7 @@ for testing a plug or a particular function.</p>
 </div>
 <div class="detail" id="conn/0">
   
+  
   <div class="detail-header">
     <a href="#conn/0" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
@@ -515,6 +522,7 @@ for testing a plug or a particular function.</p>
 </div>
 <div class="detail" id="connect/3">
   
+  
     <span id="connect/2"></span>
   
   <div class="detail-header">
@@ -536,6 +544,7 @@ for testing a plug or a particular function.</p>
   </section>
 </div>
 <div class="detail" id="delete/3">
+  
   
     <span id="delete/2"></span>
   
@@ -559,6 +568,7 @@ for testing a plug or a particular function.</p>
 </div>
 <div class="detail" id="delete_req_cookie/2">
   
+  
   <div class="detail-header">
     <a href="#delete_req_cookie/2" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
@@ -581,6 +591,7 @@ for testing a plug or a particular function.</p>
   </section>
 </div>
 <div class="detail" id="dispatch/5">
+  
   
     <span id="dispatch/4"></span>
   
@@ -635,6 +646,7 @@ without normalizing its entries</p>
 </div>
 <div class="detail" id="get/3">
   
+  
     <span id="get/2"></span>
   
   <div class="detail-header">
@@ -657,6 +669,7 @@ without normalizing its entries</p>
 </div>
 <div class="detail" id="head/3">
   
+  
     <span id="head/2"></span>
   
   <div class="detail-header">
@@ -678,6 +691,7 @@ without normalizing its entries</p>
   </section>
 </div>
 <div class="detail" id="html_response/2">
+  
   
   <div class="detail-header">
     <a href="#html_response/2" class="detail-link" title="Link to this function">
@@ -711,6 +725,7 @@ returns the response body if one was set or sent.</p>
 </div>
 <div class="detail" id="json_response/3">
   
+  
     <span id="json_response/2"></span>
   
   <div class="detail-header">
@@ -738,6 +753,7 @@ assert &quot;can&#39;t be blank&quot; in body[&quot;errors&quot;]</code></pre>
 </div>
 <div class="detail" id="options/3">
   
+  
     <span id="options/2"></span>
   
   <div class="detail-header">
@@ -759,6 +775,7 @@ assert &quot;can&#39;t be blank&quot; in body[&quot;errors&quot;]</code></pre>
   </section>
 </div>
 <div class="detail" id="patch/3">
+  
   
     <span id="patch/2"></span>
   
@@ -782,6 +799,7 @@ assert &quot;can&#39;t be blank&quot; in body[&quot;errors&quot;]</code></pre>
 </div>
 <div class="detail" id="patch_json/3">
   
+  
   <div class="detail-header">
     <a href="#patch_json/3" class="detail-link" title="Link to this macro">
       <span class="icon-link" aria-hidden="true"></span>
@@ -801,6 +819,7 @@ assert &quot;can&#39;t be blank&quot; in body[&quot;errors&quot;]</code></pre>
   </section>
 </div>
 <div class="detail" id="post/3">
+  
   
     <span id="post/2"></span>
   
@@ -824,6 +843,7 @@ assert &quot;can&#39;t be blank&quot; in body[&quot;errors&quot;]</code></pre>
 </div>
 <div class="detail" id="post_json/3">
   
+  
   <div class="detail-header">
     <a href="#post_json/3" class="detail-link" title="Link to this macro">
       <span class="icon-link" aria-hidden="true"></span>
@@ -843,6 +863,7 @@ assert &quot;can&#39;t be blank&quot; in body[&quot;errors&quot;]</code></pre>
   </section>
 </div>
 <div class="detail" id="put/3">
+  
   
     <span id="put/2"></span>
   
@@ -866,6 +887,7 @@ assert &quot;can&#39;t be blank&quot; in body[&quot;errors&quot;]</code></pre>
 </div>
 <div class="detail" id="put_json/3">
   
+  
   <div class="detail-header">
     <a href="#put_json/3" class="detail-link" title="Link to this macro">
       <span class="icon-link" aria-hidden="true"></span>
@@ -885,6 +907,7 @@ assert &quot;can&#39;t be blank&quot; in body[&quot;errors&quot;]</code></pre>
   </section>
 </div>
 <div class="detail" id="put_req_cookie/3">
+  
   
   <div class="detail-header">
     <a href="#put_req_cookie/3" class="detail-link" title="Link to this function">
@@ -908,6 +931,7 @@ assert &quot;can&#39;t be blank&quot; in body[&quot;errors&quot;]</code></pre>
   </section>
 </div>
 <div class="detail" id="recycle/1">
+  
   
   <div class="detail-header">
     <a href="#recycle/1" class="detail-link" title="Link to this function">
@@ -938,6 +962,7 @@ recycled.</p>
   </section>
 </div>
 <div class="detail" id="redirected_to/2">
+  
   
     <span id="redirected_to/1"></span>
   
@@ -974,6 +999,7 @@ assert redirected_to(conn, :moved_permanently) =~ &quot;/foo/bar&quot;</code></p
 </div>
 <div class="detail" id="response/2">
   
+  
   <div class="detail-header">
     <a href="#response/2" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
@@ -1007,6 +1033,7 @@ assert response(conn, 200) =~ &quot;hello world&quot;</code></pre>
 </div>
 <div class="detail" id="response_content_type/2">
   
+  
   <div class="detail-header">
     <a href="#response_content_type/2" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
@@ -1038,6 +1065,7 @@ assert response_content_type(conn, :html) =~ &quot;charset=utf-8&quot;</code></p
   </section>
 </div>
 <div class="detail" id="text_response/2">
+  
   
   <div class="detail-header">
     <a href="#text_response/2" class="detail-link" title="Link to this function">
@@ -1071,6 +1099,7 @@ returns the response body if one was set or sent.</p>
 </div>
 <div class="detail" id="trace/3">
   
+  
     <span id="trace/2"></span>
   
   <div class="detail-header">
@@ -1100,7 +1129,7 @@ returns the response body if one was set or sent.</p>
         <p>
           <span class="line">
             Built using
-            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.16.2),
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.16.3),
           </span>
           <span class="line">
             designed by
@@ -1113,7 +1142,8 @@ returns the response body if one was set or sent.</p>
   </div>
 </section>
 </div>
-  <script src="dist/app-4988ddd06b.js"></script>
+  <script src="dist/app-574613960f.js"></script>
+  
   </body>
 </html>
 
