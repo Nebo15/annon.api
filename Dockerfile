@@ -1,75 +1,81 @@
-FROM nebo15/alpine-elixir:1.5.0
-
-# Maintainers
+FROM nebo15/alpine-elixir:1.5.1 as builder
 MAINTAINER Nebo#15 support@nebo15.com
 
-# Configure environment variables and other settings
-ENV TERM=xterm \
-    MIX_ENV=prod \
-    APP_NAME=annon_api \
-    GATEWAY_PUBLIC_PORT=4000 \
-    GATEWAY_PUBLIC_HTTPS_PORT=4000 \
-    GATEWAY_MANAGEMENT_PORT=4001 \
-    GATEWAY_PRIVATE_PORT=4443
+# Always build with production environment
+ENV MIX_ENV=prod
 
-WORKDIR ${HOME}
+# `/opt` is a common place for third-party provided packages that are not part of the OS itself
+WORKDIR /opt/app
 
 # Required in elixir_make
 RUN apk add --update --no-cache make
 
 # Install and compile project dependencies
+# We do this before all other files to make container build faster
+# when configuration and dependencies are not changed
 COPY mix.* ./
 COPY config ./config
-RUN mix do deps.get, deps.compile
+RUN mix deps.get --only prod
+RUN mix deps.compile
 
-# Add project sources
+# Copy rest of project files and build an OTP application
 COPY . .
-
-# Compile project for Erlang VM
 RUN mix compile
 RUN mix release --verbose
 
-# Move release to /opt/$APP_NAME
-RUN \
-    mkdir -p $HOME/priv && \
-    mkdir -p /opt/$APP_NAME/log && \
-    mkdir -p /var/log && \
-    mkdir -p /opt/$APP_NAME/priv && \
-    mkdir -p /opt/$APP_NAME/hooks && \
-    mkdir -p /opt/$APP_NAME/uploads && \
-    cp -R $HOME/priv /opt/$APP_NAME/ && \
-    cp -R $HOME/bin/hooks /opt/$APP_NAME/ && \
-    APP_TARBALL=$(find $HOME/_build/$MIX_ENV/rel/$APP_NAME/releases -maxdepth 2 -name ${APP_NAME}.tar.gz) && \
-    cp $APP_TARBALL /opt/$APP_NAME/ && \
-    cd /opt/$APP_NAME && \
-    tar -xzf $APP_NAME.tar.gz && \
-    rm $APP_NAME.tar.gz && \
-    rm -rf /opt/app/* && \
-    chmod -R 777 $HOME && \
-    chmod -R 777 /opt/$APP_NAME && \
-    chmod -R 777 /var/log
+# Release is packaged in a tarball that contains everything the application
+# needs to run. We remove all other build artifacts and unarchived tarball
+# to a well-known folder
+RUN set -xe; \
+    RELEASE_TARBALL_PATH=$(find _build/${MIX_ENV}/rel/*/releases -maxdepth 2 -name *.tar.gz) && \
+    RELEASE_TARBALL_FILENAME="${RELEASE_TARBALL_PATH##*/}" && \
+    RELEASE_APPLICATION_NAME="${RELEASE_TARBALL_FILENAME%%.*}" && \
+    cp ${RELEASE_TARBALL_PATH} /opt/${RELEASE_TARBALL_FILENAME} && \
+    cd /opt && \
+    rm -rf /otp/app/ && \
+    mkdir -p /opt/${RELEASE_APPLICATION_NAME} && \
+    tar -xzf ${RELEASE_TARBALL_FILENAME} -C ${RELEASE_APPLICATION_NAME} && \
+    rm ${RELEASE_TARBALL_FILENAME}
 
-RUN apk del --no-cache make
+# Build a container for runtime
+# We are using Linux Alpine image with pre-installed Erlang,
+# pure alpine with ERTS from tarball won't work because Erlang VM
+# has lots of native dependencies
+FROM nebo15/alpine-erlang:20.0.4
+MAINTAINER Nebo#15 support@nebo15.com
 
-# Change user to "default"
+ENV \
+    # Application name
+    APPLICATION_NAME=annon_api \
+    # Common that we want to expose from a container,
+    # make sure that you change this variables after updating
+    # them in config.exs
+    GATEWAY_PUBLIC_PORT=4000 \
+    GATEWAY_PUBLIC_HTTPS_PORT=4000 \
+    GATEWAY_MANAGEMENT_PORT=4001 \
+    GATEWAY_PRIVATE_PORT=4443 \
+    # Replace ${VAR_NAME} in sys.config (generated with your application configuration)
+    # at the start time with actual environment variables values
+    REPLACE_OS_VARS=true
+
+# Bash is required by Distillery
+RUN apk add --update --no-cache bash
+
+# Copy OTP release from a builder stage
+COPY --from=builder /opt/${APPLICATION_NAME} /opt/${APPLICATION_NAME}
+# Fix file permissions
+RUN set xe; \
+    chmod -R 777 /opt/${APPLICATION_NAME}
+
+WORKDIR /opt/${APPLICATION_NAME}
+
+# Change user to "default" to limit runtime privileges
 USER default
-
-# Allow to read ENV vars for mix configs
-ENV REPLACE_OS_VARS=true
 
 # Exposes this port from the docker container to the host machine
 EXPOSE ${GATEWAY_PUBLIC_PORT} ${GATEWAY_PUBLIC_HTTPS_PORT} ${GATEWAY_MANAGEMENT_PORT} ${GATEWAY_PRIVATE_PORT}
 
-# Change workdir to a released directory
-WORKDIR /opt
-
-# Pre-run hook that allows you to add initialization scripts.
-# All Docker hooks should be located in bin/hooks directory.
-RUN $APP_NAME/hooks/pre-run.sh
-
 # The command to run when this image starts up
-#  You can run it in one of the following ways:
-#    Interactive: annon_api/bin/annon_api console
-#    Foreground: annon_api/bin/annon_api foreground
-#    Daemon: annon_api/bin/annon_api start
-CMD $APP_NAME/bin/$APP_NAME foreground
+# We start application in foreground mode to keep
+# the container running and to redirect logs to the `STDOUT`
+CMD bin/${APPLICATION_NAME} foreground

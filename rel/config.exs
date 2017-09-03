@@ -10,6 +10,12 @@ environment :default do
   set overlays: [
     {:template, "rel/templates/vm.args.eex", "releases/<%= release_version %>/vm.args"}
   ]
+  set commands: [
+    migrate: "rel/commands/migrate.sh"
+  ]
+  # The cookie is set at start time by ERLANG_COOKIE environment variable,
+  # but we want to suppress Distillery warnings
+  set cookie: :nowarn
 end
 
 release :annon_api do
