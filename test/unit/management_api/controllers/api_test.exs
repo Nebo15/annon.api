@@ -315,9 +315,9 @@ defmodule Annon.ManagementAPI.Controllers.APITest do
       id = Ecto.UUID.generate()
 
       invalid_attrs =
-        ConfigurationFactory.params_for(:api,
-          request: Poison.encode!(ConfigurationFactory.params_for(:api_request, path: "bad_path/"))
-        )
+        :api
+        |> ConfigurationFactory.params_for()
+        |> Map.put(:request, Poison.encode!(ConfigurationFactory.params_for(:api_request, path: "bad_path/")))
 
       errors =
         conn

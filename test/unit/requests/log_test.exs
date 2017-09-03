@@ -59,57 +59,63 @@ defmodule Annon.Requests.LogTest do
     end
 
     test "paginates results" do
-      request1 = RequestsFactory.insert(:request, id: "1")
-      request2 = RequestsFactory.insert(:request, id: "2")
-      request3 = RequestsFactory.insert(:request, id: "3")
-      request4 = RequestsFactory.insert(:request, id: "4")
-      request5 = RequestsFactory.insert(:request, id: "5")
+      request1_id = RequestsFactory.insert(:request, id: "1").id
+      request2_id = RequestsFactory.insert(:request, id: "2").id
+      request3_id = RequestsFactory.insert(:request, id: "3").id
+      request4_id = RequestsFactory.insert(:request, id: "4").id
+      request5_id = RequestsFactory.insert(:request, id: "5").id
 
-      assert {[^request5, ^request4, ^request3, ^request2, ^request1], _paging} =
-        Log.list_requests(%{}, %Paging{limit: nil})
-      assert {[^request5], _paging} =
-        Log.list_requests(%{}, %Paging{limit: 1})
-      assert {[^request5, ^request4], _paging} =
-        Log.list_requests(%{}, %Paging{limit: 2})
+      {first_page, _paging} = Log.list_requests(%{}, %Paging{limit: nil})
+      assert [^request5_id, ^request4_id, ^request3_id, ^request2_id, ^request1_id] = Enum.map(first_page, &(&1.id))
 
-      assert {[^request3, ^request2], _paging} =
-        Log.list_requests(%{}, %Paging{limit: 2, cursors: %Cursors{starting_after: request4.id}})
-      assert {[^request3, ^request2], _paging} =
-        Log.list_requests(%{}, %Paging{limit: 2, cursors: %Cursors{ending_before: request1.id}})
+      {page, _paging} = Log.list_requests(%{}, %Paging{limit: 1})
+      assert [^request5_id] = Enum.map(page, &(&1.id))
+
+      {page, _paging} = Log.list_requests(%{}, %Paging{limit: 2})
+      assert [^request5_id, ^request4_id] = Enum.map(page, &(&1.id))
+
+      {page, _paging} = Log.list_requests(%{}, %Paging{limit: 2, cursors: %Cursors{starting_after: request4_id}})
+      assert [^request3_id, ^request2_id] = Enum.map(page, &(&1.id))
+
+      {page, _paging} = Log.list_requests(%{}, %Paging{limit: 2, cursors: %Cursors{ending_before: request1_id}})
+      assert [^request3_id, ^request2_id] = Enum.map(page, &(&1.id))
     end
 
     test "paginates with filters" do
-      request1 = RequestsFactory.insert(:request,
-        api: RequestsFactory.build(:api, id: "my_api_1"), status_code: 202)
+      request1_id = RequestsFactory.insert(:request,
+        api: RequestsFactory.build(:api, id: "my_api_1"), status_code: 202).id
       RequestsFactory.insert(:request,
         api: RequestsFactory.build(:api, id: "my_api_1"), status_code: 201)
-      request3 =
+      request3_id =
         RequestsFactory.insert(:request,
-          api: RequestsFactory.build(:api, id: "my_api_1"), status_code: 202)
-      request4 =
+          api: RequestsFactory.build(:api, id: "my_api_1"), status_code: 202).id
+      request4_id =
         RequestsFactory.insert(:request,
-          api: RequestsFactory.build(:api, id: "my_api_1"), ip_address: "127.0.0.1")
-      request5 =
+          api: RequestsFactory.build(:api, id: "my_api_1"), ip_address: "127.0.0.1").id
+      request5_id =
         RequestsFactory.insert(:request,
-          api: RequestsFactory.build(:api, id: "my_api_1"), idempotency_key: "my_idempotency_key_one")
+          api: RequestsFactory.build(:api, id: "my_api_1"), idempotency_key: "my_idempotency_key_one").id
 
-      assert {[^request5, ^request4], _paging} =
+      {page, _paging} =
         Log.list_requests(
           %{"api_ids" => "my_api_1"},
-          %Paging{limit: 2, cursors: %Cursors{ending_before: request3.id}}
+          %Paging{limit: 2, cursors: %Cursors{ending_before: request3_id}}
         )
+      assert [^request5_id, ^request4_id] = Enum.map(page, &(&1.id))
 
-      assert {[^request5], _paging} =
+      {page, _paging} =
         Log.list_requests(
           %{"idempotency_key" => "my_idempotency_key_one"},
-          %Paging{limit: 2, cursors: %Cursors{ending_before: request1.id}}
+          %Paging{limit: 2, cursors: %Cursors{ending_before: request1_id}}
         )
+      assert [^request5_id] = Enum.map(page, &(&1.id))
 
-      assert {[^request3], _paging} =
+      {page, _paging} =
         Log.list_requests(
           %{"status_codes" => "202"},
-          %Paging{limit: 1, cursors: %Cursors{ending_before: request1.id}}
+          %Paging{limit: 1, cursors: %Cursors{ending_before: request1_id}}
         )
+      assert [^request3_id] = Enum.map(page, &(&1.id))
     end
   end
 
