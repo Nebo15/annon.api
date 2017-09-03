@@ -8,72 +8,59 @@ defmodule Annon.ReleaseTasks do
   """
   alias Ecto.Migrator
 
-  @start_apps [
-    :logger_json,
-    :postgrex,
-    :ecto
-  ]
-
   @otp_app :annon_api
+  @start_apps [:logger_json, :postgrex, :ecto]
 
-  @repos [
-    Annon.Configuration.Repo,
-    Annon.Requests.Repo
-  ]
+  def migrate do
+    init(@otp_app, @start_apps)
+    run_migrations_for(@otp_app)
+    stop()
+  end
 
-  def migrate! do
-    IO.puts "Loading #{@otp_app}.."
-    # Load the code for apps, but don't start it
-    :ok = Application.load(@otp_app)
+  defp init(app, start_apps) do
+    IO.puts "Loading app.."
+    :ok = Application.load(app)
 
     IO.puts "Starting dependencies.."
-    # Start apps necessary for executing migrations
-    Enum.each(@start_apps, &Application.ensure_all_started/1)
+    Enum.each(start_apps, &Application.ensure_all_started/1)
 
-    # Start the Repo(s) for annon_api
     IO.puts "Starting repos.."
-    Enum.each(@repos, &(&1.start_link(pool_size: 1)))
+    app
+    |> Application.get_env(:ecto_repos, [])
+    |> Enum.each(&(&1.start_link(pool_size: 1)))
+  end
 
-    # Run migrations
-    run_migrations_for(@otp_app)
-
-    # Run the seed script if it exists
-    seed_script = seed_path(@otp_app)
-    if File.exists?(seed_script) do
-      IO.puts "Running seed script for app #{@otp_app}.."
-      Code.eval_file(seed_script)
-    end
-
-    # Signal shutdown
+  defp stop do
     IO.puts "Success!"
     :init.stop()
   end
 
   defp run_migrations_for(app) do
     IO.puts "Running migrations for #{app}"
-    Enum.each(@repos, &run_repo_migrations(app, &1))
-  end
 
-  defp run_repo_migrations(app, repo) do
-    Migrator.run(repo, migrations_path(app, repo), :up, all: true)
+    app
+    |> Application.get_env(:ecto_repos, [])
+    |> Enum.each(&Migrator.run(&1, migrations_path(app, &1), :up, all: true))
   end
 
   defp migrations_path(app, repo) do
-    priv_path =
+    "priv/" <> rel_path =
       app
       |> Application.get_env(repo)
-      |> Keyword.get(:priv)
+      |> Keyword.fetch!(:priv)
 
-    case priv_path do
-      nil -> Path.join([priv_dir(app), "repos", String.downcase(Atom.to_string(repo)), "migrations"])
-      "priv/" <> path -> Path.join([priv_dir(app), path, "migrations"])
-      full_path -> full_path
-    end
+    path = priv_dir(app, [rel_path, "migrations"])
+    IO.puts "- for repo #{Atom.to_string(repo)} from path #{path}"
+    path
   end
 
-  defp seed_path(app),
-    do: Path.join([priv_dir(app), "repos", "seeds.exs"])
+  defp priv_dir(app, path) when is_list(path) do
+    case :code.priv_dir(app) do
+      priv_path when is_binary(priv_path) or is_list(priv_path) ->
+        Path.join([priv_path] ++ path)
 
-  def priv_dir(app),
-    do: :code.priv_dir(app)
+      {:error, :bad_name} ->
+        raise ArgumentError, "unknown application `#{inspect app}`"
+    end
+  end
 end
