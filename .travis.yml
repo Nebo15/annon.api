@@ -61,7 +61,7 @@ script:
   - source .env; PGPASSWORD="${DB_PASSWORD}"; psql -U ${DB_USER} -w -c"CREATE DATABASE ${DB_NAME}"
   # Run Docker container
   - sudo ./bin/ci/release/start-container.sh -a '--add-host=httpbin.org:$HOST_IP'
-  - sleep 5
+  - sleep 10
   - docker ps
   - RUNNING_CONTAINERS=`docker ps | wc -l`;
     if [ "${RUNNING_CONTAINERS//[[:space:]]/}" == "2" ]; then
