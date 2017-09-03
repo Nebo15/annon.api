@@ -41,10 +41,6 @@ config :annon_api, :acceptance,
   mock: [
     port: {:system, :integer, "TEST_MOCK_PORT", 4040},
     host: {:system, "TEST_MOCK_HOST", "127.0.0.1"}
-  ],
-  pcm_mock: [
-    port: {:system, :integer, "TEST_PCM_MOCK_PORT", 4050},
-    host: {:system, "TEST_PCM_MOCK_HOST", "localhost"}
   ]
 
 config :annon_api, :public_http,
