@@ -7,7 +7,7 @@ services:
   - docker
   - postgresql
 addons:
-  postgresql: "9.5"
+  postgresql: "9.6"
   hosts:
     - httpbin.org
 elixir:
