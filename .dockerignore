@@ -16,9 +16,6 @@ erl_crash.dump
 # Ignore any node modules, as they should be fetched within container
 node_modules
 
-# Ignore static files
-priv/static/*
-
 # Ignore Phoenix uploads in dev env
 uploads/files/*
 

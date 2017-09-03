@@ -22,12 +22,6 @@ bench/snapshots
 # Ignore Exometer logs
 /log
 
-# Ignore released binaries
-rel/*/
-!rel/config.exs
-!rel/templates/
-.deliver
-
 # Don't commit file uploads
 uploads/
 !uploads/.gitkeep
