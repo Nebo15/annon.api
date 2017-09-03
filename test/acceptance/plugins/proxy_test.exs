@@ -416,22 +416,27 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
       token = build_jwt_token(token_data, secret)
       headers = [{"authorization", "Bearer #{token}"}]
 
-      headers = api_path
-      |> put_public_url()
-      |> get!(headers)
-      |> get_body()
-      |> get_in(["data", "request", "headers"])
+      headers =
+        api_path
+        |> put_public_url()
+        |> get!(headers)
+        |> get_body()
+        |> get_in(["data", "request", "headers"])
 
-      actual_scope = headers
-      |> Enum.filter_map(fn(x) -> Map.has_key?(x, "x-consumer-scope") end, &(Map.get(&1, "x-consumer-scope")))
-      |> Enum.at(0)
-      |> String.split(" ")
+      actual_scope =
+        headers
+        |> Enum.filter(fn(x) -> Map.has_key?(x, "x-consumer-scope") end)
+        |> Enum.map(&(Map.get(&1, "x-consumer-scope")))
+        |> Enum.at(0)
+        |> String.split(" ")
 
       assert expected_scopes == actual_scope
 
-      actual_party_id = headers
-      |> Enum.filter_map(fn(x) -> Map.has_key?(x, "x-consumer-id") end, &(Map.get(&1, "x-consumer-id")))
-      |> Enum.at(0)
+      actual_party_id =
+        headers
+        |> Enum.filter(fn(x) -> Map.has_key?(x, "x-consumer-id") end)
+        |> Enum.map(&(Map.get(&1, "x-consumer-id")))
+        |> Enum.at(0)
 
       assert expected_consumer_id == actual_party_id
     end
@@ -456,10 +461,11 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
       |> get_body()
       |> get_in(["data", "request", "headers"])
 
-      assert "" == headers
-      |> Enum.filter_map(fn x -> Enum.at(Map.keys(x), 0) in protected_headers end,
-        &(Map.get(&1, Enum.at(Map.keys(&1), 0))))
-      |> Enum.join("")
+      assert "" ==
+        headers
+        |> Enum.filter(fn x -> Enum.at(Map.keys(x), 0) in protected_headers end)
+        |> Enum.map(&(Map.get(&1, Enum.at(Map.keys(&1), 0))))
+        |> Enum.join("")
     end
   end
 end

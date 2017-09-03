@@ -19,7 +19,7 @@ defmodule Annon.Cluster do
   end
 
   defp spawn_node(node_host) do
-    {:ok, new_node} = :slave.start(to_char_list("127.0.0.1"), node_name(node_host), inet_loader_args())
+    {:ok, new_node} = :slave.start(to_charlist("127.0.0.1"), node_name(node_host), inet_loader_args())
     add_code_paths(new_node)
     transfer_configuration(new_node)
     apply_additional_configuration(new_node)
@@ -32,7 +32,7 @@ defmodule Annon.Cluster do
   end
 
   defp inet_loader_args do
-    to_char_list("-loader inet -hosts 127.0.0.1 -setcookie #{:erlang.get_cookie()}")
+    to_charlist("-loader inet -hosts 127.0.0.1 -setcookie #{:erlang.get_cookie()}")
   end
 
   defp allow_boot(host) do
