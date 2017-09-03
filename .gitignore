@@ -22,22 +22,6 @@ bench/snapshots
 # Ignore Exometer logs
 /log
 
-# Don't commit editor configs
-.idea
-*.iws
-/out/
-atlassian-ide-plugin.xml
-*.tmlanguage.cache
-*.tmPreferences.cache
-*.stTheme.cache
-*.sublime-workspace
-sftp-config.json
-GitHub.sublime-settings
-.tags
-.tags_sorted_by_file
-.vagrant
-.DS_Store
-
 # Ignore released binaries
 rel/*/
 !rel/config.exs
