@@ -2,6 +2,7 @@
   "benchfella": {:hex, :benchfella, "0.3.4", "41d2c017b361ece5225b5ba2e3b30ae53578c57c6ebc434417b4f1c2c94cf4f3", [:mix], []},
   "bunt": {:hex, :bunt, "0.2.0", "951c6e801e8b1d2cbe58ebbd3e616a869061ddadcc4863d0a2182541acae9a38", [:mix], []},
   "certifi": {:hex, :certifi, "1.2.1", "c3904f192bd5284e5b13f20db3ceac9626e14eeacfbb492e19583cf0e37b22be", [:rebar3], []},
+  "cidr": {:hex, :cidr, "1.1.0", "77ab79e3d694d6d315c2e7dea1c66710623488ab7595316d3e2987aebe0def25", [], [], "hexpm"},
   "confex": {:hex, :confex, "3.2.2", "4fc6161d1bbbe3f24581758059dce285fa9d2719fe41a15b396c4f32250ef7c1", [:mix], []},
   "connection": {:hex, :connection, "1.0.4", "a1cae72211f0eef17705aaededacac3eb30e6625b04a6117c1b2db6ace7d5976", [:mix], []},
   "cors_plug": {:hex, :cors_plug, "1.4.0", "c1c4fb68adf2fd1b4caccee978663edd58f62881627ab65b52ff56146945687f", [:mix], [{:plug, "> 0.14.0", [hex: :plug, optional: false]}]},
