@@ -37,7 +37,7 @@ defmodule Annon.Plugins.IPRestriction do
     do: nil
 
   defp blacklisted?(%{"blacklist" => list}, ip),
-    do: match?(list, ip)
+    do: ip_listed?(list, ip)
   defp blacklisted?(_plugin, _ip),
     do: nil
 
