@@ -82,7 +82,7 @@ defmodule Annon.Plugins.IPRestrictionTest do
         "whitelist" => ["127.0.0.0/24"]
       }
 
-      conn = Map.put(conn, :remote_ip, {127, 0, 0,253})
+      conn = Map.put(conn, :remote_ip, {127, 0, 0, 253})
       assert conn == IPRestriction.execute(conn, nil, settings)
     end
   end
