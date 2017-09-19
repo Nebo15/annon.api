@@ -32,6 +32,13 @@ defmodule Annon.Plugins.IPRestrictionTest do
       }}}
 
       assert %Ecto.Changeset{valid?: false} = IPRestriction.validate_settings(changeset)
+
+      changeset = %Ecto.Changeset{valid?: true, changes: %{settings: %{
+        "blacklist" => ["127.0.0.0/100"],
+        "whitelist" => ["128.30.50.245/ab"]
+      }}}
+
+      assert %Ecto.Changeset{valid?: false} = IPRestriction.validate_settings(changeset)
     end
   end
 
@@ -68,6 +75,14 @@ defmodule Annon.Plugins.IPRestrictionTest do
       }
 
       conn = Map.put(conn, :remote_ip, {127, 0, 0, 1})
+      assert conn == IPRestriction.execute(conn, nil, settings)
+
+      settings = %{
+        "blacklist" => ["127.0.0.1"],
+        "whitelist" => ["127.0.0.0/24"]
+      }
+
+      conn = Map.put(conn, :remote_ip, {127, 0, 0, 253})
       assert conn == IPRestriction.execute(conn, nil, settings)
     end
   end

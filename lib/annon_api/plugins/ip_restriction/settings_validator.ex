@@ -23,7 +23,7 @@ defmodule Annon.Plugins.IPRestriction.SettingsValidator do
           "items" => %{
             "type" => "string",
             "oneOf" => [
-              %{"pattern" => "^(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)$"}
+              %{"pattern" => "^(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)(\/\\d{1,2})?$"}
             ]
           }
         },
@@ -32,7 +32,7 @@ defmodule Annon.Plugins.IPRestriction.SettingsValidator do
           "items" => %{
             "type" => "string",
             "oneOf" => [
-              %{"pattern" => "^(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)$"}
+              %{"pattern" => "^(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)\.(\\*|\\d+)(\/\\d{1,2})?$"}
             ]
           }
         }

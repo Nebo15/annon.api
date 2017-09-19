@@ -32,14 +32,25 @@ defmodule Annon.Plugins.IPRestriction do
   end
 
   defp whitelisted?(%{"whitelist" => list}, ip),
-    do: Enum.any?(list, &ip_matches?(&1, ip))
+    do: ip_listed?(list, ip)
   defp whitelisted?(_plugin, _ip),
     do: nil
 
   defp blacklisted?(%{"blacklist" => list}, ip),
-    do: Enum.any?(list, &ip_matches?(&1, ip))
+    do: ip_listed?(list, ip)
   defp blacklisted?(_plugin, _ip),
     do: nil
+
+  defp ip_listed?(list, ip) do
+    Enum.any? list, fn listed_ip ->
+      case CIDR.parse(listed_ip) do
+        %CIDR{} = cidr ->
+          CIDR.match!(cidr, ip)
+        {:error, _} ->
+          ip_matches?(listed_ip, ip)
+      end
+    end
+  end
 
   defp ip_matches?(ip1, ip2) do
     ip2_list = String.split(ip2, ".")
