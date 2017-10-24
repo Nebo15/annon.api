@@ -112,6 +112,60 @@ defmodule Annon.Acceptance.Smoke.AclTest do
     assert_logs_are_written(response)
   end
 
+  test "A valid broker scope is required to access upstream", %{secret: secret} do
+    auth_token = build_jwt_token(%{
+      "consumer_id" => "id",
+      "consumer_scope" => ["httpbin:read, httpbin:write"],
+      "broker_scope" => "httpbin:read"
+    }, secret)
+
+    headers = [
+      {"authorization", "Bearer #{auth_token}"},
+      {"content-type", "application/json"}
+    ]
+
+    response =
+      "/httpbin?my_param=my_value"
+      |> put_public_url()
+      |> HTTPoison.post!(Poison.encode!(%{}), headers ++ [magic_header()])
+      |> Map.get(:body)
+      |> Poison.decode!
+
+    assert "Your scope does not allow to access this resource. Missing allowances: httpbin:write"
+      == response["error"]["message"]
+    assert "forbidden" == response["error"]["type"]
+    assert 403 == response["meta"]["code"]
+
+    assert_logs_are_written(response)
+  end
+
+  test "Broker is disabled", %{secret: secret} do
+    auth_token = build_jwt_token(%{
+      "consumer_id" => "id",
+      "consumer_scope" => ["httpbin:read"],
+      "broker_scope" => ""
+    }, secret)
+
+    headers = [
+      {"authorization", "Bearer #{auth_token}"},
+      {"content-type", "application/json"}
+    ]
+
+    response =
+      "/httpbin?my_param=my_value"
+      |> put_public_url()
+      |> HTTPoison.get!(headers ++ [magic_header()])
+      |> Map.get(:body)
+      |> Poison.decode!
+
+    assert "Your scope does not allow to access this resource. Missing allowances: httpbin:read"
+      == response["error"]["message"]
+    assert "forbidden" == response["error"]["type"]
+    assert 403 == response["meta"]["code"]
+
+    assert_logs_are_written(response)
+  end
+
   defp assert_logs_are_written(response) do
     log_entry = Annon.Requests.Repo.one(Annon.Requests.Request)
     logged_response = Poison.decode!(log_entry.response.body)

@@ -6,7 +6,9 @@ config :skycluster,
 
 config :annon_api,
   sql_sandbox: true,
-  enable_ssl?: false
+  enable_ssl?: false,
+  protected_headers: {:system, :list, "PROTECTED_HEADERS", [
+    "x-consumer-id", "x-consumer-scope", "x-consumer-token", "x-consumer-token-id", "x-consumer-metadata", "host"]}
 
 config :annon_api, Annon.Configuration.Repo,
   database: "annon_api_configs_test",

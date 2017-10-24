@@ -176,6 +176,62 @@ defmodule Annon.Plugins.ACLTest do
       |> json_response(403)
     end
 
+    test "returns forbidden when consumer has invalid broker scope", %{conn: conn, api: api} do
+      settings = %{
+        "rules" => [
+          %{
+            "methods" => ["GET"],
+            "path" => ".*",
+            "scopes" => ["some_resource:write"]
+          }
+        ]
+      }
+
+      consumer = %Consumer{
+        id: "bob",
+        scope: "some_resource:read some_resource:write",
+        metadata: %{"broker_scope" => "some_resource:read"}
+      }
+
+      assert %{
+        "error" => %{
+          "message" => "Your scope does not allow to access this resource. Missing allowances: some_resource:write",
+          "type" => "forbidden"
+        }
+      } = conn
+      |> Conn.assign(:consumer, consumer)
+      |> ACL.execute(%{api: api}, settings)
+      |> json_response(403)
+    end
+
+    test "returns forbidden when broker scope is empty", %{conn: conn, api: api} do
+      settings = %{
+        "rules" => [
+          %{
+            "methods" => ["GET"],
+            "path" => ".*",
+            "scopes" => ["some_resource:read"]
+          }
+        ]
+      }
+
+      consumer = %Consumer{
+        id: "bob",
+        scope: "some_resource:read",
+        metadata: %{"broker_scope" => ""}
+      }
+
+      assert %{
+        "error" => %{
+          "message" => "Your scope does not allow to access this resource. Missing allowances: some_resource:read",
+          "type" => "forbidden"
+        }
+      } = conn
+      |> Conn.assign(:consumer, consumer)
+      |> ACL.execute(%{api: api}, settings)
+      |> json_response(403)
+    end
+
     test "uses first matched rule", %{conn: conn, api: api} do
       settings = %{
         "rules" => [

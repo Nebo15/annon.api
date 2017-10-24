@@ -1,6 +1,7 @@
 %{
   configs: [
     %{
+      color: true,
       name: "default",
       files: %{
         included: ["lib/"]
