@@ -117,7 +117,7 @@ defmodule Annon.Requests.AnalyticsTest do
         }
       ] = Analytics.aggregate_latencies([api_id1], "1 hour")
 
-      {:ok, {{_, _, _}, {6, _, _, _}}} = Ecto.DateTime.dump(tick1)
+      {:ok, {{_, _, _}, {3, _, _, _}}} = Ecto.DateTime.dump(tick1)
 
       # 3 days
       assert [
