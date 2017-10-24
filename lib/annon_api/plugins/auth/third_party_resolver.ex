@@ -6,8 +6,8 @@ defmodule Annon.Plugins.Auth.ThirdPartyResolver do
   alias Annon.PublicAPI.Consumer
   alias HTTPoison.Response
 
-  def call_third_party_resolver(url) do
-    headers = [{"content-type", "application/json"}, {"accept", "application/json"}]
+  def call_third_party_resolver(url, api_key \\ nil) do
+    headers = [{"content-type", "application/json"}, {"accept", "application/json"}, {"api-key", api_key}]
 
     with {:ok, %Response{status_code: 200, body: body}}
             when is_binary(body) and body != "" <- HTTPoison.get(url, headers),

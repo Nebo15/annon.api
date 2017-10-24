@@ -8,7 +8,7 @@ defmodule Annon.Plugins.Auth.Strategies.JWT do
   alias Annon.Plugins.Auth.ThirdPartyResolver
   @behaviour Annon.Plugins.Auth.Strategy
 
-  def fetch_consumer(:bearer, token, settings) do
+  def fetch_consumer(:bearer, token, settings, api_key \\ nil) do
     %{"secret" => secret, "algorithm" => algorithm} = settings
 
     signer =
@@ -23,7 +23,7 @@ defmodule Annon.Plugins.Auth.Strategies.JWT do
 
     with %Token{error: nil} = jwt_token <- verify(jwt_token),
          %Consumer{} = consumer <- get_consumer(jwt_token),
-         %Consumer{} = consumer <- put_scope(consumer, settings) do
+         %Consumer{} = consumer <- put_scope(consumer, settings, api_key) do
       {:ok, consumer}
     else
       %Token{error: _message} -> {:error, "JWT token is invalid"}
@@ -88,15 +88,15 @@ defmodule Annon.Plugins.Auth.Strategies.JWT do
   defp get_consumer_id(_),
     do: nil
 
-  defp put_scope(%{metadata: metadata} = consumer, %{"third_party_resolver" => false}),
+  defp put_scope(%{metadata: metadata} = consumer, %{"third_party_resolver" => false}, _api_key),
     do: Map.put(consumer, :scope, get_consumer_scope(metadata))
-  defp put_scope(%Consumer{} = consumer, %{"third_party_resolver" => true, "url_template" => url_template}) do
+  defp put_scope(%Consumer{} = consumer, %{"third_party_resolver" => true, "url_template" => url_template}, api_key) do
     %{id: consumer_id} = consumer
 
     resp =
       url_template
       |> String.replace("{consumer_id}", consumer_id)
-      |> ThirdPartyResolver.call_third_party_resolver()
+      |> ThirdPartyResolver.call_third_party_resolver(api_key)
 
     case resp do
       {:ok, %Consumer{scope: scope}} ->
