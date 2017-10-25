@@ -7,13 +7,13 @@ services:
   - docker
   - postgresql
 addons:
-  postgresql: "9.5"
+  postgresql: "9.6"
   hosts:
     - httpbin.org
 elixir:
-  - 1.4.5
+  - 1.5.2
 otp_release:
-  - 19.3
+  - 20.1.2
 notifications:
   slack: 
     rooms:

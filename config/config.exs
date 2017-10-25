@@ -36,7 +36,7 @@ config :annon_api, :plugin_pipeline,
 
 # Configure JSON Logger back-end
 config :logger_json, :backend,
-  on_init: {Annon, :load_from_system_env, []},
+  load_from_system_env: true,
   json_encoder: Poison,
   metadata: :all
 

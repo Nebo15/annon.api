@@ -20,7 +20,7 @@ defmodule Annon.Configuration.Matcher do
   end
 
   defp configure(config) do
-    {:ok, opts} = Annon.load_from_system_env(config)
+    {:ok, opts} = Annon.init(nil, config)
 
     adapter = Keyword.get(opts, :adapter)
 

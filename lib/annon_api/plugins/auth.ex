@@ -18,9 +18,10 @@ defmodule Annon.Plugins.Auth do
 
   def execute(%Conn{} = conn, _request, %{"strategy" => strategy} = settings) do
     adapter = Map.fetch!(@strategies, strategy)
+    api_key = conn |> Conn.get_req_header("api-key") |> List.first()
 
     with {:ok, token_type, token} <- fetch_authorization(conn),
-         {:ok, consumer} <- adapter.fetch_consumer(token_type, token, settings) do
+         {:ok, consumer} <- adapter.fetch_consumer(token_type, token, settings, api_key) do
       conn
       |> Conn.assign(:consumer, consumer)
       |> put_x_consumer_id_header(consumer.id)

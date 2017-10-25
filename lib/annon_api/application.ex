@@ -3,6 +3,7 @@ defmodule Annon do
   This is an entry point of Annon application.
   """
   use Application
+  alias Confex.Resolver
 
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
@@ -40,10 +41,10 @@ defmodule Annon do
     Confex.get_env(:annon_api, :metrics_collector)
   end
 
-  # Loads configuration in `:on_init` callbacks and replaces `{:system, ..}` tuples via Confex
+  # Loads configuration in `:init` callbacks and replaces `{:system, ..}` tuples via Confex
   @doc false
-  def load_from_system_env(config) do
-    {:ok, _} = Confex.Resolver.resolve(config)
+  def init(_key, config) do
+    Resolver.resolve(config)
   end
 
   # Configures Logger level via LOG_LEVEL environment variable.

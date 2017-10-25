@@ -50,7 +50,7 @@ defmodule Annon.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:distillery, "~> 1.1"},
+    [{:distillery, "~> 1.4.1"},
      {:skycluster, ">= 0.0.0"},
      {:confex, ">= 0.0.0"},
      {:plug, ">= 0.0.0"},

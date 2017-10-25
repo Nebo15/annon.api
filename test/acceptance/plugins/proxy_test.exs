@@ -446,7 +446,7 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
         strip_api_path: true
       })
 
-      protected_headers = Confex.get_env(:annon_api, :protected_headers)
+      protected_headers = :annon_api |> Confex.get_env(:protected_headers) |> List.delete("host")
 
       headers = Enum.map(protected_headers, fn x -> {x, "111"} end)
 

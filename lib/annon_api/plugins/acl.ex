@@ -17,9 +17,10 @@ defmodule Annon.Plugins.ACL do
     %Conn{method: request_method, request_path: request_path} = conn
     api_relative_path = String.trim_leading(request_path, String.trim_trailing(api_path, "/"))
 
-    with {:ok, consumer_scope} <- fetch_scope(conn),
+    with {:ok, consumer_scope, broker_scope} <- fetch_scope(conn),
          {:ok, rule} <- find_rule(rules, request_method, api_relative_path),
-         :ok <- validate_scope(rule, consumer_scope) do
+         :ok <- validate_scope(rule, consumer_scope),
+         :ok <- validate_broker_scope(rule, broker_scope) do
       conn
     else
       {:error, :scope_not_set} -> send_forbidden(conn)
@@ -30,8 +31,8 @@ defmodule Annon.Plugins.ACL do
     end
   end
 
-  defp fetch_scope(%Conn{assigns: %{consumer: %Consumer{scope: scope}}}),
-    do: {:ok, scope}
+  defp fetch_scope(%Conn{assigns: %{consumer: %Consumer{scope: scope, metadata: meta}}}),
+    do: {:ok, scope, Map.get(meta, "broker_scope")}
   defp fetch_scope(_),
     do: {:error, :scope_not_set}
 
@@ -47,6 +48,13 @@ defmodule Annon.Plugins.ACL do
       end)
 
     if is_nil(rule), do: {:error, :no_matching_rule}, else: rule
+  end
+
+  # broker scope not required
+  defp validate_broker_scope(_scope, nil),
+   do: :ok
+  defp validate_broker_scope(scope, broker_scope) do
+    validate_scope(scope, broker_scope)
   end
 
   defp validate_scope(%{"scopes" => required_scopes}, []),
