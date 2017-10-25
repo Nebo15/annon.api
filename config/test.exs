@@ -71,7 +71,7 @@ config :annon_api, :plugin_pipeline,
 
 config :logger,
   backends: [:console],
-  level: :debug
+  level: :error
 
 config :ex_unit, capture_log: true
 
