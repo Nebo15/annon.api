@@ -22,7 +22,13 @@ defmodule Annon.Plugins.Auth.ThirdPartyResolver do
           "Auth - Third party resolver: HTTP GET to #{url} received HTTP #{to_string(status_code)} code " <>
           "with body #{inspect body}."
         end)
-        {:error, :invalid_response}
+        case status_code do
+          422 ->
+            error = body |> Poison.decode!() |> Map.get("error") |> Map.values |> List.first()
+            {:error, error}
+          _ ->
+            {:error, :invalid_response}
+        end
 
       {:error, reason} ->
         Logger.error(fn ->
