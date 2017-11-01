@@ -17,11 +17,18 @@ defmodule Annon.Plugins.Auth.ThirdPartyResolver do
       {:ok, %Response{status_code: 401, body: error_body}} ->
         {:error, get_error_message(error_body, :invalid_status_code)}
 
-      {:ok, %Response{status_code: status_code}} ->
+      {:ok, %Response{status_code: status_code, body: body}} ->
         Logger.error(fn ->
-          "Auth - Third party resolver: HTTP GET to #{url} received HTTP #{to_string(status_code)} code."
+          "Auth - Third party resolver: HTTP GET to #{url} received HTTP #{to_string(status_code)} code " <>
+          "with body #{inspect body}."
         end)
-        {:error, :invalid_response}
+        case status_code do
+          422 ->
+            error = body |> Poison.decode!() |> Map.get("error") |> Map.values |> List.first()
+            {:error, error}
+          _ ->
+            {:error, :invalid_response}
+        end
 
       {:error, reason} ->
         Logger.error(fn ->
