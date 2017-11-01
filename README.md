@@ -1,6 +1,6 @@
 # Annon
 
-[![Coverage Status](https://coveralls.io/repos/github/edenlabllc/annon.api/badge.svg?branch=master&t=y562b4)](https://coveralls.io/github/Nebo15/annon.api?branch=master) [![Build Status](https://travis-ci.org/edenlabllc/annon.api.svg?branch=master)](https://travis-ci.org/Nebo15/annon.api)
+[![Coverage Status](https://coveralls.io/repos/github/edenlabllc/annon.api/badge.svg?branch=master&t=y562b4)](https://coveralls.io/github/edenlabllc/annon.api?branch=master) [![Build Status](https://travis-ci.org/edenlabllc/annon.api.svg?branch=master)](https://travis-ci.org/edenlabllc/annon.api)
 
 # Annon API Gateway 
 
@@ -10,12 +10,12 @@ Annon is a configurable API gateway that acts as a reverse proxy with a plugin s
 
 Annon consist of multiple main parts:
 
-- [Annon API Gateway](https://github.com/Nebo15/annon.api).
-- [Annon Dashboard](https://github.com/Nebo15/annon.web) - UI that allows to manage Annon settings, review and analyze Requests.
-- [annonktl](https://github.com/Nebo15/annon.ktl) - CLI management utility.
-- [Annon Status Pages](https://github.com/Nebo15/annon.status.web) - UI that renders APIs status pages;
+- [Annon API Gateway](https://github.com/edenlabllc/annon.api).
+- [Annon Dashboard](https://github.com/edenlabllc/annon.web) - UI that allows to manage Annon settings, review and analyze Requests.
+- [annonktl](https://github.com/edenlabllc/annon.ktl) - CLI management utility.
+- [Annon Status Pages](https://github.com/edenlabllc/annon.status.web) - UI that renders APIs status pages;
 - [EView](https://hex.pm/packages/eview) - hex package that allows to receive and modify client responses from Elixir application to match [Nebo #15 API Manifest](http://docs.apimanifest.apiary.io/). So your back-ends will respond in a same way as Annon does.
-- [Mithril](https://github.com/Nebo15/mithril.api) - authentication and role management service.
+- [Mithril](https://github.com/edenlabllc/mithril.api) - authentication and role management service.
 
 ## Goals of the Project
 
@@ -35,7 +35,7 @@ Whenever a single node receives request that changes cached data, it's responsib
 
 Whenever new node joins to a cluster, all other nodes should drop their cache, to resolve consistency issues.
 
-This feature is done via [skycluster](https://github.com/Nebo15/skycluster) package. All gateway nodes is connected via Erlang distribution protocol.
+This feature is done via [skycluster](https://github.com/edenlabllc/skycluster) package. All gateway nodes is connected via Erlang distribution protocol.
 It support different discovery strategies:
 
 - `kubernetes` - selecting pods via Kubernetes API;
@@ -81,20 +81,20 @@ Annon supports [OpenTracing](http://opentracing.io/) in Erlang via [Otter](https
 
 Annon can be installed by compiling it from sources, but we recommend you to use our pre-build Docker containers:
 
-- [Annon API Gateway](https://hub.docker.com/r/nebo15/annon_api/);
-- [Annon Dashboard](https://hub.docker.com/r/nebo15/annon.web/);
-- [Annon Status Pages](https://hub.docker.com/r/nebo15/annon.status.web/);
-- [PostgreSQL](https://hub.docker.com/r/nebo15/alpine-postgres/).
+- [Annon API Gateway](https://hub.docker.com/r/edenlabllc/annon_api/);
+- [Annon Dashboard](https://hub.docker.com/r/edenlabllc/annon.web/);
+- [Annon Status Pages](https://hub.docker.com/r/edenlabllc/annon.status.web/);
+- [PostgreSQL](https://hub.docker.com/r/edenlabllc/alpine-postgres/).
 
 Our containers are based on Alpine Linux wich is a security-oriented, lightweight Linux distribution based on musl libc and busybox.
 
 ### Kubernetes
 
-You can deploy it to Kubernetes using [example configs from Annon's Infra repo](https://github.com/Nebo15/annon.infra/blob/master/kubernetes).
+You can deploy it to Kubernetes using [example configs from Annon's Infra repo](https://github.com/edenlabllc/annon.infra/blob/master/kubernetes).
 
 ### Docker Compose
 
-For local environments we provide an [example Docket Compose configuration](https://github.com/Nebo15/annon.infra/tree/master/docker-compose). You can use this one-liner to deploy all Annon components on a local machine:
+For local environments we provide an [example Docket Compose configuration](https://github.com/edenlabllc/annon.infra/tree/master/docker-compose). You can use this one-liner to deploy all Annon components on a local machine:
 
 `curl -L http://bit.ly/annon_compose | bash`
 
@@ -102,7 +102,7 @@ For local environments we provide an [example Docket Compose configuration](http
 
 You can find full documentation on official [Apiary](http://docs.annon.apiary.io/) page.
 
-Also there are auto-generated code documentation [available here](https://nebo15.github.io/annon.api/api-reference.html#content).
+Also there are auto-generated code documentation [available here](https://edenlabllc.github.io/annon.api/api-reference.html#content).
 
 ## License
 

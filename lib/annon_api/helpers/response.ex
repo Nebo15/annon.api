@@ -6,7 +6,7 @@ defmodule Annon.Helpers.Response do
   """
 
   @doc """
-  Send error by a [EView.ErrorView](https://github.com/Nebo15/eview/blob/master/lib/eview/views/error_view.ex)
+  Send error by a [EView.ErrorView](https://github.com/edenlabllc/eview/blob/master/lib/eview/views/error_view.ex)
   template to a API consumer and halt connection.
   """
   def send_error(conn, :not_found) do

@@ -5,17 +5,17 @@ HOST: http://os-dev-gateway.nebo15.com:8080/
 
 Annon is a configurable API gateway that acts as a reverse proxy with a plugin system. Plugins are reducing boilerplate that must be done in each service, making overall development faster. Also it stores all requests, responses and key metrics, making it easy to debug your application. Inspired by [Kong](https://getkong.org/).
 
-It's free. Source code is available on [GitHub](https://github.com/Nebo15/annon.api).
+It's free. Source code is available on [GitHub](https://github.com/edenlabllc/annon.api).
 
 > "Annon" translates from the Sindarin word for 'Great Door or Gate'. Sindarin is one of the many languages spoken by the immortal Elves.
 
 Annon consist of multiple main parts:
 
-- [Annon API Gateway](https://github.com/Nebo15/annon.api).
-- [Annon Dashboard](https://github.com/Nebo15/annon.web) - UI that allows to manage Annon settings, review and analyze Requests.
-- [Annon Status Pages](https://github.com/Nebo15/annon.status.web) - UI that renders APIs status pages;
+- [Annon API Gateway](https://github.com/edenlabllc/annon.api).
+- [Annon Dashboard](https://github.com/edenlabllc/annon.web) - UI that allows to manage Annon settings, review and analyze Requests.
+- [Annon Status Pages](https://github.com/edenlabllc/annon.status.web) - UI that renders APIs status pages;
 - [EView](https://hex.pm/packages/eview) - hex package that allows to receive and modify client responses from Elixir application to match [Nebo #15 API Manifest](http://docs.apimanifest.apiary.io/). So your back-ends will respond in a same way as Annon does.
-- [Mithril](https://github.com/Nebo15/mithril.api) - authentication and role management service.
+- [Mithril](https://github.com/edenlabllc/mithril.api) - authentication and role management service.
 
 ## Goals of the Project
 
@@ -35,7 +35,7 @@ Whenever a single node receives request that changes cached data, it's responsib
 
 Whenever new node joins to a cluster, all other nodes should drop their cache, to resolve consistency issues.
 
-This feature is done via [skycluster](https://github.com/Nebo15/skycluster) package. All gateway nodes is connected via Erlang distribution protocol.
+This feature is done via [skycluster](https://github.com/edenlabllc/skycluster) package. All gateway nodes is connected via Erlang distribution protocol.
 It support different discovery strategies:
 
 - `kubernetes` - selecting pods via Kubernetes API;
@@ -79,7 +79,7 @@ Annon supports [OpenTracing](http://opentracing.io/) in Erlang via [Otter](https
 
 ### Management UI
 
-![UI Screenshow](https://github.com/Nebo15/annon.web/raw/master/docs/images/ui-animated.gif)
+![UI Screenshow](https://github.com/edenlabllc/annon.web/raw/master/docs/images/ui-animated.gif)
 
 ## Installation
 
@@ -94,11 +94,11 @@ Our containers are based on Alpine Linux wich is a security-oriented, lightweigh
 
 ### Kubernetes
 
-You can deploy it to Kubernetes using [example configs from Annon's Infra repo](https://github.com/Nebo15/annon.infra/blob/master/kubernetes).
+You can deploy it to Kubernetes using [example configs from Annon's Infra repo](https://github.com/edenlabllc/annon.infra/blob/master/kubernetes).
 
 ### Docker Compose
 
-For local environments we provide an [example Docket Compose configuration](https://github.com/Nebo15/annon.infra/tree/master/docker-compose). You can use this one-liner to deploy all Annon components on a local machine:
+For local environments we provide an [example Docket Compose configuration](https://github.com/edenlabllc/annon.infra/tree/master/docker-compose). You can use this one-liner to deploy all Annon components on a local machine:
 
 `curl -L http://bit.ly/annon_compose | bash`
 
@@ -108,7 +108,7 @@ Also there are auto-generated code documentation [available here](https://nebo15
 
 ## License
 
-See [LICENSE.md](https://github.com/Nebo15/annon.api/blob/master/LICENSE.md).
+See [LICENSE.md](https://github.com/edenlabllc/annon.api/blob/master/LICENSE.md).
 
 # Group APIs
 
