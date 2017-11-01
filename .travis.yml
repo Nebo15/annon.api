@@ -44,7 +44,7 @@ before_script:
   # Extract project name and version from mix.exs
   - source ./bin/ci/release/fetch-project-environment.sh
   # Load information about new version
-  - ./bin/ci/release/fetch-source-version.sh || travis_terminate 1
+  - source ./bin/ci/release/fetch-source-version.sh || travis_terminate 1
   # Load information about changelog
   - source ./bin/ci/release/fetch-changelog.sh
 script:

@@ -82,7 +82,7 @@ defmodule Annon.Mixfile do
     [contributors: ["Nebo #15"],
      maintainers: ["Nebo #15"],
      licenses: ["LISENSE.md"],
-     links: %{github: "https://github.com/Nebo15/annon.api"},
+     links: %{github: "https://github.com/edenlabllc/annon.api"},
      files: ~w(lib LICENSE.md mix.exs README.md)]
   end
 
