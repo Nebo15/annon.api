@@ -1,4 +1,4 @@
-FROM nebo15/alpine-elixir:1.5.1 as builder
+FROM nebo15/alpine-elixir:1.5.3 as builder
 MAINTAINER Nebo#15 support@nebo15.com
 
 # Always build with production environment
@@ -41,7 +41,7 @@ RUN set -xe; \
 # We are using Linux Alpine image with pre-installed Erlang,
 # pure alpine with ERTS from tarball won't work because Erlang VM
 # has lots of native dependencies
-FROM nebo15/alpine-erlang:20.0.4
+FROM nebo15/alpine-erlang:20.2.2
 MAINTAINER Nebo#15 support@nebo15.com
 
 ENV \
