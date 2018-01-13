@@ -12,8 +12,8 @@ if [ "${API_NAME}" != "Sanity check" ]; then
 fi
 
 # Add proxy plugin
-PROXY=$(curl --silent --request PUT --header "Content-Type: application/json" http://localhost:4001/apis/${API_ID}/plugins/proxy -d '{"plugin": {"name":"proxy","is_enabled":true,"settings":{"scheme":"http","port":80,"path":"/","host":"httpbin.org","strip_api_path":true}}}')
-PROXY_HOST=$(echo ${PROXY} | jq -r '.data.settings.host')
+PROXY=$(curl --silent --request PUT --header "Content-Type: application/json" http://localhost:4001/apis/${API_ID}/plugins/proxy -d '{"plugin": {"name":"proxy","is_enabled":true,"settings":{"upstream":{"scheme":"http","port":80,"path":"/","host":"httpbin.org"},"strip_api_path":true}}}')
+PROXY_HOST=$(echo ${PROXY} | jq -r '.data.settings.upstream.host')
 
 if [ "${PROXY_HOST}" != "httpbin.org" ]; then
   echo "Unable to create proxy plugin. Error response: ${PROXY}"
