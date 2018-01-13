@@ -21,11 +21,13 @@ defmodule Annon.Acceptance.Smoke.ProxyTest do
 
     proxy_plugin = :proxy_plugin
     |> build_factory_params(%{settings: %{
-      scheme: "http",
-      host: "httpbin.org",
-      port: 80,
-      path: "/get",
-      strip_api_path: true
+      "upstream" => %{
+        "scheme" => "http",
+        "host" => "httpbin.org",
+        "port" => 80,
+        "path" => "/get",
+      },
+      "strip_api_path" => true
     }})
 
     "apis/#{api_id}/plugins/proxy"

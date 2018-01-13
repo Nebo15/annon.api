@@ -39,11 +39,12 @@ defmodule Annon.Plugins.Proxy do
     } = conn
 
     strip_api_path? = Map.get(settings, "strip_api_path", false)
-    proxy_path = Map.get(settings, "path", nil)
-    upstream_scheme = Map.get(settings, "scheme", Atom.to_string(conn.scheme))
-    upstream_host = Map.fetch!(settings, "host")
-    upstream_port = Map.get(settings, "port", nil)
-    upstream_path = UpstreamRequest.get_upstream_path(request_path, proxy_path, api_path, strip_api_path?)
+    upstream = Map.fetch!(settings, "upstream")
+    upstream_path = Map.get(upstream, "path")
+    upstream_scheme = Map.get(upstream, "scheme", Atom.to_string(conn.scheme))
+    upstream_host = Map.fetch!(upstream, "host")
+    upstream_port = Map.get(upstream, "port")
+    upstream_path = UpstreamRequest.get_upstream_path(request_path, upstream_path, api_path, strip_api_path?)
 
     %{upstream_request |
       scheme: upstream_scheme,

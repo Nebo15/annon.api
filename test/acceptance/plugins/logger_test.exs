@@ -29,12 +29,16 @@ defmodule Annon.Acceptance.Plugins.LoggerTest do
 
     api_id = get_in(api, ["data", "id"])
 
-    proxy_plugin = build_factory_params(:proxy_plugin, %{settings: %{
-      scheme: "http",
-      host: "127.0.0.1",
-      port: 4040,
-      path: "/latency"
-    }})
+    proxy_plugin = build_factory_params(:proxy_plugin, %{
+      settings: %{
+        "upstream" => %{
+          "scheme" => "http",
+          "host" => "127.0.0.1",
+          "port" => 4040,
+          "path" => "/latency"
+        }
+      }
+    })
 
     "apis/#{api_id}/plugins/proxy"
     |> put_management_url()

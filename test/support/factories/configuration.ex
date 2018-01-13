@@ -36,9 +36,15 @@ defmodule Annon.Factories.Configuration do
       name: "proxy",
       is_enabled: true,
       settings: %{
-        "host" => sequence(:host, &"www.example#{&1}.com"),
-        "port" => 80
+        "upstream" => build(:proxy_plugin_upstream)
       }
+    }
+  end
+
+  def proxy_plugin_upstream_factory do
+    %{
+      "host" => sequence(:host, &"www.example#{&1}.com"),
+      "port" => 80
     }
   end
 

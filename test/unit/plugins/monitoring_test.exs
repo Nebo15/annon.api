@@ -27,10 +27,12 @@ defmodule Annon.Plugins.MonitoringTest do
       is_enabled: true,
       api: api,
       settings: %{
-        scheme: "http",
-        host: "localhost",
-        port: 4040,
-        path: "/apis"
+        upstream: %{
+          scheme: "http",
+          host: "localhost",
+          port: 4040,
+          path: "/apis"
+        }
       }
     })
 

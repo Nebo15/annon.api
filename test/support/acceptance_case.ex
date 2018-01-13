@@ -12,6 +12,7 @@ defmodule Annon.AcceptanceCase do
     quote location: :keep, bind_quoted: [opts: opts] do
       use HTTPoison.Base
       import Annon.AcceptanceCase
+      import Annon.Factories.Configuration
 
       # Load configuration from environment that allows to test Docker containers that run on another port
       @config Confex.get_env(:annon_api, :acceptance)
@@ -101,14 +102,10 @@ defmodule Annon.AcceptanceCase do
       def get_endpoint_host(endpoint_type), do: @config[endpoint_type][:host]
 
       def create_proxy_to_mock(api_id, settings \\ %{}) do
-        settings = %{
-          host: get_endpoint_host(:mock),
-          port: get_endpoint_port(:mock)
-        }
-        |> Map.merge(settings)
+        upstream = %{"host" => get_endpoint_host(:mock), "port" => get_endpoint_port(:mock)}
+        settings = Map.put(settings, "upstream",  Map.merge(upstream, Map.get(settings, "upstream", %{})))
 
-        params = :proxy_plugin
-        |> build_factory_params(%{settings: settings})
+        params = build_factory_params(:proxy_plugin, %{settings: settings})
 
         proxy = "apis/#{api_id}/plugins/proxy"
         |> put_management_url()

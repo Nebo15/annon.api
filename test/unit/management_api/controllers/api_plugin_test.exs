@@ -90,7 +90,16 @@ defmodule Annon.ManagementAPI.Controllers.APIPluginTest do
 
     test "updates plugin when it is exists", %{conn: conn, api: api} do
       plugin = ConfigurationFactory.insert(:proxy_plugin, api_id: api.id)
-      update_overrides = [api_id: api.id, is_enabled: false, settings: %{"host" => "mydomain.com", "port" => 1234}]
+      update_overrides = [
+        api_id: api.id,
+        is_enabled: false,
+        settings: %{
+          "upstream" => %{
+            "host" => "mydomain.com",
+            "port" => 1234
+          }
+        }
+      ]
       update_attrs = ConfigurationFactory.params_for(:proxy_plugin, update_overrides)
 
       resp =
@@ -103,8 +112,8 @@ defmodule Annon.ManagementAPI.Controllers.APIPluginTest do
       assert plugin.name == update_attrs.name
       assert update_attrs.api_id == resp["api_id"]
       assert update_attrs.is_enabled == resp["is_enabled"]
-      assert update_attrs.settings["host"] == resp["settings"]["host"]
-      assert update_attrs.settings["port"] == resp["settings"]["port"]
+      assert update_attrs.settings["upstream"]["host"] == resp["settings"]["upstream"]["host"]
+      assert update_attrs.settings["upstream"]["port"] == resp["settings"]["upstream"]["port"]
 
       assert ^resp =
         conn

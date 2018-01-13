@@ -25,8 +25,7 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
 
   describe "Proxy Plugin" do
     test "create", %{api_id: api_id} do
-      proxy = :proxy_plugin
-      |> build_factory_params(%{settings: %{host: "host.com"}})
+      proxy = build_factory_params(:proxy_plugin, %{settings: %{"upstream" => %{"host" => "host.com"}}})
 
       "apis/#{api_id}/plugins/proxy"
       |> put_management_url()
@@ -55,16 +54,22 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
       |> put!(%{"plugin" => build_invalid_plugin("proxy")})
       |> assert_status(422)
 
+      invalid_proxy_attrs = %{
+        name: "proxy",
+        is_enabled: false,
+        settings: %{"upstream" => %{"host" => "localhost", "path" => 100}}
+      }
+
       %{
         "error" => %{
           "invalid" => [
-            %{"entry" => "$.settings.host", "rules" => [%{"rule" => "schemata"}]},
-            %{"entry" => "$.settings.path", "rules" => [%{"rule" => "cast"}]},
+            %{"entry" => "$.settings.upstream.host", "rules" => [%{"rule" => "schemata"}]},
+            %{"entry" => "$.settings.upstream.path", "rules" => [%{"rule" => "cast"}]},
           ]
         }
       } = "apis/#{api_id}/plugins/proxy"
       |> put_management_url()
-      |> put!(%{"plugin" => %{name: "proxy", is_enabled: false, settings: %{host: "localhost", path: 100}}})
+      |> put!(%{"plugin" => invalid_proxy_attrs})
       |> assert_status(422)
       |> get_body()
     end
@@ -72,8 +77,7 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
 
   describe "proxy settings validator" do
     test "allows only host and port", %{api_id: api_id, api_path: api_path} do
-      api_id
-      |> create_proxy_to_mock()
+      create_proxy_to_mock(api_id)
 
       assert %{"request" => %{"uri" => uri}} = api_path
       |> put_public_url()
@@ -87,10 +91,12 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
     test "validates data", %{api_id: api_id} do
       params = :proxy_plugin
       |> build_factory_params(%{settings: %{
-        path: 123,
-        scheme: "httpd",
-        strip_api_path: "hello",
-        additional_headers: "string"
+        "upstream" => %{
+          "path" => 123,
+          "scheme" => "httpd"
+        },
+        "strip_api_path" => "hello",
+        "additional_headers" => "string"
       }})
 
       "apis/#{api_id}/plugins/proxy"
@@ -102,8 +108,7 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
 
   describe "preserves HTTP method, body and query params" do
     test "GET", %{api_id: api_id, api_path: api_path} do
-      api_id
-      |> create_proxy_to_mock()
+      create_proxy_to_mock(api_id)
 
       assert %{"request" => %{
         "method" => "GET",
@@ -116,8 +121,7 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
     end
 
     test "POST", %{api_id: api_id, api_path: api_path} do
-      api_id
-      |> create_proxy_to_mock()
+      create_proxy_to_mock(api_id)
 
       assert %{"request" => %{
         "method" => "POST",
@@ -131,8 +135,7 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
     end
 
     test "PUT", %{api_id: api_id, api_path: api_path} do
-      api_id
-      |> create_proxy_to_mock()
+      create_proxy_to_mock(api_id)
 
       assert %{"request" => %{
         "method" => "PUT",
@@ -146,8 +149,7 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
     end
 
     test "DELETE", %{api_id: api_id, api_path: api_path} do
-      api_id
-      |> create_proxy_to_mock()
+      create_proxy_to_mock(api_id)
 
       assert %{"request" => %{
         "method" => "DELETE",
@@ -161,8 +163,8 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
   end
 
   test "works when upstream does not exist", %{api_id: api_id, api_path: api_path} do
-    proxy = :proxy_plugin
-    |> build_factory_params(%{settings: %{host: "exampleabcdewqasdftrewq-does-not-exist.com"}})
+    proxy_settings = %{"upstream" => %{"host" => "example-does-not-exist-qwerty-#{Enum.random(0..1000)}.com"}}
+    proxy = build_factory_params(:proxy_plugin, %{settings: proxy_settings})
 
     "apis/#{api_id}/plugins/proxy"
     |> put_management_url()
@@ -231,9 +233,11 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
 
       api_id
       |> create_proxy_to_mock(%{
-        path: proxy_path,
-        scheme: "http",
-        strip_api_path: false
+        "upstream" => %{
+          "path" => proxy_path,
+          "scheme" => "http",
+        },
+        "strip_api_path" => false
       })
 
       assert %{"request" => %{"uri" => uri}} = api_path
@@ -256,8 +260,10 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
     test "when `strip_api_path` is false and proxy path is not set", %{api_id: api_id, api_path: api_path} do
       api_id
       |> create_proxy_to_mock(%{
-        scheme: "http",
-        strip_api_path: false
+        "upstream" => %{
+          "scheme" => "http",
+        },
+        "strip_api_path" => false
       })
 
       assert %{"request" => %{"uri" => uri}} = api_path
@@ -282,9 +288,11 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
 
       api_id
       |> create_proxy_to_mock(%{
-        path: proxy_path,
-        scheme: "http",
-        strip_api_path: false
+        "upstream" => %{
+          "path" => proxy_path,
+          "scheme" => "http",
+        },
+        "strip_api_path" => false
       })
 
       assert %{"request" => %{"uri" => uri}} = api_path
@@ -309,9 +317,11 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
 
       api_id
       |> create_proxy_to_mock(%{
-        path: proxy_path,
-        scheme: "http",
-        strip_api_path: true
+        "upstream" => %{
+          "path" => proxy_path,
+          "scheme" => "http",
+        },
+        "strip_api_path" => true
       })
 
       assert %{"request" => %{"uri" => uri}} = api_path
@@ -334,8 +344,10 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
     test "when `strip_api_path` is true and proxy path is not set", %{api_id: api_id, api_path: api_path} do
       api_id
       |> create_proxy_to_mock(%{
-        scheme: "http",
-        strip_api_path: true
+        "upstream" => %{
+          "scheme" => "http",
+        },
+        "strip_api_path" => true
       })
 
       assert %{"request" => %{"uri" => uri}} = api_path
@@ -360,8 +372,10 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
 
       api_id
       |> create_proxy_to_mock(%{
-        path: proxy_path,
-        scheme: "http",
+        "upstream" => %{
+          "path" => proxy_path,
+          "scheme" => "http",
+        },
         strip_api_path: true
       })
 
@@ -389,8 +403,10 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
 
       api_id
       |> create_proxy_to_mock(%{
-        path: proxy_path,
-        scheme: "http",
+        "upstream" => %{
+          "path" => proxy_path,
+          "scheme" => "http",
+        },
         strip_api_path: true
       })
 
@@ -446,8 +462,10 @@ defmodule Annon.Acceptance.Plugins.ProxyTest do
 
       api_id
       |> create_proxy_to_mock(%{
-        path: proxy_path,
-        scheme: "http",
+        "upstream" => %{
+          "path" => proxy_path,
+          "scheme" => "http",
+        },
         strip_api_path: true
       })
 

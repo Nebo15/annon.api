@@ -11,27 +11,33 @@ defmodule Annon.Plugins.Proxy.SettingsValidator do
   def settings_validation_schema do
     %{
       "type" => "object",
-      "required" => ["host"],
+      "required" => ["upstream"],
       "additionalProperties" => false,
       "properties" => %{
-        # ADD: upstream object
-        "host" => %{
-          "type" => "string",
-          "oneOf" => [
-            %{"format" => "hostname"},
-            %{"format" => "ipv4"}
-          ]
-        },
-        "scheme" => %{
-          "enum" => ["http", "https"]
-        },
-        "port" => %{
-          "type" => "integer"
-        },
-        "path" => %{
-          "type" => "string",
-          "pattern" => "^/.*",
-          "minLength": 1
+        "upstream" => %{
+          "type" => "object",
+          "required" => ["host"],
+          "additionalProperties" => false,
+          "properties" => %{
+            "host" => %{
+              "type" => "string",
+              "oneOf" => [
+                %{"format" => "hostname"},
+                %{"format" => "ipv4"},
+              ]
+            },
+            "scheme" => %{
+              "enum" => ["http", "https"]
+            },
+            "port" => %{
+              "type" => "integer"
+            },
+            "path" => %{
+              "type" => "string",
+              "pattern" => "^/.*",
+              "minLength": 1
+            },
+          },
         },
         "strip_api_path" => %{
           "type" => "boolean"

@@ -21,10 +21,12 @@ defmodule Annon.Acceptance.Smoke.FailedUpstreamTest do
 
     proxy_plugin = :proxy_plugin
     |> build_factory_params(%{settings: %{
-      scheme: "http",
-      host: "errorzkdjdsdhsifosdifhdsfsodihf.co",
-      port: 80,
-      path: "/get",
+      upstream: %{
+        scheme: "http",
+        host: "errorzkdjdsdhsifosdifhdsfsodihf.co",
+        port: 80,
+        path: "/get",
+      },
       strip_api_path: true
     }})
 

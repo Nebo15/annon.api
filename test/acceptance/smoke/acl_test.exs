@@ -21,13 +21,17 @@ defmodule Annon.Acceptance.Smoke.AclTest do
     api_id = get_in(api, ["data", "id"])
 
     proxy_plugin = :proxy_plugin
-    |> build_factory_params(%{settings: %{
-      scheme: "http",
-      host: "httpbin.org",
-      port: 80,
-      path: "/get",
-      strip_api_path: true
-    }})
+    |> build_factory_params(%{
+      settings: %{
+        upstream: %{
+          scheme: "http",
+          host: "httpbin.org",
+          port: 80,
+          path: "/get",
+        },
+        strip_api_path: true
+      }
+    })
 
     "apis/#{api_id}/plugins/proxy"
     |> put_management_url()
