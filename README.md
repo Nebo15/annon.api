@@ -10,7 +10,7 @@ Annon is a configurable API gateway that acts as a reverse proxy with a plugin s
 
 Annon consist of multiple main parts:
 
-- [Annon API Gateway](https://github.com/Nebo15/annon.api).
+- Annon API Gateway (you is here).
 - [Annon Dashboard](https://github.com/Nebo15/annon.web) - UI that allows to manage Annon settings, review and analyze Requests.
 - [annonktl](https://github.com/Nebo15/annon.ktl) - CLI management utility.
 - [Annon Status Pages](https://github.com/Nebo15/annon.status.web) - UI that renders APIs status pages;
@@ -88,15 +88,17 @@ Annon can be installed by compiling it from sources, but we recommend you to use
 
 Our containers are based on Alpine Linux wich is a security-oriented, lightweight Linux distribution based on musl libc and busybox.
 
-### Kubernetes
-
-You can deploy it to Kubernetes using [example configs from Annon's Infra repo](https://github.com/Nebo15/annon.infra/blob/master/kubernetes).
-
 ### Docker Compose
 
 For local environments we provide an [example Docket Compose configuration](https://github.com/Nebo15/annon.infra/tree/master/docker-compose). You can use this one-liner to deploy all Annon components on a local machine:
 
 `curl -L http://bit.ly/annon_compose | bash`
+  
+After Annon is started, open http://localhost:8080/apis for Management UI, http://localhost:4000/ for public API and http://localhost:4001/ for management API.
+
+### Kubernetes
+
+You can deploy it to Kubernetes using [example configs from Annon's Infra repo](https://github.com/Nebo15/annon.infra/blob/master/kubernetes).
 
 ## Documentation
 
