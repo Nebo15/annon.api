@@ -1,4 +1,4 @@
-FROM nebo15/alpine-elixir:1.5.3 as builder
+FROM nebo15/alpine-elixir:1.6.4 as builder
 MAINTAINER Nebo#15 support@nebo15.com
 
 # Always build with production environment
