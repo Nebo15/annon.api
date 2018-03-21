@@ -14,9 +14,9 @@ addons:
     packages:
       - docker-ce
 elixir:
-  - 1.5.1
+  - 1.6.4
 otp_release:
-  - 20.0
+  - 20.2
 env:
   global:
     - MIX_ENV=test
