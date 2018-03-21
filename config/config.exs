@@ -15,7 +15,8 @@ config :annon_api, Annon.Configuration.Repo,
   password: {:system, "DB_PASSWORD", "postgres"},
   hostname: {:system, "DB_HOST", "localhost"},
   port: {:system, :integer, "DB_PORT", 5432},
-  pool_size: 10
+  pool_size: 10,
+  loggers: [{LoggerJSON.Ecto, :log, [:info]}]
 
 config :annon_api, Annon.Requests.Repo,
   adapter: Ecto.Adapters.Postgres,
@@ -25,7 +26,8 @@ config :annon_api, Annon.Requests.Repo,
   password: {:system, "DB_PASSWORD", "postgres"},
   hostname: {:system, "DB_HOST", "localhost"},
   port: {:system, :integer, "DB_PORT", 5432},
-  pool_size: 50
+  pool_size: 50,
+  loggers: [{LoggerJSON.Ecto, :log, [:info]}]
 
 config :annon_api, :configuration_cache,
   adapter: {:system, :module, "CONFIGURATION_CACHE_ADAPTER", Annon.Configuration.CacheAdapters.ETS},
