@@ -52,9 +52,9 @@ script:
   # Submit code coverage report to Coveralls
   - mix coveralls.travis --exclude pending
   # Run static code analysis
-  - mix credo -a
+  # - mix credo -a
   # Check code style
-  - mix dogma
+  # - mix dogma
   # Build Docker container
   - ./bin/ci/release/build-container.sh
   # Initialize DB for Docker container
