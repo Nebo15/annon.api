@@ -1,5 +1,5 @@
 # Start mock server
-{:ok, _} = Plug.Adapters.Cowboy.http Annon.MockServer, [], port: Confex.get_env(:annon_api, :acceptance)[:mock][:port]
+{:ok, _} = Plug.Adapters.Cowboy2.http Annon.MockServer, [], port: Confex.get_env(:annon_api, :acceptance)[:mock][:port]
 
 # Start Factory service
 {:ok, _} = Application.ensure_all_started(:ex_machina)

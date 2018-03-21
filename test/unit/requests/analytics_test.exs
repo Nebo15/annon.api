@@ -29,7 +29,7 @@ defmodule Annon.Requests.AnalyticsTest do
             gateway: gateway_latency,
             upstream: upstream_latency,
             client_request: client_request_latency
-          ),
+          )
         )
       end)
 
@@ -54,7 +54,7 @@ defmodule Annon.Requests.AnalyticsTest do
             gateway: gateway_latency,
             upstream: upstream_latency,
             client_request: client_request_latency
-          ),
+          )
         )
       end)
 

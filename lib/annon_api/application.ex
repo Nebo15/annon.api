@@ -29,7 +29,7 @@ defmodule Annon do
 
   def management_endpoint_spec do
     config = Confex.get_env(:annon_api, :management_http)
-    Plug.Adapters.Cowboy.child_spec(:http, Annon.ManagementAPI.Router, [], config)
+    {Plug.Adapters.Cowboy2, scheme: :http, plug: Annon.ManagementAPI.Router, options: config}
   end
 
   defp matcher_opts do

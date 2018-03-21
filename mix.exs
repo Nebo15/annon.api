@@ -8,7 +8,7 @@ defmodule Annon.Mixfile do
      description: "Configurable API gateway that acts as a reverse proxy with a plugin system.",
      package: package(),
      version: @version,
-     elixir: "~> 1.5",
+     elixir: "~> 1.6",
      elixirc_paths: elixirc_paths(Mix.env),
      compilers: [] ++ Mix.compilers,
      build_embedded: Mix.env == :prod,
@@ -54,7 +54,7 @@ defmodule Annon.Mixfile do
      {:skycluster, ">= 0.0.0"},
      {:confex, ">= 0.0.0"},
      {:plug, ">= 0.0.0"},
-     {:cowboy, ">= 0.0.0"},
+     {:cowboy, "~> 2.1"},
      {:postgrex, "~> 0.13"},
      {:ecto, "~> 2.1"},
      {:poison, "~> 3.1"}, # TODO: Try jiffy for performance boost

@@ -20,7 +20,8 @@ defmodule Annon.PublicAPI.ServerSupervisor do
       else: children
 
     opts = [strategy: :one_for_one, name: Annon.PublicAPI.ServerSupervisor]
-    supervise(children, opts)
+
+    Supervisor.init(children, opts)
   end
 
   defp http_endpoint_spec(router, scheme, endpoint) do
@@ -30,7 +31,7 @@ defmodule Annon.PublicAPI.ServerSupervisor do
       |> Keyword.put_new(:otp_app, :annon_api)
       |> Keyword.put(:ref, build_ref(router, endpoint))
 
-    Plug.Adapters.Cowboy.child_spec(scheme, router, [], config)
+    {Plug.Adapters.Cowboy2, scheme: scheme, plug: router, options: config}
   end
 
   defp build_ref(plug, scheme) do
