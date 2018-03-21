@@ -6,6 +6,7 @@ defmodule Annon.PublicAPI.Router do
   but witch of them should process request will be resolved in run-time.
   """
   use Plug.Router
+  require Logger
 
   if Confex.get_env(:annon_api, :sql_sandbox) do
     plug Annon.Requests.Sandbox
@@ -35,7 +36,10 @@ defmodule Annon.PublicAPI.Router do
     Annon.Helpers.Response.send_error(conn, :not_found)
   end
 
-  def handle_errors(%Plug.Conn{halted: false} = conn, error) do
+  def handle_errors(%Plug.Conn{status: 500, halted: false} = conn, %{kind: kind, reason: reason, stack: stacktrace} = error) do
+    Logger.error(Exception.format(kind, reason, stacktrace))
     Annon.Helpers.Response.send_error(conn, error)
   end
+
+  def handle_errors(_, _), do: nil
 end

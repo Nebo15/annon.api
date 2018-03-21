@@ -5,6 +5,7 @@ defmodule Annon.ManagementAPI.Router do
   use Plug.Router
   use Plug.ErrorHandler
   alias Annon.Helpers.Response
+  require Logger
 
   if Confex.get_env(:annon_api, :sql_sandbox) do
     plug Annon.Requests.Sandbox
@@ -33,6 +34,11 @@ defmodule Annon.ManagementAPI.Router do
 
   match _ do
     Response.send_error(conn, :not_found)
+  end
+
+  def handle_errors(conn, %{kind: kind, reason: reason, stack: stacktrace} = error) do
+    Logger.error(Exception.format(kind, reason, stacktrace))
+    Annon.Helpers.Response.send_error(conn, error)
   end
 
   def handle_errors(conn, error) do
