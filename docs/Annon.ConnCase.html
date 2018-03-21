@@ -4,11 +4,11 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.18.1">
-    <title>Annon.ConnCase – annon_api v0.14.0</title>
+    <meta name="generator" content="ExDoc v0.18.3">
+    <title>Annon.ConnCase – annon_api v0.16.0</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-5626ecafcb.js"></script>
+    <script src="dist/sidebar_items-7cb78cdfdc.js"></script>
     
     
     
@@ -18,9 +18,13 @@
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
 
     <div class="main">
-<button class="sidebar-toggle">
+<button class="sidebar-button sidebar-toggle">
   <span class="icon-menu" aria-hidden="true"></span>
   <span class="sr-only">Toggle Sidebar</span>
+</button>
+<button class="sidebar-button night-mode-toggle">
+  <span class="icon-theme" aria-hidden="true"></span>
+  <span class="sr-only">Toggle Theme</span>
 </button>
 <section class="sidebar">
 
@@ -31,7 +35,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.14.0
+        v0.16.0
       </h2>
     </div>
     
@@ -41,7 +45,7 @@
     <button type="submit" class="search-button">
       <span class="icon-search" aria-hidden="true"></span>
     </button>
-    <input name="q" type="text" id="search-list" class="search-input" placeholder="search" aria-label="Search" autocomplete="off" />
+    <input name="q" type="text" id="search-list" class="search-input" placeholder="Search" aria-label="Search" autocomplete="off" />
   </form>
 
   <ul class="sidebar-listNav">
@@ -65,7 +69,7 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.14.0</small>
+        <small class="visible-xs">annon_api v0.16.0</small>
         Annon.ConnCase
         
       </h1>
@@ -413,7 +417,7 @@ returns the response body if one was set or sent</p>
     
       <div class="specs">
         
-          <pre>assert_error_sent(integer() | atom(), function()) :: {integer(), list(), term()}</pre>
+          <pre>assert_error_sent(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">integer</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">function</a>()) :: {<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">integer</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">list</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">term</a>()}</pre>
         
       </div>
     
@@ -458,7 +462,7 @@ assert {404, [_h | _t], &quot;Page not found&quot;} = response</code></pre>
     
       <div class="specs">
         
-          <pre>build_conn() :: <a href="https://hexdocs.pm/plug/1.4.3/Plug.Conn.html#t:t/0">Plug.Conn.t</a>()</pre>
+          <pre>build_conn() :: <a href="https://hexdocs.pm/plug/1.5.0/Plug.Conn.html#t:t/0">Plug.Conn.t</a>()</pre>
         
       </div>
     
@@ -484,7 +488,8 @@ assert {404, [_h | _t], &quot;Page not found&quot;} = response</code></pre>
     
       <div class="specs">
         
-          <pre>build_conn(atom() | binary(), binary(), binary() | list() | map()) :: <a href="https://hexdocs.pm/plug/1.4.3/Plug.Conn.html#t:t/0">Plug.Conn.t</a>()</pre>
+          <pre>build_conn(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">binary</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">binary</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">binary</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">list</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">map</a>()) ::
+  <a href="https://hexdocs.pm/plug/1.5.0/Plug.Conn.html#t:t/0">Plug.Conn.t</a>()</pre>
         
       </div>
     
@@ -511,7 +516,7 @@ for testing a plug or a particular function.</p>
     
       <div class="specs">
         
-          <pre>conn() :: <a href="https://hexdocs.pm/plug/1.4.3/Plug.Conn.html#t:t/0">Plug.Conn.t</a>()</pre>
+          <pre>conn() :: <a href="https://hexdocs.pm/plug/1.5.0/Plug.Conn.html#t:t/0">Plug.Conn.t</a>()</pre>
         
       </div>
     
@@ -581,7 +586,7 @@ for testing a plug or a particular function.</p>
     
       <div class="specs">
         
-          <pre>delete_req_cookie(<a href="https://hexdocs.pm/plug/1.4.3/Plug.Conn.html#t:t/0">Plug.Conn.t</a>(), binary()) :: <a href="https://hexdocs.pm/plug/1.4.3/Plug.Conn.html#t:t/0">Plug.Conn.t</a>()</pre>
+          <pre>delete_req_cookie(<a href="https://hexdocs.pm/plug/1.5.0/Plug.Conn.html#t:t/0">Plug.Conn.t</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">binary</a>()) :: <a href="https://hexdocs.pm/plug/1.5.0/Plug.Conn.html#t:t/0">Plug.Conn.t</a>()</pre>
         
       </div>
     
@@ -705,9 +710,8 @@ without normalizing its entries</p>
     
       <div class="specs">
         
-          <pre>html_response(<a href="https://hexdocs.pm/plug/1.4.3/Plug.Conn.html#t:t/0">Plug.Conn.t</a>(), status :: integer() | atom()) ::
-  <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>() |
-  no_return()</pre>
+          <pre>html_response(<a href="https://hexdocs.pm/plug/1.5.0/Plug.Conn.html#t:t/0">Plug.Conn.t</a>(), status :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">integer</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>()) ::
+  <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
         
       </div>
     
@@ -921,7 +925,7 @@ assert &quot;can&#39;t be blank&quot; in body[&quot;errors&quot;]</code></pre>
     
       <div class="specs">
         
-          <pre>put_req_cookie(<a href="https://hexdocs.pm/plug/1.4.3/Plug.Conn.html#t:t/0">Plug.Conn.t</a>(), binary(), binary()) :: <a href="https://hexdocs.pm/plug/1.4.3/Plug.Conn.html#t:t/0">Plug.Conn.t</a>()</pre>
+          <pre>put_req_cookie(<a href="https://hexdocs.pm/plug/1.5.0/Plug.Conn.html#t:t/0">Plug.Conn.t</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">binary</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">binary</a>()) :: <a href="https://hexdocs.pm/plug/1.5.0/Plug.Conn.html#t:t/0">Plug.Conn.t</a>()</pre>
         
       </div>
     
@@ -945,7 +949,7 @@ assert &quot;can&#39;t be blank&quot; in body[&quot;errors&quot;]</code></pre>
     
       <div class="specs">
         
-          <pre>recycle(<a href="https://hexdocs.pm/plug/1.4.3/Plug.Conn.html#t:t/0">Plug.Conn.t</a>()) :: <a href="https://hexdocs.pm/plug/1.4.3/Plug.Conn.html#t:t/0">Plug.Conn.t</a>()</pre>
+          <pre>recycle(<a href="https://hexdocs.pm/plug/1.5.0/Plug.Conn.html#t:t/0">Plug.Conn.t</a>()) :: <a href="https://hexdocs.pm/plug/1.5.0/Plug.Conn.html#t:t/0">Plug.Conn.t</a>()</pre>
         
       </div>
     
@@ -978,7 +982,7 @@ recycled.</p>
     
       <div class="specs">
         
-          <pre>redirected_to(<a href="https://hexdocs.pm/plug/1.4.3/Plug.Conn.html#t:t/0">Plug.Conn.t</a>(), status :: non_neg_integer()) :: <a href="https://hexdocs.pm/plug/1.4.3/Plug.Conn.html#t:t/0">Plug.Conn.t</a>()</pre>
+          <pre>redirected_to(<a href="https://hexdocs.pm/plug/1.5.0/Plug.Conn.html#t:t/0">Plug.Conn.t</a>(), status :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">non_neg_integer</a>()) :: <a href="https://hexdocs.pm/plug/1.5.0/Plug.Conn.html#t:t/0">Plug.Conn.t</a>()</pre>
         
       </div>
     
@@ -1012,9 +1016,7 @@ assert redirected_to(conn, :moved_permanently) =~ &quot;/foo/bar&quot;</code></p
     
       <div class="specs">
         
-          <pre>response(<a href="https://hexdocs.pm/plug/1.4.3/Plug.Conn.html#t:t/0">Plug.Conn.t</a>(), status :: integer() | atom()) ::
-  binary() |
-  no_return()</pre>
+          <pre>response(<a href="https://hexdocs.pm/plug/1.5.0/Plug.Conn.html#t:t/0">Plug.Conn.t</a>(), status :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">integer</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">binary</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
         
       </div>
     
@@ -1046,9 +1048,7 @@ assert response(conn, 200) =~ &quot;hello world&quot;</code></pre>
     
       <div class="specs">
         
-          <pre>response_content_type(<a href="https://hexdocs.pm/plug/1.4.3/Plug.Conn.html#t:t/0">Plug.Conn.t</a>(), atom()) ::
-  <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>() |
-  no_return()</pre>
+          <pre>response_content_type(<a href="https://hexdocs.pm/plug/1.5.0/Plug.Conn.html#t:t/0">Plug.Conn.t</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>()) :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
         
       </div>
     
@@ -1079,9 +1079,8 @@ assert response_content_type(conn, :html) =~ &quot;charset=utf-8&quot;</code></p
     
       <div class="specs">
         
-          <pre>text_response(<a href="https://hexdocs.pm/plug/1.4.3/Plug.Conn.html#t:t/0">Plug.Conn.t</a>(), status :: integer() | atom()) ::
-  <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>() |
-  no_return()</pre>
+          <pre>text_response(<a href="https://hexdocs.pm/plug/1.5.0/Plug.Conn.html#t:t/0">Plug.Conn.t</a>(), status :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">integer</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>()) ::
+  <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
         
       </div>
     
@@ -1130,14 +1129,13 @@ returns the response body if one was set or sent.</p>
         <p>
           <span class="line">
             Built using
-            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.18.1),
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.18.3),
           </span>
           <span class="line">
             designed by
             <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
             </span>
         </p>
-        <button class="night-mode-toggle"><span class="sr-only">Switch theme</span></button>
       </footer>
     </div>
   </div>

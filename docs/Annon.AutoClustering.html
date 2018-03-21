@@ -4,11 +4,11 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.18.1">
-    <title>Annon.AutoClustering – annon_api v0.14.0</title>
+    <meta name="generator" content="ExDoc v0.18.3">
+    <title>Annon.AutoClustering – annon_api v0.16.0</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
-    <script src="dist/sidebar_items-5626ecafcb.js"></script>
+    <script src="dist/sidebar_items-7cb78cdfdc.js"></script>
     
     
     
@@ -18,9 +18,13 @@
     <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
 
     <div class="main">
-<button class="sidebar-toggle">
+<button class="sidebar-button sidebar-toggle">
   <span class="icon-menu" aria-hidden="true"></span>
   <span class="sr-only">Toggle Sidebar</span>
+</button>
+<button class="sidebar-button night-mode-toggle">
+  <span class="icon-theme" aria-hidden="true"></span>
+  <span class="sr-only">Toggle Theme</span>
 </button>
 <section class="sidebar">
 
@@ -31,7 +35,7 @@
         annon_api
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.14.0
+        v0.16.0
       </h2>
     </div>
     
@@ -41,7 +45,7 @@
     <button type="submit" class="search-button">
       <span class="icon-search" aria-hidden="true"></span>
     </button>
-    <input name="q" type="text" id="search-list" class="search-input" placeholder="search" aria-label="Search" autocomplete="off" />
+    <input name="q" type="text" id="search-list" class="search-input" placeholder="Search" aria-label="Search" autocomplete="off" />
   </form>
 
   <ul class="sidebar-listNav">
@@ -65,7 +69,7 @@
 
 
       <h1>
-        <small class="visible-xs">annon_api v0.14.0</small>
+        <small class="visible-xs">annon_api v0.16.0</small>
         Annon.AutoClustering
         
       </h1>
@@ -97,8 +101,27 @@ based on different cluster discovery strategies.</p>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
+    <a href="#child_spec/1">child_spec(arg)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Returns a specification to start this module under a supervisor</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#do_reload_config/0">do_reload_config()</a>
   </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#init/1">init(opts)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Invoked when the server is started. <code class="inline">start_link/3</code> or <code class="inline">start/3</code> will
+block until it returns</p>
+</div>
   
 </div>
 <div class="summary-row">
@@ -133,7 +156,26 @@ based on different cluster discovery strategies.</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="do_reload_config/0">
+          <div class="detail" id="child_spec/1">
+  
+  
+  <div class="detail-header">
+    <a href="#child_spec/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <span class="signature">child_spec(arg)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Returns a specification to start this module under a supervisor.</p>
+<p>See <a href="https://hexdocs.pm/elixir/Supervisor.html"><code class="inline">Supervisor</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="do_reload_config/0">
   
   
   <div class="detail-header">
@@ -148,6 +190,54 @@ based on different cluster discovery strategies.</p>
   </div>
   <section class="docstring">
     
+  </section>
+</div>
+<div class="detail" id="init/1">
+  
+  
+  <div class="detail-header">
+    <a href="#init/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <span class="signature">init(opts)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Invoked when the server is started. <code class="inline">start_link/3</code> or <code class="inline">start/3</code> will
+block until it returns.</p>
+<p><code class="inline">args</code> is the argument term (second argument) passed to <code class="inline">start_link/3</code>.</p>
+<p>Returning <code class="inline">{:ok, state}</code> will cause <code class="inline">start_link/3</code> to return
+<code class="inline">{:ok, pid}</code> and the process to enter its loop.</p>
+<p>Returning <code class="inline">{:ok, state, timeout}</code> is similar to <code class="inline">{:ok, state}</code>
+except <code class="inline">handle_info(:timeout, state)</code> will be called after <code class="inline">timeout</code>
+milliseconds if no messages are received within the timeout.</p>
+<p>Returning <code class="inline">{:ok, state, :hibernate}</code> is similar to
+<code class="inline">{:ok, state}</code> except the process is hibernated before entering the loop. See
+<code class="inline">c:handle_call/3</code> for more information on hibernation.</p>
+<p>Returning <code class="inline">:ignore</code> will cause <code class="inline">start_link/3</code> to return <code class="inline">:ignore</code> and the
+process will exit normally without entering the loop or calling <code class="inline">c:terminate/2</code>.
+If used when part of a supervision tree the parent supervisor will not fail
+to start nor immediately try to restart the <a href="https://hexdocs.pm/elixir/GenServer.html"><code class="inline">GenServer</code></a>. The remainder of the
+supervision tree will be (re)started and so the <a href="https://hexdocs.pm/elixir/GenServer.html"><code class="inline">GenServer</code></a> should not be
+required by other processes. It can be started later with
+<a href="https://hexdocs.pm/elixir/Supervisor.html#restart_child/2"><code class="inline">Supervisor.restart_child/2</code></a> as the child specification is saved in the parent
+supervisor. The main use cases for this are:</p>
+<ul>
+<li>The <a href="https://hexdocs.pm/elixir/GenServer.html"><code class="inline">GenServer</code></a> is disabled by configuration but might be enabled later.
+</li>
+<li>An error occurred and it will be handled by a different mechanism than the
+   <a href="https://hexdocs.pm/elixir/Supervisor.html"><code class="inline">Supervisor</code></a>. Likely this approach involves calling <a href="https://hexdocs.pm/elixir/Supervisor.html#restart_child/2"><code class="inline">Supervisor.restart_child/2</code></a>
+after a delay to attempt a restart.
+</li>
+</ul>
+<p>Returning <code class="inline">{:stop, reason}</code> will cause <code class="inline">start_link/3</code> to return
+<code class="inline">{:error, reason}</code> and the process to exit with reason <code class="inline">reason</code> without
+entering the loop or calling <code class="inline">c:terminate/2</code>.</p>
+<p>Callback implementation for <a href="https://hexdocs.pm/elixir/GenServer.html#c:init/1"><code class="inline">GenServer.init/1</code></a>.</p>
+
   </section>
 </div>
 <div class="detail" id="reload_config/0">
@@ -193,14 +283,13 @@ based on different cluster discovery strategies.</p>
         <p>
           <span class="line">
             Built using
-            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.18.1),
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.18.3),
           </span>
           <span class="line">
             designed by
             <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
             </span>
         </p>
-        <button class="night-mode-toggle"><span class="sr-only">Switch theme</span></button>
       </footer>
     </div>
   </div>
