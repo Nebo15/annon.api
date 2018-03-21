@@ -17,7 +17,7 @@ defmodule Annon.Requests.Analytics do
       avg_gateway_latency: avg(fragment("(?->>'gateway')::numeric", request.latencies)),
       avg_upstream_latency: avg(fragment("(?->>'upstream')::numeric", request.latencies)),
       tick: fragment(~S|(
-        date_trunc('seconds', (inserted_at - timestamptz 'epoch') / ?) * ? + timestamptz 'epoch'
+        date_trunc('seconds', (inserted_at - timestamp 'epoch') / ?) * ? + timestamp 'epoch'
       ) as tick|, ^interval_seconds, ^interval_seconds),
     })
     |> group_by([request], fragment("tick"))
@@ -40,7 +40,7 @@ defmodule Annon.Requests.Analytics do
       status_code: request.status_code,
       count: count(request.status_code),
       tick: fragment(~S|(
-        date_trunc('seconds', (inserted_at - timestamptz 'epoch') / ?) * ? + timestamptz 'epoch'
+        date_trunc('seconds', (inserted_at - timestamp 'epoch') / ?) * ? + timestamp 'epoch'
       ) as tick|, ^epoch, ^epoch),
     })
     |> group_by([request], fragment("tick"))
