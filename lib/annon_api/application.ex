@@ -19,17 +19,12 @@ defmodule Annon do
       worker(Annon.Requests.LogWriter, []),
       worker(Annon.Configuration.Matcher, [matcher_opts()]),
       worker(Annon.AutoClustering, []),
-      management_endpoint_spec(),
+      supervisor(Annon.ManagementAPI.ServerSupervisor, []),
       supervisor(Annon.PublicAPI.ServerSupervisor, []),
     ]
 
     opts = [strategy: :one_for_one, name: Annon.Supervisor]
     Supervisor.start_link(children, opts)
-  end
-
-  def management_endpoint_spec do
-    config = Confex.get_env(:annon_api, :management_http)
-    {Plug.Adapters.Cowboy2, scheme: :http, plug: Annon.ManagementAPI.Router, options: config}
   end
 
   defp matcher_opts do
