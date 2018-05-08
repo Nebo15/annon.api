@@ -1,6 +1,7 @@
 # Annon
 
 [![Coverage Status](https://coveralls.io/repos/github/Nebo15/annon.api/badge.svg?branch=master&t=y562b4)](https://coveralls.io/github/Nebo15/annon.api?branch=master) [![Build Status](https://travis-ci.org/Nebo15/annon.api.svg?branch=master)](https://travis-ci.org/Nebo15/annon.api)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FNebo15%2Fannon.api.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FNebo15%2Fannon.api?ref=badge_shield)
 
 # Annon API Gateway
 
@@ -109,3 +110,6 @@ Also there are auto-generated code documentation [available here](https://nebo15
 ## License
 
 See [LICENSE.md](LICENSE.md).
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FNebo15%2Fannon.api.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FNebo15%2Fannon.api?ref=badge_large)
