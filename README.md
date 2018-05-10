@@ -90,7 +90,7 @@ Our containers are based on Alpine Linux wich is a security-oriented, lightweigh
 
 ### Docker Compose
 
-For local environments we provide an [example Docket Compose configuration](https://github.com/Nebo15/annon.infra/tree/master/docker-compose). You can use this one-liner to deploy all Annon components on a local machine:
+For local environments we provide an [example Docker Compose configuration](https://github.com/Nebo15/annon.infra/tree/master/docker-compose). You can use this one-liner to deploy all Annon components on a local machine:
 
 `curl -L http://bit.ly/annon_compose | bash`
   
