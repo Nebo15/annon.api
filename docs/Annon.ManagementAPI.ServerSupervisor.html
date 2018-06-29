@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.18.3">
-    <title>Annon.PathHelpers – annon_api v0.16.2</title>
+    <title>Annon.ManagementAPI.ServerSupervisor – annon_api v0.16.2</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
     
     <script src="dist/sidebar_items-0083d416e2.js"></script>
@@ -70,13 +70,13 @@
 
       <h1>
         <small class="visible-xs">annon_api v0.16.2</small>
-        Annon.PathHelpers
+        Annon.ManagementAPI.ServerSupervisor
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>This module provider path generation helpers for various entities in Management API.</p>
+          <p>This supervisor manages endpoints for management API.</p>
 
         </section>
       
@@ -99,37 +99,16 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#api_path/1">api_path(api_id)</a>
+    <a href="#child_spec/1">child_spec(arg)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Returns a specification to start this module under a supervisor</p>
+</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#apis_path/0">apis_path()</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#plugin_path/2">plugin_path(api_id, name)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#plugins_path/1">plugins_path(api_id)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#request_path/1">request_path(request_id)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#requests_path/0">requests_path()</a>
+    <a href="#start_link/0">start_link()</a>
   </div>
   
 </div>
@@ -153,100 +132,34 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="api_path/1">
+          <div class="detail" id="child_spec/1">
   
   
   <div class="detail-header">
-    <a href="#api_path/1" class="detail-link" title="Link to this function">
+    <a href="#child_spec/1" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <span class="signature">api_path(api_id)</span>
+    <span class="signature">child_spec(arg)</span>
     
     
     
   </div>
   <section class="docstring">
-    
+    <p>Returns a specification to start this module under a supervisor.</p>
+<p>See <a href="https://hexdocs.pm/elixir/Supervisor.html"><code class="inline">Supervisor</code></a>.</p>
+
   </section>
 </div>
-<div class="detail" id="apis_path/0">
+<div class="detail" id="start_link/0">
   
   
   <div class="detail-header">
-    <a href="#apis_path/0" class="detail-link" title="Link to this function">
+    <a href="#start_link/0" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <span class="signature">apis_path()</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="plugin_path/2">
-  
-  
-  <div class="detail-header">
-    <a href="#plugin_path/2" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <span class="signature">plugin_path(api_id, name)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="plugins_path/1">
-  
-  
-  <div class="detail-header">
-    <a href="#plugins_path/1" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <span class="signature">plugins_path(api_id)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="request_path/1">
-  
-  
-  <div class="detail-header">
-    <a href="#request_path/1" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <span class="signature">request_path(request_id)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="requests_path/0">
-  
-  
-  <div class="detail-header">
-    <a href="#requests_path/0" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <span class="signature">requests_path()</span>
+    <span class="signature">start_link()</span>
     
     
     
