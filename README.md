@@ -10,7 +10,7 @@ Annon is a configurable API gateway that acts as a reverse proxy with a plugin s
 
 Annon consist of multiple main parts:
 
-- Annon API Gateway (you is here).
+- Annon API Gateway (you are here).
 - [Annon Dashboard](https://github.com/Nebo15/annon.web) - UI that allows to manage Annon settings, review and analyze Requests.
 - [annonktl](https://github.com/Nebo15/annon.ktl) - CLI management utility.
 - [Annon Status Pages](https://github.com/Nebo15/annon.status.web) - UI that renders APIs status pages;
